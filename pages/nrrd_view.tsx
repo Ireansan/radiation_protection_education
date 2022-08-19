@@ -4,136 +4,165 @@
 
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo, useLayoutEffect } from "react";
 
-import { Canvas, useLoader } from "@react-three/fiber";
+import { useFrame, Canvas, useLoader } from "@react-three/fiber";
 import { OrbitControls, Stats } from "@react-three/drei";
 import * as THREE from "three";
 import { useControls } from "leva";
 import { useSnapshot } from "valtio";
 
 import { NRRDLoader } from "./jsm/loaders/NRRDLoader";
-import { VolumeRenderShader1 } from "./jsm/shaders/VolumeShader.js";
 
 import styles from "../styles/nrrd_view.module.css";
-import { volstate } from "./states/nrrd_view.states";
+import { volumeRenderStates } from "./states/nrrd_view.states";
+import { volumeRenderShader } from "./shaders/volumeShader";
 
-function NRRDTest() {
-    const { clim1, clim2, colormap, renderstyle, isothreshold } =
-        useSnapshot(volstate);
-
-    const [volconfig, set] = useControls(() => ({
-        clim1: {
-            value: 0,
-            min: 0,
-            max: 1,
-            onChange: (e) => {
-                volstate.clim1 = e;
-            },
-        },
-        clim2: {
-            value: 1,
-            min: 0,
-            max: 1,
-            onChange: (e) => {
-                volstate.clim2 = e;
-            },
-        },
-        colormap: {
-            options: ["viridis", "gray"],
-            onChange: (e) => {
-                if (e === "viridis") {
-                    volstate.colormap = 0;
-                } else if (e === "gray") {
-                    volstate.colormap = 1;
-                }
-            },
-        },
-        renderstyle: {
-            options: ["iso", "mip"],
-            onChange: (e) => {
-                volstate.renderstyle = e;
-            },
-        },
-        isothreshold: {
-            value: 0.15,
-            min: 0,
-            max: 1,
-            // max: 100,
-            onChange: (e) => {
-                volstate.isothreshold = e;
-            },
-        },
-    }));
+type volumeArgs = {
+    clim1: number;
+    clim2: number;
+    colormap: number;
+    renderstyle: string;
+    isothreshold: number;
+};
+function NRRDTest({
+    clim1,
+    clim2,
+    colormap,
+    renderstyle,
+    isothreshold,
+}: volumeArgs) {
+    const geometryRef = useRef<THREE.BoxGeometry>(new THREE.BoxGeometry());
+    const materialRef = useRef<THREE.ShaderMaterial>(
+        new THREE.ShaderMaterial()
+    );
 
     // Load nrrd
     var filepaths = [
-        "models/nrrd/stent.nrrd",
-        "models/nrrd/dose_106_200_290.nrrd",
-        "models/nrrd/dose_d100.nrrd",
+        "/models/nrrd/stent.nrrd",
+        "/models/nrrd/dose_106_200_290.nrrd",
+        "/models/nrrd/dose_d100.nrrd",
     ];
-    const volume: any = useLoader(NRRDLoader, filepaths[2]);
-    console.log(volume);
+    // const volume: any = useLoader(NRRDLoader, filepaths[2]);
+    const volume: any = useLoader(NRRDLoader, filepaths[0]);
 
-    // Colormap textures
-    const cmtextures = [
-        new THREE.TextureLoader().load("textures/cm_viridis.png"),
-        new THREE.TextureLoader().load("textures/cm_gray.png"),
-    ];
+    const cmtextures = useMemo(() => {
+        // Colormap textures
+        const cmtextures = [
+            new THREE.TextureLoader().load("textures/cm_viridis.png"),
+            new THREE.TextureLoader().load("textures/cm_gray.png"),
+        ];
+        //     console.log("useMemo");
 
-    // Texture
-    const texture = new THREE.Data3DTexture(
-        volume.data,
-        volume.xLength,
-        volume.yLength,
-        volume.zLength
-    );
-    texture.format = THREE.RedFormat;
-    texture.type = THREE.FloatType;
-    texture.minFilter = texture.magFilter = THREE.LinearFilter;
-    texture.unpackAlignment = 1;
-    texture.needsUpdate = true;
+        return cmtextures;
+    }, []);
 
-    // Material
-    const shader = VolumeRenderShader1;
+    // useLayoutEffect(() => {
+    const uniforms = useMemo(() => {
+        const uniforms = THREE.UniformsUtils.clone(volumeRenderShader.uniforms);
+        // Texture
+        const texture = new THREE.Data3DTexture(
+            volume.data,
+            volume.xLength,
+            volume.yLength,
+            volume.zLength
+        );
+        texture.format = THREE.RedFormat;
+        texture.type = THREE.FloatType;
+        texture.minFilter = texture.magFilter = THREE.LinearFilter;
+        texture.unpackAlignment = 1;
+        texture.needsUpdate = true;
+        console.log(texture, volume.xLength, volume.yLength, volume.zLength);
 
-    const uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+        // Material
+        uniforms.u_data = { value: texture };
+        uniforms.u_size = {
+            value: new THREE.Vector3(
+                volume.xLength,
+                volume.yLength,
+                volume.zLength
+            ),
+        };
+        uniforms.u_clim = {
+            value: new THREE.Vector2(clim1, clim2),
+        };
+        uniforms.u_renderstyle = {
+            value: renderstyle === "mip" ? 0 : 1,
+        }; // 0: MIP, 1: ISO
+        uniforms.u_renderthreshold = {
+            value: isothreshold,
+        }; // For ISO renderstyle
+        uniforms.u_cmdata = { value: cmtextures[colormap] };
 
-    uniforms["u_data"].value = texture;
-    uniforms["u_size"].value.set(
-        volume.xLength,
-        volume.yLength,
-        volume.zLength
-    );
-    uniforms["u_clim"].value.set(clim1, clim2);
-    uniforms["u_renderstyle"].value = renderstyle === "mip" ? 0 : 1; // 0: MIP, 1: ISO
-    uniforms["u_renderthreshold"].value = isothreshold; // For ISO renderstyle
-    uniforms["u_cmdata"].value = cmtextures[colormap];
+        // Geometry
+        geometryRef.current = new THREE.BoxGeometry(
+            volume.xLength,
+            volume.yLength,
+            volume.zLength
+        );
+        geometryRef.current.translate(
+            volume.xLength / 2 - 0.5,
+            volume.yLength / 2 - 0.5,
+            volume.zLength / 2 - 0.5
+        );
 
-    const material = new THREE.ShaderMaterial({
-        uniforms: uniforms,
-        vertexShader: shader.vertexShader,
-        fragmentShader: shader.fragmentShader,
-        side: THREE.BackSide, // The volume shader uses the backface as its "reference point"
+        console.log("useMemo");
+        console.log(materialRef.current);
+
+        return uniforms;
+    }, [volume, cmtextures, clim1, clim2, colormap, renderstyle, isothreshold]);
+    //     console.log("useLayoutEffect");
+    // }, []);
+
+    useFrame((state) => {
+        // /*
+        materialRef.current.uniforms.u_clim.value = new THREE.Vector2(
+            clim1,
+            clim2
+        );
+        materialRef.current.uniforms.u_renderstyle.value =
+            renderstyle === "mip" ? 0 : 1; // 0: MIP, 1: ISO
+        materialRef.current.uniforms.u_renderthreshold.value = isothreshold; // For ISO renderstyle
+        materialRef.current.uniforms.u_cmdata.value = cmtextures[colormap];
+        // */
+        /*
+        console.log(
+            "frame",
+            clim1,
+            clim2,
+            colormap,
+            renderstyle,
+            isothreshold,
+            materialRef.current.uniforms.u_data,
+            materialRef.current.uniforms.u_clim,
+            materialRef.current.uniforms.u_renderstyle,
+            materialRef.current.uniforms.u_renderthreshold,
+            materialRef.current.uniforms.u_cmdata
+        );
+         */
     });
-
-    const geometry = new THREE.BoxGeometry(
-        volume.xLength,
-        volume.yLength,
-        volume.zLength
-    );
-    geometry.translate(
-        volume.xLength / 2 - 0.5,
-        volume.yLength / 2 - 0.5,
-        volume.zLength / 2 - 0.5
-    );
-
-    console.log(geometry, material);
-    console.log(volume);
 
     return (
         <>
-            <mesh geometry={geometry} material={material} />
+            {console.log(
+                "return",
+                materialRef.current.uniforms.u_data,
+                materialRef.current.uniforms.u_clim,
+                materialRef.current.uniforms.u_renderstyle,
+                materialRef.current.uniforms.u_renderthreshold,
+                materialRef.current.uniforms.u_cmdata
+            )}
+            <mesh>
+                <boxGeometry attach="geometry" ref={geometryRef} />
+                <shaderMaterial
+                    attach="material"
+                    ref={materialRef}
+                    // uniforms={volumeRenderShader.uniforms}
+                    uniforms={uniforms}
+                    vertexShader={volumeRenderShader.vertexShader}
+                    fragmentShader={volumeRenderShader.fragmentShader}
+                />
+            </mesh>
         </>
     );
 }
@@ -145,6 +174,67 @@ function NRRDTest() {
 function NRRDView() {
     const h = 512; // frustum height
     const camera = new THREE.OrthographicCamera();
+
+    const { volume, clim1, clim2, colormap, renderstyle, isothreshold } =
+        useSnapshot(volumeRenderStates);
+
+    // Load nrrd
+    /*
+    var filepaths = [
+        "/models/nrrd/stent.nrrd",
+        "/models/nrrd/dose_106_200_290.nrrd",
+        "/models/nrrd/dose_d100.nrrd",
+    ];
+    console.log(filepaths[2]);
+    const tmpVolume: any = useLoader(NRRDLoader, filepaths[2]);
+    useEffect(() => {
+        volumeRenderStates.volume = tmpVolume;
+    }, []);
+    */
+
+    const [volumeConfig, volumeSet] = useControls(() => ({
+        clim1: {
+            value: 0,
+            min: 0,
+            max: 1,
+            onChange: (e) => {
+                volumeRenderStates.clim1 = e;
+            },
+        },
+        clim2: {
+            value: 1,
+            min: 0,
+            max: 1,
+            onChange: (e) => {
+                volumeRenderStates.clim2 = e;
+            },
+        },
+        colormap: {
+            options: ["viridis", "gray"],
+            onChange: (e) => {
+                if (e === "viridis") {
+                    volumeRenderStates.colormap = 0;
+                } else if (e === "gray") {
+                    volumeRenderStates.colormap = 1;
+                }
+            },
+        },
+        renderstyle: {
+            options: ["iso", "mip"],
+            onChange: (e) => {
+                volumeRenderStates.renderstyle = e;
+            },
+        },
+        isothreshold: {
+            value: 0.15,
+            min: 0,
+            max: 1,
+            // max: 100,
+            onChange: (e) => {
+                volumeRenderStates.isothreshold = e;
+            },
+        },
+    }));
 
     useEffect(() => {
         const aspect = window.innerWidth / window.innerHeight;
@@ -166,7 +256,13 @@ function NRRDView() {
         <div className={styles.container}>
             <div className={styles.canvas}>
                 <Canvas camera={camera}>
-                    <NRRDTest />
+                    <NRRDTest
+                        clim1={clim1}
+                        clim2={clim2}
+                        colormap={colormap}
+                        renderstyle={renderstyle}
+                        isothreshold={isothreshold}
+                    />
                     <OrbitControls />
 
                     <Stats />
