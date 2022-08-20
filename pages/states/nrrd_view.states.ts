@@ -8,8 +8,8 @@ class VolumeRenderStates {
     colormap: number = 0
     renderstyle: string = "iso"
     isothreshold: number = 0.15
-    // position: THREE.Vector3 = new THREE.Vector3(0, 0, 0)
-    // rotation: THREE.Vector3 = new THREE.Vector3(0, 0, 0)
+    position: THREE.Vector3 = new THREE.Vector3(0, 0, 0)
+    up: THREE.Vector3 = new THREE.Vector3(0, 1, 0)
 }
 
 class PlaneConfigStates {
