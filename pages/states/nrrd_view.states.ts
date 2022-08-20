@@ -1,13 +1,23 @@
 import { proxy } from 'valtio'
 import * as THREE from 'three'
 
-class volumeStates {
+class VolumeRenderStates {
+    volume: any = null
     clim1: number = 0
     clim2: number = 1
-    // colormap: string = "viridis"
     colormap: number = 0
     renderstyle: string = "iso"
     isothreshold: number = 0.15
+    // position: THREE.Vector3 = new THREE.Vector3(0, 0, 0)
+    // rotation: THREE.Vector3 = new THREE.Vector3(0, 0, 0)
 }
 
-export const volstate = proxy(new volumeStates());
+class PlaneConfigStates {
+    mode: string = "translate"
+    space: string = "world"
+}
+
+const volumeRenderStates = proxy(new VolumeRenderStates());
+const planeConfigStates = proxy(new PlaneConfigStates());
+
+export {volumeRenderStates, planeConfigStates}
