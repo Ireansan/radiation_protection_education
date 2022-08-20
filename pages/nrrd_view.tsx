@@ -6,22 +6,22 @@ import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import React, { useEffect, useRef, Suspense } from "react";
 
-import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { OrbitControls, TransformControls, Stats } from "@react-three/drei";
 import * as THREE from "three";
+import { TransformControls as TransformControlsImpl } from "three-stdlib";
 import { useControls } from "leva";
 import { useSnapshot } from "valtio";
 
 import { NRRDLoader } from "./jsm/loaders/NRRDLoader";
 import { volumeRenderShader } from "./shaders/volumeShader";
+
 import {
     volumeRenderStates,
     planeConfigStates,
 } from "./states/nrrd_view.states";
 
 import styles from "../styles/nrrd_view.module.css";
-// import { VolumeRender } from "./components/volumeRender";
-
 // /*
 type volumeArgs = {
     clim1: number;
@@ -29,6 +29,8 @@ type volumeArgs = {
     colormap: number;
     renderstyle: string;
     isothreshold: number;
+    position: THREE.Vector3;
+    up: THREE.Vector3;
 };
 function VolumeRender({
     clim1,
@@ -36,6 +38,8 @@ function VolumeRender({
     colormap,
     renderstyle,
     isothreshold,
+    position,
+    up,
 }: volumeArgs) {
     // Load nrrd
     var filepaths = [
@@ -94,75 +98,14 @@ function VolumeRender({
     return (
         <>
             <mesh geometry={geometry} material={material}>
-                <PlaneControls />
+                {/* <PlaneControls /> */}
             </mesh>
-        </>
-    );
-}
-
-// /*
-function PlaneControls() {
-    const { mode, space } = useSnapshot(planeConfigStates);
-    const [planeConfig, planeSet] = useControls(() => ({
-        // const [{ mode, space }, planeSet] = useControls(() => ({
-        position: {
-            value: { x: 0, y: 0, z: 0 },
-        },
-        rotation: {
-            value: { x: 0, y: 0, z: 0 },
-        },
-        mode: {
-            value: "translate",
-            options: ["translate", "rotate"],
-            onChange: (e) => {
-                planeConfigStates.mode = e;
-            },
-        },
-        space: {
-            value: "world",
-            options: ["world", "local"],
-            onChange: (e) => {
-                planeConfigStates.space = e;
-            },
-        },
-    }));
-
-    function Plane(props: any) {
-        return (
-            <mesh {...props}>
-                <planeGeometry />
-            </mesh>
-        );
-    }
-    console.log(mode, space);
-
-    return (
-        // <TransformControls >
-        <>
-            <TransformControls
-                mode={mode}
-                // mode="rotate"
-                space={space}
-                // space="local"
-            >
-                <Plane />
-            </TransformControls>
         </>
     );
 }
 // */
 
-/**
- * https://zenn.dev/hironorioka28/articles/8247133329d64e
- * @returns
- */
-function NRRDView() {
-    const h = 512; // frustum height
-    const camera = new THREE.OrthographicCamera();
-
-    const { clim1, clim2, colormap, renderstyle, isothreshold } =
-        useSnapshot(volumeRenderStates);
-
+function VolumeRenderControls() {
     const [volumeConfig, volumeSet] = useControls(() => ({
         clim1: {
             value: 0,
@@ -207,6 +150,77 @@ function NRRDView() {
         },
     }));
 
+    return <></>;
+}
+
+function PlaneControls() {
+    const { mode, space } = useSnapshot(planeConfigStates);
+    const [planeConfig, planeSet] = useControls(() => ({
+        position: {
+            value: { x: 0, y: 0, z: 0 },
+        },
+        rotation: {
+            value: { x: 0, y: 0, z: 0 },
+        },
+        mode: {
+            value: "translate",
+            options: ["translate", "rotate"],
+            onChange: (e) => {
+                planeConfigStates.mode = e;
+            },
+        },
+        space: {
+            value: "world",
+            options: ["world", "local"],
+            onChange: (e) => {
+                planeConfigStates.space = e;
+            },
+        },
+    }));
+
+    function Plane(props: any) {
+        return (
+            <mesh {...props}>
+                <planeGeometry />
+            </mesh>
+        );
+    }
+    console.log(mode, space);
+
+    return (
+        <>
+            <TransformControls
+                mode={mode}
+                space={space}
+                onChange={(e) => {
+                    if (e?.target.mode === "translate") {
+                        volumeRenderStates.position =
+                            e?.target.object?.position;
+                        console.log(e?.target.object?.position);
+                    } else if (e?.target.mode === "rotate") {
+                        volumeRenderStates.position = e?.target.object?.up;
+                        console.log(e?.target.object?.up);
+                    }
+                    // console.log(e?.target);
+                }}
+            >
+                <Plane />
+            </TransformControls>
+        </>
+    );
+}
+
+/**
+ * https://zenn.dev/hironorioka28/articles/8247133329d64e
+ * @returns
+ */
+function NRRDView() {
+    const h = 512; // frustum height
+    const camera = new THREE.OrthographicCamera();
+
+    const { clim1, clim2, colormap, renderstyle, isothreshold, position, up } =
+        useSnapshot(volumeRenderStates);
+
     useEffect(() => {
         const aspect = window.innerWidth / window.innerHeight;
         camera.copy(
@@ -234,8 +248,12 @@ function NRRDView() {
                             colormap={colormap}
                             renderstyle={renderstyle}
                             isothreshold={isothreshold}
+                            position={position}
+                            up={up}
                         />
                     </Suspense>
+                    <VolumeRenderControls />
+                    <PlaneControls />
                     <OrbitControls makeDefault />
 
                     <Stats />
