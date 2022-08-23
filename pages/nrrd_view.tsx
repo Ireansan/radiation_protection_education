@@ -20,6 +20,26 @@ import {
 
 import styles from "../styles/nrrd_view.module.css";
 
+const Plane = ({ ...props }) => {
+    return (
+        <>
+            <mesh {...props}>
+                <planeGeometry />
+            </mesh>
+        </>
+    );
+};
+
+const Box = ({ ...props }) => {
+    return (
+        <>
+            <mesh {...props}>
+                <boxGeometry />
+            </mesh>
+        </>
+    );
+};
+
 function VolumeRenderControls() {
     const [volumeConfig, volumeSet] = useControls(() => ({
         clim1: {
@@ -71,12 +91,6 @@ function VolumeRenderControls() {
 function PlaneControls() {
     const { mode, space } = useSnapshot(planeConfigStates);
     const [planeConfig, planeSet] = useControls(() => ({
-        position: {
-            value: { x: 0, y: 0, z: 0 },
-        },
-        rotation: {
-            value: { x: 0, y: 0, z: 0 },
-        },
         mode: {
             value: "translate",
             options: ["translate", "rotate"],
@@ -92,15 +106,7 @@ function PlaneControls() {
             },
         },
     }));
-
-    function Plane(props: any) {
-        return (
-            <mesh {...props}>
-                <planeGeometry />
-            </mesh>
-        );
-    }
-    console.log(mode, space);
+    // console.log(mode, space);
 
     return (
         <>
@@ -108,15 +114,19 @@ function PlaneControls() {
                 mode={mode}
                 space={space}
                 onChange={(e) => {
-                    if (e?.target.mode === "translate") {
-                        volumeRenderStates.position =
-                            e?.target.object?.position;
-                        console.log(e?.target.object?.position);
-                    } else if (e?.target.mode === "rotate") {
-                        volumeRenderStates.position = e?.target.object?.up;
-                        console.log(e?.target.object?.up);
-                    }
-                    // console.log(e?.target);
+                    console.log(
+                        e?.target.object?.position,
+                        e?.target.object?.rotation,
+                        e?.target.object?.up,
+                        e?.target.object?.matrix,
+                        e?.target.object
+                    );
+
+                    volumeRenderStates.position = e?.target.object?.position;
+                    var tmpMatrix4 =
+                        e?.target.object?.matrix ?? new THREE.Matrix4();
+                    volumeRenderStates.plane.applyMatrix4(tmpMatrix4);
+                    volumeRenderStates.up = volumeRenderStates.plane.up;
                 }}
             >
                 <Plane />
@@ -132,9 +142,6 @@ function PlaneControls() {
 function NRRDView() {
     const h = 512; // frustum height
     const camera = new THREE.OrthographicCamera();
-
-    const { clim1, clim2, colormap, renderstyle, isothreshold, position, up } =
-        useSnapshot(volumeRenderStates);
 
     useEffect(() => {
         const aspect = window.innerWidth / window.innerHeight;
@@ -157,20 +164,17 @@ function NRRDView() {
             <div className={styles.canvas}>
                 <Canvas camera={camera}>
                     <Suspense fallback={null}>
-                        <VolumeRender
-                            clim1={clim1}
-                            clim2={clim2}
-                            colormap={colormap}
-                            renderstyle={renderstyle}
-                            isothreshold={isothreshold}
-                            position={position}
-                            up={up}
-                        />
+                        <VolumeRender />
                     </Suspense>
 
                     <VolumeRenderControls />
                     <PlaneControls />
+                    <Plane />
                     <OrbitControls makeDefault />
+
+                    <Box position={[100, 0, 0]} scale={[50, 50, 50]} />
+                    <Box position={[0, 100, 0]} scale={[50, 50, 50]} />
+                    <Box position={[0, 0, 100]} scale={[50, 50, 50]} />
 
                     <Stats />
                 </Canvas>

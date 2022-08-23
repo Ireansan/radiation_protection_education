@@ -2,15 +2,18 @@
  * https://github.com/mrdoob/three.js/blob/master/examples/webgl2_materials_texture3d.html
  */
 
-import React from "react";
+import React, { MutableRefObject } from "react";
 
 import { useLoader } from "@react-three/fiber";
 import * as THREE from "three";
+import { useSnapshot } from "valtio";
 
 import { NRRDLoader } from "../jsm/loaders/NRRDLoader";
 import { volumeRenderShader } from "../shaders/volumeShader";
+import { volumeRenderStates } from "../states/nrrd_view.states";
 
 type volumeArgs = {
+    volume: any;
     clim1: number;
     clim2: number;
     colormap: number;
@@ -19,7 +22,8 @@ type volumeArgs = {
     position: THREE.Vector3;
     up: THREE.Vector3;
 };
-function VolumeRender({
+function VolumeRenderObject({
+    volume,
     clim1,
     clim2,
     colormap,
@@ -28,14 +32,6 @@ function VolumeRender({
     position,
     up,
 }: volumeArgs) {
-    // Load nrrd
-    var filepaths = [
-        "/models/nrrd/stent.nrrd",
-        "/models/nrrd/dose_106_200_290.nrrd",
-        "/models/nrrd/dose_d100.nrrd",
-    ];
-    const volume: any = useLoader(NRRDLoader, filepaths[2]);
-
     // Colormap textures
     const cmtextures = [
         new THREE.TextureLoader().load("textures/cm_viridis.png"),
@@ -64,13 +60,16 @@ function VolumeRender({
     uniforms.u_renderstyle.value = renderstyle === "mip" ? 0 : 1; // 0: MIP, 1: ISO
     uniforms.u_renderthreshold.value = isothreshold; // For ISO renderstyle
     uniforms.u_cmdata.value = cmtextures[colormap];
-    uniforms.u_planeposition.copy(position);
-    uniforms.u_planeup.copy(up);
+    uniforms.u_plane_position.value.copy(position);
+    uniforms.u_plane_up.value.copy(up);
     const material = new THREE.ShaderMaterial({
         uniforms: uniforms,
         vertexShader: shader.vertexShader,
         fragmentShader: shader.fragmentShader,
-        side: THREE.BackSide, // The volume shader uses the backface as its "reference point"
+        side: THREE.DoubleSide, // The volume shader uses the backface as its "reference point"
+        // side: THREE.BackSide, // The volume shader uses the backface as its "reference point"
+        clipping: true,
+        // clippingPlanes: [plane],
     });
 
     const geometry = new THREE.BoxGeometry(
@@ -79,14 +78,52 @@ function VolumeRender({
         volume.zLength
     );
     geometry.translate(
-        volume.xLength / 2 - 0.5,
-        volume.yLength / 2 - 0.5,
-        volume.zLength / 2 - 0.5
+        volume.xLength / 2,
+        volume.yLength / 2,
+        volume.zLength / 2
     );
+    console.log(position, up);
 
     return (
         <>
             <mesh geometry={geometry} material={material} />
+        </>
+    );
+}
+
+function VolumeRender() {
+    const {
+        clim1,
+        clim2,
+        colormap,
+        renderstyle,
+        isothreshold,
+        position,
+        up,
+        plane,
+    } = useSnapshot(volumeRenderStates);
+
+    // Load nrrd
+    var filepaths = [
+        "/models/nrrd/stent.nrrd",
+        "/models/nrrd/dose_106_200_290.nrrd",
+        "/models/nrrd/dose_d100.nrrd",
+    ];
+    // const volume: any = useLoader(NRRDLoader, filepaths[2]);
+    const volume: any = useLoader(NRRDLoader, filepaths[0]);
+
+    return (
+        <>
+            <VolumeRenderObject
+                volume={volume}
+                clim1={clim1}
+                clim2={clim2}
+                colormap={colormap}
+                renderstyle={renderstyle}
+                isothreshold={isothreshold}
+                position={position}
+                up={plane.up}
+            />
         </>
     );
 }
