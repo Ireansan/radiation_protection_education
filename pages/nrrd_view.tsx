@@ -6,7 +6,7 @@ import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import React, { useEffect, useRef, Suspense } from "react";
 
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, TransformControls, Stats } from "@react-three/drei";
 import * as THREE from "three";
 import { useControls } from "leva";
@@ -89,6 +89,7 @@ function VolumeRenderControls() {
 }
 
 function PlaneControls() {
+    const { plane } = useSnapshot(volumeRenderStates);
     const { mode, space } = useSnapshot(planeConfigStates);
     const [planeConfig, planeSet] = useControls(() => ({
         mode: {
@@ -114,23 +115,19 @@ function PlaneControls() {
                 mode={mode}
                 space={space}
                 onChange={(e) => {
-                    console.log(
-                        e?.target.object?.position,
-                        e?.target.object?.rotation,
-                        e?.target.object?.up,
-                        e?.target.object?.matrix,
-                        e?.target.object
-                    );
+                    console.log(e?.target.object);
 
                     volumeRenderStates.position = e?.target.object?.position;
+                    var tmpPosition =
+                        e?.target.object?.position ?? new THREE.Vector3();
                     var tmpMatrix4 =
                         e?.target.object?.matrix ?? new THREE.Matrix4();
                     volumeRenderStates.plane.applyMatrix4(tmpMatrix4);
-                    volumeRenderStates.up = volumeRenderStates.plane.up;
+                    volumeRenderStates.plane.constant =
+                        -volumeRenderStates.plane.normal.dot(tmpPosition);
                 }}
-            >
-                <Plane />
-            </TransformControls>
+            />
+            <planeHelper args={[plane, 250]} />
         </>
     );
 }

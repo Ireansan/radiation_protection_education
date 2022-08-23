@@ -1,6 +1,6 @@
 import { proxy } from "valtio";
 import * as THREE from "three";
-import type { Object3D as TypeObject3D } from "three";
+import { Object3D as TypeObject3D, Vector3 } from "three";
 
 class VolumeRenderStates {
     volume: any = null;
@@ -11,7 +11,7 @@ class VolumeRenderStates {
     isothreshold: number = 0.15;
     position: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
     up: THREE.Vector3 = new THREE.Vector3(0, 0, 1);
-    plane: TypeObject3D = new THREE.Object3D();
+    plane: THREE.Plane = new THREE.Plane(new Vector3(0, 0, 1), 0);
 }
 
 class PlaneConfigStates {

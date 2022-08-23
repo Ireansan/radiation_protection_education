@@ -4,7 +4,7 @@
 
 import React, { MutableRefObject } from "react";
 
-import { useLoader } from "@react-three/fiber";
+import { useLoader, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useSnapshot } from "valtio";
 
@@ -19,8 +19,7 @@ type volumeArgs = {
     colormap: number;
     renderstyle: string;
     isothreshold: number;
-    position: THREE.Vector3;
-    up: THREE.Vector3;
+    plane: THREE.Plane;
 };
 function VolumeRenderObject({
     volume,
@@ -29,9 +28,11 @@ function VolumeRenderObject({
     colormap,
     renderstyle,
     isothreshold,
-    position,
-    up,
+    plane,
 }: volumeArgs) {
+    const { gl } = useThree();
+    gl.localClippingEnabled = true;
+
     // Colormap textures
     const cmtextures = [
         new THREE.TextureLoader().load("textures/cm_viridis.png"),
@@ -60,16 +61,13 @@ function VolumeRenderObject({
     uniforms.u_renderstyle.value = renderstyle === "mip" ? 0 : 1; // 0: MIP, 1: ISO
     uniforms.u_renderthreshold.value = isothreshold; // For ISO renderstyle
     uniforms.u_cmdata.value = cmtextures[colormap];
-    uniforms.u_plane_position.value.copy(position);
-    uniforms.u_plane_up.value.copy(up);
     const material = new THREE.ShaderMaterial({
         uniforms: uniforms,
         vertexShader: shader.vertexShader,
         fragmentShader: shader.fragmentShader,
-        side: THREE.DoubleSide, // The volume shader uses the backface as its "reference point"
-        // side: THREE.BackSide, // The volume shader uses the backface as its "reference point"
+        side: THREE.BackSide, // The volume shader uses the backface as its "reference point"
         clipping: true,
-        // clippingPlanes: [plane],
+        clippingPlanes: [plane],
     });
 
     const geometry = new THREE.BoxGeometry(
@@ -82,7 +80,7 @@ function VolumeRenderObject({
         volume.yLength / 2,
         volume.zLength / 2
     );
-    console.log(position, up);
+    console.log(plane);
 
     return (
         <>
@@ -121,8 +119,7 @@ function VolumeRender() {
                 colormap={colormap}
                 renderstyle={renderstyle}
                 isothreshold={isothreshold}
-                position={position}
-                up={plane.up}
+                plane={plane}
             />
         </>
     );

@@ -1,10 +1,8 @@
 /**
- * https://codesandbox.io/s/grass-shader-5xho4?file=/src/GrassMaterial.js
- * https://codesandbox.io/s/shader-fire-3878x?file=/src/shaders/Fire.js
- *
- * https://codesandbox.io/s/gpgpu-curl-noise-dof-zgsyn?file=/src/shaders/dofPointsMaterial.js
- *
- * https://stackoverflow.com/questions/71070802/react-three-fiber-sending-uniforms-to-custom-shader-with-typescript
+ * Original:
+ * 	https://github.com/mrdoob/three.js/blob/dev/examples/jsm/shaders/VolumeShader.js
+ * 
+ * https://stackoverflow.com/questions/42532545/add-clipping-to-three-shadermaterial
  *
  */
 
@@ -18,8 +16,6 @@ const volumeRenderShader = {
         u_clim: { value: new THREE.Vector2(1, 1) },
         u_data: { value: null },
         u_cmdata: { value: null },
-		u_plane_position: { value: new THREE.Vector3(0, 0, 0) },
-		u_plane_up: { value: new THREE.Vector3(0, 0, 1) },
     },
 
     vertexShader: /* glsl */ 
@@ -28,7 +24,13 @@ varying vec4 v_nearpos;
 varying vec4 v_farpos;
 varying vec3 v_position;
 
+// https://github.com/mrdoob/three.js/blob/dev/src/renderers/shaders/ShaderChunk/clipping_planes_pars_vertex.glsl.js
+#include <clipping_planes_pars_vertex>
+
 void main() {
+	// https://github.com/mrdoob/three.js/blob/dev/src/renderers/shaders/ShaderChunk/begin_vertex.glsl.js
+	#include <begin_vertex>
+
 	// Prepare transforms to map to "camera view". See also:
 	// https://threejs.org/docs/#api/renderers/webgl/WebGLProgram
 	mat4 viewtransformf = modelViewMatrix;
@@ -52,6 +54,11 @@ void main() {
 	// Set varyings and output pos
 	v_position = position;
 	gl_Position = projectionMatrix * viewMatrix * modelMatrix * position4;
+
+	// https://github.com/mrdoob/three.js/blob/dev/src/renderers/shaders/ShaderChunk/project_vertex.glsl.js
+	// https://github.com/mrdoob/three.js/blob/dev/src/renderers/shaders/ShaderChunk/clipping_planes_vertex.glsl.js
+	#include <project_vertex>
+	#include <clipping_planes_vertex>
 }
 `,
     fragmentShader: /* glsl */ 
@@ -63,9 +70,6 @@ uniform vec3 u_size;
 uniform int u_renderstyle;
 uniform float u_renderthreshold;
 uniform vec2 u_clim;
-
-uniform vec3 u_plane_position;
-uniform vec3 u_plane_up;
 
 uniform sampler3D u_data;
 uniform sampler2D u_cmdata;
@@ -83,10 +87,12 @@ const vec4 diffuse_color=vec4(.8,.2,.2,1.);
 const vec4 specular_color=vec4(1.,1.,1.,1.);
 const float shininess=40.;
 
+// https://github.com/mrdoob/three.js/blob/dev/src/renderers/shaders/ShaderChunk/clipping_planes_pars_fragment.glsl.js
+#include <clipping_planes_pars_fragment>
+
 void cast_mip(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray);
 void cast_iso(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray);
 
-float vPosition(vec3 position);
 float sample1(vec3 texcoords);
 vec4 apply_colormap(float val);
 vec4 add_lighting(float val,vec3 loc,vec3 step,vec3 view_ray);
@@ -127,8 +133,8 @@ void main(){
 	//'gl_FragColor = vec4(0.0, float(nsteps) / 1.0 / u_size.x, 1.0, 1.0);
 	//'return;
 
-	// FIXME:
-	if (vPosition(v_position)>0.) discard;
+	// https://github.com/mrdoob/three.js/blob/dev/src/renderers/shaders/ShaderChunk/clipping_planes_fragment.glsl.js
+	#include <clipping_planes_fragment>
 
 	if(u_renderstyle==0)
 	cast_mip(start_loc,step,nsteps,view_ray);
@@ -137,11 +143,6 @@ void main(){
 	
 	if(gl_FragColor.a<.05)
 	discard;
-}
-
-float vPosition(vec3 position){
-	vec3 direction=position-u_plane_position;
-	return dot(u_plane_up, direction);
 }
 
 float sample1(vec3 texcoords){
