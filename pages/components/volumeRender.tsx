@@ -2,7 +2,7 @@
  * https://github.com/mrdoob/three.js/blob/master/examples/webgl2_materials_texture3d.html
  */
 
-import React, { MutableRefObject } from "react";
+import React from "react";
 
 import { useLoader, useThree } from "@react-three/fiber";
 import * as THREE from "three";
@@ -10,7 +10,10 @@ import { useSnapshot } from "valtio";
 
 import { NRRDLoader } from "../jsm/loaders/NRRDLoader";
 import { volumeRenderShader } from "../shaders/volumeShader";
-import { volumeRenderStates } from "../states/nrrd_view.states";
+import {
+    volumeRenderStates,
+    clippingPlaneStore,
+} from "../states/nrrd_view.states";
 
 type volumeArgs = {
     volume: any;
@@ -80,7 +83,6 @@ function VolumeRenderObject({
         volume.yLength / 2,
         volume.zLength / 2
     );
-    console.log(plane);
 
     return (
         <>
@@ -90,16 +92,9 @@ function VolumeRenderObject({
 }
 
 function VolumeRender() {
-    const {
-        clim1,
-        clim2,
-        colormap,
-        renderstyle,
-        isothreshold,
-        position,
-        up,
-        plane,
-    } = useSnapshot(volumeRenderStates);
+    const { clim1, clim2, colormap, renderstyle, isothreshold } =
+        useSnapshot(volumeRenderStates);
+    const plane: THREE.Plane = clippingPlaneStore((state) => state.plane);
 
     // Load nrrd
     var filepaths = [

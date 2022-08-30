@@ -4,7 +4,7 @@
 
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
-import React, { useEffect, useRef, useState, Suspense } from "react";
+import React, { useEffect, useRef, Suspense } from "react";
 
 import { Canvas, useThree } from "@react-three/fiber";
 import {
@@ -14,7 +14,6 @@ import {
     GizmoHelper,
     GizmoViewport,
 } from "@react-three/drei";
-import type { TransformControls as TransformControlsType } from "@react-three/drei";
 import * as THREE from "three";
 import { TransformControls as TransformControlsLib } from "three-stdlib";
 import { useControls } from "leva";
@@ -58,7 +57,8 @@ const radToDegree = (r: number): number => {
     return (180 / Math.PI) * r;
 };
 
-function VolumeRenderControls() {
+/** */
+function VolumeRenderConfigControls() {
     const [volumeConfig, volumeSet] = useControls(() => ({
         clim1: {
             value: 0,
@@ -106,19 +106,11 @@ function VolumeRenderControls() {
     return <></>;
 }
 
-function ClippingPlaneTransformControls() {
+/** */
+function ClippingPlaneControls() {
     const meshRef = useRef<THREE.Mesh>(new THREE.Mesh());
-    const { camera, gl } = useThree();
-    const transformRef = useRef<TransformControlsLib>(
-        new TransformControlsLib(camera, gl.domElement)
-    );
-    // const { plane, position, constant, updatePlane } =
-    //     useSnapshot(clippingPlaneStates);
     const { plane, position, setPosition, matrix, setMatrix, setPlane } =
         clippingPlaneStore();
-    const { mode, space, position_base, rotation_base } = useSnapshot(
-        transformConfigStates
-    );
     const [planeConfig, setConfig] = useControls(() => ({
         position: {
             value: { x: 0, y: 0, z: 0 },
@@ -128,24 +120,7 @@ function ClippingPlaneTransformControls() {
                 setPlane();
 
                 meshRef.current.position.copy(position_);
-                // transformRef.current.gizmo.worldPostion?.copy(position_);
-                // transformRef.current.worldPostion?.copy(position_);
-                const matrix_ = new THREE.Matrix4();
-                matrix_.copy(matrix);
-                matrix_.setPosition(position_);
-                // transformRef.current.children[0].worldPosition.copy(position_);
-
-                console.log(
-                    "event planeConfig translate",
-                    e,
-                    position,
-                    transformRef.current,
-                    transformRef.current.children[0],
-                    transformRef.current.children[1]
-                );
-
-                const event: Event = new Event("objectChange");
-                gl.domElement.dispatchEvent(event);
+                console.log("event planeConfig translate", e, position);
             },
             step: 1,
         },
@@ -162,12 +137,11 @@ function ClippingPlaneTransformControls() {
                 setMatrix(matrix_);
                 setPlane();
 
+                meshRef.current.matrix.copy(matrix_);
                 // meshRef.current.rotation.copy(rotation_);
                 const quaternion_: THREE.Quaternion = new THREE.Quaternion();
                 quaternion_.setFromEuler(rotation_);
                 meshRef.current.quaternion.copy(quaternion_);
-                // transformRef.current.gizmo.worldQuaternion?.copy(quaternion_);
-                transformRef.current.applyMatrix4(matrix_);
 
                 console.log(
                     "event planeConfig rotate",
@@ -175,11 +149,33 @@ function ClippingPlaneTransformControls() {
                     rotation_,
                     matrix_,
                     matrix
-                    // transformRef.current,
                 );
             },
             step: 1,
         },
+    }));
+
+    return (
+        <>
+            <planeHelper args={[plane, 250]} />
+            <mesh ref={meshRef} scale={[100, 100, 100]}>
+                <planeGeometry />
+            </mesh>
+        </>
+    );
+}
+
+/** */
+function ClippingPlaneTransformControls() {
+    const meshRef = useRef<THREE.Mesh>(new THREE.Mesh());
+    const { camera, gl } = useThree();
+    const transformRef = useRef<TransformControlsLib>(
+        new TransformControlsLib(camera, gl.domElement)
+    );
+    const { plane, position, setPosition, matrix, setMatrix, setPlane } =
+        clippingPlaneStore();
+    const { mode, space } = useSnapshot(transformConfigStates);
+    const [planeConfig, setConfig] = useControls(() => ({
         mode: {
             value: "translate",
             options: ["translate", "rotate"],
@@ -196,7 +192,36 @@ function ClippingPlaneTransformControls() {
         },
     }));
     // console.log(mode, space);
-    useEffect(() => {}, []);
+    const onObjectChange = (e: THREE.Event | undefined) => {
+        if (mode === "translate") {
+            const position_: THREE.Vector3 =
+                e?.target.object.position ?? new THREE.Vector3();
+            setPosition(position_);
+            setPlane();
+
+            meshRef.current.position.copy(position_);
+
+            console.log(
+                "chnage Obj translate",
+                position_,
+                e?.target.object.position
+            );
+        } else if (mode === "rotate") {
+            const rotation_: THREE.Euler =
+                transformRef.current.rotation ?? new THREE.Euler();
+            const matrix_ = new THREE.Matrix4();
+            matrix_.makeRotationFromEuler(rotation_);
+            setMatrix(matrix_);
+            setPlane();
+
+            meshRef.current.matrix.copy(matrix_);
+            console.log(
+                "chnage Obj rotate",
+                e?.target.object.rotation,
+                e?.target.object.quaternion
+            );
+        }
+    };
 
     return (
         <>
@@ -205,38 +230,7 @@ function ClippingPlaneTransformControls() {
                 mode={mode}
                 space={space}
                 onObjectChange={(e) => {
-                    if (mode === "translate") {
-                        const position_: THREE.Vector3 =
-                            // transformRef.current.gizmo.worldPosition ??
-                            e?.target.object.position ?? new THREE.Vector3();
-                        setConfig({
-                            position: {
-                                x: position_.x,
-                                y: position_.y,
-                                z: position_.z,
-                            },
-                        });
-                        console.log(
-                            "chnage Obj translate",
-                            position_,
-                            e?.target.object.position
-                        );
-                    } else if (mode === "rotate") {
-                        const rotation_euler: THREE.Euler =
-                            transformRef.current.rotation ?? new THREE.Euler();
-                        setConfig({
-                            rotation: {
-                                x: radToDegree(rotation_euler.x),
-                                y: radToDegree(rotation_euler.y),
-                                z: radToDegree(rotation_euler.z),
-                            },
-                        });
-                        console.log(
-                            "chnage Obj rotate",
-                            e?.target.object.rotation,
-                            e?.target.object.quaternion
-                        );
-                    }
+                    onObjectChange(e);
                 }}
             />
             <planeHelper args={[plane, 250]} />
@@ -279,7 +273,7 @@ function NRRDView() {
                         <VolumeRender />
                     </Suspense>
 
-                    <VolumeRenderControls />
+                    <VolumeRenderConfigControls />
                     <ClippingPlaneTransformControls />
                     <Plane />
                     <OrbitControls makeDefault />
