@@ -2,9 +2,9 @@
  * https://github.com/mrdoob/three.js/blob/master/examples/webgl2_materials_texture3d.html
  */
 
-import React from "react";
+import React, { useRef, useLayoutEffect } from "react";
 
-import { useLoader, useThree } from "@react-three/fiber";
+import { useLoader, useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useSnapshot } from "valtio";
 
@@ -17,6 +17,7 @@ import {
 
 type volumeArgs = {
     volume: any;
+    cmtextures: THREE.Texture[];
     clim1: number;
     clim2: number;
     colormap: number;
@@ -26,6 +27,7 @@ type volumeArgs = {
 };
 function VolumeRenderObject({
     volume,
+    cmtextures,
     clim1,
     clim2,
     colormap,
@@ -36,43 +38,12 @@ function VolumeRenderObject({
     const { gl } = useThree();
     gl.localClippingEnabled = true;
 
-    // Colormap textures
-    const cmtextures = [
-        new THREE.TextureLoader().load("textures/cm_viridis.png"),
-        new THREE.TextureLoader().load("textures/cm_gray.png"),
-    ];
-
-    // Texture
-    const texture = new THREE.Data3DTexture(
-        volume.data,
-        volume.xLength,
-        volume.yLength,
-        volume.zLength
-    );
-    texture.format = THREE.RedFormat;
-    texture.type = THREE.FloatType;
-    texture.minFilter = texture.magFilter = THREE.LinearFilter;
-    texture.unpackAlignment = 1;
-    texture.needsUpdate = true;
-
     // Material
-    const shader = volumeRenderShader;
-    const uniforms = THREE.UniformsUtils.clone(shader.uniforms);
-    uniforms.u_data.value = texture;
-    uniforms.u_size.value.set(volume.xLength, volume.yLength, volume.zLength);
-    uniforms.u_clim.value.set(clim1, clim2);
-    uniforms.u_renderstyle.value = renderstyle === "mip" ? 0 : 1; // 0: MIP, 1: ISO
-    uniforms.u_renderthreshold.value = isothreshold; // For ISO renderstyle
-    uniforms.u_cmdata.value = cmtextures[colormap];
-    const material = new THREE.ShaderMaterial({
-        uniforms: uniforms,
-        vertexShader: shader.vertexShader,
-        fragmentShader: shader.fragmentShader,
-        side: THREE.BackSide, // The volume shader uses the backface as its "reference point"
-        clipping: true,
-        clippingPlanes: [plane],
-    });
+    const materialRef = useRef<THREE.ShaderMaterial>(
+        new THREE.ShaderMaterial()
+    );
 
+    // Geometry
     const geometry = new THREE.BoxGeometry(
         volume.xLength,
         volume.yLength,
@@ -84,31 +55,83 @@ function VolumeRenderObject({
         volume.zLength / 2
     );
 
+    useLayoutEffect(() => {
+        // Texture
+        const texture = new THREE.Data3DTexture(
+            volume.data,
+            volume.xLength,
+            volume.yLength,
+            volume.zLength
+        );
+        texture.format = THREE.RedFormat;
+        texture.type = THREE.FloatType;
+        texture.minFilter = texture.magFilter = THREE.LinearFilter;
+        texture.unpackAlignment = 1;
+        texture.needsUpdate = true;
+
+        // Material
+        const shader = volumeRenderShader;
+        materialRef.current.vertexShader = shader.vertexShader;
+        materialRef.current.fragmentShader = shader.fragmentShader;
+
+        const uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+        uniforms.u_data.value = texture;
+        uniforms.u_size.value.set(
+            volume.xLength,
+            volume.yLength,
+            volume.zLength
+        );
+        uniforms.u_clim.value.set(clim1, clim2);
+        uniforms.u_renderstyle.value = renderstyle === "mip" ? 0 : 1; // 0: MIP, 1: ISO
+        uniforms.u_renderthreshold.value = isothreshold; // For ISO renderstyle
+        uniforms.u_cmdata.value = cmtextures[colormap];
+        materialRef.current.uniforms = uniforms;
+
+        materialRef.current.side = THREE.BackSide; // The volume shader uses the backface as its "reference point"
+        materialRef.current.clipping = true;
+        materialRef.current.clippingPlanes = [plane];
+    }, []);
+
+    useFrame(() => {
+        materialRef.current.uniforms.u_clim.value.set(clim1, clim2);
+        materialRef.current.uniforms.u_renderstyle.value =
+            renderstyle === "mip" ? 0 : 1; // 0: MIP, 1: ISO
+        materialRef.current.uniforms.u_renderthreshold.value = isothreshold; // For ISO renderstyle
+        materialRef.current.uniforms.u_cmdata.value = cmtextures[colormap];
+        materialRef.current.clippingPlanes = [plane];
+    });
+
     return (
         <>
-            <mesh geometry={geometry} material={material} />
+            <mesh geometry={geometry}>
+                <shaderMaterial ref={materialRef} />
+            </mesh>
         </>
     );
 }
 
-function VolumeRender() {
+type volumeRenderArg = {
+    filepath: string;
+};
+function VolumeRender({ filepath }: volumeRenderArg) {
     const { clim1, clim2, colormap, renderstyle, isothreshold } =
         useSnapshot(volumeRenderStates);
     const plane: THREE.Plane = clippingPlaneStore((state) => state.plane);
 
     // Load nrrd
-    var filepaths = [
-        "/models/nrrd/stent.nrrd",
-        "/models/nrrd/dose_106_200_290.nrrd",
-        "/models/nrrd/dose_d100.nrrd",
+    const volume: any = useLoader(NRRDLoader, filepath);
+
+    // Colormap textures
+    const cmtextures = [
+        new THREE.TextureLoader().load("textures/cm_viridis.png"),
+        new THREE.TextureLoader().load("textures/cm_gray.png"),
     ];
-    // const volume: any = useLoader(NRRDLoader, filepaths[2]);
-    const volume: any = useLoader(NRRDLoader, filepaths[0]);
 
     return (
         <>
             <VolumeRenderObject
                 volume={volume}
+                cmtextures={cmtextures}
                 clim1={clim1}
                 clim2={clim2}
                 colormap={colormap}

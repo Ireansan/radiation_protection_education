@@ -10,6 +10,7 @@ class VolumeRenderStates {
     renderstyle: string = "iso";
     isothreshold: number = 0.15;
 }
+const volumeRenderStates = proxy(new VolumeRenderStates());
 
 interface ClippingPlaneStates {
     position: THREE.Vector3;
@@ -17,6 +18,7 @@ interface ClippingPlaneStates {
     matrix: THREE.Matrix4;
     setMatrix: (matrix: THREE.Matrix4) => void;
     normal: number[];
+    setNormal: ([x, y, z]: number[]) => void;
     plane: THREE.Plane;
     setPlane: () => void;
 }
@@ -31,6 +33,9 @@ const clippingPlaneStore = create<ClippingPlaneStates>((set, get) => {
             set((state) => ({ matrix: matrix }));
         },
         normal: [0, 0, -1],
+        setNormal: ([x, y, z]: number[]) => {
+            set((state) => ({ normal: [x, y, z] }));
+        },
         plane: new THREE.Plane(new THREE.Vector3(0, 0, -1), 0),
         setPlane: () => {
             const { normal, position, matrix } = get();
@@ -47,45 +52,22 @@ const clippingPlaneStore = create<ClippingPlaneStates>((set, get) => {
     };
 });
 
-/*
-class ClippingPlaneStates {
-    position: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
-    matrix: THREE.Matrix4 = new THREE.Matrix4();
-    normal: number[] = [0, 0, -1];
-    normal_vector: THREE.Vector3 = new THREE.Vector3().fromArray(this.normal);
-    constant: number = 0;
-    plane = new THREE.Plane(this.normal_vector, 0);;
-
-    calcNormal(): THREE.Vector3 {
-        console.log("update Normal");
-        const normal_vec: THREE.Vector3 = new THREE.Vector3().fromArray(this.normal);
-        return normal_vec.transformDirection(this.matrix);
-    }
-
-    calcConstant(): number {
-        return -this.normal_vector.dot(this.position);
-    }
-
-    updatePlane(): void {
-        console.log("update Plane");
-        this.normal_vector = this.calcNormal();
-        this.constant = this.calcConstant();
-        console.log(this.constant)
-
-        this.plane.set(this.normal_vector, this.constant);
-    }
-}
-*/
-
 class TransformConfigStates {
     mode: string = "translate";
     space: string = "world";
-    position_base: THREE.Vector3 = new THREE.Vector3();
-    rotation_base: THREE.Vector3 = new THREE.Vector3();
 }
-
-const volumeRenderStates = proxy(new VolumeRenderStates());
-// const clippingPlaneStates = proxy(new ClippingPlaneStates());
 const transformConfigStates = proxy(new TransformConfigStates());
 
-export { volumeRenderStates, clippingPlaneStore, transformConfigStates };
+
+class ClippingPlaneStates {
+    position: THREE.Vector3 = new THREE.Vector3();
+    rotation: THREE.Euler = new THREE.Euler();
+}
+class TypeConfigStates {
+    configType: string = "type 1";
+    controlsStates: ClippingPlaneStates = new ClippingPlaneStates();
+    transfromControlsStates: ClippingPlaneStates = new ClippingPlaneStates();
+}
+const typeConfigStates = proxy(new TypeConfigStates());
+
+export { volumeRenderStates, clippingPlaneStore, transformConfigStates, typeConfigStates };
