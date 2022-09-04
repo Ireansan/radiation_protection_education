@@ -15,9 +15,8 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 
-import { VolumeRender } from "./components/volumeRender";
-// import { VolumeRender } from "./components/volumeRenderCustom";
-import { VolumeRenderControls } from "./components/volumeRenderControls";
+import VolumeRender from "../components/volumeRender";
+import VolumeRenderControls from "../components/volumeRender.Controls";
 
 import styles from "../styles/nrrd_view.module.css";
 

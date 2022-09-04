@@ -8,12 +8,10 @@ import { useLoader, useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useSnapshot } from "valtio";
 
-import { NRRDLoader } from "../jsm/loaders/NRRDLoader";
-import { volumeRenderShader } from "../shaders/volumeShader";
-import {
-    volumeRenderStates,
-    clippingPlaneStore,
-} from "../states/nrrd_view.states";
+import { NRRDLoader } from "../lib/jsm/loaders/NRRDLoader";
+import volumeRenderShader from "../lib/shaders/volumeShader";
+import volumeRenderStates from "../lib/states/volumeRender.state";
+import clippingPlaneStore from "../lib/states/clippingPlane.state";
 
 type volumeArgs = {
     volume: any;
@@ -143,4 +141,4 @@ function VolumeRender({ filepath }: volumeRenderArg) {
     );
 }
 
-export { VolumeRender };
+export default VolumeRender;

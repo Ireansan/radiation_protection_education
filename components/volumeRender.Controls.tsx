@@ -6,13 +6,14 @@ import { TransformControls as TransformControlsLib } from "three-stdlib";
 import { useControls, folder } from "leva";
 import { useSnapshot } from "valtio";
 
+import volumeRenderStates from "../lib/states/volumeRender.state";
 import {
-    volumeRenderStates,
-    clippingPlaneStore,
     transformConfigStates,
     typeConfigStates,
-} from "../states/nrrd_view.states";
+} from "../lib/states/volumeRender.Controls.state";
+import clippingPlaneStore from "../lib/states/clippingPlane.state";
 
+/** */
 const degreeToRad = (d: number): number => {
     return (Math.PI / 180) * d;
 };
@@ -233,4 +234,4 @@ function VolumeRenderControls() {
     );
 }
 
-export { VolumeRenderControls };
+export default VolumeRenderControls;
