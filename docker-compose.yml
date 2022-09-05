@@ -1,11 +1,22 @@
+####################
+# Original:
+#   https://github.com/vercel/next.js/blob/canary/examples/with-docker-compose/docker-compose.dev.yml
+# 
+# Command Note:
+#   $ docker compose -f docker-compose.yml build
+#   $ docker compose -f docker-compose.yml up
+####################
+
 version: '3'
 
 services:
-  next:
+  nextjs:
+    container_name: nextjs
     build:
       context: .
-    container_name: nextjs
+      dockerfile: ./dev.Dockerfile
     volumes:
       - .:/app
+      - /app/node_modules
     ports:
       - 3000:3000
