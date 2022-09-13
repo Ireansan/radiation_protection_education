@@ -20,4 +20,12 @@ class TypeConfigStates {
 }
 const typeConfigStates = proxy(new TypeConfigStates());
 
-export { transformConfigStates, typeConfigStates };
+/** */
+class AnimationStates {
+    animation: boolean = true
+    animate: boolean = true
+    speed: number = 0.1
+}
+const animationStates = proxy(new AnimationStates());
+
+export { transformConfigStates, typeConfigStates, animationStates };

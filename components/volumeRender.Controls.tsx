@@ -10,6 +10,7 @@ import volumeRenderStates from "../lib/states/volumeRender.state";
 import {
     transformConfigStates,
     typeConfigStates,
+    animationStates,
 } from "../lib/states/volumeRender.Controls.state";
 import clippingPlaneStore from "../lib/states/clippingPlane.state";
 
@@ -193,11 +194,37 @@ function ClippingPlaneControls() {
 }
 
 /** */
+function AnimationControls() {
+    const { animate } = useSnapshot(animationStates);
+    const animationCofig = useControls("animation", {
+        animate: {
+            value: true,
+            onChange: (e) => {
+                animationStates.animate = e;
+            },
+        },
+        speed: {
+            value: 0.3,
+            min: 0,
+            max: 2,
+            render: () => animate,
+            onChange: (e) => {
+                animationStates.speed = e;
+            },
+        },
+    });
+
+    return <></>;
+}
+
+/** */
 function VolumeRenderControls() {
     const { position, setPosition, matrix, setMatrix, setPlane } =
         clippingPlaneStore();
     const { configType, controlsStates, transfromControlsStates } =
         useSnapshot(typeConfigStates);
+    const { animation } = useSnapshot(animationStates);
+
     const [typeConfig, setConfig] = useControls(() => ({
         type: {
             value: "type 1",
@@ -230,6 +257,7 @@ function VolumeRenderControls() {
             <VolumeRenderConfigControls />
             {configType === "type 1" && <ClippingPlaneTransformControls />}
             {configType === "type 2" && <ClippingPlaneControls />}
+            {animation && <AnimationControls />}
         </>
     );
 }

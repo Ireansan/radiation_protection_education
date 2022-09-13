@@ -1,7 +1,3 @@
-/**
- * https://github.com/mrdoob/three.js/blob/master/examples/webgl2_materials_texture3d.html
- */
-
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import React, { useEffect, Suspense } from "react";
@@ -20,38 +16,14 @@ import VolumeRenderControls from "../components/volumeRender.Controls";
 
 import styles from "../styles/nrrd_view.module.css";
 
-const Plane = ({ ...props }) => {
-    return (
-        <>
-            <mesh {...props}>
-                <planeGeometry />
-            </mesh>
-        </>
-    );
-};
-
-const Box = ({ ...props }) => {
-    return (
-        <>
-            <mesh {...props}>
-                <boxGeometry />
-            </mesh>
-        </>
-    );
-};
-
-/**
- * https://zenn.dev/hironorioka28/articles/8247133329d64e
- * @returns
- */
-function NRRDView() {
+function DoseVisualization() {
     const h = 512; // frustum height
     const camera = new THREE.OrthographicCamera();
 
     // nrrd
     var filepaths = [
-        "/models/nrrd/stent.nrrd",
         "/models/nrrd/dose_106_200_290.nrrd",
+        "/models/nrrd/stent.nrrd",
         "/models/nrrd/dose_d100.nrrd",
     ];
 
@@ -76,13 +48,11 @@ function NRRDView() {
             <div className={styles.canvas}>
                 <Canvas camera={camera}>
                     <Suspense fallback={null}>
-                        <VolumeRender filepath={filepaths[0]} />
+                        <VolumeRender filepath={filepaths} />
                     </Suspense>
 
                     <VolumeRenderControls />
                     <OrbitControls makeDefault />
-
-                    {/* <Box scale={[5, 50, 5]} position={[-10, 4.6, -3]} /> */}
 
                     <Stats />
                     <GizmoHelper
@@ -101,4 +71,4 @@ function NRRDView() {
     );
 }
 
-export default NRRDView;
+export default DoseVisualization;
