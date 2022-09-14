@@ -70,14 +70,19 @@ function VolumeRenderConfigControls() {
 
 /** */
 function ClippingPlaneTransformControls() {
+    const { plane, setPosition, setMatrix, setPlane } = clippingPlaneStore();
+    const { mode, space } = useSnapshot(transformConfigStates);
+    const { transfromControlsStates } = useSnapshot(typeConfigStates);
+
+    const planeRef = useRef<THREE.PlaneHelper>(
+        new THREE.PlaneHelper(plane, 250)
+    );
     const meshRef = useRef<THREE.Mesh>(new THREE.Mesh());
     const { camera, gl } = useThree();
     const transformRef = useRef<TransformControlsLib>(
         new TransformControlsLib(camera, gl.domElement)
     );
-    const { plane, setPosition, setMatrix, setPlane } = clippingPlaneStore();
-    const { mode, space } = useSnapshot(transformConfigStates);
-    const { transfromControlsStates } = useSnapshot(typeConfigStates);
+
     const [planeConfig, setConfig] = useControls(() => ({
         mode: {
             value: "translate",
@@ -135,7 +140,7 @@ function ClippingPlaneTransformControls() {
                     onObjectChange(e);
                 }}
             />
-            <planeHelper args={[plane, 250]} />
+            <planeHelper ref={planeRef} />
             <mesh ref={meshRef} scale={[100, 100, 100]}>
                 <planeGeometry />
             </mesh>
@@ -145,8 +150,13 @@ function ClippingPlaneTransformControls() {
 
 /** */
 function ClippingPlaneControls() {
-    const meshRef = useRef<THREE.Mesh>(new THREE.Mesh());
     const { plane, setPosition, setMatrix, setPlane } = clippingPlaneStore();
+
+    const planeRef = useRef<THREE.PlaneHelper>(
+        new THREE.PlaneHelper(plane, 250)
+    );
+    const meshRef = useRef<THREE.Mesh>(new THREE.Mesh());
+
     const [planeConfig, setConfig] = useControls(() => ({
         position: {
             value: { x: 0, y: 0, z: 0 },
@@ -185,7 +195,7 @@ function ClippingPlaneControls() {
 
     return (
         <>
-            <planeHelper args={[plane, 250]} />
+            <planeHelper ref={planeRef} />
             <mesh ref={meshRef} scale={[100, 100, 100]}>
                 <planeGeometry />
             </mesh>
