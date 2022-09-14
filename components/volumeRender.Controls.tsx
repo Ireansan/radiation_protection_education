@@ -202,7 +202,7 @@ function ClippingPlaneControls() {
 
     return (
         <>
-            <planeHelper plane={plane} size={250} />
+            <planeHelper ref={planeHelperRef} />
             <mesh ref={meshRef} scale={[100, 100, 100]}>
                 <planeGeometry />
             </mesh>
