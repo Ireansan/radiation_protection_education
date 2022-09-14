@@ -74,6 +74,9 @@ function ClippingPlaneTransformControls() {
     const { mode, space } = useSnapshot(transformConfigStates);
     const { transfromControlsStates } = useSnapshot(typeConfigStates);
 
+    const planeHelperRef = useRef<THREE.PlaneHelper>(
+        new THREE.PlaneHelper(new THREE.Plane())
+    );
     const meshRef = useRef<THREE.Mesh>(new THREE.Mesh());
     const { camera, gl } = useThree();
     const transformRef = useRef<TransformControlsLib>(
@@ -98,7 +101,9 @@ function ClippingPlaneTransformControls() {
     }));
 
     useEffect(() => {
-        console.log("transformControls");
+        planeHelperRef.current.plane = plane;
+        planeHelperRef.current.size = 250;
+
         meshRef.current.position.copy(transfromControlsStates.position);
         meshRef.current.rotation.copy(transfromControlsStates.rotation);
     });
@@ -137,7 +142,7 @@ function ClippingPlaneTransformControls() {
                     onObjectChange(e);
                 }}
             />
-            <planeHelper plane={plane} size={250} />
+            <planeHelper ref={planeHelperRef} />
             <mesh ref={meshRef} scale={[100, 100, 100]}>
                 <planeGeometry />
             </mesh>
@@ -149,6 +154,9 @@ function ClippingPlaneTransformControls() {
 function ClippingPlaneControls() {
     const { plane, setPosition, setMatrix, setPlane } = clippingPlaneStore();
 
+    const planeHelperRef = useRef<THREE.PlaneHelper>(
+        new THREE.PlaneHelper(new THREE.Plane())
+    );
     const meshRef = useRef<THREE.Mesh>(new THREE.Mesh());
 
     const [planeConfig, setConfig] = useControls(() => ({
@@ -186,6 +194,11 @@ function ClippingPlaneControls() {
             step: 1,
         },
     }));
+
+    useEffect(() => {
+        planeHelperRef.current.plane = plane;
+        planeHelperRef.current.size = 250;
+    });
 
     return (
         <>
