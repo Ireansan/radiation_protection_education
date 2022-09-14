@@ -50,9 +50,9 @@ function NRRDView() {
 
     // nrrd
     var filepaths = [
-        "/models/nrrd/stent.nrrd",
-        "/models/nrrd/dose_106_200_290.nrrd",
-        "/models/nrrd/dose_d100.nrrd",
+        "models/nrrd/stent.nrrd",
+        "models/nrrd/dose_106_200_290.nrrd",
+        "models/nrrd/dose_d100.nrrd",
     ];
 
     useEffect(() => {
