@@ -19,6 +19,7 @@ import volumeRenderShader from "../lib/shaders/volumeShader";
 import volumeRenderStates from "../lib/states/volumeRender.state";
 import { animationStates } from "../lib/states/volumeRender.Controls.state";
 import clippingPlaneStore from "../lib/states/clippingPlane.state";
+import { BufferGeometry } from "three";
 
 type volumeArgs = {
     volume: any;
@@ -50,16 +51,7 @@ function VolumeRenderObject({
     );
 
     // Geometry
-    const geometry = new THREE.BoxGeometry(
-        volume.xLength,
-        volume.yLength,
-        volume.zLength
-    );
-    geometry.translate(
-        volume.xLength / 2,
-        volume.yLength / 2,
-        volume.zLength / 2
-    );
+    const geometryRef = useRef<THREE.BufferGeometry>(new THREE.BoxGeometry());
 
     // Texture
     const texture = new THREE.Data3DTexture(
@@ -75,6 +67,20 @@ function VolumeRenderObject({
     texture.needsUpdate = true;
 
     useLayoutEffect(() => {
+        // Geometry
+        geometryRef.current.copy(
+            new THREE.BoxGeometry(
+                volume.xLength,
+                volume.yLength,
+                volume.zLength
+            )
+        );
+        geometryRef.current.translate(
+            volume.xLength / 2,
+            volume.yLength / 2,
+            volume.zLength / 2
+        );
+
         // Material
         const shader = volumeRenderShader;
         materialRef.current.vertexShader = shader.vertexShader;
@@ -99,6 +105,20 @@ function VolumeRenderObject({
     }, []);
 
     useEffect(() => {
+        // Geometry
+        geometryRef.current.copy(
+            new THREE.BoxGeometry(
+                volume.xLength,
+                volume.yLength,
+                volume.zLength
+            )
+        );
+        geometryRef.current.translate(
+            volume.xLength / 2,
+            volume.yLength / 2,
+            volume.zLength / 2
+        );
+
         materialRef.current.uniforms.u_data.value = texture;
         materialRef.current.uniforms.u_size.value.set(
             volume.xLength,
@@ -118,7 +138,8 @@ function VolumeRenderObject({
 
     return (
         <>
-            <mesh geometry={geometry} {...props}>
+            <mesh {...props}>
+                <bufferGeometry ref={geometryRef} />
                 <shaderMaterial ref={materialRef} />
             </mesh>
         </>
