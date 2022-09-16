@@ -18,7 +18,7 @@ import * as THREE from "three";
 import VolumeRender from "../components/volumeRender";
 import VolumeRenderControls from "../components/volumeRender.Controls";
 
-import styles from "../styles/nrrd_view.module.css";
+import styles from "../styles/threejs.module.css";
 
 const Plane = ({ ...props }) => {
     return (
