@@ -9,6 +9,8 @@ import * as THREE from "three";
 
 import VolumeRender from "../components/volumeRender";
 // import VolumeRenderControls from "../components/volumeRender.Controls";
+
+import volumeRenderStates from "../lib/states/volumeRender.state";
 import clippingPlaneStore from "../lib/states/clippingPlane.state";
 
 import styles from "../styles/threejs.module.css";
@@ -37,9 +39,10 @@ function DoseVisualization() {
                 1000
             )
         );
-        camera.position.set(-64, 128, -64);
-        camera.up.set(0, 1, 0); // y up
-        setNormal([0, -1, 0]); // set plane's normal vector
+        camera.position.set(-64, -64, 128);
+        camera.up.set(0, 0, 1); // z up
+
+        volumeRenderStates.modelRotation.set(0, Math.PI / 2, 0);
     }, []);
 
     return (

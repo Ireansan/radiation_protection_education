@@ -22,6 +22,8 @@ import clippingPlaneStore from "../lib/states/clippingPlane.state";
 import { BufferGeometry } from "three";
 
 type volumeArgs = {
+    position?: THREE.Vector3;
+    rotation?: THREE.Euler;
     volume: any;
     cmtextures: THREE.Texture[];
     clim1: number;
@@ -32,6 +34,8 @@ type volumeArgs = {
     plane: THREE.Plane;
 };
 function VolumeRenderObject({
+    position = new THREE.Vector3(0, 0, 0),
+    rotation = new THREE.Euler(0, 0, 0),
     volume,
     cmtextures,
     clim1,
@@ -44,6 +48,9 @@ function VolumeRenderObject({
 }: volumeArgs) {
     const { gl } = useThree();
     gl.localClippingEnabled = true;
+
+    // Mesh
+    const meshRef = useRef<THREE.Mesh>(new THREE.Mesh());
 
     // Material
     const materialRef = useRef<THREE.ShaderMaterial>(
@@ -67,19 +74,9 @@ function VolumeRenderObject({
     texture.needsUpdate = true;
 
     useLayoutEffect(() => {
-        // Geometry
-        geometryRef.current.copy(
-            new THREE.BoxGeometry(
-                volume.xLength,
-                volume.yLength,
-                volume.zLength
-            )
-        );
-        geometryRef.current.translate(
-            volume.xLength / 2,
-            volume.yLength / 2,
-            volume.zLength / 2
-        );
+        // Mesh
+        meshRef.current.position.copy(position);
+        meshRef.current.rotation.copy(rotation);
 
         // Material
         const shader = volumeRenderShader;
@@ -98,6 +95,13 @@ function VolumeRenderObject({
         uniforms.u_renderthreshold.value = isothreshold; // For ISO renderstyle
         uniforms.u_cmdata.value = cmtextures[colormap];
         materialRef.current.uniforms = uniforms;
+
+        const modelMatrix = new THREE.Matrix4().compose(
+            position,
+            new THREE.Quaternion().setFromEuler(rotation),
+            new THREE.Vector3(1, 1, 1)
+        );
+        uniforms.u_modelMatrix.value = modelMatrix;
 
         materialRef.current.side = THREE.BackSide; // The volume shader uses the backface as its "reference point"
         materialRef.current.clipping = true;
@@ -138,7 +142,7 @@ function VolumeRenderObject({
 
     return (
         <>
-            <mesh {...props}>
+            <mesh {...props} ref={meshRef}>
                 <bufferGeometry ref={geometryRef} />
                 <shaderMaterial ref={materialRef} />
             </mesh>
@@ -154,13 +158,23 @@ type volumeRenderSysArg = {
     cmtextures: THREE.Texture[];
 };
 function VolumeRenderSystem({ cmtextures, ...props }: volumeRenderSysArg) {
-    const { volume, clim1, clim2, colormap, renderstyle, isothreshold } =
-        useSnapshot(volumeRenderStates);
+    const {
+        modelPosition,
+        modelRotation,
+        volume,
+        clim1,
+        clim2,
+        colormap,
+        renderstyle,
+        isothreshold,
+    } = useSnapshot(volumeRenderStates);
     const plane: THREE.Plane = clippingPlaneStore((state) => state.plane);
 
     return (
         <>
             <VolumeRenderObject
+                position={modelPosition}
+                rotation={modelRotation}
                 volume={volume}
                 cmtextures={cmtextures}
                 clim1={clim1}

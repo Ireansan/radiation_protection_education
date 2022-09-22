@@ -14,11 +14,15 @@ import * as THREE from "three";
 import VolumeRender from "../components/volumeRender";
 import VolumeRenderControls from "../components/volumeRender.Controls";
 
+import volumeRenderStates from "../lib/states/volumeRender.state";
+import clippingPlaneStore from "../lib/states/clippingPlane.state";
+
 import styles from "../styles/threejs.module.css";
 
 function DoseVisualization() {
     const h = 512; // frustum height
     const camera = new THREE.OrthographicCamera();
+    const { setNormal, setPlane } = clippingPlaneStore();
 
     // nrrd
     var filepaths = [
@@ -40,7 +44,9 @@ function DoseVisualization() {
             )
         );
         camera.position.set(-64, -64, 128);
-        camera.up.set(0, 0, 1); // In our data, z is up
+        camera.up.set(0, 0, 1); // z up
+
+        volumeRenderStates.modelRotation.set(0, Math.PI / 2, 0);
     }, []);
 
     return (

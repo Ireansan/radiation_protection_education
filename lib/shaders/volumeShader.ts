@@ -9,17 +9,18 @@
 import * as THREE from "three";
 
 const volumeRenderShader = {
-    uniforms: {
-        u_size: { value: new THREE.Vector3(1, 1, 1) },
-        u_renderstyle: { value: 0 },
-        u_renderthreshold: { value: 0.5 },
-        u_clim: { value: new THREE.Vector2(1, 1) },
-        u_data: { value: null },
-        u_cmdata: { value: null },
-    },
+	uniforms: {
+		u_size: { value: new THREE.Vector3(1, 1, 1) },
+		u_renderstyle: { value: 0 },
+		u_renderthreshold: { value: 0.5 },
+		u_clim: { value: new THREE.Vector2(1, 1) },
+		u_data: { value: null },
+		u_cmdata: { value: null },
+		u_modelMatrix: { value: new THREE.Matrix4() }
+	},
 
-    /* glsl */
-    vertexShader: `
+	/* glsl */
+	vertexShader: `
 varying vec4 v_nearpos;
 varying vec4 v_farpos;
 varying vec3 v_position;
@@ -55,8 +56,8 @@ void main() {
 
 }
 `,
-    /* glsl */
-    fragmentShader: `
+	/* glsl */
+	fragmentShader: `
 precision highp float;
 precision mediump sampler3D;
 
@@ -67,6 +68,7 @@ uniform vec2 u_clim;
 
 uniform sampler3D u_data;
 uniform sampler2D u_cmdata;
+uniform mat4 u_modelMatrix;
 
 varying vec3 v_position;
 varying vec4 v_nearpos;
@@ -145,7 +147,7 @@ void main(){
 // https://github.com/mrdoob/three.js/blob/dev/src/renderers/shaders/ShaderChunk/clipping_planes_vertex.glsl.js
 vec3 clip_position(vec3 position){
 	vec4 position4 = vec4(position, 1.0);
-	vec4 mvPosition = viewMatrix * position4;
+	vec4 mvPosition = viewMatrix * u_modelMatrix * position4;
 	return - mvPosition.xyz;
 }
 
