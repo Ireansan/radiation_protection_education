@@ -42,6 +42,13 @@ const Home: NextPage = () => {
                         </a>
                     </Link>
 
+                    <Link href={"/dose_visualization_VR"}>
+                        <a className={styles.card}>
+                            <h2>Dose Visualization (Ver. VR)&rarr;</h2>
+                            <p>Next.js + react-three-fiber, Texture 3D</p>
+                        </a>
+                    </Link>
+
                     <a
                         href="https://threejs.org/examples/?q=texture3d#webgl2_materials_texture3d"
                         className={styles.card}
