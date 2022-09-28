@@ -1,7 +1,7 @@
 import { proxy } from "valtio";
 import * as THREE from "three";
 
-import {Volume} from "../jsm/misc/Volume";
+import {Volume} from "three/examples/jsm/misc/Volume";
 
 class VolumeRenderStates {
     modelPosition: THREE.Vector3 = new THREE.Vector3(0, 0, 0);

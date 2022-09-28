@@ -14,7 +14,7 @@ import { useLoader, useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useSnapshot } from "valtio";
 
-import { NRRDLoader } from "../lib/jsm/loaders/NRRDLoader";
+import { NRRDLoader } from "three/examples/jsm/loaders/NRRDLoader";
 import volumeRenderShader from "../lib/shaders/volumeShader";
 import volumeRenderStates from "../lib/states/volumeRender.state";
 import { animationStates } from "../lib/states/volumeRender.Controls.state";
