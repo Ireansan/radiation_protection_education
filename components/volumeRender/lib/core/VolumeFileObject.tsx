@@ -4,10 +4,10 @@ import { useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 import { NRRDLoader } from "three/examples/jsm/loaders/NRRDLoader";
 
-import VolumeRenderObject from "./VolumeRenderObject";
+import { VolumeRenderObject } from "../core";
 
 /**
- * VolumeObject
+ * @function VolumeFileObject
  * @param filepath: string
  * @param position?: THREE.Vector3, Default (0, 0, 0)
  * @param rotation?: THREE.Euler, Default (0, 0, 0)
@@ -20,7 +20,7 @@ import VolumeRenderObject from "./VolumeRenderObject";
  * @param isothreshold: number
  * @param plane?: THREE.Plane
  */
-type volumeObjArg = {
+type volumeFileObjArg = {
     filepath: string;
     position?: THREE.Vector3;
     rotation?: THREE.Euler;
@@ -33,7 +33,7 @@ type volumeObjArg = {
     isothreshold: number;
     plane?: THREE.Plane;
 };
-function VolumeObject({
+function VolumeFileObject({
     filepath,
     position = new THREE.Vector3(0, 0, 0),
     rotation = new THREE.Euler(0, 0, 0),
@@ -46,7 +46,7 @@ function VolumeObject({
     isothreshold,
     plane,
     ...props
-}: volumeObjArg) {
+}: volumeFileObjArg) {
     const [volume, setVolume] = useState<any>(useLoader(NRRDLoader, filepath));
 
     return (
@@ -69,4 +69,4 @@ function VolumeObject({
     );
 }
 
-export default VolumeObject;
+export default VolumeFileObject;

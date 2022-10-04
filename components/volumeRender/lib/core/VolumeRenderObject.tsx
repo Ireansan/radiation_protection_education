@@ -7,11 +7,11 @@ import React, { useRef, useLayoutEffect, useState, useEffect } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-import volumeRenderShader from "../../../lib/shaders/volumeShader";
+import volumeRenderShader from "../shaders/volumeShader";
 
 /**
- * VolumeRenderObject
- *  Core
+ * @function VolumeRenderObject
+ * @abstract Core
  * @param volume: any
  * @param position?: THREE.Vector3, Default (0, 0, 0)
  * @param rotation?: THREE.Euler, Default (0, 0, 0)

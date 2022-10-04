@@ -2,16 +2,21 @@ import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { useControls, folder } from "leva";
 
-import { typeConfigStates } from "../../../lib/states/volumeRender.Controls.state";
-import clippingPlaneStore from "../../../lib/states/clippingPlane.state";
+import {
+    clippingPlanePanelControlsStates,
+    clippingPlaneStore,
+} from "../states";
 
 /** */
 const degreeToRad = (d: number): number => {
     return (Math.PI / 180) * d;
 };
 
-/** */
-function ClippingPlaneControls() {
+/**
+ * @function ClippingPlanePanelControls
+ * @abstract
+ */
+function ClippingPlanePanelControls() {
     const { plane, setPosition, setMatrix, setPlane } = clippingPlaneStore();
 
     const planeHelperRef = useRef<THREE.PlaneHelper>(
@@ -29,7 +34,7 @@ function ClippingPlaneControls() {
                 setPlane();
 
                 meshRef.current.position.copy(position_);
-                typeConfigStates.controlsStates.position.copy(position_);
+                clippingPlanePanelControlsStates.position.copy(position_);
             },
             step: 1,
         },
@@ -49,7 +54,7 @@ function ClippingPlaneControls() {
                 setPlane();
 
                 meshRef.current.rotation.copy(rotation_);
-                typeConfigStates.controlsStates.rotation.copy(rotation_);
+                clippingPlanePanelControlsStates.rotation.copy(rotation_);
             },
             step: 1,
         },
@@ -70,4 +75,4 @@ function ClippingPlaneControls() {
     );
 }
 
-export default ClippingPlaneControls;
+export default ClippingPlanePanelControls;

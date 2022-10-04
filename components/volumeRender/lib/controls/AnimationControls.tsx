@@ -2,9 +2,12 @@ import React from "react";
 import { useControls, folder } from "leva";
 import { useSnapshot } from "valtio";
 
-import { animationStates } from "../../../lib/states/volumeRender.Controls.state";
+import { animationStates } from "../states";
 
-/** */
+/**
+ * @function AnimationControls
+ * @abstract
+ */
 function AnimationControls() {
     const { animate } = useSnapshot(animationStates);
     const animationCofig = useControls("animation", {

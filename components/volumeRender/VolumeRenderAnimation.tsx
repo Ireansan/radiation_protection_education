@@ -4,10 +4,10 @@ import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useSnapshot } from "valtio";
 
-import { animationStates } from "../../lib/states/volumeRender.Controls.state";
+import { animationStates } from "./lib/states";
 
 /**
- * VolumeRenderAnimation
+ * @function VolumeRenderAnimation
  * @param children
  */
 function VolumeRenderAnimation({ ...children }) {

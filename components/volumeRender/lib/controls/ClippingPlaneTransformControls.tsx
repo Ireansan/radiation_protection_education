@@ -7,16 +7,19 @@ import { useControls, folder } from "leva";
 import { useSnapshot } from "valtio";
 
 import {
-    transformConfigStates,
-    typeConfigStates,
-} from "../../../lib/states/volumeRender.Controls.state";
-import clippingPlaneStore from "../../../lib/states/clippingPlane.state";
+    clippingPlaneTransformControlsStates,
+    clippingPlaneStore,
+} from "../states";
 
-/** */
+/**
+ * @function ClippingPlaneTransformControls
+ * @abstract
+ */
 function ClippingPlaneTransformControls() {
     const { plane, setPosition, setMatrix, setPlane } = clippingPlaneStore();
-    const { mode, space } = useSnapshot(transformConfigStates);
-    const { transfromControlsStates } = useSnapshot(typeConfigStates);
+    const { mode, space, position, rotation } = useSnapshot(
+        clippingPlaneTransformControlsStates
+    );
 
     const planeHelperRef = useRef<THREE.PlaneHelper>(
         new THREE.PlaneHelper(new THREE.Plane())
@@ -32,14 +35,14 @@ function ClippingPlaneTransformControls() {
             value: "translate",
             options: ["translate", "rotate"],
             onChange: (e) => {
-                transformConfigStates.mode = e;
+                clippingPlaneTransformControlsStates.mode = e;
             },
         },
         space: {
             value: "world",
             options: ["world", "local"],
             onChange: (e) => {
-                transformConfigStates.space = e;
+                clippingPlaneTransformControlsStates.space = e;
             },
         },
     });
@@ -48,8 +51,8 @@ function ClippingPlaneTransformControls() {
         planeHelperRef.current.plane = plane;
         planeHelperRef.current.size = 250;
 
-        meshRef.current.position.copy(transfromControlsStates.position);
-        meshRef.current.rotation.copy(transfromControlsStates.rotation);
+        meshRef.current.position.copy(position);
+        meshRef.current.rotation.copy(rotation);
     });
 
     const onObjectChange = (e: THREE.Event | undefined) => {
@@ -61,7 +64,7 @@ function ClippingPlaneTransformControls() {
             setPlane();
 
             meshRef.current.position.copy(position_);
-            typeConfigStates.transfromControlsStates.position.copy(position_);
+            clippingPlaneTransformControlsStates.position.copy(position_);
         } else if (mode === "rotate") {
             const rotation_: THREE.Euler =
                 e?.target.object.rotation ?? new THREE.Euler();
@@ -72,7 +75,7 @@ function ClippingPlaneTransformControls() {
             setPlane();
 
             meshRef.current.rotation.copy(rotation_);
-            typeConfigStates.transfromControlsStates.rotation.copy(rotation_);
+            clippingPlaneTransformControlsStates.rotation.copy(rotation_);
         }
     };
 
