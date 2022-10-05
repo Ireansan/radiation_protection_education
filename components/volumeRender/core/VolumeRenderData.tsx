@@ -1,57 +1,39 @@
-import React, { useEffect } from "react";
-import { useSnapshot } from "valtio";
 import * as THREE from "three";
 
-import { VolumeRenderObject } from "./core";
-import { volumeStore, clippingPlaneStore } from "./states";
+import { VolumeRenderObject } from "./index";
+import { volumeStore, clippingPlaneStore } from "../states";
 
 /**
- *
+ * @function VolumeFileObject
+ * @param volume any
+ * @param position THREE.Vector3, Default (0, 0, 0)
+ * @param rotation THREE.Euler, Default (0, 0, 0)
+ * @param scale THREE.Vector3, Default (1, 1, 1)
  */
-type volumeRenderArg = {
+type volumeRenderDataArg = {
     volume: any;
     position?: THREE.Vector3;
     rotation?: THREE.Euler;
     scale?: THREE.Vector3;
-    cmtextures: THREE.Texture[];
-    clipping?: boolean;
 };
-function VolumeRender({
+function VolumeRenderData({
     volume,
     position = new THREE.Vector3(0, 0, 0),
     rotation = new THREE.Euler(0, 0, 0),
     scale = new THREE.Vector3(1, 1, 1),
-    cmtextures,
-    clipping = false,
     ...props
-}: volumeRenderArg) {
-    const {
-        setPosition,
-        setRotation,
-        setScale,
-        clim1,
-        clim2,
-        colormap,
-        renderstyle,
-        isothreshold,
-    } = volumeStore();
-
+}: volumeRenderDataArg) {
+    const { clim1, clim2, cmtextures, colormap, renderstyle, isothreshold } =
+        volumeStore();
     const plane: THREE.Plane = clippingPlaneStore((state) => state.plane);
-
-    // Init
-    useEffect(() => {
-        setPosition(position);
-        setRotation(rotation);
-        setScale(scale);
-    });
 
     return (
         <>
             <VolumeRenderObject
+                volume={volume}
                 position={position}
                 rotation={rotation}
                 scale={scale}
-                volume={volume}
                 cmtextures={cmtextures}
                 clim1={clim1}
                 clim2={clim2}
@@ -64,5 +46,3 @@ function VolumeRender({
         </>
     );
 }
-
-export default VolumeRender;

@@ -9,21 +9,6 @@ import * as THREE from "three";
 
 import volumeRenderShader from "../shaders/volumeShader";
 
-/**
- * @function VolumeRenderObject
- * @abstract Core
- * @param volume: any
- * @param position?: THREE.Vector3, Default (0, 0, 0)
- * @param rotation?: THREE.Euler, Default (0, 0, 0)
- * @param scale?: THREE.Vector3, Default (1, 1, 1)
- * @param cmtextures: THREE.Texture[]
- * @param clim1?: number, Default 0
- * @param clim2?: number, Default 1
- * @param colormap: number
- * @param renderstyle: string
- * @param isothreshold: number
- * @param plane?: THREE.Plane
- */
 type volumeRenderObjArgs = {
     volume: any;
     position?: THREE.Vector3;
@@ -37,6 +22,21 @@ type volumeRenderObjArgs = {
     isothreshold: number;
     plane?: THREE.Plane;
 };
+/**
+ * @function VolumeRenderObject
+ * @abstract Core
+ * @param volume any
+ * @param position THREE.Vector3, Default (0, 0, 0)
+ * @param rotation THREE.Euler, Default (0, 0, 0)
+ * @param scale THREE.Vector3, Default (1, 1, 1)
+ * @param cmtextures THREE.Texture[]
+ * @param clim1 number, Default 0
+ * @param clim2 number, Default 1
+ * @param colormap number
+ * @param renderstyle string
+ * @param isothreshold number
+ * @param plane THREE.Plane
+ */
 function VolumeRenderObject({
     volume,
     position = new THREE.Vector3(0, 0, 0),

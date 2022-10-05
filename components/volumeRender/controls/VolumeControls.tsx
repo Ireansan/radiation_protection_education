@@ -1,20 +1,22 @@
 import React from "react";
 import { useControls, folder } from "leva";
 
-import { volumeStates } from "../states";
+import { volumeStore } from "../states";
 
 /**
  * @function VolumeControls
  * @abstract
  */
 function VolumeControls() {
+    const { setClim1, setClim2, setColormap, setRenderstyle, setIsothreshold } =
+        volumeStore();
     const [volumeConfig, volumeSet] = useControls(() => ({
         clim1: {
             value: 0,
             min: 0,
             max: 1,
             onChange: (e) => {
-                volumeStates.clim1 = e;
+                setClim1(e);
             },
         },
         clim2: {
@@ -22,23 +24,23 @@ function VolumeControls() {
             min: 0,
             max: 1,
             onChange: (e) => {
-                volumeStates.clim2 = e;
+                setClim2(e);
             },
         },
         colormap: {
             options: ["viridis", "gray"],
             onChange: (e) => {
                 if (e === "viridis") {
-                    volumeStates.colormap = 0;
+                    setColormap(0);
                 } else if (e === "gray") {
-                    volumeStates.colormap = 1;
+                    setColormap(1);
                 }
             },
         },
         renderstyle: {
             options: ["iso", "mip"],
             onChange: (e) => {
-                volumeStates.renderstyle = e;
+                setRenderstyle(e);
             },
         },
         isothreshold: {
@@ -47,7 +49,7 @@ function VolumeControls() {
             max: 1,
             // max: 100,
             onChange: (e) => {
-                volumeStates.isothreshold = e;
+                setIsothreshold(e);
             },
         },
     }));
