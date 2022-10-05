@@ -4,7 +4,7 @@
 
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
-import React, { useEffect, Suspense } from "react";
+import React, { useMemo, useEffect, Suspense } from "react";
 
 import { Canvas } from "@react-three/fiber";
 import {
@@ -15,8 +15,11 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 
-import VolumeRender from "../components/volumeRender";
-import VolumeRenderControls from "../components/volumeRender.Controls";
+import {
+    volumeLoader,
+    VolumeRender,
+    VolumeRenderControls,
+} from "../components/volumeRender";
 
 import styles from "../styles/threejs.module.css";
 
@@ -54,7 +57,17 @@ function NRRDView() {
         "models/nrrd/dose_106_200_290.nrrd",
         "models/nrrd/dose_d100.nrrd",
     ];
+    const volume: any = useMemo(() => {
+        return volumeLoader(filepaths)[0];
+    }, [filepaths]);
 
+    // cmtexture
+    const cmtextures = [
+        new THREE.TextureLoader().load("textures/cm_viridis.png"),
+        new THREE.TextureLoader().load("textures/cm_gray.png"),
+    ];
+
+    // Init
     useEffect(() => {
         const aspect = window.innerWidth / window.innerHeight;
         camera.copy(
@@ -76,7 +89,7 @@ function NRRDView() {
             <div className={styles.canvas}>
                 <Canvas camera={camera}>
                     <Suspense fallback={null}>
-                        <VolumeRender filepath={filepaths[0]} />
+                        <VolumeRender volume={volume} cmtextures={cmtextures} />
                     </Suspense>
 
                     <VolumeRenderControls />

@@ -49,6 +49,13 @@ const Home: NextPage = () => {
                         </a>
                     </Link>
 
+                    <Link href={"/drop_file_input"}>
+                        <a className={styles.card}>
+                            <h2>File Convert&rarr;</h2>
+                            <p>Next.js</p>
+                        </a>
+                    </Link>
+
                     <a
                         href="https://threejs.org/examples/?q=texture3d#webgl2_materials_texture3d"
                         className={styles.card}

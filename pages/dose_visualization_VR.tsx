@@ -1,18 +1,22 @@
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
-import React, { useEffect, Suspense } from "react";
+import React, { useMemo, useEffect, Suspense } from "react";
 
 import { Canvas } from "@react-three/fiber";
 import { VRButton, XR, Interactive, Controllers } from "@react-three/xr";
 import { Stats, GizmoHelper, GizmoViewport } from "@react-three/drei";
 import * as THREE from "three";
 
-import VolumeRender from "../components/volumeRender";
-// import VolumeRenderControls from "../components/volumeRender.Controls";
-
-import volumeRenderStates from "../lib/states/volumeRender.state";
-import clippingPlaneStore from "../lib/states/clippingPlane.state";
-
+import {
+    // States
+    volumeStates,
+    clippingPlaneStore,
+    // Loader
+    volumeLoader,
+    // Components
+    VolumeRenderAnimation,
+    VolumeRenderControls,
+} from "../components/volumeRender";
 import styles from "../styles/threejs.module.css";
 
 function DoseVisualization() {
@@ -26,8 +30,19 @@ function DoseVisualization() {
         "models/nrrd/stent.nrrd",
         "models/nrrd/dose_d100.nrrd",
     ];
+    const volumes: any[] = useMemo(() => {
+        return volumeLoader(filepaths);
+    }, [filepaths]);
 
+    // cmtexture
+    const cmtextures = [
+        new THREE.TextureLoader().load("textures/cm_viridis.png"),
+        new THREE.TextureLoader().load("textures/cm_gray.png"),
+    ];
+
+    // Init
     useEffect(() => {
+        // Setup Camera
         const aspect = window.innerWidth / window.innerHeight;
         camera.copy(
             new THREE.OrthographicCamera(
@@ -42,7 +57,7 @@ function DoseVisualization() {
         camera.position.set(-64, -64, 128);
         camera.up.set(0, 0, 1); // z up
 
-        volumeRenderStates.modelRotation.set(0, Math.PI / 2, 0);
+        volumeStates.rotation.set(0, Math.PI / 2, 0);
     }, []);
 
     return (
@@ -52,7 +67,10 @@ function DoseVisualization() {
                 <Canvas camera={camera}>
                     <XR>
                         <Suspense fallback={null}>
-                            <VolumeRender filepath={filepaths} />
+                            <VolumeRenderAnimation
+                                volumes={volumes}
+                                cmtextures={cmtextures}
+                            />
                         </Suspense>
                     </XR>
 
