@@ -1,6 +1,6 @@
-import { NextPage } from "next";
+import { NextPage, GetStaticProps } from "next";
 import dynamic from "next/dynamic";
-import React, { useMemo, useEffect, Suspense } from "react";
+import React, { useState, useMemo, useEffect, Suspense } from "react";
 
 import { Canvas } from "@react-three/fiber";
 import {
@@ -12,38 +12,23 @@ import {
 import * as THREE from "three";
 
 import {
-    // States
-    volumeStates,
+    // Stores
+    volumeStore,
     clippingPlaneStore,
-    // Loader
-    volumeLoader,
     // Components
     VolumeRenderAnimation,
     VolumeRenderControls,
 } from "../components/volumeRender";
+import * as Models from "../components/models";
 
 import styles from "../styles/threejs.module.css";
 
 function DoseVisualization() {
     const h = 512; // frustum height
     const camera = new THREE.OrthographicCamera();
-    const { setNormal, setPlane } = clippingPlaneStore();
-
-    // nrrd
-    var filepaths = [
-        "models/nrrd/dose_106_200_290.nrrd",
-        "models/nrrd/stent.nrrd",
-        "models/nrrd/dose_d100.nrrd",
-    ];
-    const volumes: any[] = useMemo(() => {
-        return volumeLoader(filepaths);
-    }, [filepaths]);
-
-    // cmtexture
-    const cmtextures = [
-        new THREE.TextureLoader().load("textures/cm_viridis.png"),
-        new THREE.TextureLoader().load("textures/cm_gray.png"),
-    ];
+    const setCmtextures = volumeStore((state) => state.setCmtextures);
+    const setNormal = clippingPlaneStore((state) => state.setNormal);
+    const setPlane = clippingPlaneStore((state) => state.setPlane);
 
     // Init
     useEffect(() => {
@@ -62,7 +47,11 @@ function DoseVisualization() {
         camera.position.set(-64, -64, 128);
         camera.up.set(0, 0, 1); // z up
 
-        volumeStates.rotation.set(0, Math.PI / 2, 0);
+        // cmtextures
+        setCmtextures([
+            new THREE.TextureLoader().load("textures/cm_viridis.png"),
+            new THREE.TextureLoader().load("textures/cm_gray.png"),
+        ]);
     }, []);
 
     return (
@@ -70,13 +59,15 @@ function DoseVisualization() {
             <div className={styles.canvas}>
                 <Canvas camera={camera}>
                     <Suspense fallback={null}>
-                        <VolumeRenderAnimation
-                            volumes={volumes}
-                            cmtextures={cmtextures}
-                        />
+                        <VolumeRenderAnimation>
+                            <Models.Dose clipping={true} />
+                            <Models.Dose_106_200_290 clipping={true} />
+                            <Models.Dose_d100 clipping={true} />
+                            <Models.Stent clipping={true} />
+                        </VolumeRenderAnimation>
                     </Suspense>
 
-                    <VolumeRenderControls />
+                    <VolumeRenderControls clipping={true} animation={true} />
                     <OrbitControls makeDefault />
 
                     <Stats />

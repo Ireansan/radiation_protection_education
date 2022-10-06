@@ -8,37 +8,22 @@ import { Stats, GizmoHelper, GizmoViewport } from "@react-three/drei";
 import * as THREE from "three";
 
 import {
-    // States
-    volumeStates,
+    // Stores
+    volumeStore,
     clippingPlaneStore,
-    // Loader
-    volumeLoader,
     // Components
     VolumeRenderAnimation,
     VolumeRenderControls,
 } from "../components/volumeRender";
+import * as Models from "../components/models";
+
 import styles from "../styles/threejs.module.css";
 
 function DoseVisualization() {
     const h = 512; // frustum height
     const camera = new THREE.OrthographicCamera();
+    const setCmtextures = volumeStore((state) => state.setCmtextures);
     const { setNormal } = clippingPlaneStore();
-
-    // nrrd
-    var filepaths = [
-        "models/nrrd/dose_106_200_290.nrrd",
-        "models/nrrd/stent.nrrd",
-        "models/nrrd/dose_d100.nrrd",
-    ];
-    const volumes: any[] = useMemo(() => {
-        return volumeLoader(filepaths);
-    }, [filepaths]);
-
-    // cmtexture
-    const cmtextures = [
-        new THREE.TextureLoader().load("textures/cm_viridis.png"),
-        new THREE.TextureLoader().load("textures/cm_gray.png"),
-    ];
 
     // Init
     useEffect(() => {
@@ -54,10 +39,15 @@ function DoseVisualization() {
                 1000
             )
         );
-        camera.position.set(-64, -64, 128);
         camera.up.set(0, 0, 1); // z up
 
-        volumeStates.rotation.set(0, Math.PI / 2, 0);
+        // volumeStates.rotation.set(0, Math.PI / 2, 0);
+
+        // cmtextures
+        setCmtextures([
+            new THREE.TextureLoader().load("textures/cm_viridis.png"),
+            new THREE.TextureLoader().load("textures/cm_gray.png"),
+        ]);
     }, []);
 
     return (
@@ -67,10 +57,12 @@ function DoseVisualization() {
                 <Canvas camera={camera}>
                     <XR>
                         <Suspense fallback={null}>
-                            <VolumeRenderAnimation
-                                volumes={volumes}
-                                cmtextures={cmtextures}
-                            />
+                            <VolumeRenderAnimation>
+                                <Models.Dose />
+                                <Models.Dose_106_200_290 />
+                                <Models.Dose_d100 />
+                                <Models.Stent />
+                            </VolumeRenderAnimation>
                         </Suspense>
                     </XR>
 

@@ -21,7 +21,7 @@ interface VolumeStates {
     isothreshold: number;
     setIsothreshold: (isothreshold: number) => void;
 }
-const volumeStore = create<VolumeStates>((set, get) => ({
+const volumeStore = create<VolumeStates>((set) => ({
     position: new THREE.Vector3(0, 0, 0),
     setPosition: (position: THREE.Vector3) => {
         set((state) => ({ position: position }));
@@ -44,7 +44,7 @@ const volumeStore = create<VolumeStates>((set, get) => ({
     },
     cmtextures: [],
     setCmtextures: (cmtextures: THREE.Texture[]) => {
-        set((state) => ({ cmtextures: cmtextures }));
+        set( {cmtextures: cmtextures} );
     },
     colormap: 0,
     setColormap: (colormap: number) => {

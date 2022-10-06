@@ -1,13 +1,10 @@
 import React from "react";
-import * as THREE from "three";
-import { useControls, folder } from "leva";
-import { useSnapshot } from "valtio";
 
 import {
     VolumeControls,
     ClippingPlaneControls,
     AnimationControls,
-} from "./lib/controls";
+} from "./controls";
 
 /**
  * @function VolumeRenderControls

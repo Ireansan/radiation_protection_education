@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import * as THREE from "three";
 import { useControls, folder } from "leva";
 import { useSnapshot } from "valtio";
 
 import {
-    clippingPlaneStore,
+    clippingPlaneControlsStates,
     clippingPlaneTransformControlsStates,
     clippingPlanePanelControlsStates,
 } from "../states";
+import { clippingPlaneStore } from "../stores";
 
 import {
     ClippingPlaneTransformControls,
@@ -19,13 +20,19 @@ import {
  * @abstract
  */
 function ClippingPlaneControls({}) {
-    const { setPosition, setMatrix, setPlane } = clippingPlaneStore();
+    // ClippingPlane State
+    const setPosition = clippingPlaneStore((state) => state.setPosition);
+    const setMatrix = clippingPlaneStore((state) => state.setMatrix);
+    const setPlane = clippingPlaneStore((state) => state.setPlane);
+    // Controls State
+    const { type } = useSnapshot(clippingPlaneControlsStates);
+    // TransformControls State
     const transfromControlsStates = useSnapshot(
         clippingPlaneTransformControlsStates
     );
     const panelControlsStates = useSnapshot(clippingPlanePanelControlsStates);
 
-    const [typeConfig, setConfig] = useControls(() => ({
+    const typeConfig = useControls("plane control", {
         type: {
             value: "type 1",
             options: ["type 1", "type 2"],
@@ -43,17 +50,22 @@ function ClippingPlaneControls({}) {
                     matrix_.makeRotationFromEuler(panelControlsStates.rotation);
                 }
 
+                clippingPlaneControlsStates.type = e;
                 setPosition(position_);
                 setMatrix(matrix_);
                 setPlane();
             },
         },
-    }));
+    });
+
+    useEffect(() => {
+        console.log("typeConfig", typeConfig);
+    }, [typeConfig]);
 
     return (
         <>
-            {typeConfig === "type 1" && <ClippingPlaneTransformControls />}
-            {typeConfig === "type 2" && <ClippingPlanePanelControls />}
+            {type === "type 1" && <ClippingPlaneTransformControls />}
+            {type === "type 2" && <ClippingPlanePanelControls />}
         </>
     );
 }

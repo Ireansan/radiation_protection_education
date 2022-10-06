@@ -1,2 +1,2 @@
-export {default as VolumeRenderObject} from "./VolumeRenderObject";
-export {default as VolumeFileObject} from "./VolumeFileObject";
+export { default as VolumeRenderData } from "./VolumeRenderData";
+export { default as VolumeRenderObject } from "./VolumeRenderObject";

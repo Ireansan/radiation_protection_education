@@ -2,10 +2,8 @@ import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { useControls, folder } from "leva";
 
-import {
-    clippingPlanePanelControlsStates,
-    clippingPlaneStore,
-} from "../states";
+import { clippingPlanePanelControlsStates } from "../states";
+import { clippingPlaneStore } from "../stores";
 
 /** */
 const degreeToRad = (d: number): number => {
@@ -16,8 +14,11 @@ const degreeToRad = (d: number): number => {
  * @function ClippingPlanePanelControls
  * @abstract
  */
-function ClippingPlanePanelControls() {
-    const { plane, setPosition, setMatrix, setPlane } = clippingPlaneStore();
+function ClippingPlanePanelControls({}) {
+    const plane = clippingPlaneStore((state) => state.plane);
+    const setPosition = clippingPlaneStore((state) => state.setPosition);
+    const setMatrix = clippingPlaneStore((state) => state.setMatrix);
+    const setPlane = clippingPlaneStore((state) => state.setPlane);
 
     const planeHelperRef = useRef<THREE.PlaneHelper>(
         new THREE.PlaneHelper(new THREE.Plane())

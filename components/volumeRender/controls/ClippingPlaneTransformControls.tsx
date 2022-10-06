@@ -6,17 +6,18 @@ import { TransformControls as TransformControlsLib } from "three-stdlib";
 import { useControls, folder } from "leva";
 import { useSnapshot } from "valtio";
 
-import {
-    clippingPlaneTransformControlsStates,
-    clippingPlaneStore,
-} from "../states";
+import { clippingPlaneTransformControlsStates } from "../states";
+import { clippingPlaneStore } from "../stores";
 
 /**
  * @function ClippingPlaneTransformControls
  * @abstract
  */
-function ClippingPlaneTransformControls() {
-    const { plane, setPosition, setMatrix, setPlane } = clippingPlaneStore();
+function ClippingPlaneTransformControls({}) {
+    const plane = clippingPlaneStore((state) => state.plane);
+    const setPosition = clippingPlaneStore((state) => state.setPosition);
+    const setMatrix = clippingPlaneStore((state) => state.setMatrix);
+    const setPlane = clippingPlaneStore((state) => state.setPlane);
     const { mode, space, position, rotation } = useSnapshot(
         clippingPlaneTransformControlsStates
     );

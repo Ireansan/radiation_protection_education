@@ -20,6 +20,7 @@ type volumeRenderObjArgs = {
     colormap: number;
     renderstyle: string;
     isothreshold: number;
+    clipping?: boolean;
     plane?: THREE.Plane;
 };
 /**
@@ -35,6 +36,7 @@ type volumeRenderObjArgs = {
  * @param colormap number
  * @param renderstyle string
  * @param isothreshold number
+ * @param clipping boolean, Default false
  * @param plane THREE.Plane
  */
 function VolumeRenderObject({
@@ -48,9 +50,12 @@ function VolumeRenderObject({
     colormap,
     renderstyle,
     isothreshold,
+    clipping = false,
     plane,
     ...props
 }: volumeRenderObjArgs) {
+    console.log("VolumeRenderObject", volume, clipping, plane);
+
     const { gl } = useThree();
     gl.localClippingEnabled = true;
 
@@ -115,8 +120,10 @@ function VolumeRenderObject({
         uniforms.u_modelMatrix.value = modelMatrix;
 
         materialRef.current.side = THREE.BackSide; // The volume shader uses the backface as its "reference point"
-        materialRef.current.clipping = true;
-        materialRef.current.clippingPlanes = [plane];
+        materialRef.current.clipping = clipping;
+        if (clipping) {
+            materialRef.current.clippingPlanes = [plane];
+        }
     }, []);
 
     useEffect(() => {
@@ -150,7 +157,9 @@ function VolumeRenderObject({
             renderstyle === "mip" ? 0 : 1; // 0: MIP, 1: ISO
         materialRef.current.uniforms.u_renderthreshold.value = isothreshold; // For ISO renderstyle
         materialRef.current.uniforms.u_cmdata.value = cmtextures[colormap];
-        materialRef.current.clippingPlanes = [plane];
+        if (clipping) {
+            materialRef.current.clippingPlanes = [plane];
+        }
     });
 
     return (

@@ -4,7 +4,7 @@
 
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
-import React, { useMemo, useEffect, Suspense } from "react";
+import React, { useState, useMemo, useEffect, Suspense } from "react";
 
 import { Canvas } from "@react-three/fiber";
 import {
@@ -16,10 +16,16 @@ import {
 import * as THREE from "three";
 
 import {
+    // States
+    volumeStore,
+    clippingPlaneStore,
+    // Loader
     volumeLoader,
-    VolumeRender,
+    // Components
+    VolumeRenderAnimation,
     VolumeRenderControls,
 } from "../components/volumeRender";
+import * as Models from "../components/models";
 
 import styles from "../styles/threejs.module.css";
 
@@ -50,22 +56,7 @@ const Box = ({ ...props }) => {
 function NRRDView() {
     const h = 512; // frustum height
     const camera = new THREE.OrthographicCamera();
-
-    // nrrd
-    var filepaths = [
-        "models/nrrd/stent.nrrd",
-        "models/nrrd/dose_106_200_290.nrrd",
-        "models/nrrd/dose_d100.nrrd",
-    ];
-    const volume: any = useMemo(() => {
-        return volumeLoader(filepaths)[0];
-    }, [filepaths]);
-
-    // cmtexture
-    const cmtextures = [
-        new THREE.TextureLoader().load("textures/cm_viridis.png"),
-        new THREE.TextureLoader().load("textures/cm_gray.png"),
-    ];
+    const setCmtextures = volumeStore((state) => state.setCmtextures);
 
     // Init
     useEffect(() => {
@@ -82,6 +73,12 @@ function NRRDView() {
         );
         camera.position.set(-64, -64, 128);
         camera.up.set(0, 0, 1); // In our data, z is up
+
+        // cmtextures
+        setCmtextures([
+            new THREE.TextureLoader().load("textures/cm_viridis.png"),
+            new THREE.TextureLoader().load("textures/cm_gray.png"),
+        ]);
     }, []);
 
     return (
@@ -89,13 +86,14 @@ function NRRDView() {
             <div className={styles.canvas}>
                 <Canvas camera={camera}>
                     <Suspense fallback={null}>
-                        <VolumeRender volume={volume} cmtextures={cmtextures} />
+                        <Models.Stent clipping={true} />
                     </Suspense>
 
-                    <VolumeRenderControls />
+                    <VolumeRenderControls clipping={true} />
                     <OrbitControls makeDefault />
 
-                    {/* <Box scale={[5, 50, 5]} position={[-10, 4.6, -3]} /> */}
+                    {/* <Box scale={[10, 10, 10]} position={[-10, 4.6, -3]} /> */}
+                    {/* <Box scale={[10, 10, 10]} position={[0, 0, 0]} /> */}
 
                     <Stats />
                     <GizmoHelper
