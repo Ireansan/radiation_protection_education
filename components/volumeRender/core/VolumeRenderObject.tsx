@@ -54,8 +54,6 @@ function VolumeRenderObject({
     plane,
     ...props
 }: volumeRenderObjArgs) {
-    console.log("VolumeRenderObject", volume, clipping, plane);
-
     const { gl } = useThree();
     gl.localClippingEnabled = true;
 

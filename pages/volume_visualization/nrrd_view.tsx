@@ -1,4 +1,8 @@
-import { NextPage, GetStaticProps } from "next";
+/**
+ * https://github.com/mrdoob/three.js/blob/master/examples/webgl2_materials_texture3d.html
+ */
+
+import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import React, { useState, useMemo, useEffect, Suspense } from "react";
 
@@ -12,27 +16,50 @@ import {
 import * as THREE from "three";
 
 import {
-    // Stores
+    // States
     volumeStore,
     clippingPlaneStore,
+    // Loader
+    volumeLoader,
     // Components
     VolumeRenderAnimation,
     VolumeRenderControls,
-} from "../components/volumeRender";
-import * as Models from "../components/models";
+} from "../../components/volumeRender";
+import * as Models from "../../components/models";
 
-import styles from "../styles/threejs.module.css";
+import styles from "../../styles/threejs.module.css";
 
-function DoseVisualization() {
+const Plane = ({ ...props }) => {
+    return (
+        <>
+            <mesh {...props}>
+                <planeGeometry />
+            </mesh>
+        </>
+    );
+};
+
+const Box = ({ ...props }) => {
+    return (
+        <>
+            <mesh {...props}>
+                <boxGeometry />
+            </mesh>
+        </>
+    );
+};
+
+/**
+ * https://zenn.dev/hironorioka28/articles/8247133329d64e
+ * @returns
+ */
+function NRRDView() {
     const h = 512; // frustum height
     const camera = new THREE.OrthographicCamera();
     const setCmtextures = volumeStore((state) => state.setCmtextures);
-    const setNormal = clippingPlaneStore((state) => state.setNormal);
-    const setPlane = clippingPlaneStore((state) => state.setPlane);
 
     // Init
     useEffect(() => {
-        // Setup Camera
         const aspect = window.innerWidth / window.innerHeight;
         camera.copy(
             new THREE.OrthographicCamera(
@@ -45,12 +72,12 @@ function DoseVisualization() {
             )
         );
         camera.position.set(-64, -64, 128);
-        camera.up.set(0, 0, 1); // z up
+        camera.up.set(0, 0, 1); // In our data, z is up
 
         // cmtextures
         setCmtextures([
-            new THREE.TextureLoader().load("textures/cm_viridis.png"),
-            new THREE.TextureLoader().load("textures/cm_gray.png"),
+            new THREE.TextureLoader().load("/textures/cm_viridis.png"),
+            new THREE.TextureLoader().load("/textures/cm_gray.png"),
         ]);
     }, []);
 
@@ -59,16 +86,14 @@ function DoseVisualization() {
             <div className={styles.canvas}>
                 <Canvas camera={camera}>
                     <Suspense fallback={null}>
-                        <VolumeRenderAnimation>
-                            <Models.Dose clipping={true} />
-                            <Models.Dose_106_200_290 clipping={true} />
-                            <Models.Dose_d100 clipping={true} />
-                            <Models.Stent clipping={true} />
-                        </VolumeRenderAnimation>
+                        <Models.Stent clipping={true} />
                     </Suspense>
 
-                    <VolumeRenderControls clipping={true} animation={true} />
+                    <VolumeRenderControls clipping={true} />
                     <OrbitControls makeDefault />
+
+                    {/* <Box scale={[10, 10, 10]} position={[-10, 4.6, -3]} /> */}
+                    {/* <Box scale={[10, 10, 10]} position={[0, 0, 0]} /> */}
 
                     <Stats />
                     <GizmoHelper
@@ -87,4 +112,4 @@ function DoseVisualization() {
     );
 }
 
-export default DoseVisualization;
+export default NRRDView;

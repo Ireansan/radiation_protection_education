@@ -13,7 +13,7 @@ function Dose_d100({
     clipping = false,
     ...props
 }: modelProperties) {
-    const volume: any = useLoader(NRRDLoader, "models/nrrd/dose_d100.nrrd");
+    const volume: any = useLoader(NRRDLoader, "/models/nrrd/dose_d100.nrrd");
 
     return (
         <>

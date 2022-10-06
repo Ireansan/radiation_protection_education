@@ -15,7 +15,7 @@ function Dose_106_200_290({
 }: modelProperties) {
     const volume: any = useLoader(
         NRRDLoader,
-        "models/nrrd/dose_106_200_290.nrrd"
+        "/models/nrrd/dose_106_200_290.nrrd"
     );
 
     return (

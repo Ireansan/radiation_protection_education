@@ -13,8 +13,7 @@ function Stent({
     clipping = false,
     ...props
 }: modelProperties) {
-    const volume: any = useLoader(NRRDLoader, "models/nrrd/stent.nrrd");
-    console.log("Finish load stent.nrrd", volume, clipping);
+    const volume: any = useLoader(NRRDLoader, "/models/nrrd/stent.nrrd");
 
     return (
         <>

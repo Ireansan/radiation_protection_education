@@ -33,15 +33,6 @@ function VolumeRenderData({
     const renderstyle = volumeStore((state) => state.renderstyle);
     const isothreshold = volumeStore((state) => state.isothreshold);
     const plane = clippingPlaneStore((state) => state.plane);
-    // console.log(
-    //     "VolumeRenderData",
-    //     clim1,
-    //     clim2,
-    //     cmtextures,
-    //     colormap,
-    //     renderstyle,
-    //     isothreshold
-    // );
 
     return (
         <>

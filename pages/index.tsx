@@ -28,28 +28,28 @@ const Home: NextPage = () => {
                 </p>
 
                 <div className={styles.grid}>
-                    <Link href={"/nrrd_view"}>
+                    <Link href={"/volume_visualization/nrrd_view"}>
                         <a className={styles.card}>
                             <h2>NRRD View &rarr;</h2>
                             <p>Next.js + react-three-fiber, Texture 3D</p>
                         </a>
                     </Link>
 
-                    <Link href={"/dose_visualization"}>
+                    <Link href={"/volume_visualization/dose_visualization"}>
                         <a className={styles.card}>
                             <h2>Dose Visualization &rarr;</h2>
                             <p>Next.js + react-three-fiber, Texture 3D</p>
                         </a>
                     </Link>
 
-                    <Link href={"/dose_visualization_VR"}>
+                    <Link href={"/volume_visualization/dose_visualization_VR"}>
                         <a className={styles.card}>
                             <h2>Dose Visualization (Ver. VR)&rarr;</h2>
                             <p>Next.js + react-three-fiber, Texture 3D</p>
                         </a>
                     </Link>
 
-                    <Link href={"/drop_file_input"}>
+                    <Link href={"/file_convert/drop_file_input"}>
                         <a className={styles.card}>
                             <h2>File Convert&rarr;</h2>
                             <p>Next.js</p>

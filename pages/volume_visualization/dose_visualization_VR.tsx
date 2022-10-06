@@ -4,7 +4,12 @@ import React, { useMemo, useEffect, Suspense } from "react";
 
 import { Canvas } from "@react-three/fiber";
 import { VRButton, XR, Interactive, Controllers } from "@react-three/xr";
-import { Stats, GizmoHelper, GizmoViewport } from "@react-three/drei";
+import {
+    OrbitControls,
+    Stats,
+    GizmoHelper,
+    GizmoViewport,
+} from "@react-three/drei";
 import * as THREE from "three";
 
 import {
@@ -14,16 +19,16 @@ import {
     // Components
     VolumeRenderAnimation,
     VolumeRenderControls,
-} from "../components/volumeRender";
-import * as Models from "../components/models";
+} from "../../components/volumeRender";
+import * as Models from "../../components/models";
 
-import styles from "../styles/threejs.module.css";
+import styles from "../../styles/threejs.module.css";
 
-function DoseVisualization() {
+function DoseVisualizationVR() {
     const h = 512; // frustum height
     const camera = new THREE.OrthographicCamera();
     const setCmtextures = volumeStore((state) => state.setCmtextures);
-    const { setNormal } = clippingPlaneStore();
+    const setNormal = clippingPlaneStore((state) => state.setNormal);
 
     // Init
     useEffect(() => {
@@ -39,14 +44,13 @@ function DoseVisualization() {
                 1000
             )
         );
+        camera.position.set(-64, -64, 128);
         camera.up.set(0, 0, 1); // z up
-
-        // volumeStates.rotation.set(0, Math.PI / 2, 0);
 
         // cmtextures
         setCmtextures([
-            new THREE.TextureLoader().load("textures/cm_viridis.png"),
-            new THREE.TextureLoader().load("textures/cm_gray.png"),
+            new THREE.TextureLoader().load("/textures/cm_viridis.png"),
+            new THREE.TextureLoader().load("/textures/cm_gray.png"),
         ]);
     }, []);
 
@@ -65,12 +69,11 @@ function DoseVisualization() {
                             </VolumeRenderAnimation>
                         </Suspense>
                     </XR>
-
-                    <Stats />
                 </Canvas>
+                <Stats />
             </div>
         </div>
     );
 }
 
-export default DoseVisualization;
+export default DoseVisualizationVR;

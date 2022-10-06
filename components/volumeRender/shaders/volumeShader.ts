@@ -1,8 +1,8 @@
 /**
  * Original:
- * 	https://github.com/mrdoob/three.js/blob/dev/examples/jsm/shaders/VolumeShader.js
+ * @link https://github.com/mrdoob/three.js/blob/dev/examples/jsm/shaders/VolumeShader.js
  *
- * https://stackoverflow.com/questions/42532545/add-clipping-to-three-shadermaterial
+ * @link https://stackoverflow.com/questions/42532545/add-clipping-to-three-shadermaterial
  *
  */
 
