@@ -69,11 +69,23 @@ function DoseVisualization() {
             <div className={styles.canvas}>
                 <Canvas camera={camera}>
                     <Suspense fallback={null}>
-                        <VolumeRenderAnimation>
-                            <Models.Dose clipping={true} />
-                            <Models.Dose_106_200_290 clipping={true} />
-                            <Models.Dose_d100 clipping={true} />
-                            <Models.Stent clipping={true} />
+                        <VolumeRenderAnimation rotation={[0, Math.PI / 2, 0]}>
+                            <Models.Dose_1 clipping={true} />
+                            <Models.Dose_2 clipping={true} />
+                            <Models.Dose_3 clipping={true} />
+                            <Models.Dose_4 clipping={true} />
+                            <Models.Dose_5 clipping={true} />
+                            <Models.Dose_6 clipping={true} />
+                            <Models.Dose_7 clipping={true} />
+                            <Models.Dose_8 clipping={true} />
+                            <Models.Dose_9 clipping={true} />
+                            <Models.Dose_10 clipping={true} />
+                            <Models.Dose_11 clipping={true} />
+                            <Models.Dose_12 clipping={true} />
+                            <Models.Dose_13 clipping={true} />
+                            <Models.Dose_14 clipping={true} />
+                            <Models.Dose_15 clipping={true} />
+                            <Models.Dose_16 clipping={true} />
                         </VolumeRenderAnimation>
                     </Suspense>
 
