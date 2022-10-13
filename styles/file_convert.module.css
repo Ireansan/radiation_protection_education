@@ -1,0 +1,11 @@
+.box {
+    background-color: var(--box-bg);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: var(--box-shadow);
+}
+
+.header {
+    margin-bottom: 30px;
+    text-align: center;
+}
