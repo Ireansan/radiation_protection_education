@@ -3,7 +3,7 @@ import { useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 import { NRRDLoader } from "three/examples/jsm/loaders/NRRDLoader";
 
-import { modelProperties } from "./types";
+import { modelProps } from "./types";
 import { VolumeRenderData } from "../volumeRender";
 
 function Dose({
@@ -12,7 +12,7 @@ function Dose({
     scale = new THREE.Vector3(1, 1, 1),
     clipping = false,
     ...props
-}: modelProperties) {
+}: modelProps) {
     const volume: any = useLoader(NRRDLoader, "/models/nrrd/dose.nrrd");
 
     return (
