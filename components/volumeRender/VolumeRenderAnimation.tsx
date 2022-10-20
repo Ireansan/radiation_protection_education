@@ -6,7 +6,7 @@ import { useSnapshot } from "valtio";
 
 import { animationStates } from "./states";
 
-type volumeRenderAnimationArg = {
+type volumeRenderAnimationProps = {
     children: React.ReactNode;
 };
 /**
@@ -16,7 +16,7 @@ type volumeRenderAnimationArg = {
 function VolumeRenderAnimation({
     children,
     ...props
-}: volumeRenderAnimationArg) {
+}: volumeRenderAnimationProps) {
     const { animate, loop, speed, i } = useSnapshot(animationStates);
 
     const childrenLength = Children.count(children);

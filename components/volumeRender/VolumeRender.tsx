@@ -25,14 +25,25 @@ function VolumeRender({
     clipping = false,
     ...props
 }: volumeRenderArg) {
-    const setPosition = volumeStore((state) => state.setPosition);
-    const setRotation = volumeStore((state) => state.setRotation);
-    const setScale = volumeStore((state) => state.setScale);
-    const clim1 = volumeStore((state) => state.clim1);
-    const clim2 = volumeStore((state) => state.clim2);
-    const colormap = volumeStore((state) => state.colormap);
-    const renderstyle = volumeStore((state) => state.renderstyle);
-    const isothreshold = volumeStore((state) => state.isothreshold);
+    const [
+        setPosition,
+        setRotation,
+        setScale,
+        clim1,
+        clim2,
+        colormap,
+        renderstyle,
+        isothreshold,
+    ] = volumeStore((state) => [
+        state.setPosition,
+        state.setRotation,
+        state.setScale,
+        state.clim1,
+        state.clim2,
+        state.colormap,
+        state.renderstyle,
+        state.isothreshold,
+    ]);
 
     const plane: THREE.Plane = clippingPlaneStore((state) => state.plane);
 

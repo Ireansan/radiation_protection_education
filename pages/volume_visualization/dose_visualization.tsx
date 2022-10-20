@@ -20,6 +20,7 @@ import {
     VolumeRenderControls,
 } from "../../components/volumeRender";
 import * as Models from "../../components/models";
+import * as Scenes from "../../components/scenes";
 
 import styles from "../../styles/threejs.module.css";
 
@@ -37,8 +38,10 @@ function DoseVisualization() {
     const h = 512; // frustum height
     const camera = new THREE.OrthographicCamera();
     const setCmtextures = volumeStore((state) => state.setCmtextures);
-    const setNormal = clippingPlaneStore((state) => state.setNormal);
-    const setPlane = clippingPlaneStore((state) => state.setPlane);
+    const [setNormal, setPlane] = clippingPlaneStore((state) => [
+        state.setNormal,
+        state.setPlane,
+    ]);
 
     // Init
     useEffect(() => {
@@ -69,24 +72,7 @@ function DoseVisualization() {
             <div className={styles.canvas}>
                 <Canvas camera={camera}>
                     <Suspense fallback={null}>
-                        <VolumeRenderAnimation rotation={[0, Math.PI / 2, 0]}>
-                            <Models.Dose_1 clipping={true} />
-                            <Models.Dose_2 clipping={true} />
-                            <Models.Dose_3 clipping={true} />
-                            <Models.Dose_4 clipping={true} />
-                            <Models.Dose_5 clipping={true} />
-                            <Models.Dose_6 clipping={true} />
-                            <Models.Dose_7 clipping={true} />
-                            <Models.Dose_8 clipping={true} />
-                            <Models.Dose_9 clipping={true} />
-                            <Models.Dose_10 clipping={true} />
-                            <Models.Dose_11 clipping={true} />
-                            <Models.Dose_12 clipping={true} />
-                            <Models.Dose_13 clipping={true} />
-                            <Models.Dose_14 clipping={true} />
-                            <Models.Dose_15 clipping={true} />
-                            <Models.Dose_16 clipping={true} />
-                        </VolumeRenderAnimation>
+                        <Scenes.XRayRoomAnimation />
                     </Suspense>
 
                     <VolumeRenderControls clipping={true} animation={true} />

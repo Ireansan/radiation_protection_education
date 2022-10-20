@@ -2,12 +2,13 @@ import * as THREE from "three";
 
 import { VolumeRenderObject } from "./index";
 import { volumeStore, clippingPlaneStore } from "../stores";
+import { useEffect, useRef } from "react";
 
-type volumeRenderDataArg = {
+type volumeRenderDataProps = {
     volume: any;
-    position?: THREE.Vector3;
-    rotation?: THREE.Euler;
-    scale?: THREE.Vector3;
+    position?: number[];
+    rotation?: number[];
+    scale?: number[];
     clipping?: boolean;
 };
 /**
@@ -20,27 +21,33 @@ type volumeRenderDataArg = {
  */
 function VolumeRenderData({
     volume,
-    position = new THREE.Vector3(0, 0, 0),
-    rotation = new THREE.Euler(0, 0, 0),
-    scale = new THREE.Vector3(1, 1, 1),
+    position = [0, 0, 0],
+    rotation = [0, 0, 0],
+    scale = [1, 1, 1],
     clipping = false,
     ...props
-}: volumeRenderDataArg) {
-    const clim1 = volumeStore((state) => state.clim1);
-    const clim2 = volumeStore((state) => state.clim2);
-    const cmtextures = volumeStore((state) => state.cmtextures);
-    const colormap = volumeStore((state) => state.colormap);
-    const renderstyle = volumeStore((state) => state.renderstyle);
-    const isothreshold = volumeStore((state) => state.isothreshold);
+}: volumeRenderDataProps) {
+    const [clim1, clim2, cmtextures, colormap, renderstyle, isothreshold] =
+        volumeStore((state) => [
+            state.clim1,
+            state.clim2,
+            state.cmtextures,
+            state.colormap,
+            state.renderstyle,
+            state.isothreshold,
+        ]);
     const plane = clippingPlaneStore((state) => state.plane);
+    const position_ = new THREE.Vector3(position[0], position[1], position[2]);
+    const rotation_ = new THREE.Euler(rotation[0], rotation[1], rotation[2]);
+    const scale_ = new THREE.Vector3(scale[0], scale[1], scale[2]);
 
     return (
         <>
             <VolumeRenderObject
                 volume={volume}
-                position={position}
-                rotation={rotation}
-                scale={scale}
+                position={position_}
+                rotation={rotation_}
+                scale={scale_}
                 clim1={clim1}
                 clim2={clim2}
                 cmtextures={cmtextures}

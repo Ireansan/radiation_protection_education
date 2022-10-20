@@ -86,8 +86,8 @@ const vec4 specular_color=vec4(1.,1.,1.,1.);
 const float shininess=40.;
 
 // https://github.com/mrdoob/three.js/blob/dev/src/renderers/shaders/ShaderChunk/clipping_planes_pars_fragment.glsl.js
-#if NUM_CLIPPING_PLANES > 0
-	uniform vec4 clippingPlanes[ NUM_CLIPPING_PLANES ];
+#if NUM_CLIPPING_PLANES>0
+uniform vec4 clippingPlanes[NUM_CLIPPING_PLANES];
 #endif
 
 void cast_mip(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray);
@@ -134,7 +134,7 @@ void main(){
 	// whether the rays are correctly oriented
 	//'gl_FragColor = vec4(0.0, float(nsteps) / 1.0 / u_size.x, 1.0, 1.0);
 	//'return;
-
+	
 	if(u_renderstyle==0)
 	cast_mip(start_loc,step,nsteps,view_ray);
 	else if(u_renderstyle==1)
@@ -146,36 +146,36 @@ void main(){
 
 // https://github.com/mrdoob/three.js/blob/dev/src/renderers/shaders/ShaderChunk/clipping_planes_vertex.glsl.js
 vec3 clip_position(vec3 position){
-	vec4 position4 = vec4(position, 1.0);
-	vec4 mvPosition = viewMatrix * u_modelMatrix * position4;
-	return - mvPosition.xyz;
+	vec4 position4=vec4(position,1.);
+	vec4 mvPosition=viewMatrix*u_modelMatrix*position4;
+	return-mvPosition.xyz;
 }
 
 // https://discourse.threejs.org/t/multiple-angle-clipping-in-volume/9242
 // https://github.com/mrdoob/three.js/blob/dev/src/renderers/shaders/ShaderChunk/clipping_planes_fragment.glsl.js
 // https://qiita.com/edo_m18/items/b1bc950ac6965c321e29
 bool within_boundaries(vec3 position){
-	bool clipped = false;
-
-	#if NUM_CLIPPING_PLANES > 0
-		vec4 plane;
-		
-		#pragma unroll_loop_start
-		for ( int i = 0; i < UNION_CLIPPING_PLANES; i ++ ) {
-			plane = clippingPlanes[ i ];
-			clipped = ( dot( position, plane.xyz ) > plane.w );
-		}
-		#pragma unroll_loop_end
-		#if UNION_CLIPPING_PLANES < NUM_CLIPPING_PLANES
-			#pragma unroll_loop_start
-			for ( int i = UNION_CLIPPING_PLANES; i < NUM_CLIPPING_PLANES; i ++ ) {
-				plane = clippingPlanes[ i ];
-				clipped = ( dot( position, plane.xyz ) > plane.w ) && clipped;
-			}
-			#pragma unroll_loop_end
-		#endif
+	bool clipped=false;
+	
+	#if NUM_CLIPPING_PLANES>0
+	vec4 plane;
+	
+	#pragma unroll_loop_start
+	for(int i=0;i<UNION_CLIPPING_PLANES;i++){
+		plane=clippingPlanes[i];
+		clipped=(dot(position,plane.xyz)>plane.w);
+	}
+	#pragma unroll_loop_end
+	#if UNION_CLIPPING_PLANES<NUM_CLIPPING_PLANES
+	#pragma unroll_loop_start
+	for(int i=UNION_CLIPPING_PLANES;i<NUM_CLIPPING_PLANES;i++){
+		plane=clippingPlanes[i];
+		clipped=(dot(position,plane.xyz)>plane.w)&&clipped;
+	}
+	#pragma unroll_loop_end
 	#endif
-
+	#endif
+	
 	return clipped;
 }
 
@@ -202,8 +202,14 @@ void cast_mip(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
 		break;
 		// Sample from the 3D texture
 		float val=sample1(loc);
+		
+		// FIXME:
+		vec3 uv_position=u_size*loc;
+		vec3 vClipPosition=clip_position(uv_position);
+		bool clipped=within_boundaries(vClipPosition);
+		
 		// Apply MIP operation
-		if(val>max_val){
+		if(val>max_val&&!clipped){
 			max_val=val;
 			max_i=iter;
 		}
@@ -238,24 +244,24 @@ void cast_iso(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
 	for(int iter=0;iter<MAX_STEPS;iter++){
 		if(iter>=nsteps)
 		break;
-
+		
 		// Sample from the 3D texture
 		float val=sample1(loc);
-
+		
 		// FIXME:
-		vec3 uv_position = u_size * loc;
-		vec3 vClipPosition = clip_position(uv_position);
-		bool clipped = within_boundaries(vClipPosition);
-
-		if(val>low_threshold && !clipped){
+		vec3 uv_position=u_size*loc;
+		vec3 vClipPosition=clip_position(uv_position);
+		bool clipped=within_boundaries(vClipPosition);
+		
+		if(val>low_threshold&&!clipped){
 			// Take the last interval in smaller steps
 			vec3 iloc=loc-.5*step;
 			vec3 istep=step/float(REFINEMENT_STEPS);
 			for(int i=0;i<REFINEMENT_STEPS;i++){
 				val=sample1(iloc);
-				uv_position = u_size * iloc;
-				clipped = within_boundaries(uv_position);
-				if(val>u_renderthreshold || clipped){
+				uv_position=u_size*iloc;
+				clipped=within_boundaries(uv_position);
+				if(val>u_renderthreshold||clipped){
 					gl_FragColor=add_lighting(val,iloc,dstep,view_ray);
 					return;
 				}
