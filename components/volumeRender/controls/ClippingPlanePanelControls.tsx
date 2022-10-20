@@ -15,10 +15,14 @@ const degreeToRad = (d: number): number => {
  * @abstract
  */
 function ClippingPlanePanelControls({}) {
-    const plane = clippingPlaneStore((state) => state.plane);
-    const setPosition = clippingPlaneStore((state) => state.setPosition);
-    const setMatrix = clippingPlaneStore((state) => state.setMatrix);
-    const setPlane = clippingPlaneStore((state) => state.setPlane);
+    const [plane, setPosition, setMatrix, setPlane] = clippingPlaneStore(
+        (state) => [
+            state.plane,
+            state.setPosition,
+            state.setMatrix,
+            state.setPlane,
+        ]
+    );
 
     const planeHelperRef = useRef<THREE.PlaneHelper>(
         new THREE.PlaneHelper(new THREE.Plane())

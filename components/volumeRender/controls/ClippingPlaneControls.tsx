@@ -21,9 +21,11 @@ import {
  */
 function ClippingPlaneControls({}) {
     // ClippingPlane State
-    const setPosition = clippingPlaneStore((state) => state.setPosition);
-    const setMatrix = clippingPlaneStore((state) => state.setMatrix);
-    const setPlane = clippingPlaneStore((state) => state.setPlane);
+    const [setPosition, setMatrix, setPlane] = clippingPlaneStore((state) => [
+        state.setPosition,
+        state.setMatrix,
+        state.setPlane,
+    ]);
     // Controls State
     const { type } = useSnapshot(clippingPlaneControlsStates);
     // TransformControls State

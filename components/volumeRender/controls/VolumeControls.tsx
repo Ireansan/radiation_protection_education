@@ -8,11 +8,14 @@ import { volumeStore } from "../stores";
  * @abstract
  */
 function VolumeControls() {
-    const setClim1 = volumeStore((state) => state.setClim1);
-    const setClim2 = volumeStore((state) => state.setClim2);
-    const setColormap = volumeStore((state) => state.setColormap);
-    const setRenderstyle = volumeStore((state) => state.setRenderstyle);
-    const setIsothreshold = volumeStore((state) => state.setIsothreshold);
+    const [setClim1, setClim2, setColormap, setRenderstyle, setIsothreshold] =
+        volumeStore((state) => [
+            state.setClim1,
+            state.setClim2,
+            state.setColormap,
+            state.setRenderstyle,
+            state.setIsothreshold,
+        ]);
     const [volumeConfig, volumeSet] = useControls(() => ({
         clim1: {
             value: 0,
