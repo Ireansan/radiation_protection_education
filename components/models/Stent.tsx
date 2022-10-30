@@ -4,12 +4,12 @@ import * as THREE from "three";
 import { NRRDLoader } from "three/examples/jsm/loaders/NRRDLoader";
 
 import { modelProps } from "./types";
-import { VolumeRenderData } from "../volumeRender";
+import { Object } from "../volumeRender";
 
-function Stent({
-    position = new THREE.Vector3(0, 0, 0),
-    rotation = new THREE.Euler(0, 0, 0),
-    scale = new THREE.Vector3(1, 1, 1),
+export function Stent({
+    position = [0, 0, 0],
+    rotation = [0, 0, 0],
+    scale = [1, 1, 1],
     clipping = false,
     ...props
 }: modelProps) {
@@ -17,15 +17,14 @@ function Stent({
 
     return (
         <>
-            <VolumeRenderData
+            <Object
                 volume={volume}
+                clipping={clipping}
                 position={position}
                 rotation={rotation}
                 scale={scale}
-                clipping={clipping}
+                {...props}
             />
         </>
     );
 }
-
-export default Stent;

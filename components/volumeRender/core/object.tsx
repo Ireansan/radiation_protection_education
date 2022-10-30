@@ -1,59 +1,49 @@
-/**
- * https://github.com/mrdoob/three.js/blob/master/examples/webgl2_materials_texture3d.html
- */
-
 import React, { useRef, useLayoutEffect, useState, useEffect } from "react";
 
 import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 import volumeRenderShader from "../shaders/volumeShader";
+import { cmtextures } from "../textures";
 
-type volumeRenderObjArgs = {
+type volumeProps = {
     volume: any;
-    position?: THREE.Vector3;
-    rotation?: THREE.Euler;
-    scale?: THREE.Vector3;
-    cmtextures: THREE.Texture[];
+};
+export type objectProps = {
     clim1?: number;
     clim2?: number;
-    colormap: number;
-    renderstyle: string;
-    isothreshold: number;
+    colormap?: string;
+    renderstyle?: string;
+    isothreshold?: number;
     clipping?: boolean;
-    plane?: THREE.Plane;
+};
+export type planesProps = {
+    planes?: THREE.Plane[];
 };
 /**
- * @function VolumeRenderObject
+ * @link https://github.com/mrdoob/three.js/blob/master/examples/webgl2_materials_texture3d.html
+ * @function Object
  * @abstract Core
  * @param volume any
- * @param position THREE.Vector3, Default (0, 0, 0)
- * @param rotation THREE.Euler, Default (0, 0, 0)
- * @param scale THREE.Vector3, Default (1, 1, 1)
- * @param cmtextures THREE.Texture[]
  * @param clim1 number, Default 0
  * @param clim2 number, Default 1
- * @param colormap number
- * @param renderstyle string
- * @param isothreshold number
+ * @param colormap string, Default viridis
+ * @param renderstyle string, Default mip
+ * @param isothreshold number, Default 0.1
  * @param clipping boolean, Default false
- * @param plane THREE.Plane
+ * @param planes THREE.Plane
  */
-function VolumeRenderObject({
+export function Object({
     volume,
-    position = new THREE.Vector3(0, 0, 0),
-    rotation = new THREE.Euler(0, 0, 0),
-    scale = new THREE.Vector3(1, 1, 1),
-    cmtextures,
     clim1 = 0,
     clim2 = 1,
-    colormap,
-    renderstyle,
-    isothreshold,
+    colormap = "viridis",
+    renderstyle = "mip",
+    isothreshold = 0.1,
     clipping = false,
-    plane,
+    planes = [],
     ...props
-}: volumeRenderObjArgs) {
+}: volumeProps & objectProps & planesProps & JSX.IntrinsicElements["mesh"]) {
     const { gl } = useThree();
     gl.localClippingEnabled = true;
 
@@ -69,6 +59,7 @@ function VolumeRenderObject({
     const geometryRef = useRef<THREE.BufferGeometry>(new THREE.BoxGeometry());
 
     // Texture
+    const cmtexturesRef = useRef<{ [index: string]: THREE.Texture }>(null!);
     const [texture, setTexture] = useState<THREE.Data3DTexture>(
         new THREE.Data3DTexture(
             volume.data,
@@ -80,12 +71,11 @@ function VolumeRenderObject({
 
     // Init
     useLayoutEffect(() => {
-        // Mesh
-        meshRef.current.position.copy(position);
-        meshRef.current.rotation.copy(rotation);
-        meshRef.current.scale.copy(scale);
-
         // Texture
+        cmtexturesRef.current = {
+            viridis: new THREE.TextureLoader().load("/textures/cm_viridis.png"),
+            gray: new THREE.TextureLoader().load("/textures/cm_gray.png"),
+        };
         texture.format = THREE.RedFormat;
         texture.type = THREE.FloatType;
         texture.minFilter = texture.magFilter = THREE.LinearFilter;
@@ -107,20 +97,18 @@ function VolumeRenderObject({
         uniforms.u_clim.value.set(clim1, clim2);
         uniforms.u_renderstyle.value = renderstyle === "mip" ? 0 : 1; // 0: MIP, 1: ISO
         uniforms.u_renderthreshold.value = isothreshold; // For ISO renderstyle
-        uniforms.u_cmdata.value = cmtextures[colormap];
+        uniforms.u_cmdata.value = cmtexturesRef.current[colormap];
+        console.log(cmtexturesRef.current[colormap]);
         materialRef.current.uniforms = uniforms;
 
-        const modelMatrix = new THREE.Matrix4().compose(
-            position,
-            new THREE.Quaternion().setFromEuler(rotation),
-            scale
-        );
+        meshRef.current.updateMatrixWorld();
+        const modelMatrix = meshRef.current.matrixWorld;
         uniforms.u_modelMatrix.value = modelMatrix;
 
         materialRef.current.side = THREE.BackSide; // The volume shader uses the backface as its "reference point"
         materialRef.current.clipping = clipping;
         if (clipping) {
-            materialRef.current.clippingPlanes = [plane];
+            materialRef.current.clippingPlanes = planes;
         }
     }, []);
 
@@ -138,6 +126,7 @@ function VolumeRenderObject({
             volume.yLength / 2,
             volume.zLength / 2
         );
+        console.log(geometryRef.current);
 
         // Material
         materialRef.current.uniforms.u_data.value = texture;
@@ -154,9 +143,10 @@ function VolumeRenderObject({
         materialRef.current.uniforms.u_renderstyle.value =
             renderstyle === "mip" ? 0 : 1; // 0: MIP, 1: ISO
         materialRef.current.uniforms.u_renderthreshold.value = isothreshold; // For ISO renderstyle
-        materialRef.current.uniforms.u_cmdata.value = cmtextures[colormap];
+        materialRef.current.uniforms.u_cmdata.value =
+            cmtexturesRef.current[colormap];
         if (clipping) {
-            materialRef.current.clippingPlanes = [plane];
+            materialRef.current.clippingPlanes = planes;
         }
     });
 
@@ -169,5 +159,3 @@ function VolumeRenderObject({
         </>
     );
 }
-
-export default VolumeRenderObject;

@@ -12,14 +12,9 @@ import {
 import * as THREE from "three";
 
 import {
-    // Stores
-    volumeStore,
-    clippingPlaneStore,
-    // Components
-    VolumeRenderAnimation,
-    VolumeRenderControls,
+    VolumeControls,
+    ClippingPlaneControls,
 } from "../../components/volumeRender";
-import * as Models from "../../components/models";
 import * as Scenes from "../../components/scenes";
 
 import styles from "../../styles/threejs.module.css";
@@ -37,11 +32,6 @@ const Box = ({ ...props }) => {
 function DoseVisualization() {
     const h = 512; // frustum height
     const camera = new THREE.OrthographicCamera();
-    const setCmtextures = volumeStore((state) => state.setCmtextures);
-    const [setNormal, setPlane] = clippingPlaneStore((state) => [
-        state.setNormal,
-        state.setPlane,
-    ]);
 
     // Init
     useEffect(() => {
@@ -59,23 +49,18 @@ function DoseVisualization() {
         );
         camera.position.set(-64, -64, 128);
         camera.up.set(0, 0, 1); // z up
-
-        // cmtextures
-        setCmtextures([
-            new THREE.TextureLoader().load("/textures/cm_viridis.png"),
-            new THREE.TextureLoader().load("/textures/cm_gray.png"),
-        ]);
     }, []);
 
     return (
         <div className={styles.container}>
             <div className={styles.canvas}>
                 <Canvas camera={camera}>
-                    <Suspense fallback={null}>
-                        <Scenes.XRayRoomAnimation />
-                    </Suspense>
+                    <VolumeControls>
+                        <ClippingPlaneControls normal={[0, 0, -1]}>
+                            <Scenes.XRayRoomAnimation />
+                        </ClippingPlaneControls>
+                    </VolumeControls>
 
-                    <VolumeRenderControls clipping={true} animation={true} />
                     <OrbitControls makeDefault />
 
                     <Box scale={[10, 10, 10]} position={[0, 0, 0]} />

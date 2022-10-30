@@ -4,9 +4,9 @@ import * as THREE from "three";
 import { NRRDLoader } from "three/examples/jsm/loaders/NRRDLoader";
 
 import { modelProps } from "../types";
-import { VolumeRenderData } from "../../volumeRender";
+import { Object } from "../../volumeRender";
 
-function Dose_11({
+export function Dose_11({
     position = [0, 0, 0],
     rotation = [0, 0, 0],
     scale = [1, 1, 1],
@@ -20,15 +20,14 @@ function Dose_11({
 
     return (
         <>
-            <VolumeRenderData
+            <Object
                 volume={volume}
                 position={position}
                 rotation={rotation}
                 scale={scale}
                 clipping={clipping}
+                {...props}
             />
         </>
     );
 }
-
-export default Dose_11;

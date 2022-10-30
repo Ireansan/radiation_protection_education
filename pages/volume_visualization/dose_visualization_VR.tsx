@@ -13,22 +13,16 @@ import {
 import * as THREE from "three";
 
 import {
-    // Stores
-    volumeStore,
-    clippingPlaneStore,
-    // Components
-    VolumeRenderAnimation,
-    VolumeRenderControls,
+    VolumeControls,
+    ClippingPlaneControls,
 } from "../../components/volumeRender";
-import * as Models from "../../components/models";
+import * as Scenes from "../../components/scenes";
 
 import styles from "../../styles/threejs.module.css";
 
 function DoseVisualizationVR() {
     const h = 512; // frustum height
     const camera = new THREE.OrthographicCamera();
-    const setCmtextures = volumeStore((state) => state.setCmtextures);
-    const setNormal = clippingPlaneStore((state) => state.setNormal);
 
     // Init
     useEffect(() => {
@@ -46,12 +40,6 @@ function DoseVisualizationVR() {
         );
         camera.position.set(-64, -64, 128);
         camera.up.set(0, 0, 1); // z up
-
-        // cmtextures
-        setCmtextures([
-            new THREE.TextureLoader().load("/textures/cm_viridis.png"),
-            new THREE.TextureLoader().load("/textures/cm_gray.png"),
-        ]);
     }, []);
 
     return (
@@ -60,16 +48,14 @@ function DoseVisualizationVR() {
                 <VRButton />
                 <Canvas camera={camera}>
                     <XR>
-                        <Suspense fallback={null}>
-                            <VolumeRenderAnimation>
-                                <Models.Dose />
-                                <Models.Dose_106_200_290 />
-                                <Models.Dose_d100 />
-                                <Models.Stent />
-                            </VolumeRenderAnimation>
-                        </Suspense>
+                        <VolumeControls>
+                            <ClippingPlaneControls normal={[0, 0, -1]}>
+                                <Scenes.XRayRoomAnimation />
+                            </ClippingPlaneControls>
+                        </VolumeControls>
                     </XR>
                 </Canvas>
+
                 <Stats />
             </div>
         </div>

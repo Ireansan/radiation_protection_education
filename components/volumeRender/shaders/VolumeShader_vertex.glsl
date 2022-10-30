@@ -2,10 +2,14 @@ varying vec4 v_nearpos;
 varying vec4 v_farpos;
 varying vec3 v_position;
 
+// https://github.com/mrdoob/three.js/blob/dev/src/renderers/shaders/ShaderChunk/clipping_planes_pars_vertex.glsl.js
+varying mat4 viewtransformf;
+
 void main(){
+    
     // Prepare transforms to map to "camera view". See also:
     // https://threejs.org/docs/#api/renderers/webgl/WebGLProgram
-    mat4 viewtransformf=modelViewMatrix;
+    viewtransformf=modelViewMatrix;
     mat4 viewtransformi=inverse(modelViewMatrix);
     
     // Project local vertex coordinate to camera position. Then do a step
@@ -26,4 +30,5 @@ void main(){
     // Set varyings and output pos
     v_position=position;
     gl_Position=projectionMatrix*viewMatrix*modelMatrix*position4;
+    
 }
