@@ -52,14 +52,16 @@ export function Object({
 
     // Material
     const materialRef = useRef<THREE.ShaderMaterial>(
-        new THREE.ShaderMaterial()
+        new THREE.ShaderMaterial({})
     );
 
     // Geometry
     const geometryRef = useRef<THREE.BufferGeometry>(new THREE.BoxGeometry());
 
-    // Texture
+    // Colormap
     const cmtexturesRef = useRef<{ [index: string]: THREE.Texture }>(null!);
+
+    // Texture
     const [texture, setTexture] = useState<THREE.Data3DTexture>(
         new THREE.Data3DTexture(
             volume.data,
@@ -71,11 +73,13 @@ export function Object({
 
     // Init
     useLayoutEffect(() => {
-        // Texture
+        // Colormap
         cmtexturesRef.current = {
             viridis: new THREE.TextureLoader().load("/textures/cm_viridis.png"),
             gray: new THREE.TextureLoader().load("/textures/cm_gray.png"),
         };
+
+        // Texture
         texture.format = THREE.RedFormat;
         texture.type = THREE.FloatType;
         texture.minFilter = texture.magFilter = THREE.LinearFilter;
@@ -83,11 +87,7 @@ export function Object({
         texture.needsUpdate = true;
 
         // Material
-        const shader = volumeRenderShader;
-        materialRef.current.vertexShader = shader.vertexShader;
-        materialRef.current.fragmentShader = shader.fragmentShader;
-
-        const uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+        const uniforms = THREE.UniformsUtils.clone(volumeRenderShader.uniforms);
         uniforms.u_data.value = texture;
         uniforms.u_size.value.set(
             volume.xLength,
@@ -98,18 +98,21 @@ export function Object({
         uniforms.u_renderstyle.value = renderstyle === "mip" ? 0 : 1; // 0: MIP, 1: ISO
         uniforms.u_renderthreshold.value = isothreshold; // For ISO renderstyle
         uniforms.u_cmdata.value = cmtexturesRef.current[colormap];
-        console.log(cmtexturesRef.current[colormap]);
-        materialRef.current.uniforms = uniforms;
-
         meshRef.current.updateMatrixWorld();
-        const modelMatrix = meshRef.current.matrixWorld;
-        uniforms.u_modelMatrix.value = modelMatrix;
-
-        materialRef.current.side = THREE.BackSide; // The volume shader uses the backface as its "reference point"
+        uniforms.u_modelMatrix.value = meshRef.current.matrixWorld;
         materialRef.current.clipping = clipping;
         if (clipping) {
             materialRef.current.clippingPlanes = planes;
         }
+
+        materialRef.current.uniforms = uniforms;
+        materialRef.current.vertexShader = volumeRenderShader.vertexShader;
+        materialRef.current.fragmentShader = volumeRenderShader.fragmentShader;
+        materialRef.current.side = THREE.BackSide; // The volume shader uses the backface as its "reference point"
+    }, []);
+
+    useEffect(() => {
+        materialRef.current.uniforms.u_data.value = texture;
     }, []);
 
     useEffect(() => {
@@ -129,7 +132,6 @@ export function Object({
         console.log(geometryRef.current);
 
         // Material
-        materialRef.current.uniforms.u_data.value = texture;
         materialRef.current.uniforms.u_size.value.set(
             volume.xLength,
             volume.yLength,
@@ -145,6 +147,10 @@ export function Object({
         materialRef.current.uniforms.u_renderthreshold.value = isothreshold; // For ISO renderstyle
         materialRef.current.uniforms.u_cmdata.value =
             cmtexturesRef.current[colormap];
+        meshRef.current.updateMatrixWorld();
+        materialRef.current.uniforms.u_modelMatrix.value =
+            meshRef.current.matrixWorld;
+        materialRef.current.clipping = clipping;
         if (clipping) {
             materialRef.current.clippingPlanes = planes;
         }
