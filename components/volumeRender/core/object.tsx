@@ -129,7 +129,6 @@ export function Object({
             volume.yLength / 2,
             volume.zLength / 2
         );
-        console.log(geometryRef.current);
 
         // Material
         materialRef.current.uniforms.u_size.value.set(
