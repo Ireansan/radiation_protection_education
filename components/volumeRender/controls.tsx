@@ -78,11 +78,16 @@ export function VolumeControls({ children }: volumeControlsProps) {
 type clippingPlaneControlsProps = {
     children: React.ReactElement | React.ReactElement[];
     normal?: THREE.Vector3Tuple;
+    size?: number;
+    color?: THREE.Color;
+    subsize?: number;
+    subcolor?: THREE.Color;
 };
 /**
  * @function Controls
  * @param children React.ReactElement | React.ReactElement[];
  * @param normal THREE.Vector3Tuple
+ * @param color THREE.Color
  */
 /**
  * TODO: Support Multi plane controls
@@ -102,6 +107,10 @@ type clippingPlaneControlsProps = {
 export function ClippingPlaneControls({
     children,
     normal = [0, -1, 0],
+    size = 100,
+    color = new THREE.Color(0xffff00),
+    subsize = 50,
+    subcolor = new THREE.Color(0xaaaaaa),
     ...props
 }: clippingPlaneControlsProps & objectProps) {
     /**
@@ -114,6 +123,12 @@ export function ClippingPlaneControls({
     const [plane, setPlane] = useState<THREE.Plane>(new THREE.Plane(N, 0));
     const planeHelperRef = useRef<THREE.PlaneHelper>(null!);
     const meshRef = useRef<THREE.Mesh>(new THREE.Mesh());
+    const lineBasicMaterial = useRef<THREE.LineBasicMaterial>(
+        new THREE.LineBasicMaterial()
+    );
+    const meshBasicMaterial = useRef<THREE.MeshBasicMaterial>(
+        new THREE.MeshBasicMaterial()
+    );
 
     const planeConfig = useControls("transform", {
         mode: {
@@ -163,9 +178,8 @@ export function ClippingPlaneControls({
      * Init
      */
     useEffect(() => {
-        // Plane
-        planeHelperRef.current.plane = plane;
-        planeHelperRef.current.size = 250;
+        // Plane Mesh
+        meshRef.current.lookAt(N);
     }, []);
 
     const cloneChildren = React.Children.map(
@@ -195,9 +209,15 @@ export function ClippingPlaneControls({
                     onObjectChange(e);
                 }}
             />
-            <planeHelper ref={planeHelperRef} />
-            <mesh ref={meshRef} scale={[100, 100, 100]}>
+            <planeHelper
+                ref={planeHelperRef}
+                plane={plane}
+                size={size}
+                color={color}
+            />
+            <mesh ref={meshRef} scale={[subsize, subsize, subsize]}>
                 <planeGeometry />
+                <meshBasicMaterial color={subcolor} wireframe={true} />
             </mesh>
         </>
     );

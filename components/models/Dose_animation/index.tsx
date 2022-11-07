@@ -14,3 +14,5 @@ export * from "./Dose_13";
 export * from "./Dose_14";
 export * from "./Dose_15";
 export * from "./Dose_16";
+export * from "./Dose_material";
+export * from "./Dose_region";
