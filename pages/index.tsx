@@ -27,25 +27,78 @@ const Home: NextPage = () => {
                     <code className={styles.code}>pages/index.tsx</code>
                 </p>
 
+                <h2>Content</h2>
                 <div className={styles.grid}>
                     <Link href={"/volume_visualization/nrrd_view"}>
                         <a className={styles.card}>
                             <h2>NRRD View &rarr;</h2>
-                            <p>Next.js + react-three-fiber, Texture 3D</p>
+                            <p>Next.js + react-three/fiber, Texture 3D</p>
                         </a>
                     </Link>
 
                     <Link href={"/volume_visualization/dose_visualization"}>
                         <a className={styles.card}>
                             <h2>Dose Visualization &rarr;</h2>
-                            <p>Next.js + react-three-fiber, Texture 3D</p>
+                            <p>Next.js + react-three/fiber, Texture 3D</p>
                         </a>
                     </Link>
 
                     <Link href={"/volume_visualization/dose_visualization_VR"}>
                         <a className={styles.card}>
                             <h2>Dose Visualization (Ver. VR)&rarr;</h2>
-                            <p>Next.js + react-three-fiber, Texture 3D</p>
+                            <p>
+                                Next.js + react-three/fiber + react-three/xr,
+                                Texture 3D
+                            </p>
+                        </a>
+                    </Link>
+
+                    {/* 
+                    <Link href={"/volume_visualization/colormap"}>
+                        <a className={styles.card}>
+                            <h2>Colormap&rarr;</h2>
+                            <p>Next.js + react-three/fiber, Data Texture</p>
+                        </a>
+                    </Link>
+                     */}
+
+                    {/* 
+                    <Link href={"/multiplay/minecraft_example"}>
+                        <a className={styles.card}>
+                            <h2>Minecraft Example</h2>
+                            <p>Next.js + react-three/fiber</p>
+                        </a>
+                    </Link>
+                     */}
+
+                    <Link href={"/multiplay/game_template_test"}>
+                        <a className={styles.card}>
+                            <h2>Game Template</h2>
+                            <p>Next.js + react-three/fiber</p>
+                        </a>
+                    </Link>
+                </div>
+
+                {/* 
+                <div className={styles.grid}>
+                    <Link href={"/webrtc_test/voice_chat"}>
+                        <a className={styles.card}>
+                            <h2>WebRTC Voice Chat&rarr;</h2>
+                            <p>Next.js, WebRTC</p>
+                        </a>
+                    </Link>
+
+                    <Link href={"/webrtc_test/data_communication"}>
+                        <a className={styles.card}>
+                            <h2>WebRTC Data Communication&rarr;</h2>
+                            <p>Next.js, WebRTC</p>
+                        </a>
+                    </Link>
+
+                    <Link href={"/webrtc_test/skyway_react_example"}>
+                        <a className={styles.card}>
+                            <h2>WebRTC SkyWay Example&rarr;</h2>
+                            <p>Next.js, WebRTC</p>
                         </a>
                     </Link>
 
@@ -55,7 +108,11 @@ const Home: NextPage = () => {
                             <p>Next.js</p>
                         </a>
                     </Link>
+                </div> 
+                */}
 
+                <h2>References</h2>
+                <div className={styles.grid}>
                     <a
                         href="https://threejs.org/examples/?q=texture3d#webgl2_materials_texture3d"
                         className={styles.card}
