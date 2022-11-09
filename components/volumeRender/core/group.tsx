@@ -21,7 +21,6 @@ export function Group({ children, ...props }: groupProps) {
                 renderstyle: props.renderstyle,
                 isothreshold: props.isothreshold,
                 clipping: props.clipping || child.props.clipping,
-                plane: props.planes,
                 ...child.props,
             })
     );
