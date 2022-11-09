@@ -41,7 +41,7 @@ export default function App() {
                     <Ground />
                     <Player />
                 </Physics>
-                <ControlPanel position={[0, 2, 0]} />
+                <ControlPanel position={[0, 2, -5]} />
 
                 <ToggledOrbitControls />
                 <ToggledPointerLockControls />

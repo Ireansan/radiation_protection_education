@@ -21,6 +21,10 @@ const controls = {
     jump: false,
 };
 
+const states = {
+    animation: "idle"
+}
+
 export const debug = false as const;
 export const dpr = 1.5 as const;
 export const position = [-110, 0.75, 220] as const;
@@ -34,7 +38,7 @@ export const playerConfig = {
     moveSpeed: 5,
     boost: 2,
     cameraDistance: 5.0,
-    animationNames: ["walking", "idle"],
+    animationNames: ["walking", "jump", "idle"],
 } as const;
 
 const actionNames = ["reset"] as const;
@@ -42,6 +46,7 @@ export type ActionNames = typeof actionNames[number];
 
 type Camera = typeof cameras[number];
 export type Controls = typeof controls;
+export type States = typeof states;
 
 /**
  * @link https://github.com/pmndrs/zustand/blob/ca059788d3f015b1582dc4d82b2bd4dbb6d93de4/src/vanilla.ts#L141
@@ -74,6 +79,7 @@ export interface IState extends BaseState {
     actions: Record<ActionNames, () => void>;
     camera: Camera;
     controls: Controls;
+    states: States;
     get: Getter;
     set: Setter;
     playerConfig: PlayerConfig;
@@ -108,6 +114,7 @@ const useStoreImpl = create<IState>(
             set,
             shadows,
             sound: true,
+            states,
             stats,
             playerConfig,
         };
