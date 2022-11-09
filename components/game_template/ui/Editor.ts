@@ -21,7 +21,7 @@ export function Editor() {
         state.shadows,
         state.stats,
     ]);
-    const { radius, height, width, moveSpeed, boost, cameraDistance } =
+    const { radius, halfHeight, moveSpeed, boost, cameraDistance } =
         playerConfig;
 
     const [, setPlayerEditor] = useControls(() => ({
@@ -46,21 +46,8 @@ export function Editor() {
                             },
                         }),
                 },
-                width: {
-                    value: width,
-                    min: 0.1,
-                    max: 10,
-                    step: 0.01,
-                    onChange: (value) =>
-                        set({
-                            playerConfig: {
-                                ...get().playerConfig,
-                                width: value,
-                            },
-                        }),
-                },
-                height: {
-                    value: height,
+                halfHeight: {
+                    value: halfHeight,
                     min: -5,
                     max: 5,
                     step: 0.01,
@@ -68,7 +55,7 @@ export function Editor() {
                         set({
                             playerConfig: {
                                 ...get().playerConfig,
-                                height: value,
+                                halfHeight: value,
                             },
                         }),
                 },
