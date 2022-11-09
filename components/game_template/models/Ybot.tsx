@@ -26,8 +26,10 @@ const modelPath = "/models/glb/ybot.glb";
 
 export function Ybot(props: JSX.IntrinsicElements["group"]) {
     const group = useRef<THREE.Group>();
-    const { nodes, materials, animations } = useGLTF(modelPath) as GLTFResult;
-    const { actions } = useAnimations<GLTFActions>(animations, group);
+    const { nodes, materials, animations } = useGLTF(
+        modelPath
+    ) as unknown as GLTFResult;
+    const { actions } = useAnimations(animations, group);
     return (
         <group ref={group} {...props} dispose={null}>
             <group name="Scene">
