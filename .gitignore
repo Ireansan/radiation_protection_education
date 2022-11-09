@@ -36,3 +36,5 @@ yarn-error.log*
 
 # VSCode
 /.vscode
+
+/components/game_template/assets/blend
