@@ -38,3 +38,4 @@ yarn-error.log*
 /.vscode
 
 /components/game_template/assets/blend
+/components/volumeRender/textures/python/colormap/__pycache__/*

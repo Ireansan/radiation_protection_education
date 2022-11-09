@@ -37,6 +37,9 @@ const modelPath = "/models/glb/ybot.glb";
 /**
  * Animation KeyConfig
  */
+interface Actions {
+    [key: string]: THREE.AnimationAction | null;
+}
 interface KeyMap {
     animation: string;
 }
@@ -69,10 +72,7 @@ const animationKeyConfig = [
         animation: "walking",
     },
 ];
-function useAnimationKeys<T extends THREE.AnimationClip>(
-    actions: { [key in T["name"]]: THREE.AnimationAction | null },
-    keyConfig: KeyConfig[]
-) {
+function useAnimationKeys(actions: Actions, keyConfig: KeyConfig[]) {
     useEffect(() => {
         const keyMap = keyConfig.reduce<{ [key: string]: KeyMap }>(
             (out, { keys, animation }) => {
@@ -121,7 +121,9 @@ export function Ybot_with_Animation(props: JSX.IntrinsicElements["group"]) {
     const { camera } = useThree();
 
     const group = useRef<THREE.Group>();
-    const { nodes, materials, animations } = useGLTF(modelPath) as GLTFResult;
+    const { nodes, materials, animations } = useGLTF(
+        modelPath
+    ) as unknown as GLTFResult;
     const { actions } = useAnimations(animations, group);
 
     let t: number;
