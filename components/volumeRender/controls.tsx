@@ -32,7 +32,22 @@ export function VolumeControls({ children }: volumeControlsProps) {
             max: 1,
         },
         colormap: {
-            options: ["viridis", "gray"],
+            value: "viridis",
+            options: [
+                "parula",
+                "heat",
+                "jet",
+                "turbo",
+                "hot",
+                "gray",
+                "magma",
+                "inferno",
+                "plasma",
+                "viridis",
+                "cividis",
+                "github",
+                "cubehelix",
+            ],
         },
         renderstyle: {
             options: ["mip", "iso"],
