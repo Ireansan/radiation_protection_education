@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect, Suspense } from "react";
 import * as THREE from "three";
+import { useThree } from "@react-three/fiber";
 import { TransformControls } from "@react-three/drei";
 import { useControls } from "leva";
+import type { TransformControlsProps } from "@react-three/drei";
 
 import type { objectProps } from "./core";
 
@@ -145,6 +147,9 @@ export function ClippingPlaneControls({
         new THREE.MeshBasicMaterial()
     );
 
+    type modeType = "translate" | "rotate" | "scale" | undefined;
+    type spaceType = "world" | "local" | undefined;
+
     const planeConfig = useControls("transform", {
         mode: {
             value: "translate",
@@ -195,6 +200,8 @@ export function ClippingPlaneControls({
     useEffect(() => {
         // Plane Mesh
         meshRef.current.lookAt(N);
+
+        planeHelperRef.current.size = size;
     }, []);
 
     const cloneChildren = React.Children.map(
@@ -218,18 +225,13 @@ export function ClippingPlaneControls({
             {cloneChildren}
             {/* Plane Control */}
             <TransformControls
-                mode={planeConfig.mode}
-                space={planeConfig.space}
+                mode={planeConfig.mode as modeType}
+                space={planeConfig.space as spaceType}
                 onObjectChange={(e) => {
                     onObjectChange(e);
                 }}
             />
-            <planeHelper
-                ref={planeHelperRef}
-                plane={plane}
-                size={size}
-                color={color}
-            />
+            <planeHelper ref={planeHelperRef} plane={plane} size={size} />
             <mesh ref={meshRef} scale={[subsize, subsize, subsize]}>
                 <planeGeometry />
                 <meshBasicMaterial color={subcolor} wireframe={true} />
