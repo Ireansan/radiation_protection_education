@@ -31,6 +31,11 @@ export function ControlPanel({ ...props }: JSX.IntrinsicElements["mesh"]) {
         },
     });
 
+    const onOcclude = (visible: boolean) => {
+        setVisible(visible);
+        return null;
+    };
+
     return (
         <mesh scale={test.size * 2} {...props}>
             <boxGeometry />
@@ -45,7 +50,7 @@ export function ControlPanel({ ...props }: JSX.IntrinsicElements["mesh"]) {
                 position={[0, 0, 0.51]}
                 transform
                 occlude
-                onOcclude={setVisible}
+                onOcclude={onOcclude}
             >
                 <span>Size</span>
                 <div>

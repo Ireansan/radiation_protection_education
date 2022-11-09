@@ -120,7 +120,7 @@ export function Ybot_with_Animation(props: JSX.IntrinsicElements["group"]) {
 
     const { camera } = useThree();
 
-    const group = useRef<THREE.Group>();
+    const group = useRef<THREE.Group>(new THREE.Group());
     const { nodes, materials, animations } = useGLTF(
         modelPath
     ) as unknown as GLTFResult;
