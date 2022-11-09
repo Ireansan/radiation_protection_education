@@ -17,7 +17,7 @@ type GLTFResult = GLTF & {
 const modelPath = "/models/gltf/dose_material_1-53.gltf";
 
 export function Dose_material(props: JSX.IntrinsicElements["group"]) {
-    const { nodes, materials } = useGLTF(modelPath) as GLTFResult;
+    const { nodes, materials } = useGLTF(modelPath) as unknown as GLTFResult;
     return (
         <group {...props} dispose={null}>
             <PerspectiveCamera
