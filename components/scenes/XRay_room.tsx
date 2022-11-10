@@ -6,22 +6,14 @@ import {
     Stats,
     GizmoHelper,
     GizmoViewport,
+    Box,
+    Sphere,
 } from "@react-three/drei";
 import * as THREE from "three";
 
 import { VolumeControls, ClippingPlaneControls } from "../volumeRender";
 import * as MODELS from "../models";
 import * as SCENES from "./index";
-
-const Box = ({ ...props }) => {
-    return (
-        <>
-            <mesh {...props}>
-                <boxGeometry />
-            </mesh>
-        </>
-    );
-};
 
 function XRayRoom() {
     const h = 512; // frustum height
@@ -47,25 +39,29 @@ function XRayRoom() {
     return (
         <>
             <Canvas camera={camera}>
+                {/* eslint-disable-next-line react/no-unknown-property */}
                 <ambientLight intensity={0.5} />
 
-                <group>
-                    <VolumeControls>
-                        <ClippingPlaneControls>
-                            <SCENES.XRayRoomAnimation
-                                position={[45, 0, 48]}
-                                rotation={[0, Math.PI, -Math.PI / 2]}
-                            />
-                        </ClippingPlaneControls>
-                    </VolumeControls>
-                    <group
-                        rotation={[0, 0, Math.PI]}
-                        scale={[1 / 6, 1 / 6, 1 / 6]}
-                    >
-                        <MODELS.Dose_material />
-                        <MODELS.Dose_region />
-                    </group>
+                {/* eslint-disable-next-line react/no-unknown-property */}
+                {/* <group position={[0, 50, 0]}> */}
+                <VolumeControls>
+                    <ClippingPlaneControls>
+                        <SCENES.XRayRoomAnimation
+                            position={[45, 0, 48]}
+                            rotation={[0, Math.PI, -Math.PI / 2]}
+                        />
+                    </ClippingPlaneControls>
+                </VolumeControls>
+                {/* eslint-disable-next-line react/no-unknown-property */}
+                <group rotation={[0, 0, Math.PI]} scale={1 / 5}>
+                    <MODELS.Dose_material />
+                    <MODELS.Dose_region />
                 </group>
+                {/* <Sphere scale={25} /> */}
+                {/* </group> */}
+
+                {/* <Box scale={25} /> */}
+                {/* <Box scale={10} position={[0, 100, 0]} /> */}
 
                 <OrbitControls makeDefault />
 

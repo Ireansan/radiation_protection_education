@@ -1,5 +1,6 @@
+/* eslint-disable react/no-unknown-property */
 /**
- * @de
+ *
  */
 
 import { Canvas } from "@react-three/fiber";
