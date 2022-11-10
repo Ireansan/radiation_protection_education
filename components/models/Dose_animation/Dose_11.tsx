@@ -1,5 +1,4 @@
 import React from "react";
-import getConfig from "next/config";
 import { useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 import { NRRDLoader } from "three/examples/jsm/loaders/NRRDLoader";
@@ -7,9 +6,7 @@ import { NRRDLoader } from "three/examples/jsm/loaders/NRRDLoader";
 import { modelProps } from "../types";
 import { Object } from "../../volumeRender";
 
-const { publicRuntimeConfig } = getConfig();
-const basePath = (publicRuntimeConfig && publicRuntimeConfig.basePath) || "";
-const modelURL = `${basePath}/models/nrrd/dose_animation/dose_11.nrrd`;
+const modelURL = `/models/nrrd/dose_animation/dose_11.nrrd`;
 
 export function Dose_11({
     position = [0, 0, 0],
