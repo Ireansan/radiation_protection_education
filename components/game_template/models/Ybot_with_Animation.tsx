@@ -32,7 +32,7 @@ type GLTFResult = GLTF & {
 type ActionName = "idle" | "jump" | "tpose" | "walking";
 type GLTFActions = Record<ActionName, THREE.AnimationAction>;
 
-const modelPath = "/models/glb/ybot.glb";
+const modelURL = "/models/glb/ybot.glb";
 
 /**
  * Animation KeyConfig
@@ -122,7 +122,7 @@ export function Ybot_with_Animation(props: JSX.IntrinsicElements["group"]) {
 
     const group = useRef<THREE.Group>(new THREE.Group());
     const { nodes, materials, animations } = useGLTF(
-        modelPath
+        modelURL
     ) as unknown as GLTFResult;
     const { actions } = useAnimations(animations, group);
 
@@ -281,4 +281,4 @@ export function Ybot_with_Animation(props: JSX.IntrinsicElements["group"]) {
     );
 }
 
-useGLTF.preload(modelPath);
+useGLTF.preload(modelURL);

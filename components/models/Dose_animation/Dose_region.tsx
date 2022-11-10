@@ -14,10 +14,10 @@ type GLTFResult = GLTF & {
     materials: {};
 };
 
-const modelPath = "/models/gltf/dose_region_1002-1019.gltf";
+const modelURL = "/models/gltf/dose_region_1002-1019.gltf";
 
 export function Dose_region(props: JSX.IntrinsicElements["group"]) {
-    const { nodes, materials } = useGLTF(modelPath) as unknown as GLTFResult;
+    const { nodes, materials } = useGLTF(modelURL) as unknown as GLTFResult;
     return (
         <group {...props} dispose={null}>
             <PerspectiveCamera
@@ -36,4 +36,4 @@ export function Dose_region(props: JSX.IntrinsicElements["group"]) {
     );
 }
 
-useGLTF.preload(modelPath);
+useGLTF.preload(modelURL);
