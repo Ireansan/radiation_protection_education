@@ -2,6 +2,7 @@
     "name": "radiation_protection_education",
     "version": "0.1.0",
     "private": true,
+    "homepage": "https://ireansan.github.io/radiation_protection_education/",
     "scripts": {
         "dev": "NODE_OPTIONS='--inspect' next dev",
         "build": "next build && next export",
