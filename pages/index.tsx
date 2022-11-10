@@ -25,8 +25,7 @@ const Home: NextPage = () => {
                 <p className={styles.description}>
                     Get started by editing{" "}
                     <code className={styles.code}>pages/index.tsx</code>
-                    <br />
-                    process.env.NODE_ENV {process.env.NODE_ENV} end
+                    <p>process.env.NODE_ENV {process.env.NODE_ENV}</p>
                 </p>
 
                 <h2>Content</h2>
