@@ -25,9 +25,15 @@ const Home: NextPage = () => {
                 <p className={styles.description}>
                     Get started by editing{" "}
                     <code className={styles.code}>pages/index.tsx</code>
-                    process.env.URL_PREFIX {process.env.URL_PREFIX}
-                    process.env.GITHUB_ACTIONS {process.env.GITHUB_ACTIONS}
-                    process.env.GITHUB_PAGES {process.env.GITHUB_PAGES}
+                    <br />
+                    process.env.URL_PREFIX {process.env.URL_PREFIX} end
+                    <br />
+                    process.env.GITHUB_ACTIONS {process.env.GITHUB_ACTION} end
+                    <br />
+                    process.env.GITHUB_ACTIONS {process.env.GITHUB_ACTIONS} end
+                    <br />
+                    process.env.GITHUB_PAGES {process.env.GITHUB_PAGES}end
+                    <br />
                 </p>
 
                 <h2>Content</h2>
