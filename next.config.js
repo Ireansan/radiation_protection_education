@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: process.env.GITHUB_ACTIONS ? '/radiation_protection_education' : '',
-  assetPrefix: process.env.GITHUB_ACTIONS ? '/radiation_protection_education' : '',
+  basePath: process.env.URL_PREFIX ? '/' + process.env.URL_PREFIX : '',
+  assetPrefix: process.env.URL_PREFIX ? '/' + process.env.URL_PREFIX : '',
   trailingSlash: true,
   reactStrictMode: true,
 }
