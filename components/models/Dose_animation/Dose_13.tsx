@@ -1,10 +1,15 @@
 import React from "react";
+import getConfig from "next/config";
 import { useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 import { NRRDLoader } from "three/examples/jsm/loaders/NRRDLoader";
 
 import { modelProps } from "../types";
 import { Object } from "../../volumeRender";
+
+const { publicRuntimeConfig } = getConfig();
+const basePath = (publicRuntimeConfig && publicRuntimeConfig.basePath) || "";
+const modelURL = `${basePath}/models/nrrd/dose_animation/dose_13.nrrd`;
 
 export function Dose_13({
     position = [0, 0, 0],
@@ -13,10 +18,7 @@ export function Dose_13({
     clipping = false,
     ...props
 }: modelProps) {
-    const volume: any = useLoader(
-        NRRDLoader,
-        "/models/nrrd/dose_animation/dose_13.nrrd"
-    );
+    const volume: any = useLoader(NRRDLoader, modelURL);
 
     return (
         <>
