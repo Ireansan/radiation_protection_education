@@ -10,7 +10,7 @@ import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 import volumeRenderShader from "../shaders/volumeShader";
-import { cmtextures } from "../textures";
+import { cmtextures } from "../textures/typescript";
 
 /**
  * FIXME:
