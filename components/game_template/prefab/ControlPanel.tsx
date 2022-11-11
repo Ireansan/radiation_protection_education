@@ -6,7 +6,7 @@
 
 import { useState } from "react";
 import { Html } from "@react-three/drei";
-import { Leva, useControls } from "leva";
+import { Leva, LevaPanel, useControls, useCreateStore } from "leva";
 import { Components } from "leva/plugin";
 
 const { Row, Label, Number } = Components;
@@ -23,13 +23,17 @@ export function ControlPanel({ ...props }: JSX.IntrinsicElements["mesh"]) {
         },
     }));
     */
-    const test = useControls({
-        size: {
-            value: 1,
-            min: 0,
-            max: 5,
+    const testStore = useCreateStore();
+    const test = useControls(
+        {
+            size: {
+                value: 1,
+                min: 0,
+                max: 5,
+            },
         },
-    });
+        { store: testStore }
+    );
 
     const onOcclude = (visible: boolean) => {
         setVisible(visible);
@@ -53,8 +57,17 @@ export function ControlPanel({ ...props }: JSX.IntrinsicElements["mesh"]) {
                 onOcclude={onOcclude}
             >
                 <span>Size</span>
-                <div>
-                    <Leva titleBar={false} />
+                <div
+                    style={{
+                        display: "grid",
+                        width: 300,
+                        gap: 10,
+                        paddingBottom: 40,
+                        overflow: "auto",
+                        background: "#181C20",
+                    }}
+                >
+                    <LevaPanel fill flat titleBar={false} store={testStore} />
                 </div>
             </Html>
         </mesh>

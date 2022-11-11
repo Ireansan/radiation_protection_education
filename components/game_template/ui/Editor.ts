@@ -4,7 +4,14 @@
 
 import { button, folder, useControls } from "leva";
 
-import { debug, shadows, stats, useStore, playerConfig } from "../store";
+import {
+    matcapList,
+    debug,
+    shadows,
+    stats,
+    useStore,
+    playerConfig,
+} from "../store";
 
 const initialValues = {
     shadows,
@@ -21,8 +28,15 @@ export function Editor() {
         state.shadows,
         state.stats,
     ]);
-    const { radius, halfHeight, moveSpeed, boost, cameraDistance } =
-        playerConfig;
+    const {
+        radius,
+        halfHeight,
+        moveSpeed,
+        boost,
+        cameraDistance,
+        bodyMatcap,
+        jointMatcap,
+    } = playerConfig;
 
     const [, setPlayerEditor] = useControls(() => ({
         Performance: folder({
@@ -95,6 +109,28 @@ export function Editor() {
                             playerConfig: {
                                 ...get().playerConfig,
                                 cameraDistance: value,
+                            },
+                        }),
+                },
+                bodyMatcap: {
+                    value: bodyMatcap,
+                    options: matcapList,
+                    onChange: (value) =>
+                    set({
+                        playerConfig: {
+                            ...get().playerConfig,
+                            bodyMatcap: value,
+                        },
+                    }),
+                },
+                jointMatcap: {
+                    value: jointMatcap,
+                    options: matcapList,
+                    onChange: (value) =>
+                        set({
+                            playerConfig: {
+                                ...get().playerConfig,
+                                jointMatcap: value,
                             },
                         }),
                 },

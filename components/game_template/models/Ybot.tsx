@@ -15,11 +15,16 @@ type GLTFResult = GLTF & {
     };
     materials: {
         Alpha_Joints_MAT: THREE.MeshStandardMaterial;
-        ["Alpha_Body_MAT.002"]: THREE.MeshStandardMaterial;
+        Alpha_Body_MAT: THREE.MeshStandardMaterial;
     };
 };
 
-type ActionName = "idle" | "jump" | "tpose" | "walking";
+type ActionName =
+    | "idle"
+    | "jumpingUp"
+    | "tpose"
+    | "walking"
+    | "walkingBackward";
 type GLTFActions = Record<ActionName, THREE.AnimationAction>;
 
 import { applyBasePath } from "../../utils";
@@ -49,7 +54,7 @@ export function Ybot(props: JSX.IntrinsicElements["group"]) {
                     <skinnedMesh
                         name="Alpha_Surface"
                         geometry={nodes.Alpha_Surface.geometry}
-                        material={materials["Alpha_Body_MAT.002"]}
+                        material={materials.Alpha_Body_MAT}
                         skeleton={nodes.Alpha_Surface.skeleton}
                     />
                 </group>

@@ -8,6 +8,7 @@ import shallow from "zustand/shallow";
 import * as THREE from "three";
 import type { RefObject } from "react";
 import type { Group, Object3D } from "three";
+import { TypeScriptConfig } from "next/dist/server/config-shared";
 
 export const angularVelocity = [0, 0.5, 0] as const;
 export const cameras = ["FIRST_PERSON", "THIRD_PERSON"] as const;
@@ -22,8 +23,8 @@ const controls = {
 };
 
 const states = {
-    animation: "idle"
-}
+    animation: "idle",
+};
 
 export const debug = false as const;
 export const dpr = 1.5 as const;
@@ -32,13 +33,27 @@ export const rotation = [0, Math.PI / 2 + 0.35, 0] as const;
 export const shadows = true as const;
 export const stats = false as const;
 
+/**
+ * matcapList
+ * @link https://github.com/emmelleppi/matcaps/blob/master/matcap-list.json
+ * 
+ * color palette
+ * @link https://qiita.com/nemutas/items/6202b3f8458376ab79b6#paramsts
+ */
+// [92, 45, 20, 21, 25, 28, 26, 39, 58, 540, 544, 546, 550, 580, 586, 613, 635, 639]
+export const matcapList = [
+    92, 45, 20, 21, 25, 28, 26, 39, 58, 540, 544, 546, 550, 580, 586, 613, 635, 639
+] as const;
+export type MatcapList = typeof matcapList[number];
+
 export const playerConfig = {
     radius: 0.5,
     halfHeight: 0.75,
     moveSpeed: 5,
     boost: 2,
     cameraDistance: 5.0,
-    animationNames: ["walking", "jump", "idle"],
+    bodyMatcap: matcapList[1],
+    jointMatcap: matcapList[0],
 } as const;
 
 const actionNames = ["reset"] as const;
