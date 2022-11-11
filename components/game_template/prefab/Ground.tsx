@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unknown-property */
 /**
  * @link https://codesandbox.io/s/minecraft-vkgi6?file=/src/Ground.js
  */

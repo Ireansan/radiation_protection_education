@@ -39,10 +39,8 @@ function XRayRoom() {
     return (
         <>
             <Canvas camera={camera}>
-                {/* eslint-disable-next-line react/no-unknown-property */}
                 <ambientLight intensity={0.5} />
 
-                {/* eslint-disable-next-line react/no-unknown-property */}
                 {/* <group position={[0, 50, 0]}> */}
                 <VolumeControls>
                     <ClippingPlaneControls>
@@ -52,7 +50,6 @@ function XRayRoom() {
                         />
                     </ClippingPlaneControls>
                 </VolumeControls>
-                {/* eslint-disable-next-line react/no-unknown-property */}
                 <group rotation={[0, 0, Math.PI]} scale={1 / 5}>
                     <MODELS.Dose_material />
                     <MODELS.Dose_region />

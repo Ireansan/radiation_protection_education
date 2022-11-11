@@ -33,7 +33,6 @@ function XRayRoomVR() {
         <>
             <VRButton />
             <Canvas camera={camera}>
-                {/* eslint-disable-next-line react/no-unknown-property */}
                 <ambientLight intensity={0.5} />
 
                 <XR>
@@ -46,7 +45,6 @@ function XRayRoomVR() {
                                 />
                             </ClippingPlaneControls>
                         </VolumeControls>
-                        {/* eslint-disable-next-line react/no-unknown-property */}
                         <group rotation={[0, 0, Math.PI]} scale={1 / 6}>
                             <MODELS.Dose_material />
                             <MODELS.Dose_region />

@@ -231,11 +231,9 @@ export function ClippingPlaneControls({
                     onObjectChange(e);
                 }}
             />
-            {/* eslint-disable-next-line react/no-unknown-property */}
             <planeHelper ref={planeHelperRef} plane={plane} size={size} />
             <mesh ref={meshRef} scale={[subsize, subsize, subsize]}>
                 <planeGeometry />
-                {/* eslint-disable-next-line react/no-unknown-property */}
                 <meshBasicMaterial color={subcolor} wireframe={true} />
             </mesh>
         </>
