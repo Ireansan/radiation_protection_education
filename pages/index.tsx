@@ -5,6 +5,9 @@ import Link from "next/link";
 
 import styles from "../styles/Home.module.css";
 
+import { applyBasePath } from "../components/utils";
+const logoURL = applyBasePath("/vercel.svg");
+
 const Home: NextPage = () => {
     return (
         <div className={styles.container}>
@@ -136,8 +139,9 @@ const Home: NextPage = () => {
                 >
                     Powered by{" "}
                     <span className={styles.logo}>
-                        <img
-                            src="/vercel.svg"
+                        <Image
+                            // src={logoURL}
+                            src={"/vercel.svg"}
                             alt="Vercel Logo"
                             width={72}
                             height={16}
