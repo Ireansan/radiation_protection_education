@@ -33,42 +33,46 @@ const Home: NextPage = () => {
 
                 <h2>Content</h2>
                 <div className={styles.grid}>
-                    <Link href={"/volume_visualization/nrrd_view"} passHref>
-                        <a className={styles.card}>
-                            <h2>NRRD View &rarr;</h2>
-                            <p>Next.js + react-three/fiber, Texture 3D</p>
-                        </a>
-                    </Link>
+                    <div className={styles.card}>
+                        <Link href={"/volume_visualization/nrrd_view"}>
+                            <a>
+                                <h2>NRRD View &rarr;</h2>
+                                <p>Next.js + react-three/fiber, Texture 3D</p>
+                            </a>
+                        </Link>
+                    </div>
 
-                    <Link
-                        href={"/volume_visualization/dose_visualization"}
-                        passHref
-                    >
-                        <a className={styles.card}>
-                            <h2>Dose Visualization &rarr;</h2>
-                            <p>Next.js + react-three/fiber, Texture 3D</p>
-                        </a>
-                    </Link>
+                    <div className={styles.card}>
+                        <Link href={"/volume_visualization/dose_visualization"}>
+                            <a>
+                                <h2>Dose Visualization &rarr;</h2>
+                                <p>Next.js + react-three/fiber, Texture 3D</p>
+                            </a>
+                        </Link>
+                    </div>
 
-                    <Link
-                        href={"/volume_visualization/dose_visualization_VR"}
-                        passHref
-                    >
-                        <a className={styles.card}>
-                            <h2>Dose Visualization (Ver. VR)&rarr;</h2>
-                            <p>
-                                Next.js + react-three/fiber + react-three/xr,
-                                Texture 3D
-                            </p>
-                        </a>
-                    </Link>
+                    <div className={styles.card}>
+                        <Link
+                            href={"/volume_visualization/dose_visualization_VR"}
+                        >
+                            <a>
+                                <h2>Dose Visualization (Ver. VR)&rarr;</h2>
+                                <p>
+                                    Next.js + react-three/fiber +
+                                    react-three/xr, Texture 3D
+                                </p>
+                            </a>
+                        </Link>
+                    </div>
 
-                    <Link href={"/multiplay/game_template_test"} passHref>
-                        <a className={styles.card}>
-                            <h2>Game Template</h2>
-                            <p>Next.js + react-three/fiber</p>
-                        </a>
-                    </Link>
+                    <div className={styles.card}>
+                        <Link href={"/multiplay/game_template_test"}>
+                            <a>
+                                <h2>Game Template</h2>
+                                <p>Next.js + react-three/fiber</p>
+                            </a>
+                        </Link>
+                    </div>
                 </div>
 
                 <h2>References</h2>
