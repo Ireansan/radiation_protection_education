@@ -15,7 +15,8 @@ type GLTFResult = GLTF & {
     materials: {};
 };
 
-const modelURL = `/models/gltf/dose_material_1-53.gltf`;
+import { applyBasePath } from "../../utils";
+const modelURL = applyBasePath(`/models/gltf/dose_material_1-53.gltf`);
 
 export function Dose_material(props: JSX.IntrinsicElements["group"]) {
     const { nodes, materials } = useGLTF(modelURL) as unknown as GLTFResult;

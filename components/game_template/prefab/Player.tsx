@@ -8,7 +8,6 @@ import {
     RigidBodyApi,
     useRapier,
 } from "@react-three/rapier";
-
 import { Sphere } from "@react-three/drei";
 
 import { getState, mutation, useStore } from "../store";

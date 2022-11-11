@@ -33,7 +33,8 @@ type GLTFResult = GLTF & {
 type ActionName = "idle" | "jump" | "tpose" | "walking";
 type GLTFActions = Record<ActionName, THREE.AnimationAction>;
 
-const modelURL = `/models/glb/ybot.glb`;
+import { applyBasePath } from "../../utils";
+const modelURL = applyBasePath(`/models/glb/ybot.glb`);
 
 /**
  * Animation KeyConfig

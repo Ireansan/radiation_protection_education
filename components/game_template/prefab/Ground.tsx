@@ -7,9 +7,11 @@ import * as THREE from "three";
 import { useTexture } from "@react-three/drei";
 import { CuboidCollider, RigidBody, RigidBodyProps } from "@react-three/rapier";
 
-const texturePath = "/textures/grass.jpg";
+import { applyBasePath } from "../../utils";
+const textureURL = applyBasePath(`/textures/grass.jpg`);
+
 export function Ground({ ...props }: RigidBodyProps) {
-    const texture = useTexture(texturePath);
+    const texture = useTexture(textureURL);
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 
     return (

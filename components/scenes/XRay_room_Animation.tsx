@@ -9,22 +9,22 @@ export function XRayRoomAnimation({ ...props }) {
         <>
             <Suspense fallback={null}>
                 <AnimationGroup {...props}>
-                    <Models.Dose_1 />
-                    <Models.Dose_2 />
-                    <Models.Dose_3 />
-                    <Models.Dose_4 />
-                    <Models.Dose_5 />
-                    <Models.Dose_6 />
-                    <Models.Dose_7 />
-                    <Models.Dose_8 />
-                    <Models.Dose_9 />
-                    <Models.Dose_10 />
-                    <Models.Dose_11 />
-                    <Models.Dose_12 />
-                    <Models.Dose_13 />
-                    <Models.Dose_14 />
-                    <Models.Dose_15 />
-                    <Models.Dose_16 />
+                    <Models.Dose_all_1 />
+                    <Models.Dose_all_2 />
+                    <Models.Dose_all_3 />
+                    <Models.Dose_all_4 />
+                    <Models.Dose_all_5 />
+                    <Models.Dose_all_6 />
+                    <Models.Dose_all_7 />
+                    <Models.Dose_all_8 />
+                    <Models.Dose_all_9 />
+                    <Models.Dose_all_10 />
+                    <Models.Dose_all_11 />
+                    <Models.Dose_all_12 />
+                    <Models.Dose_all_13 />
+                    <Models.Dose_all_14 />
+                    <Models.Dose_all_15 />
+                    <Models.Dose_all_16 />
                 </AnimationGroup>
             </Suspense>
         </>

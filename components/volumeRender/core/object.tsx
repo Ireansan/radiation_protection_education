@@ -4,6 +4,7 @@ import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 import volumeRenderShader from "../shaders/volumeShader";
+import { applyBasePath } from "../../utils";
 
 type volumeProps = {
     volume: any;
@@ -75,43 +76,43 @@ export function Object({
         // Colormap
         cmtexturesRef.current = {
             parula: new THREE.TextureLoader().load(
-                "/textures/colormap/cm_parula.png"
+                applyBasePath(`/textures/colormap/cm_parula.png`)
             ),
             heat: new THREE.TextureLoader().load(
-                "/textures/colormap/cm_heat.png"
+                applyBasePath(`/textures/colormap/cm_heat.png`)
             ),
             jet: new THREE.TextureLoader().load(
-                "/textures/colormap/cm_jet.png"
+                applyBasePath(`/textures/colormap/cm_jet.png`)
             ),
             turbo: new THREE.TextureLoader().load(
-                "/textures/colormap/cm_turbo.png"
+                applyBasePath(`/textures/colormap/cm_turbo.png`)
             ),
             hot: new THREE.TextureLoader().load(
-                "/textures/colormap/cm_hot.png"
+                applyBasePath(`/textures/colormap/cm_hot.png`)
             ),
             gray: new THREE.TextureLoader().load(
-                "/textures/colormap/cm_gray.png"
+                applyBasePath(`/textures/colormap/cm_gray.png`)
             ),
             magma: new THREE.TextureLoader().load(
-                "/textures/colormap/cm_magma.png"
+                applyBasePath(`/textures/colormap/cm_magma.png`)
             ),
             inferno: new THREE.TextureLoader().load(
-                "/textures/colormap/cm_inferno.png"
+                applyBasePath(`/textures/colormap/cm_inferno.png`)
             ),
             plasma: new THREE.TextureLoader().load(
-                "/textures/colormap/cm_plasma.png"
+                applyBasePath(`/textures/colormap/cm_plasma.png`)
             ),
             viridis: new THREE.TextureLoader().load(
-                "/textures/colormap/cm_viridis.png"
+                applyBasePath(`/textures/colormap/cm_viridis.png`)
             ),
             cividis: new THREE.TextureLoader().load(
-                "/textures/colormap/cm_cividis.png"
+                applyBasePath(`/textures/colormap/cm_cividis.png`)
             ),
             github: new THREE.TextureLoader().load(
-                "/textures/colormap/cm_github.png"
+                applyBasePath(`/textures/colormap/cm_github.png`)
             ),
             cubehelix: new THREE.TextureLoader().load(
-                "/textures/colormap/cm_cubehelix.png"
+                applyBasePath(`/textures/colormap/cm_cubehelix.png`)
             ),
         };
 

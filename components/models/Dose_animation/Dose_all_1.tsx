@@ -6,13 +6,13 @@ import { NRRDLoader } from "three/examples/jsm/loaders/NRRDLoader";
 import { modelProps } from "../types";
 import { Object } from "../../volumeRender";
 
-const modelURL = `/models/nrrd/dose_animation/dose_10.nrrd`;
+import { applyBasePath } from "../../utils";
+const modelURL = applyBasePath(`/models/nrrd/dose_animation/dose_1.nrrd`);
 
-export function Dose_10({
+export function Dose_all_1({
     position = [0, 0, 0],
     rotation = [0, 0, 0],
     scale = [1, 1, 1],
-    clipping = false,
     ...props
 }: modelProps) {
     const volume: any = useLoader(NRRDLoader, modelURL);
@@ -24,7 +24,6 @@ export function Dose_10({
                 position={position}
                 rotation={rotation}
                 scale={scale}
-                clipping={clipping}
                 {...props}
             />
         </>

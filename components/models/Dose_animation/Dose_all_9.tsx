@@ -6,9 +6,10 @@ import { NRRDLoader } from "three/examples/jsm/loaders/NRRDLoader";
 import { modelProps } from "../types";
 import { Object } from "../../volumeRender";
 
-const modelURL = `/models/nrrd/dose_animation/dose_5.nrrd`;
+import { applyBasePath } from "../../utils";
+const modelURL = applyBasePath(`/models/nrrd/dose_animation/dose_9.nrrd`);
 
-export function Dose_5({
+export function Dose_all_9({
     position = [0, 0, 0],
     rotation = [0, 0, 0],
     scale = [1, 1, 1],
