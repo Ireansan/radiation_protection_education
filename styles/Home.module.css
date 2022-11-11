@@ -67,8 +67,8 @@
 
 .grid {
     display: flex;
-    align-items: stretch;
-    justify-content: flex-start;
+    align-items: center;
+    justify-content: center;
     flex-wrap: wrap;
     max-width: 800px;
 }
@@ -113,5 +113,18 @@
     .grid {
         width: 100%;
         flex-direction: column;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .card,
+    .footer {
+        border-color: #30363c;
+    }
+    .code {
+        background: #21262b;
+    }
+    .logo img {
+        filter: invert(1);
     }
 }
