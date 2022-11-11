@@ -37,6 +37,7 @@ type GLTFResult = GLTF & {
 type ActionName =
     | "idle"
     | "jumpingUp"
+    | "jumpingDown"
     | "tpose"
     | "walking"
     | "walkingBackward";
@@ -73,7 +74,7 @@ const animationKeyConfig = [
     },
     {
         keys: [" "],
-        animation: "jumpingUp",
+        animation: "jumpingDown",
     },
     {
         keys: ["Shift"],
@@ -81,6 +82,13 @@ const animationKeyConfig = [
     },
 ];
 function useAnimationKeys(actions: Actions, keyConfig: KeyConfig[]) {
+    const [get, set, playerConfig] = useStore((state) => [
+        state.get,
+        state.set,
+        state.playerConfig,
+    ]);
+    const { animationState } = playerConfig;
+
     useEffect(() => {
         const keyMap = keyConfig.reduce<{ [key: string]: KeyMap }>(
             (out, { keys, animation }) => {
@@ -95,6 +103,12 @@ function useAnimationKeys(actions: Actions, keyConfig: KeyConfig[]) {
                 return;
             const { animation } = keyMap[key];
             actions[animation]?.play();
+            set({
+                playerConfig: {
+                    ...get().playerConfig,
+                    animationState: animation,
+                },
+            });
         };
 
         const upHandler = ({ key, target }: KeyboardEvent) => {
@@ -102,6 +116,12 @@ function useAnimationKeys(actions: Actions, keyConfig: KeyConfig[]) {
                 return;
             const { animation } = keyMap[key];
             actions[animation]?.stop();
+            set({
+                playerConfig: {
+                    ...get().playerConfig,
+                    animationState: "idle",
+                },
+            });
         };
 
         window.addEventListener("keydown", downHandler, { passive: true });
@@ -122,11 +142,13 @@ const modelURL = applyBasePath(`/models/glb/ybot.glb`);
  * @returns
  */
 export function Ybot_with_Animation(props: JSX.IntrinsicElements["group"]) {
-    const [editor, playerConfig] = useStore((state) => [
+    const [editor, debug, playerConfig] = useStore((state) => [
         state.editor,
+        state.debug,
         state.playerConfig,
     ]);
-    const { cameraDistance, bodyMatcap, jointMatcap } = playerConfig;
+    const { cameraDistance, bodyMatcap, jointMatcap, animationState } =
+        playerConfig;
 
     const { camera } = useThree();
 
@@ -153,9 +175,10 @@ export function Ybot_with_Animation(props: JSX.IntrinsicElements["group"]) {
     useAnimationKeys(actions, animationKeyConfig);
 
     useEffect(() => {
-        console.log(actions);
-        // actions["idle"]?.play();
-    }, [actions]);
+        if (debug) {
+            console.log(animationState);
+        }
+    }, [actions, animationState]);
 
     /**
      * Update

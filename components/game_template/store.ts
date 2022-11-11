@@ -36,15 +36,23 @@ export const stats = false as const;
 /**
  * matcapList
  * @link https://github.com/emmelleppi/matcaps/blob/master/matcap-list.json
- * 
+ *
  * color palette
  * @link https://qiita.com/nemutas/items/6202b3f8458376ab79b6#paramsts
  */
-// [92, 45, 20, 21, 25, 28, 26, 39, 58, 540, 544, 546, 550, 580, 586, 613, 635, 639]
 export const matcapList = [
-    92, 45, 20, 21, 25, 28, 26, 39, 58, 540, 544, 546, 550, 580, 586, 613, 635, 639
+    92, 45, 20, 21, 25, 28, 26, 39, 58, 540, 544, 546, 550, 580, 586, 613, 635,
+    639,
 ] as const;
 export type MatcapList = typeof matcapList[number];
+
+const animationNames = [
+    "idle",
+    "jumpingUp",
+    "tpose",
+    "walking",
+    "walkingBackward",
+];
 
 export const playerConfig = {
     radius: 0.5,
@@ -54,6 +62,7 @@ export const playerConfig = {
     cameraDistance: 5.0,
     bodyMatcap: matcapList[1],
     jointMatcap: matcapList[0],
+    animationState: animationNames[0],
 } as const;
 
 const actionNames = ["reset"] as const;
