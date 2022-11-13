@@ -155,15 +155,15 @@ vec3 clip_position(vec3 position){
 // https://github.com/mrdoob/three.js/blob/dev/src/renderers/shaders/ShaderChunk/clipping_planes_fragment.glsl.js
 // https://qiita.com/edo_m18/items/b1bc950ac6965c321e29
 bool within_boundaries(vec3 position){
-	bool clipped=false;
-	
+	bool clipped;
+
 	#if NUM_CLIPPING_PLANES>0
 	vec4 plane;
 	
 	#pragma unroll_loop_start
 	for(int i=0;i<UNION_CLIPPING_PLANES;i++){
 		plane=clippingPlanes[i];
-		clipped=(dot(position,plane.xyz)>plane.w);
+		clipped=clipped||(dot(position,plane.xyz)>plane.w);
 	}
 	#pragma unroll_loop_end
 	#if UNION_CLIPPING_PLANES<NUM_CLIPPING_PLANES
