@@ -1,4 +1,4 @@
-import React, { Children, useRef } from "react";
+import React, { Children, useRef, useState } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { useControls, folder } from "leva";
@@ -23,6 +23,7 @@ export function AnimationGroup({ children, ...props }: animationGroupProps) {
     const childrenLength = Children.count(children);
     const seconds = useRef<number>(0);
     const i = useRef<number>(0);
+    const [edit, setEdit] = useState<boolean>(false);
 
     const [animationConfig, setAnimationConfig] = useControls(() => ({
         animation: folder({
@@ -41,7 +42,14 @@ export function AnimationGroup({ children, ...props }: animationGroupProps) {
                 value: 1,
                 min: 1,
                 max: childrenLength,
+                step: 1,
                 // FIXME: need custom controller
+                onEditStart: (value, path, context) => {
+                    setEdit(true);
+                },
+                onEditEnd: (value, path, context) => {
+                    setEdit(false);
+                },
             },
         }),
     }));
@@ -66,17 +74,21 @@ export function AnimationGroup({ children, ...props }: animationGroupProps) {
 
     useFrame((state, delta) => {
         if (animationConfig.animate) {
-            var deltaTime: number = animationConfig.speed * delta;
-            seconds.current += deltaTime;
+            if (edit) {
+                i.current = animationConfig.index;
+            } else {
+                var deltaTime: number = animationConfig.speed * delta;
+                seconds.current += deltaTime;
 
-            if (seconds.current >= 1) {
-                seconds.current = 0;
-                i.current += 1;
+                if (seconds.current >= 1) {
+                    seconds.current = 0;
+                    i.current += 1;
 
-                if (i.current >= childrenLength - 1) {
-                    i.current = 0;
+                    if (i.current >= childrenLength - 1) {
+                        i.current = 0;
+                    }
+                    setAnimationConfig({ index: i.current + 1 });
                 }
-                setAnimationConfig({ index: i.current + 1 });
             }
         }
     });
