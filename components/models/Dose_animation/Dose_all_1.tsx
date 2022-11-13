@@ -9,23 +9,12 @@ import { Object } from "../../volumeRender";
 import { applyBasePath } from "../../utils";
 const modelURL = applyBasePath(`/models/nrrd/dose_animation/dose_1.nrrd`);
 
-export function Dose_all_1({
-    position = [0, 0, 0],
-    rotation = [0, 0, 0],
-    scale = [1, 1, 1],
-    ...props
-}: modelProps) {
+export function Dose_all_1({ ...props }: modelProps) {
     const volume: any = useLoader(NRRDLoader, modelURL);
 
     return (
         <>
-            <Object
-                volume={volume}
-                position={position}
-                rotation={rotation}
-                scale={scale}
-                {...props}
-            />
+            <Object volume={volume} {...props} />
         </>
     );
 }

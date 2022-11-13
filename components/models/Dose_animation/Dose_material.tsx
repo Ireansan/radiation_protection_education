@@ -32,7 +32,9 @@ export function Dose_material(props: JSX.IntrinsicElements["group"]) {
                 geometry={nodes.mesh0.geometry}
                 material={nodes.mesh0.material}
                 rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
-            />
+            >
+                <meshBasicMaterial color={0xfafafa} />
+            </mesh>
         </group>
     );
 }
