@@ -8,6 +8,7 @@ import React, { useState, useEffect } from "react";
 
 import { Canvas } from "@react-three/fiber";
 import {
+    OrthographicCamera,
     OrbitControls,
     Stats,
     GizmoHelper,
@@ -47,37 +48,23 @@ const Box = ({ ...props }) => {
  * https://zenn.dev/hironorioka28/articles/8247133329d64e
  * @returns
  */
-function NRRDView() {
-    const h = 512; // frustum height
-    const camera = new THREE.OrthographicCamera();
-
-    // Init
-    useEffect(() => {
-        const aspect = window.innerWidth / window.innerHeight;
-        camera.copy(
-            new THREE.OrthographicCamera(
-                (-h * aspect) / 2,
-                (h * aspect) / 2,
-                h / 2,
-                -h / 2,
-                0.001,
-                1000
-            )
-        );
-        camera.position.set(-64, -64, 128);
-        camera.up.set(0, 0, 1); // In our data, z is up
-    }, []);
-
+function ExampleStent() {
     return (
         <div className={styles.container}>
             <div className={styles.canvas}>
-                <Canvas camera={camera}>
+                <Canvas camera={{ position: [64, 128, 64] }}>
                     <VolumeControls>
-                        <ClippingPlaneControls normal={[0, 0, -1]}>
-                            <Models.Stent />
+                        <ClippingPlaneControls
+                            normals={[
+                                [0, -1, 0],
+                                [-1, 0, 0],
+                            ]}
+                        >
+                            <Models.Stent rotation={[-Math.PI / 2, 0, 0]} />
                         </ClippingPlaneControls>
                     </VolumeControls>
 
+                    <OrthographicCamera />
                     <OrbitControls makeDefault />
 
                     {/* <Box scale={[10, 10, 10]} position={[-10, 4.6, -3]} /> */}
@@ -100,4 +87,4 @@ function NRRDView() {
     );
 }
 
-export default NRRDView;
+export default ExampleStent;

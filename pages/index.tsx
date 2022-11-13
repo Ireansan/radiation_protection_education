@@ -34,9 +34,9 @@ const Home: NextPage = () => {
                 <h2>Content</h2>
                 <div className={styles.grid}>
                     <div className={styles.card}>
-                        <Link href={"/volume_visualization/nrrd_view"}>
+                        <Link href={"/volume_visualization/example_stent"}>
                             <a>
-                                <h2>NRRD View &rarr;</h2>
+                                <h2>Example Stent.nrrd &rarr;</h2>
                                 <p>Next.js + react-three/fiber, Texture 3D</p>
                             </a>
                         </Link>
@@ -99,6 +99,22 @@ const Home: NextPage = () => {
                     >
                         <h2>NRRD Production example &rarr;</h2>
                         <p>Three.js + NRRD Production</p>
+                    </a>
+
+                    <a
+                        href="https://contsrv.icer.kyushu-u.ac.jp/Medu/XraySim/"
+                        className={styles.card}
+                    >
+                        <h2>Radiation visualization 1 &rarr;</h2>
+                        <p>A-Frame</p>
+                    </a>
+
+                    <a
+                        href="https://contsrv.icer.kyushu-u.ac.jp/Medu/XraySim2/"
+                        className={styles.card}
+                    >
+                        <h2>Radiation visualization 2 &rarr;</h2>
+                        <p>A-Frame</p>
                     </a>
 
                     <a href="https://nextjs.org/docs" className={styles.card}>
