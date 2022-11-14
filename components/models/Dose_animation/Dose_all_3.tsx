@@ -9,12 +9,12 @@ import { Object } from "../../volumeRender";
 import { applyBasePath } from "../../utils";
 const modelURL = applyBasePath(`/models/nrrd/dose_animation/dose_3.nrrd`);
 
-export function Dose_all_3({ clipping = false, ...props }: modelProps) {
+export function Dose_all_3({ ...props }: modelProps) {
     const volume: any = useLoader(NRRDLoader, modelURL);
 
     return (
         <>
-            <Object volume={volume} clipping={clipping} {...props} />
+            <Object volume={volume} {...props} />
         </>
     );
 }
