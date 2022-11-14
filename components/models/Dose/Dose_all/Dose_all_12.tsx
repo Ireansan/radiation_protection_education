@@ -3,13 +3,13 @@ import { useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 import { NRRDLoader } from "three/examples/jsm/loaders/NRRDLoader";
 
-import { modelProps } from "../types";
-import { Object } from "../../volumeRender";
+import { modelProps } from "../../types";
+import { Object } from "../../../volumeRender";
 
-import { applyBasePath } from "../../utils";
-const modelURL = applyBasePath(`/models/nrrd/dose_animation/dose_13.nrrd`);
+import { applyBasePath } from "../../../utils";
+const modelURL = applyBasePath(`/models/nrrd/dose_animation/dose_12.nrrd`);
 
-export function Dose_all_13({ ...props }: modelProps) {
+export function Dose_all_12({ ...props }: modelProps) {
     const volume: any = useLoader(NRRDLoader, modelURL);
 
     return (

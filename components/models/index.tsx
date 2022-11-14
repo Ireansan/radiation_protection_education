@@ -1,2 +1,2 @@
 export * from "./Stent";
-export * from "./Dose_animation";
+export * from "./Dose";

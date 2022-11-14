@@ -27,7 +27,7 @@ function XRayRoom() {
                             [-1, 0, 0],
                         ]}
                     >
-                        <SCENES.XRayRoomAnimation
+                        <SCENES.Dose_all_Animation
                             position={[45, 0, 48]}
                             rotation={[0, Math.PI, -Math.PI / 2]}
                         />
