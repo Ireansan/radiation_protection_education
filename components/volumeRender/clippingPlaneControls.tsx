@@ -9,22 +9,10 @@ import type { objectProps } from "./core";
 
 type modeType = "translate" | "rotate" | "scale" | undefined;
 type spaceType = "world" | "local" | undefined;
-
-interface IState {
-    target: THREE.Object3D | undefined;
-    targetID: number;
-    setTarget: (target: THREE.Object3D | undefined, id: number) => void;
-}
-const useStore = create<IState>((set) => ({
-    target: undefined,
-    targetID: 0,
-    setTarget: (target, id) =>
-        set((state) => {
-            state.target = target;
-            state.targetID = id;
-            return { ...state };
-        }),
-}));
+type Target = {
+    object: THREE.Object3D | undefined;
+    id: number;
+};
 
 /**
  * PlaneHelper & Plane Mesh
@@ -34,19 +22,19 @@ type planeHelperMeshProps = {
     normal: THREE.Vector3;
     subsize: number;
     subcolor: THREE.Color;
+    setTarget: (target: Target) => void;
 };
 function PlaneHelperMesh({
     id,
     normal,
     subsize,
     subcolor,
+    setTarget,
 }: planeHelperMeshProps) {
-    const [target, setTarget] = useStore((state) => [
-        state.target,
-        state.setTarget,
-    ]);
     const planeID = id;
     const meshRef = useRef<THREE.Mesh>(new THREE.Mesh());
+    const [hovered, setHovered] = useState(false);
+    useCursor(hovered);
 
     // Init
     useEffect(() => {
@@ -61,7 +49,9 @@ function PlaneHelperMesh({
             <mesh
                 ref={meshRef}
                 scale={subsize}
-                onClick={(e) => setTarget(e.object, planeID)}
+                onClick={(e) => setTarget({ object: e.object, id: planeID })}
+                onPointerOver={() => setHovered(true)}
+                onPointerOut={() => setHovered(false)}
             >
                 <planeGeometry />
                 <meshBasicMaterial color={subcolor} wireframe={true} />
@@ -100,10 +90,7 @@ export function ClippingPlaneControls({
     subcolor = new THREE.Color(0xaaaaaa),
     ...props
 }: clippingPlaneControlsProps & objectProps) {
-    const [target, targetID] = useStore((state) => [
-        state.target,
-        state.targetID,
-    ]);
+    const [target, setTarget] = useState<Target>({ object: undefined, id: 0 });
 
     const Normals: THREE.Vector3[] = normals.map((normal) =>
         new THREE.Vector3().fromArray(normal)
@@ -127,13 +114,16 @@ export function ClippingPlaneControls({
     });
 
     function onObjectChange(e: THREE.Event | undefined) {
-        if (target) {
-            const direction = new THREE.Vector3();
-            target.getWorldDirection(direction);
+        const direction = new THREE.Vector3();
+        const position = new THREE.Vector3();
+
+        if (target.object) {
+            target.object?.getWorldDirection(direction);
             direction.normalize().multiplyScalar(-1);
-            const position = new THREE.Vector3().copy(target.position);
-            Planes[targetID].normal.copy(direction);
-            Planes[targetID].constant = -position.dot(direction);
+            position.copy(target.object.position);
+
+            Planes[target.id].normal.copy(direction);
+            Planes[target.id].constant = -position.dot(direction);
         }
     }
 
@@ -159,7 +149,7 @@ export function ClippingPlaneControls({
             {cloneChildren}
             {/* Plane Control */}
             <TransformControls
-                object={target}
+                object={target.object}
                 mode={planeConfig.mode as modeType}
                 space={planeConfig.space as spaceType}
                 onObjectChange={(e) => {
@@ -175,6 +165,7 @@ export function ClippingPlaneControls({
                         normal={plane.normal}
                         subsize={subsize}
                         subcolor={subcolor}
+                        setTarget={setTarget}
                     />
                 </>
             ))}
