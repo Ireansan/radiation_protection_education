@@ -73,6 +73,24 @@ const Home: NextPage = () => {
                             </a>
                         </Link>
                     </div>
+
+                    <div className={styles.card}>
+                        <Link href={"/multiplay/stent_game"}>
+                            <a>
+                                <h2>Stent + Game</h2>
+                                <p>Next.js + react-three/fiber</p>
+                            </a>
+                        </Link>
+                    </div>
+
+                    <div className={styles.card}>
+                        <Link href={"/multiplay/xray_game"}>
+                            <a>
+                                <h2>XRay + Game</h2>
+                                <p>Next.js + react-three/fiber</p>
+                            </a>
+                        </Link>
+                    </div>
                 </div>
 
                 <h2>References</h2>

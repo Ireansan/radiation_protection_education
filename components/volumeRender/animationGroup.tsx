@@ -73,10 +73,10 @@ export function AnimationGroup({ children, ...props }: animationGroupProps) {
     );
 
     useFrame((state, delta) => {
-        if (animationConfig.animate) {
-            if (edit) {
-                i.current = animationConfig.index;
-            } else {
+        if (edit) {
+            i.current = animationConfig.index;
+        } else {
+            if (animationConfig.animate) {
                 var deltaTime: number = animationConfig.speed * delta;
                 seconds.current += deltaTime;
 
@@ -84,7 +84,7 @@ export function AnimationGroup({ children, ...props }: animationGroupProps) {
                     seconds.current = 0;
                     i.current += 1;
 
-                    if (i.current >= childrenLength - 1) {
+                    if (i.current >= childrenLength) {
                         i.current = 0;
                     }
                     setAnimationConfig({ index: i.current + 1 });

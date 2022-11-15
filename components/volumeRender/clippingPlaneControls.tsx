@@ -3,7 +3,6 @@ import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 import { TransformControls, useCursor } from "@react-three/drei";
 import { useControls } from "leva";
-import create from "zustand";
 
 import type { objectProps } from "./core";
 
@@ -144,7 +143,6 @@ export function ClippingPlaneControls({
 
     return (
         <>
-            {console.log("rendering")}
             {/* Children */}
             {cloneChildren}
             {/* Plane Control */}

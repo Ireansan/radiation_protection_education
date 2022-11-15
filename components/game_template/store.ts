@@ -6,9 +6,7 @@ import { createRef } from "react";
 import create, { StoreApi } from "zustand";
 import shallow from "zustand/shallow";
 import * as THREE from "three";
-import type { RefObject } from "react";
-import type { Group, Object3D } from "three";
-import { TypeScriptConfig } from "next/dist/server/config-shared";
+import type { Object3D } from "three";
 
 export const angularVelocity = [0, 0.5, 0] as const;
 export const cameras = ["FIRST_PERSON", "THIRD_PERSON"] as const;
@@ -56,7 +54,7 @@ const animationNames = [
 
 export const playerConfig = {
     radius: 0.5,
-    halfHeight: 0.75,
+    halfHeight: 0.6,
     moveSpeed: 5,
     boost: 2,
     cameraDistance: 5.0,
