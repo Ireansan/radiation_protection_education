@@ -4,7 +4,7 @@ import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 import volumeRenderShader from "../shaders/volumeShader";
-import { applyBasePath } from "../../utils";
+import { cmtextures } from "../textures";
 
 type volumeProps = {
     volume: any;
@@ -58,9 +58,6 @@ export function Object({
     // Geometry
     const geometryRef = useRef<THREE.BufferGeometry>(new THREE.BoxGeometry());
 
-    // Colormap
-    const cmtexturesRef = useRef<{ [index: string]: THREE.Texture }>(null!);
-
     // Texture
     const [texture, setTexture] = useState<THREE.Data3DTexture>(
         new THREE.Data3DTexture(
@@ -73,49 +70,6 @@ export function Object({
 
     // Init
     useLayoutEffect(() => {
-        // Colormap
-        cmtexturesRef.current = {
-            parula: new THREE.TextureLoader().load(
-                applyBasePath(`/textures/colormap/cm_parula.png`)
-            ),
-            heat: new THREE.TextureLoader().load(
-                applyBasePath(`/textures/colormap/cm_heat.png`)
-            ),
-            jet: new THREE.TextureLoader().load(
-                applyBasePath(`/textures/colormap/cm_jet.png`)
-            ),
-            turbo: new THREE.TextureLoader().load(
-                applyBasePath(`/textures/colormap/cm_turbo.png`)
-            ),
-            hot: new THREE.TextureLoader().load(
-                applyBasePath(`/textures/colormap/cm_hot.png`)
-            ),
-            gray: new THREE.TextureLoader().load(
-                applyBasePath(`/textures/colormap/cm_gray.png`)
-            ),
-            magma: new THREE.TextureLoader().load(
-                applyBasePath(`/textures/colormap/cm_magma.png`)
-            ),
-            inferno: new THREE.TextureLoader().load(
-                applyBasePath(`/textures/colormap/cm_inferno.png`)
-            ),
-            plasma: new THREE.TextureLoader().load(
-                applyBasePath(`/textures/colormap/cm_plasma.png`)
-            ),
-            viridis: new THREE.TextureLoader().load(
-                applyBasePath(`/textures/colormap/cm_viridis.png`)
-            ),
-            cividis: new THREE.TextureLoader().load(
-                applyBasePath(`/textures/colormap/cm_cividis.png`)
-            ),
-            github: new THREE.TextureLoader().load(
-                applyBasePath(`/textures/colormap/cm_github.png`)
-            ),
-            cubehelix: new THREE.TextureLoader().load(
-                applyBasePath(`/textures/colormap/cm_cubehelix.png`)
-            ),
-        };
-
         // Texture
         texture.format = THREE.RedFormat;
         texture.type = THREE.FloatType;
@@ -134,7 +88,7 @@ export function Object({
         uniforms.u_clim.value.set(clim1, clim2);
         uniforms.u_renderstyle.value = renderstyle === "mip" ? 0 : 1; // 0: MIP, 1: ISO
         uniforms.u_renderthreshold.value = isothreshold; // For ISO renderstyle
-        uniforms.u_cmdata.value = cmtexturesRef.current[colormap];
+        uniforms.u_cmdata.value = cmtextures[colormap];
         meshRef.current.updateMatrixWorld();
         uniforms.u_modelMatrix.value = meshRef.current.matrixWorld;
         materialRef.current.clipping = clipping;
@@ -181,8 +135,7 @@ export function Object({
         materialRef.current.uniforms.u_renderstyle.value =
             renderstyle === "mip" ? 0 : 1; // 0: MIP, 1: ISO
         materialRef.current.uniforms.u_renderthreshold.value = isothreshold; // For ISO renderstyle
-        materialRef.current.uniforms.u_cmdata.value =
-            cmtexturesRef.current[colormap];
+        materialRef.current.uniforms.u_cmdata.value = cmtextures[colormap];
         meshRef.current.updateMatrixWorld();
         materialRef.current.uniforms.u_modelMatrix.value =
             meshRef.current.matrixWorld;
