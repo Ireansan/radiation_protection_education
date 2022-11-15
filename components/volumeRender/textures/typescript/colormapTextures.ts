@@ -93,7 +93,7 @@ export function GetTexture(width: number, height: number, type: string) {
             data[stride] = color.r * 255;
             data[stride + 1] = color.g * 255;
             data[stride + 2] = color.b * 255;
-            data[stride + 3] = 1;
+            data[stride + 3] = 255;
         }
     }
     const texture = new THREE.DataTexture(
@@ -103,7 +103,10 @@ export function GetTexture(width: number, height: number, type: string) {
         THREE.RGBAFormat,
         THREE.UnsignedByteType,
     );
-    texture.magFilter = THREE.NearestFilter;
+    texture.minFilter = THREE.LinearMipMapLinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    texture.flipY = true;
+    texture.unpackAlignment = 4;
     texture.needsUpdate = true;
 
     return texture;
