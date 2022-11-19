@@ -1,20 +1,39 @@
-import React from "react";
-import { useLoader } from "@react-three/fiber";
+import React, { useEffect, useRef } from "react";
+import { extend, useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 import { NRRDLoader } from "three/examples/jsm/loaders/NRRDLoader";
+// import { NRRDLoader } from "three-stdlib";
+
+import { useNRRD } from "../volumeRender/core/useNRRD";
 
 import { modelProps } from "./types";
-import { Object } from "../volumeRender";
+import { VolumeObject } from "../volumeRender/core/volumeObject";
+extend({ VolumeObject });
+
+import { Volume } from "three-stdlib";
 
 import { applyBasePath } from "../utils";
 const modelURL = applyBasePath(`/models/nrrd/stent.nrrd`);
 
-export function Stent({ clipping = false, ...props }: modelProps) {
-    const volume: any = useLoader(NRRDLoader, modelURL);
+export function Stent({ ...props }: JSX.IntrinsicElements["volumeObject"]) {
+    const volume: Volume = useLoader(NRRDLoader, modelURL);
+    // const volume: Volume = useNRRD(modelURL);
+
+    console.log("stent", volume);
+    const refTest = useRef<VolumeObject>(null);
+
+    useEffect(() => {
+        if (refTest.current) {
+            refTest.current.renderstyle = props.renderstyle ?? "mip";
+        }
+    }, [props]);
 
     return (
         <>
-            <Object volume={volume} clipping={clipping} {...props} />
+            {console.log("rendering", volume, props)}
+            <volumeObject ref={refTest} args={[volume]} {...props} />
         </>
     );
 }
+
+// useLoader.preload(NRRDLoader, modelURL);
