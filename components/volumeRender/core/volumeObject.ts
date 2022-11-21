@@ -29,6 +29,8 @@ export class VolumeObject extends THREE.Object3D {
     _clipping: boolean;
     _planes: THREE.Plane[];
 
+    volumeParamAutoUpdate: boolean;
+
     isMesh: boolean;
     geometry: THREE.BufferGeometry;
     material: THREE.ShaderMaterial;
@@ -45,6 +47,8 @@ export class VolumeObject extends THREE.Object3D {
         this._isothreshold = 0.1;
         this._clipping = false;
         this._planes = [];
+
+        this.volumeParamAutoUpdate = true;
 
         this.isMesh = true;
 
@@ -103,6 +107,7 @@ export class VolumeObject extends THREE.Object3D {
     set clim1(clim1: number) {
         this._clim1 = clim1;
         this.material.uniforms.u_clim.value.set(clim1, this.clim2);
+        this.updateVolumeParam(false, true);
     }
     get clim2() {
         return this._clim2;
@@ -110,6 +115,7 @@ export class VolumeObject extends THREE.Object3D {
     set clim2(clim2: number) {
         this._clim2 = clim2;
         this.material.uniforms.u_clim.value.set(this.clim1, clim2);
+        this.updateVolumeParam(false, true);
     }
 
     get colormap() {
@@ -118,6 +124,7 @@ export class VolumeObject extends THREE.Object3D {
     set colormap(colormap: string) {
         this._colormap = colormap;
         this.material.uniforms.u_cmdata.value = cmtextures[colormap];
+        this.updateVolumeParam(false, true);
     }
 
     get renderstyle() {
@@ -127,6 +134,7 @@ export class VolumeObject extends THREE.Object3D {
         this._renderstyle = renderstyle;
         this.material.uniforms.u_renderstyle.value =
             renderstyle === "mip" ? 0 : 1;
+        this.updateVolumeParam(false, true);
     }
 
     get isothreshold() {
@@ -135,6 +143,7 @@ export class VolumeObject extends THREE.Object3D {
     set isothreshold(isothreshold: number) {
         this._isothreshold = isothreshold;
         this.material.uniforms.u_renderthreshold.value = isothreshold;
+        this.updateVolumeParam(false, true);
     }
 
     get clipping() {
@@ -143,6 +152,7 @@ export class VolumeObject extends THREE.Object3D {
     set clipping(clipping: boolean) {
         this._clipping = clipping;
         this.material.clipping = clipping;
+        this.updateVolumeParam(false, true);
     }
     get planes() {
         return this._planes;
@@ -150,41 +160,46 @@ export class VolumeObject extends THREE.Object3D {
     set planes(planes: THREE.Plane[]) {
         this._planes = planes;
         this.material.clippingPlanes = this.material.clipping ? planes : [];
+        this.updateVolumeParam(false, true);
     }
 
     // FIXME:
+    // https://github.com/mrdoob/three.js/blob/master/src/core/Object3D.js#L601
     updateVolumeParam(updateParents: boolean, updateChildren: boolean) {
+        // update parent
         const parent = this.parent;
-
-        if (
-            updateParents === true &&
-            parent !== null &&
-            parent.matrixWorldAutoUpdate === true
-        ) {
-            parent.updateWorldMatrix(true, false);
+        if (updateParents === true) {
+            if (
+                parent !== null &&
+                parent instanceof VolumeObject &&
+                parent.volumeParamAutoUpdate === true
+            ) {
+                parent.updateVolumeParam(true, false);
+            }
         }
 
-        if (this.matrixAutoUpdate) this.updateMatrix();
-
-        if (this.parent === null) {
-            this.matrixWorld.copy(this.matrix);
-        } else {
-            this.matrixWorld.multiplyMatrices(
-                this.parent.matrixWorld,
-                this.matrix
-            );
+        if (parent !== null && parent instanceof VolumeObject) {
+            this.clim1 = parent._clim1;
+            this.clim2 = parent._clim2;
+            this.colormap = parent._colormap;
+            this.renderstyle = parent._renderstyle;
+            this.isothreshold = parent._isothreshold;
+            this.clipping = parent._clipping;
+            this.planes = parent._planes;
         }
 
         // update children
-
         if (updateChildren === true) {
             const children = this.children;
 
             for (let i = 0, l = children.length; i < l; i++) {
                 const child = children[i];
 
-                if (child.matrixWorldAutoUpdate === true) {
-                    child.updateWorldMatrix(false, true);
+                if (
+                    child instanceof VolumeObject &&
+                    child.volumeParamAutoUpdate === true
+                ) {
+                    child.updateVolumeParam(false, true);
                 }
             }
         }
