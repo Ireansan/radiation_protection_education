@@ -7,7 +7,7 @@ import { NRRDLoader } from "three/examples/jsm/loaders/NRRDLoader";
 import { useNRRD } from "../volumeRender/core/useNRRD";
 
 import { modelProps } from "./types";
-import { VolumeObject } from "../volumeRender/core/volumeObject";
+import { VolumeObject } from "../volumeRender/core/VolumeObject";
 extend({ VolumeObject });
 
 import { Volume } from "three-stdlib";

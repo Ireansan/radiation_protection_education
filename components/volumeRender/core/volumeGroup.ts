@@ -1,14 +1,10 @@
 import * as THREE from "three";
-import { Object3DNode } from "@react-three/fiber";
-import { Volume } from "three-stdlib";
 
-import { VolumeObject } from "./volumeObject";
-import volumeRenderShader from "../shaders/volumeShader";
-import { cmtextures } from "../textures";
+import { VolumeObject } from "./VolumeObject";
 
 /**
  * @link https://github.com/mrdoob/three.js/blob/master/examples/webgl2_materials_texture3d.html
- * @function Group
+ *
  * @abstract Core
  * @param volume any
  * @param clim1 number, Default 0
@@ -19,25 +15,132 @@ import { cmtextures } from "../textures";
  * @param clipping boolean, Default false
  * @param planes THREE.Plane
  */
-export class VolumeGroup extends VolumeObject {
-    isGroup: boolean;
+export class VolumeGroup extends THREE.Group {
+    _clim1: number;
+    _clim2: number;
+    _colormap: string;
+    _renderstyle: string;
+    _isothreshold: number;
+    _clipping: boolean;
+    _planes: THREE.Plane[];
+
+    volumeParamAutoUpdate: boolean;
+
+    // isGroup: boolean;
 
     constructor() {
         super();
 
-        this.isGroup = true;
+        this._clim1 = 0;
+        this._clim2 = 1;
+        this._colormap = "viridis";
+        this._renderstyle = "mip";
+        this._isothreshold = 0.1;
+        this._clipping = false;
+        this._planes = [];
+
+        this.volumeParamAutoUpdate = true;
+
+        // this.isGroup = true;
         this.type = "Group";
     }
-}
 
-/**
- * @link https://github.com/pmndrs/react-three-fiber/blob/26cf7eed4f9bddd79305a1f61b20554b07fdff1b/docs/tutorials/typescript.mdx#extend-usage
- */
+    get clim1() {
+        return this._clim1;
+    }
+    set clim1(clim1: number) {
+        this._clim1 = clim1;
+        this.updateVolumeParam(false, true);
+    }
+    get clim2() {
+        return this._clim2;
+    }
+    set clim2(clim2: number) {
+        this._clim2 = clim2;
+        this.updateVolumeParam(false, true);
+    }
 
-export type VolumeObjectProps = Object3DNode<VolumeObject, typeof VolumeObject>;
+    get colormap() {
+        return this._colormap;
+    }
+    set colormap(colormap: string) {
+        this._colormap = colormap;
+        this.updateVolumeParam(false, true);
+    }
 
-declare module "@react-three/fiber" {
-    interface ThreeElements {
-        volumeObject: VolumeObjectProps;
+    get renderstyle() {
+        return this._renderstyle;
+    }
+    set renderstyle(renderstyle: string) {
+        this._renderstyle = renderstyle;
+        renderstyle === "mip" ? 0 : 1;
+        this.updateVolumeParam(false, true);
+    }
+
+    get isothreshold() {
+        return this._isothreshold;
+    }
+    set isothreshold(isothreshold: number) {
+        this._isothreshold = isothreshold;
+        this.updateVolumeParam(false, true);
+    }
+
+    get clipping() {
+        return this._clipping;
+    }
+    set clipping(clipping: boolean) {
+        this._clipping = clipping;
+        this.updateVolumeParam(false, true);
+    }
+    get planes() {
+        return this._planes;
+    }
+    set planes(planes: THREE.Plane[]) {
+        this._planes = planes;
+        this.updateVolumeParam(false, true);
+        console.log("group", planes)
+    }
+
+    // https://github.com/mrdoob/three.js/blob/master/src/core/Object3D.js#L601
+    updateVolumeParam(updateParents: boolean, updateChildren: boolean) {
+        // update parent
+        const parent = this.parent;
+        if (updateParents === true) {
+            if (
+                parent !== null &&
+                parent instanceof VolumeObject &&
+                parent.volumeParamAutoUpdate === true
+            ) {
+                parent.updateVolumeParam(true, false);
+            }
+        }
+
+        if (parent !== null && parent instanceof VolumeObject) {
+            this._clim1 = parent._clim1;
+            this._clim2 = parent._clim2;
+            this._colormap = parent._colormap;
+            this._renderstyle = parent._renderstyle;
+            this._isothreshold = parent._isothreshold;
+            this._clipping = parent._clipping;
+            this._planes = parent._planes;
+
+            console.log("group updateVolumeParam", this._planes);
+        }
+
+        // update children
+        if (updateChildren === true) {
+            const children = this.children;
+
+            for (let i = 0, l = children.length; i < l; i++) {
+                const child = children[i];
+
+                if (
+                    child instanceof VolumeObject &&
+                    child.volumeParamAutoUpdate === true
+                ) {
+                    child.updateVolumeParam(false, true);
+                }
+            }
+        }
     }
 }

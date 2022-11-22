@@ -1,13 +1,14 @@
 import * as THREE from "three";
-import { Object3DNode } from "@react-three/fiber";
 import { Volume } from "three-stdlib";
 
 import volumeRenderShader from "../shaders/volumeShader";
 import { cmtextures } from "../textures";
+import { VolumeGroup } from "./VolumeGroup";
 
 /**
  * @link https://github.com/mrdoob/three.js/blob/master/examples/webgl2_materials_texture3d.html
- * @function Object
+ * @link https://github.com/mrdoob/three.js/blob/master/src/objects/Mesh.js
+ *
  * @abstract Core
  * @param volume any
  * @param clim1 number, Default 0
@@ -97,8 +98,6 @@ export class VolumeObject extends THREE.Object3D {
             this.volume.yLength / 2 - 0.5,
             this.volume.zLength / 2 - 0.5
         );
-
-        console.log(this);
     }
 
     get clim1() {
@@ -178,14 +177,33 @@ export class VolumeObject extends THREE.Object3D {
             }
         }
 
-        if (parent !== null && parent instanceof VolumeObject) {
-            this.clim1 = parent._clim1;
-            this.clim2 = parent._clim2;
-            this.colormap = parent._colormap;
-            this.renderstyle = parent._renderstyle;
-            this.isothreshold = parent._isothreshold;
-            this.clipping = parent._clipping;
-            this.planes = parent._planes;
+        if (
+            parent !== null &&
+            (parent instanceof VolumeObject || parent instanceof VolumeGroup)
+        ) {
+            this._clim1 = parent._clim1;
+            this._clim2 = parent._clim2;
+            this._colormap = parent._colormap;
+            this._renderstyle = parent._renderstyle;
+            this._isothreshold = parent._isothreshold;
+            this._clipping = parent._clipping;
+            this._planes = parent._clipping ? parent._planes : [];
+
+            this.material.uniforms.u_clim.value.set(
+                parent._clim1,
+                parent._clim2
+            );
+            this.material.uniforms.u_cmdata.value =
+                cmtextures[parent._colormap];
+            this.material.uniforms.u_renderstyle.value =
+                parent._renderstyle === "mip" ? 0 : 1;
+            this.material.uniforms.u_renderthreshold.value =
+                parent._isothreshold;
+            this.material.clipping = parent._clipping;
+            this.material.clippingPlanes = this.material.clipping
+                ? parent._planes
+                : [];
+            console.log("object updateVolumeParam", this.material.clippingPlanes);
         }
 
         // update children
@@ -203,17 +221,5 @@ export class VolumeObject extends THREE.Object3D {
                 }
             }
         }
-    }
-}
-
-/**
- * @link https://github.com/pmndrs/react-three-fiber/blob/26cf7eed4f9bddd79305a1f61b20554b07fdff1b/docs/tutorials/typescript.mdx#extend-usage
- */
-
-export type VolumeObjectProps = Object3DNode<VolumeObject, typeof VolumeObject>;
-
-declare module "@react-three/fiber" {
-    interface ThreeElements {
-        volumeObject: VolumeObjectProps;
     }
 }

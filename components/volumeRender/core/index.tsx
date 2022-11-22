@@ -1,3 +1,5 @@
 export * from "./object";
 export * from "./group";
-export * from "./volumeObject";
+export * from "./volume.type";
+export * from "./VolumeGroup";
+export * from "./VolumeObject";
