@@ -1,20 +1,25 @@
 import React from "react";
-import { useLoader } from "@react-three/fiber";
-import * as THREE from "three";
-import { NRRDLoader } from "three/examples/jsm/loaders/NRRDLoader";
+import { extend, useThree, useLoader } from "@react-three/fiber";
+import { Volume, NRRDLoader } from "three-stdlib";
 
-import { modelProps } from "../../types";
-import { Object } from "../../../volumeRender";
+import { VolumeObject } from "../../../volumeRender"; // FIXME: filepath
+extend({ VolumeObject });
 
 import { applyBasePath } from "../../../utils";
 const modelURL = applyBasePath(`/models/nrrd/dose_animation/dose_4.nrrd`);
 
-export function Dose_all_4({ ...props }: modelProps) {
-    const volume: any = useLoader(NRRDLoader, modelURL);
+export function Dose_all_4({
+    ...props
+}: JSX.IntrinsicElements["volumeObject"]) {
+    const { gl } = useThree();
+    gl.localClippingEnabled = true;
+
+    // @ts-ignore
+    const volume: Volume = useLoader(NRRDLoader, modelURL);
 
     return (
         <>
-            <Object volume={volume} {...props} />
+            <volumeObject args={[volume]} {...props} />
         </>
     );
 }
