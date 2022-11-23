@@ -28,7 +28,7 @@ export class VolumeObject extends THREE.Object3D {
     _renderstyle: string;
     _isothreshold: number;
     _clipping: boolean;
-    _planes: THREE.Plane[];
+    _clippingPlanes: THREE.Plane[];
 
     volumeParamAutoUpdate: boolean;
 
@@ -36,18 +36,27 @@ export class VolumeObject extends THREE.Object3D {
     geometry: THREE.BufferGeometry;
     material: THREE.ShaderMaterial;
 
-    constructor(volume = new Volume()) {
+    constructor(
+        volume = new Volume(),
+        clim1 = 0,
+        clim2 = 1,
+        colormap = "viridis",
+        renderstyle = "mip",
+        isothreshold = 0.1,
+        clipping = false,
+        clippingPlanes = []
+    ) {
         // Init
         super();
 
         this.volume = volume;
-        this._clim1 = 0;
-        this._clim2 = 1;
-        this._colormap = "viridis";
-        this._renderstyle = "mip";
-        this._isothreshold = 0.1;
-        this._clipping = false;
-        this._planes = [];
+        this._clim1 = clim1;
+        this._clim2 = clim2;
+        this._colormap = colormap;
+        this._renderstyle = renderstyle;
+        this._isothreshold = isothreshold;
+        this._clipping = clipping;
+        this._clippingPlanes = clippingPlanes;
 
         this.volumeParamAutoUpdate = true;
 
@@ -79,12 +88,16 @@ export class VolumeObject extends THREE.Object3D {
         uniforms.u_renderstyle.value = this.renderstyle == "mip" ? 0 : 1; // 0: MIP, 1: ISO
         uniforms.u_renderthreshold.value = this.isothreshold; // For ISO renderstyle
         uniforms.u_cmdata.value = cmtextures[this.colormap];
+        this.updateMatrixWorld();
+        uniforms.u_modelMatrix.value = this.matrixWorld;
 
         this.material = new THREE.ShaderMaterial({
             uniforms: uniforms,
             vertexShader: volumeRenderShader.vertexShader,
             fragmentShader: volumeRenderShader.fragmentShader,
             side: THREE.BackSide, // The volume shader uses the backface as its "reference point"
+            clipping: clipping,
+            clippingPlanes: clippingPlanes,
         });
 
         // Geometry
@@ -153,11 +166,11 @@ export class VolumeObject extends THREE.Object3D {
         this.material.clipping = clipping;
         this.updateVolumeParam(false, true);
     }
-    get planes() {
-        return this._planes;
+    get clippingPlanes() {
+        return this._clippingPlanes;
     }
-    set planes(planes: THREE.Plane[]) {
-        this._planes = planes;
+    set clippingPlanes(planes: THREE.Plane[]) {
+        this._clippingPlanes = planes;
         this.material.clippingPlanes = this.material.clipping ? planes : [];
         this.updateVolumeParam(false, true);
     }
@@ -187,7 +200,9 @@ export class VolumeObject extends THREE.Object3D {
             this._renderstyle = parent._renderstyle;
             this._isothreshold = parent._isothreshold;
             this._clipping = parent._clipping;
-            this._planes = parent._clipping ? parent._planes : [];
+            this._clippingPlanes = parent._clipping
+                ? parent._clippingPlanes
+                : [];
 
             this.material.uniforms.u_clim.value.set(
                 parent._clim1,
@@ -201,9 +216,8 @@ export class VolumeObject extends THREE.Object3D {
                 parent._isothreshold;
             this.material.clipping = parent._clipping;
             this.material.clippingPlanes = this.material.clipping
-                ? parent._planes
-                : [];
-            console.log("object updateVolumeParam", this.material.clippingPlanes);
+                ? parent._clippingPlanes
+                : null;
         }
 
         // update children

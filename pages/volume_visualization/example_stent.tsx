@@ -16,10 +16,7 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 
-import {
-    VolumeControls,
-    ClippingPlaneControls,
-} from "../../components/volumeRender";
+import { VolumeControls } from "../../components/volumeRender";
 import * as Models from "../../components/models";
 
 import styles from "../../styles/threejs.module.css";

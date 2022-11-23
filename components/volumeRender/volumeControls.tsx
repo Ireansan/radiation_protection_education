@@ -25,6 +25,7 @@ type planeHelperMeshProps = {
     subsize: number;
     subcolor: THREE.Color;
     setTarget: (target: Target) => void;
+    visible: boolean;
 };
 function PlaneHelperMesh({
     id,
@@ -32,6 +33,7 @@ function PlaneHelperMesh({
     subsize,
     subcolor,
     setTarget,
+    visible,
 }: planeHelperMeshProps) {
     const planeID = id;
     const meshRef = React.useRef<THREE.Mesh>(new THREE.Mesh());
@@ -53,6 +55,7 @@ function PlaneHelperMesh({
                 onClick={(e) => setTarget({ object: e.object, id: planeID })}
                 onPointerOver={() => setHovered(true)}
                 onPointerOut={() => setHovered(false)}
+                visible={visible}
             >
                 <planeGeometry />
                 <meshBasicMaterial color={subcolor} wireframe={true} />
@@ -215,7 +218,9 @@ export const VolumeControls = React.forwardRef<
 
     // FIXME:
     React.useEffect(() => {
-        controls.planes = Planes;
+        controls.clipping = clipping;
+        clipping ? (controls.clippingPlanes = Planes) : null;
+
         console.log(controls, Planes);
     }, [controls, clipping, Planes]);
 
@@ -232,34 +237,31 @@ export const VolumeControls = React.forwardRef<
             >
                 {children}
             </volumeGroup>
+
             {/* Clipping Plane Controls */}
-            {
-                clipping ? (
-                    <>
-                        <TransformControls
-                            object={target.object}
-                            mode={volumeConfig.mode as modeType}
-                            space={volumeConfig.space as spaceType}
-                            onObjectChange={(e) => {
-                                onObjectChange(e);
-                            }}
-                        />
-                        {Planes.map((plane, index) => (
-                            <>
-                                <planeHelper plane={plane} size={size} />
-                                <PlaneHelperMesh
-                                    id={index}
-                                    normal={plane.normal}
-                                    subsize={subsize}
-                                    subcolor={subcolor}
-                                    setTarget={setTarget}
-                                />
-                            </>
-                        ))}
-                    </>
-                ) : null
-                // console.log(null)
-            }
+            {clipping ? (
+                <TransformControls
+                    object={target.object}
+                    mode={volumeConfig.mode as modeType}
+                    space={volumeConfig.space as spaceType}
+                    onObjectChange={(e) => {
+                        onObjectChange(e);
+                    }}
+                />
+            ) : null}
+            {Planes.map((plane, index) => (
+                <>
+                    <planeHelper plane={plane} size={size} visible={clipping} />
+                    <PlaneHelperMesh
+                        id={index}
+                        normal={plane.normal}
+                        subsize={subsize}
+                        subcolor={subcolor}
+                        setTarget={setTarget}
+                        visible={clipping}
+                    />
+                </>
+            ))}
         </>
     ) : null;
 });

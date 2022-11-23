@@ -22,7 +22,7 @@ export class VolumeGroup extends THREE.Group {
     _renderstyle: string;
     _isothreshold: number;
     _clipping: boolean;
-    _planes: THREE.Plane[];
+    _clippingPlanes: THREE.Plane[];
 
     volumeParamAutoUpdate: boolean;
 
@@ -37,7 +37,7 @@ export class VolumeGroup extends THREE.Group {
         this._renderstyle = "mip";
         this._isothreshold = 0.1;
         this._clipping = false;
-        this._planes = [];
+        this._clippingPlanes = [];
 
         this.volumeParamAutoUpdate = true;
 
@@ -92,11 +92,11 @@ export class VolumeGroup extends THREE.Group {
         this._clipping = clipping;
         this.updateVolumeParam(false, true);
     }
-    get planes() {
-        return this._planes;
+    get clippingPlanes() {
+        return this._clippingPlanes;
     }
-    set planes(planes: THREE.Plane[]) {
-        this._planes = planes;
+    set clippingPlanes(planes: THREE.Plane[]) {
+        this._clippingPlanes = planes;
         this.updateVolumeParam(false, true);
         console.log("group", planes)
     }
@@ -122,9 +122,7 @@ export class VolumeGroup extends THREE.Group {
             this._renderstyle = parent._renderstyle;
             this._isothreshold = parent._isothreshold;
             this._clipping = parent._clipping;
-            this._planes = parent._planes;
-
-            console.log("group updateVolumeParam", this._planes);
+            this._clippingPlanes = parent._clippingPlanes;
         }
 
         // update children

@@ -13,7 +13,7 @@ export class VolumeControls extends THREE.Object3D {
     _renderstyle: string;
     _isothreshold: number;
     _clipping: boolean;
-    _planes: THREE.Plane[];
+    _clippingPlanes: THREE.Plane[];
 
     isVolumeControls: boolean;
 
@@ -29,7 +29,7 @@ export class VolumeControls extends THREE.Object3D {
         this._renderstyle = "mip";
         this._isothreshold = 0.1;
         this._clipping = false;
-        this._planes = [];
+        this._clippingPlanes = [];
 
         this.isVolumeControls = true;
     }
@@ -106,17 +106,16 @@ export class VolumeControls extends THREE.Object3D {
             : null;
     }
 
-    get planes() {
-        return this._planes;
+    get clippingPlanes() {
+        return this._clippingPlanes;
     }
-    set planes(planes: THREE.Plane[]) {
-        this._planes = planes;
+    set clippingPlanes(planes: THREE.Plane[]) {
+        this._clippingPlanes = planes;
         this.object &&
         (this.object instanceof VolumeObject ||
             this.object instanceof VolumeGroup)
-            ? this.object.planes = (this._clipping ? planes : [])
+            ? this.object.clippingPlanes = (this._clipping ? planes : [])
             : null;
-        console.log("controls", this._clipping, planes)
     }
 
     // Set current object
