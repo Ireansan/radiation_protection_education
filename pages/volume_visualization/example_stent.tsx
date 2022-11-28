@@ -16,10 +16,7 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 
-import {
-    VolumeControls,
-    ClippingPlaneControls,
-} from "../../components/volumeRender";
+import { VolumeControls } from "../../components/volumeRender";
 import * as Models from "../../components/models";
 
 import styles from "../../styles/threejs.module.css";
@@ -53,15 +50,20 @@ function ExampleStent() {
         <div className={styles.container}>
             <div className={styles.canvas}>
                 <Canvas camera={{ position: [64, 128, 64] }}>
-                    <VolumeControls>
-                        <ClippingPlaneControls
+                    <VolumeControls
+                        normals={[
+                            [0, -1, 0],
+                            [-1, 0, 0],
+                        ]}
+                    >
+                        <Models.Stent rotation={[-Math.PI / 2, 0, 0]} />
+                        {/* <ClippingPlaneControls
                             normals={[
                                 [0, -1, 0],
                                 [-1, 0, 0],
                             ]}
                         >
-                            <Models.Stent rotation={[-Math.PI / 2, 0, 0]} />
-                        </ClippingPlaneControls>
+                        </ClippingPlaneControls> */}
                     </VolumeControls>
 
                     <OrthographicCamera />
