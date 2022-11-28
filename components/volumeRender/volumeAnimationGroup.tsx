@@ -115,8 +115,10 @@ export function VolumeAnimationGroup({
             actions["volumeAnimation"]
                 ? (actions["volumeAnimation"].time = animationConfig.index)
                 : null;
+            mixer.update(0);
+        } else {
+            mixer.update(delta * animationConfig.speed);
         }
-        mixer.update(delta * animationConfig.speed);
 
         if (actions["volumeAnimation"]) {
             actions["volumeAnimation"].time !== animationConfig.index
