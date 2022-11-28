@@ -1,15 +1,22 @@
 import * as THREE from "three";
-import React, { useRef, useMemo, useEffect } from "react";
-import { extend, useFrame } from "@react-three/fiber";
+import React from "react";
+import { extend, ReactThreeFiber } from "@react-three/fiber";
 import { useAnimations } from "@react-three/drei";
 
 import * as DOSE_ALL from "./Dose_all";
 import {
-    VolumeGroup,
     VolumeAnimationObject,
     VolumeAnimationGroup,
 } from "../../volumeRender";
-extend({ VolumeGroup, VolumeAnimationObject });
+extend({ VolumeAnimationObject });
+declare module "@react-three/fiber" {
+    interface ThreeElements {
+        volumeAnimationObject: ReactThreeFiber.Object3DNode<
+            VolumeAnimationObject,
+            typeof VolumeAnimationObject
+        >;
+    }
+}
 
 export function Dose_all_Animation({
     ...props

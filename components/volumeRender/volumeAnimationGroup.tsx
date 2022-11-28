@@ -1,10 +1,18 @@
 import React from "react";
 import * as THREE from "three";
-import { extend, useFrame } from "@react-three/fiber";
+import { extend, ReactThreeFiber, useFrame } from "@react-three/fiber";
 import { useControls, folder, button } from "leva";
 
 import { VolumeObject, VolumeGroup, VolumeAnimationObject } from "./core";
 extend({ VolumeAnimationObject });
+declare module "@react-three/fiber" {
+    interface ThreeElements {
+        volumeAnimationObject: ReactThreeFiber.Object3DNode<
+            VolumeAnimationObject,
+            typeof VolumeAnimationObject
+        >;
+    }
+}
 
 export type VolumeAnimationGroupProps =
     JSX.IntrinsicElements["volumeAnimationObject"] & {

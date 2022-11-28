@@ -1,10 +1,23 @@
 import React, { useEffect, useRef } from "react";
-import { extend, useThree, useLoader } from "@react-three/fiber";
+import {
+    extend,
+    ReactThreeFiber,
+    useThree,
+    useLoader,
+} from "@react-three/fiber";
 import { NRRDLoader } from "three/examples/jsm/loaders/NRRDLoader";
 // import { NRRDLoader } from "three-stdlib";
 
 import { VolumeObject } from "../volumeRender/core/VolumeObject";
 extend({ VolumeObject });
+declare module "@react-three/fiber" {
+    interface ThreeElements {
+        volumeObject: ReactThreeFiber.Object3DNode<
+            VolumeObject,
+            typeof VolumeObject
+        >;
+    }
+}
 
 import { Volume } from "three-stdlib";
 

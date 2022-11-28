@@ -7,8 +7,20 @@ import { useCursor, TransformControls } from "@react-three/drei";
 import { useControls, folder } from "leva";
 
 import { VolumeObject, VolumeGroup } from "./core";
-import { VolumeControls as VolumeControlsImpl } from "./controls";
 extend({ VolumeObject, VolumeGroup });
+declare module "@react-three/fiber" {
+    interface ThreeElements {
+        volumeObject: ReactThreeFiber.Object3DNode<
+            VolumeObject,
+            typeof VolumeObject
+        >;
+        volumeGroup: ReactThreeFiber.Object3DNode<
+            VolumeGroup,
+            typeof VolumeGroup
+        >;
+    }
+}
+import { VolumeControls as VolumeControlsImpl } from "./controls";
 
 type modeType = "translate" | "rotate" | "scale" | undefined;
 type spaceType = "world" | "local" | undefined;
