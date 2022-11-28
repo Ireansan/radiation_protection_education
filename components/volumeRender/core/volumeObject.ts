@@ -3,7 +3,7 @@ import { Volume } from "three-stdlib";
 
 import volumeRenderShader from "../shaders/volumeShader";
 import { cmtextures } from "../textures";
-import { VolumeGroup } from "./VolumeGroup";
+import { VolumeGroup } from "./volumeGroup";
 
 /**
  * @link https://github.com/mrdoob/three.js/blob/master/examples/webgl2_materials_texture3d.html
@@ -19,7 +19,7 @@ import { VolumeGroup } from "./VolumeGroup";
  * @param clipping boolean, Default false
  * @param planes THREE.Plane
  */
-export class VolumeObject extends THREE.Object3D {
+class VolumeObject extends THREE.Object3D {
     volume: Volume;
 
     _clim1: number;
@@ -237,3 +237,5 @@ export class VolumeObject extends THREE.Object3D {
         }
     }
 }
+
+export { VolumeObject };

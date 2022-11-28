@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import { VolumeGroup } from "./VolumeGroup";
+import { VolumeGroup } from "./volumeGroup";
 
 /**
  * @link https://github.com/mrdoob/three.js/blob/master/examples/webgl2_materials_texture3d.html
@@ -15,7 +15,7 @@ import { VolumeGroup } from "./VolumeGroup";
  * @param clipping boolean, Default false
  * @param planes THREE.Plane
  */
-export class VolumeAnimationObject extends VolumeGroup {
+class VolumeAnimationObject extends VolumeGroup {
     volumeAnimationParamAutoUpdate: boolean;
 
     constructor() {
@@ -56,3 +56,5 @@ export class VolumeAnimationObject extends VolumeGroup {
         ];
     }
 }
+
+export { VolumeAnimationObject };

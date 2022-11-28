@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import { VolumeObject } from "./VolumeObject";
+import { VolumeObject } from "./volumeObject";
 
 /**
  * @link https://github.com/mrdoob/three.js/blob/master/examples/webgl2_materials_texture3d.html
@@ -15,7 +15,7 @@ import { VolumeObject } from "./VolumeObject";
  * @param clipping boolean, Default false
  * @param planes THREE.Plane
  */
-export class VolumeGroup extends THREE.Group {
+class VolumeGroup extends THREE.Group {
     _clim1: number;
     _clim2: number;
     _colormap: string;
@@ -104,14 +104,18 @@ export class VolumeGroup extends THREE.Group {
         if (updateParents === true) {
             if (
                 parent !== null &&
-                (parent instanceof VolumeObject || parent instanceof VolumeGroup) &&
+                (parent instanceof VolumeObject ||
+                    parent instanceof VolumeGroup) &&
                 parent.volumeParamAutoUpdate === true
             ) {
                 parent.updateVolumeParam(true, false);
             }
         }
 
-        if (parent !== null && (parent instanceof VolumeObject || parent instanceof VolumeGroup)) {
+        if (
+            parent !== null &&
+            (parent instanceof VolumeObject || parent instanceof VolumeGroup)
+        ) {
             this._clim1 = parent._clim1;
             this._clim2 = parent._clim2;
             this._colormap = parent._colormap;
@@ -129,7 +133,8 @@ export class VolumeGroup extends THREE.Group {
                 const child = children[i];
 
                 if (
-                    (child instanceof VolumeObject || child instanceof VolumeGroup) &&
+                    (child instanceof VolumeObject ||
+                        child instanceof VolumeGroup) &&
                     child.volumeParamAutoUpdate === true
                 ) {
                     child.updateVolumeParam(false, true);
@@ -138,3 +143,5 @@ export class VolumeGroup extends THREE.Group {
         }
     }
 }
+
+export { VolumeGroup };

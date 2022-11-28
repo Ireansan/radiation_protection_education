@@ -1,3 +1,3 @@
-export * from "./VolumeAnimationObject";
-export * from "./VolumeGroup";
-export * from "./VolumeObject";
+export * from "./volumeAnimationObject";
+export * from "./volumeGroup";
+export * from "./volumeObject";
