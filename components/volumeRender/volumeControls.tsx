@@ -8,18 +8,7 @@ import { useControls, folder } from "leva";
 
 import { VolumeObject, VolumeGroup } from "./core";
 extend({ VolumeObject, VolumeGroup });
-declare module "@react-three/fiber" {
-    interface ThreeElements {
-        volumeObject: ReactThreeFiber.Object3DNode<
-            VolumeObject,
-            typeof VolumeObject
-        >;
-        volumeGroup: ReactThreeFiber.Object3DNode<
-            VolumeGroup,
-            typeof VolumeGroup
-        >;
-    }
-}
+
 import { VolumeControls as VolumeControlsImpl } from "./controls";
 
 type modeType = "translate" | "rotate" | "scale" | undefined;

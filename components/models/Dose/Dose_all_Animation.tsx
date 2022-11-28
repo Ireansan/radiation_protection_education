@@ -9,14 +9,6 @@ import {
     VolumeAnimationGroup,
 } from "../../volumeRender";
 extend({ VolumeAnimationObject });
-declare module "@react-three/fiber" {
-    interface ThreeElements {
-        volumeAnimationObject: ReactThreeFiber.Object3DNode<
-            VolumeAnimationObject,
-            typeof VolumeAnimationObject
-        >;
-    }
-}
 
 export function Dose_all_Animation({
     ...props

@@ -10,14 +10,6 @@ import { NRRDLoader } from "three/examples/jsm/loaders/NRRDLoader";
 
 import { VolumeObject } from "../volumeRender/core/VolumeObject";
 extend({ VolumeObject });
-declare module "@react-three/fiber" {
-    interface ThreeElements {
-        volumeObject: ReactThreeFiber.Object3DNode<
-            VolumeObject,
-            typeof VolumeObject
-        >;
-    }
-}
 
 import { Volume } from "three-stdlib";
 

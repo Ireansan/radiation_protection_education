@@ -5,14 +5,6 @@ import { useControls, folder, button } from "leva";
 
 import { VolumeObject, VolumeGroup, VolumeAnimationObject } from "./core";
 extend({ VolumeAnimationObject });
-declare module "@react-three/fiber" {
-    interface ThreeElements {
-        volumeAnimationObject: ReactThreeFiber.Object3DNode<
-            VolumeAnimationObject,
-            typeof VolumeAnimationObject
-        >;
-    }
-}
 
 export type VolumeAnimationGroupProps =
     JSX.IntrinsicElements["volumeAnimationObject"] & {

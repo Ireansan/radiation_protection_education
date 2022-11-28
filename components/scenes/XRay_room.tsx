@@ -14,14 +14,7 @@ import * as THREE from "three";
 
 import { VolumeGroup, VolumeControls } from "../volumeRender";
 extend({ VolumeGroup });
-declare module "@react-three/fiber" {
-    interface ThreeElements {
-        volumeGroup: ReactThreeFiber.Object3DNode<
-            VolumeGroup,
-            typeof VolumeGroup
-        >;
-    }
-}
+
 import * as MODELS from "../models";
 import * as SCENES from "./index";
 
