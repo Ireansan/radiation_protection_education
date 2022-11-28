@@ -1,3 +1,3 @@
 export * from "./core";
-export * from "./animationGroup";
 export * from "./volumeControls";
+export * from "./volumeAnimationGroup";

@@ -11,19 +11,22 @@ import { Volume } from "three-stdlib";
 import { applyBasePath } from "../utils";
 const modelURL = applyBasePath(`/models/nrrd/stent.nrrd`);
 
-export function Stent({ ...props }: JSX.IntrinsicElements["volumeObject"]) {
+export function Stent({
+    ref,
+    ...props
+}: JSX.IntrinsicElements["volumeObject"]) {
     const { gl } = useThree();
     gl.localClippingEnabled = true;
 
     const volume: Volume = useLoader(NRRDLoader, modelURL);
 
     console.log("stent", volume);
-    const refTest = useRef<VolumeObject>(null);
+    // const refTest = useRef<VolumeObject>(null);
 
     return (
         <>
-            {console.log("rendering", volume, props)}
-            <volumeObject ref={refTest} args={[volume]} {...props} />
+            {console.log("rendering", volume, props, ref)}
+            <volumeObject ref={ref} args={[volume]} {...props} />
         </>
     );
 }

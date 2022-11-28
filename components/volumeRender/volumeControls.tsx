@@ -65,19 +65,19 @@ function PlaneHelperMesh({
     );
 }
 
-export type VolumeControlsProps = ReactThreeFiber.Object3DNode<
-    VolumeControlsImpl,
-    typeof VolumeControlsImpl
-> &
-    JSX.IntrinsicElements["volumeGroup"] & {
-        children?: React.ReactElement<VolumeObject | VolumeGroup>;
-        object?: VolumeObject | React.MutableRefObject<VolumeObject>;
-        normals?: THREE.Vector3Tuple[];
-        size?: number;
-        color?: THREE.Color;
-        subsize?: number;
-        subcolor?: THREE.Color;
-    };
+export type VolumeControlsProps = JSX.IntrinsicElements["volumeGroup"] & {
+    children?: React.ReactElement<VolumeObject | VolumeGroup>;
+    object?:
+        | VolumeObject
+        | VolumeGroup
+        | React.MutableRefObject<VolumeObject>
+        | React.MutableRefObject<VolumeGroup>;
+    normals?: THREE.Vector3Tuple[];
+    size?: number;
+    color?: THREE.Color;
+    subsize?: number;
+    subcolor?: THREE.Color;
+};
 
 /**
  * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
@@ -117,20 +117,10 @@ export const VolumeControls = React.forwardRef<
         Normals.map((n) => new THREE.Plane(n, 0))
     );
 
-    // Animation
-    /*
-    const [isAnimationGroup, setAnimationGroup] =
-        React.useState<boolean>(false);
-    const [childrenLength, setLength] = React.useState<number>(1);
-    console.log("childrenLength", childrenLength);
-    const seconds = React.useRef<number>(0);
-    const i = React.useRef<number>(0);
-    const [edit, setEdit] = React.useState<boolean>(false);
-    */
-
     /**
      * leva panels
      */
+    // Volume
     const [volumeConfig, setVolume] = useControls("volume", () => ({
         clim1: {
             value: 0,
@@ -173,6 +163,7 @@ export const VolumeControls = React.forwardRef<
             options: ["mip", "iso"],
             onChange: (e) => {
                 controls.renderstyle = e;
+                console.log("leva renderstyle", object);
             },
         },
         isothreshold: {
@@ -192,6 +183,7 @@ export const VolumeControls = React.forwardRef<
         },
     }));
 
+    // Clipping
     const [planeConfig, setPlaneConfig] = useControls("transform", () => ({
         mode: {
             value: "translate",
@@ -202,37 +194,6 @@ export const VolumeControls = React.forwardRef<
             options: ["world", "local"],
         },
     }));
-
-    /*
-    const [animationConfig, setAnimationConfig] = useControls(() => ({
-        animation: folder({
-            animate: {
-                value: true,
-            },
-            loop: {
-                value: true,
-            },
-            speed: {
-                value: 1.0,
-                min: 0.25,
-                max: 2,
-            },
-            index: {
-                value: 1,
-                min: 1,
-                max: childrenLength,
-                step: 1,
-                // FIXME: need custom controller
-                onEditStart: (value, path, context) => {
-                    setEdit(true);
-                },
-                onEditEnd: (value, path, context) => {
-                    setEdit(false);
-                },
-            },
-        }),
-    }));
-    */
 
     /** */
     function onObjectChange(e: THREE.Event | undefined) {
@@ -249,38 +210,28 @@ export const VolumeControls = React.forwardRef<
         }
     }
 
+    // Volume
     React.useLayoutEffect(() => {
         if (object) {
+            // TODO: use and check
             controls.attach(
                 object instanceof VolumeObject || object instanceof VolumeGroup
                     ? object
                     : object.current
             );
 
-            /*
-            if (object instanceof VolumeGroup && object.isAnimationGroup) {
-                setAnimationGroup(true);
-                setLength(object.children.length);
-                console.log(object.children.length);
-            } else {
-                setAnimationGroup(false);
-                setLength(1);
-            }
-            */
-
-            console.log("attach object", object);
+            console.log(
+                "attach object",
+                object instanceof VolumeObject || object instanceof VolumeGroup
+                    ? "VolumeObject || VolumeGroup"
+                    : "Ref",
+                object instanceof VolumeObject || object instanceof VolumeGroup
+                    ? object
+                    : object.current,
+                controls
+            );
         } else if (group.current instanceof VolumeGroup) {
             controls.attach(group.current);
-
-            /*
-            if (group.current.isAnimationGroup) {
-                setAnimationGroup(true);
-                setLength(group.current.children.length);
-            } else {
-                setAnimationGroup(false);
-                setLength(1);
-            }
-            */
 
             console.log("attach group.current", group.current);
         }
@@ -290,32 +241,11 @@ export const VolumeControls = React.forwardRef<
         return () => void controls.detach();
     }, [object, children, controls, Planes]);
 
+    // Clipping
     React.useEffect(() => {
         controls.clipping = clipping;
         clipping ? (controls.clippingPlanes = Planes) : null;
     }, [controls, clipping, Planes]);
-
-    /*
-    useFrame((state, delta) => {
-        if (edit) {
-            i.current = animationConfig.index;
-        } else {
-            if (animationConfig.animate) {
-                seconds.current += animationConfig.speed * delta;
-
-                if (seconds.current >= 1) {
-                    seconds.current = 0;
-                    i.current += 1;
-
-                    if (i.current >= childrenLength) {
-                        i.current = 0;
-                    }
-                    setAnimationConfig({ index: i.current + 1 });
-                }
-            }
-        }
-    });
-    */
 
     return controls ? (
         <>

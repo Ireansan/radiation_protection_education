@@ -26,8 +26,6 @@ export class VolumeGroup extends THREE.Group {
 
     volumeParamAutoUpdate: boolean;
 
-    // isGroup: boolean;
-
     constructor() {
         super();
 
@@ -41,7 +39,6 @@ export class VolumeGroup extends THREE.Group {
 
         this.volumeParamAutoUpdate = true;
 
-        // this.isGroup = true;
         this.type = "Group";
     }
 
@@ -73,7 +70,6 @@ export class VolumeGroup extends THREE.Group {
     }
     set renderstyle(renderstyle: string) {
         this._renderstyle = renderstyle;
-        renderstyle === "mip" ? 0 : 1;
         this.updateVolumeParam(false, true);
     }
 
@@ -98,7 +94,7 @@ export class VolumeGroup extends THREE.Group {
     set clippingPlanes(planes: THREE.Plane[]) {
         this._clippingPlanes = planes;
         this.updateVolumeParam(false, true);
-        console.log("group", planes)
+        console.log("group", planes);
     }
 
     // https://github.com/mrdoob/three.js/blob/master/src/core/Object3D.js#L601
@@ -108,14 +104,14 @@ export class VolumeGroup extends THREE.Group {
         if (updateParents === true) {
             if (
                 parent !== null &&
-                parent instanceof VolumeObject &&
+                (parent instanceof VolumeObject || parent instanceof VolumeGroup) &&
                 parent.volumeParamAutoUpdate === true
             ) {
                 parent.updateVolumeParam(true, false);
             }
         }
 
-        if (parent !== null && parent instanceof VolumeObject) {
+        if (parent !== null && (parent instanceof VolumeObject || parent instanceof VolumeGroup)) {
             this._clim1 = parent._clim1;
             this._clim2 = parent._clim2;
             this._colormap = parent._colormap;
@@ -133,7 +129,7 @@ export class VolumeGroup extends THREE.Group {
                 const child = children[i];
 
                 if (
-                    child instanceof VolumeObject &&
+                    (child instanceof VolumeObject || child instanceof VolumeGroup) &&
                     child.volumeParamAutoUpdate === true
                 ) {
                     child.updateVolumeParam(false, true);

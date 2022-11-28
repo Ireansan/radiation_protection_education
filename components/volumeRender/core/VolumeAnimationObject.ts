@@ -35,6 +35,7 @@ export class VolumeAnimationObject extends VolumeGroup {
     // TODO: support remove
 
     updateAnimation() {
+        this.children.map((object, i) => (object.visible = false));
         const childrenLen = this.children.length;
         const indexArray = [...Array(childrenLen)].map((_, i) => i);
 
