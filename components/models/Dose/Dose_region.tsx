@@ -21,13 +21,13 @@ export function Dose_region(props: JSX.IntrinsicElements["group"]) {
     const { nodes, materials } = useGLTF(modelURL) as unknown as GLTFResult;
     return (
         <group {...props} dispose={null}>
-            <PerspectiveCamera
+            {/* <PerspectiveCamera
                 makeDefault={false}
                 far={906.44}
                 near={425.38}
                 fov={30}
                 position={[-40, -17.5, -726.19]}
-            />
+            /> */}
             <mesh
                 geometry={nodes.mesh0.geometry}
                 material={nodes.mesh0.material}

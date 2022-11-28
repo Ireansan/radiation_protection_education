@@ -15,7 +15,7 @@ import {
 import * as THREE from "three";
 import { Physics, Debug } from "@react-three/rapier";
 
-import { VolumeControls, ClippingPlaneControls } from "../volumeRender";
+import { VolumeControls } from "../volumeRender";
 import * as MODELS from "../models";
 import * as SCENES from "./index";
 
@@ -50,7 +50,7 @@ function XRayRoomGame() {
                 <group
                     position={[0, 2, 0]}
                     rotation={[0, 0, Math.PI]}
-                    scale={(1 / 5) * (1 / 20)}
+                    scale={(1 / 4) * (1 / 20)}
                 >
                     <MODELS.Dose_material />
                     <MODELS.Dose_region />

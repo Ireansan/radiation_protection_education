@@ -5,7 +5,7 @@ import { VRButton, XR, Interactive, Controllers } from "@react-three/xr";
 import { Stats, OrthographicCamera } from "@react-three/drei";
 import * as THREE from "three";
 
-import { VolumeControls, ClippingPlaneControls } from "../volumeRender";
+import { VolumeControls } from "../volumeRender";
 import * as MODELS from "../models";
 import * as SCENES from "./index";
 
@@ -18,14 +18,12 @@ function XRayRoomVR() {
 
                 <XR>
                     <VolumeControls>
-                        <ClippingPlaneControls>
-                            <SCENES.Dose_all_Animation
-                                position={[45, 0, 48]}
-                                rotation={[0, Math.PI, -Math.PI / 2]}
-                            />
-                        </ClippingPlaneControls>
+                        <SCENES.Dose_all_Animation
+                            position={[45, 0, 48]}
+                            rotation={[0, Math.PI, -Math.PI / 2]}
+                        />
                     </VolumeControls>
-                    <group rotation={[0, 0, Math.PI]} scale={1 / 6}>
+                    <group rotation={[0, 0, Math.PI]} scale={1 / 4}>
                         <MODELS.Dose_material />
                         <MODELS.Dose_region />
                     </group>

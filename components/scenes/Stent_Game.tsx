@@ -15,7 +15,7 @@ import {
 import * as THREE from "three";
 import { Physics, Debug } from "@react-three/rapier";
 
-import { VolumeControls, ClippingPlaneControls } from "../volumeRender";
+import { VolumeControls } from "../volumeRender";
 import * as MODELS from "../models";
 
 import {

@@ -41,7 +41,7 @@ function XRayRoom() {
                     />
                 </volumeGroup>
                 {/* </VolumeControls> */}
-                <group rotation={[0, 0, Math.PI]} scale={1 / 5} visible={false}>
+                <group rotation={[0, 0, Math.PI]} scale={1 / 4}>
                     <MODELS.Dose_material />
                     <MODELS.Dose_region />
                 </group>
