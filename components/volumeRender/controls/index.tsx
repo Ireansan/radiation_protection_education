@@ -1,1 +1,1 @@
-export * from "./VolumeControls";
+export * from "./volumeControls";
