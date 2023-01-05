@@ -1,10 +1,8 @@
 import React from "react";
 import * as THREE from "three";
-import { ReactThreeFiber, extend, useFrame } from "@react-three/fiber";
-import { useCursor, TransformControls } from "@react-three/drei";
-// import omit from "lodash.omit";
-// import pick from "lodash.pick";
-import { useControls, folder } from "leva";
+import { extend } from "@react-three/fiber";
+import { useCursor, TransformControls, PivotControls } from "@react-three/drei";
+import { useControls, folder, Leva } from "leva";
 
 import { VolumeObject, VolumeGroup } from "./core";
 extend({ VolumeObject, VolumeGroup });
@@ -19,7 +17,7 @@ type Target = {
 };
 
 /**
- * PlaneHelper & Plane Mesh
+ * Plane Helper Mesh
  */
 type planeHelperMeshProps = {
     id: number;
@@ -27,7 +25,8 @@ type planeHelperMeshProps = {
     subsize: number;
     subcolor: THREE.Color;
     visible: boolean;
-    setTarget: (target: Target) => void;
+    onClick: (e: THREE.Event, id: number) => void;
+    setMatrix: (matrix: THREE.Matrix4) => void;
 };
 function PlaneHelperMesh({
     id,
@@ -35,7 +34,8 @@ function PlaneHelperMesh({
     subsize,
     subcolor,
     visible,
-    setTarget,
+    onClick,
+    setMatrix,
 }: planeHelperMeshProps) {
     const planeID = id;
     const meshRef = React.useRef<THREE.Mesh>(new THREE.Mesh());
@@ -54,7 +54,10 @@ function PlaneHelperMesh({
             <mesh
                 ref={meshRef}
                 scale={subsize}
-                onClick={(e) => setTarget({ object: e.object, id: planeID })}
+                onClick={(e) => {
+                    onClick(e, planeID);
+                    setMatrix(meshRef.current.matrixWorld);
+                }}
                 onPointerOver={() => setHovered(true)}
                 onPointerOut={() => setHovered(false)}
                 visible={visible}
@@ -63,6 +66,100 @@ function PlaneHelperMesh({
                 <meshBasicMaterial color={subcolor} wireframe={true} />
             </mesh>
         </>
+    );
+}
+
+/**
+ * Controls
+ */
+type controlsProps = {
+    target: Target;
+    planes: THREE.Plane[];
+};
+// PivotControls
+type pivotControlsProps = {
+    matrix: THREE.Matrix4;
+} & controlsProps;
+function ClippingPlanesPivotControls({
+    target,
+    planes,
+    matrix,
+}: pivotControlsProps) {
+    const pivotRef = React.useRef<THREE.Group>(null!);
+
+    function onDrag(
+        l: THREE.Matrix4,
+        deltaL: THREE.Matrix4,
+        w: THREE.Matrix4,
+        deltaW: THREE.Matrix4
+    ) {
+        const direction = new THREE.Vector3();
+        const position = new THREE.Vector3();
+        matrix.copy(w);
+
+        if (target.object) {
+            var rotationMatrix = new THREE.Matrix4().extractRotation(w);
+            target.object.position.setFromMatrixPosition(w);
+            target.object.rotation.setFromRotationMatrix(rotationMatrix);
+
+            target.object.getWorldDirection(direction);
+            direction.normalize().multiplyScalar(-1);
+            position.copy(target.object.position);
+
+            planes[target.id].normal.copy(direction);
+            planes[target.id].constant = -position.dot(direction);
+        }
+    }
+
+    return (
+        <PivotControls
+            ref={pivotRef}
+            matrix={matrix}
+            autoTransform={true}
+            onDrag={(l, deltaL, w, deltaW) => onDrag(l, deltaL, w, deltaW)}
+        />
+    );
+}
+
+// TransformControls
+function ClippingPlanesTransformControls({ target, planes }: controlsProps) {
+    const [transformControlsConfig, setTransformControlsConfig] = useControls(
+        "transform",
+        () => ({
+            mode: {
+                value: "translate",
+                options: ["translate", "rotate"],
+            },
+            space: {
+                value: "world",
+                options: ["world", "local"],
+            },
+        })
+    );
+
+    function onObjectChange(e: THREE.Event | undefined) {
+        const direction = new THREE.Vector3();
+        const position = new THREE.Vector3();
+
+        if (target.object) {
+            target.object?.getWorldDirection(direction);
+            direction.normalize().multiplyScalar(-1);
+            position.copy(target.object.position);
+
+            planes[target.id].normal.copy(direction);
+            planes[target.id].constant = -position.dot(direction);
+        }
+    }
+
+    return (
+        <TransformControls
+            object={target.object}
+            mode={transformControlsConfig.mode as modeType}
+            space={transformControlsConfig.space as spaceType}
+            onObjectChange={(e) => {
+                onObjectChange(e);
+            }}
+        />
     );
 }
 
@@ -79,7 +176,6 @@ export type VolumeControlsProps = JSX.IntrinsicElements["volumeGroup"] & {
     subsize?: number;
     subcolor?: THREE.Color;
 };
-
 /**
  * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
  */
@@ -99,11 +195,14 @@ export const VolumeControls = React.forwardRef<
     },
     ref
 ) {
-    // const transformProps = pick(props, transformOnlyPropNames);
-    // const objectProps = omit(props, transformOnlyPropNames);
-
     const controls = React.useMemo(() => new VolumeControlsImpl(), []);
     const group = React.useRef<VolumeGroup>(null);
+
+    const [matrix, setMatrix] = React.useState<THREE.Matrix4>(
+        new THREE.Matrix4()
+    );
+
+    const [controlsType, setControlsType] = React.useState<String>();
 
     // Plane
     const [clipping, setClipping] = React.useState<boolean>(false);
@@ -182,62 +281,30 @@ export const VolumeControls = React.forwardRef<
                 setClipping(e);
             },
         },
-    }));
-
-    // Clipping
-    const [planeConfig, setPlaneConfig] = useControls("transform", () => ({
-        mode: {
-            value: "translate",
-            options: ["translate", "rotate"],
-        },
-        space: {
-            value: "world",
-            options: ["world", "local"],
+        controlsType: {
+            options: ["PivotControls", "TransformControls"],
+            onChange: (e) => {
+                setControlsType(e);
+            },
         },
     }));
 
     /** */
-    function onObjectChange(e: THREE.Event | undefined) {
-        const direction = new THREE.Vector3();
-        const position = new THREE.Vector3();
-
-        if (target.object) {
-            target.object?.getWorldDirection(direction);
-            direction.normalize().multiplyScalar(-1);
-            position.copy(target.object.position);
-
-            Planes[target.id].normal.copy(direction);
-            Planes[target.id].constant = -position.dot(direction);
-        }
+    function onClick(e: THREE.Event, id: number) {
+        setTarget({ object: e.object, id: id });
     }
 
     // Volume
     React.useLayoutEffect(() => {
         if (object) {
-            // TODO: use and check
             controls.attach(
                 object instanceof VolumeObject || object instanceof VolumeGroup
                     ? object
                     : object.current
             );
-
-            console.log(
-                "attach object",
-                object instanceof VolumeObject || object instanceof VolumeGroup
-                    ? "VolumeObject || VolumeGroup"
-                    : "Ref",
-                object instanceof VolumeObject || object instanceof VolumeGroup
-                    ? object
-                    : object.current,
-                controls
-            );
         } else if (group.current instanceof VolumeGroup) {
             controls.attach(group.current);
-
-            console.log("attach group.current", group.current);
         }
-
-        console.log(object, controls, group.current instanceof VolumeGroup);
 
         return () => void controls.detach();
     }, [object, children, controls, Planes]);
@@ -250,28 +317,23 @@ export const VolumeControls = React.forwardRef<
 
     return controls ? (
         <>
-            <primitive
-                ref={ref}
-                object={controls}
-                //  {...transformProps}
-            />
-            <volumeGroup
-                ref={group}
-                // {...objectProps}
-            >
-                {children}
-            </volumeGroup>
+            <primitive ref={ref} object={controls} />
+            <volumeGroup ref={group}>{children}</volumeGroup>
 
             {/* Clipping Plane Controls */}
             {clipping ? (
-                <TransformControls
-                    object={target.object}
-                    mode={planeConfig.mode as modeType}
-                    space={planeConfig.space as spaceType}
-                    onObjectChange={(e) => {
-                        onObjectChange(e);
-                    }}
-                />
+                controlsType === "PivotControls" ? (
+                    <ClippingPlanesPivotControls
+                        target={target}
+                        planes={Planes}
+                        matrix={matrix}
+                    />
+                ) : (
+                    <ClippingPlanesTransformControls
+                        target={target}
+                        planes={Planes}
+                    />
+                )
             ) : null}
             {Planes.map((plane, index) => (
                 <>
@@ -281,8 +343,9 @@ export const VolumeControls = React.forwardRef<
                         normal={plane.normal}
                         subsize={subsize}
                         subcolor={subcolor}
-                        setTarget={setTarget}
                         visible={clipping}
+                        onClick={onClick}
+                        setMatrix={setMatrix}
                     />
                 </>
             ))}

@@ -57,13 +57,6 @@ function ExampleStent() {
                         ]}
                     >
                         <Models.Stent rotation={[-Math.PI / 2, 0, 0]} />
-                        {/* <ClippingPlaneControls
-                            normals={[
-                                [0, -1, 0],
-                                [-1, 0, 0],
-                            ]}
-                        >
-                        </ClippingPlaneControls> */}
                     </VolumeControls>
 
                     <OrthographicCamera />
