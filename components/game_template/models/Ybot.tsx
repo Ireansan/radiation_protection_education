@@ -20,18 +20,22 @@ type GLTFResult = GLTF & {
 };
 
 type ActionName =
-    | "idle"
-    | "jumpingUp"
-    | "tpose"
-    | "walking"
-    | "walkingBackward";
+    | "FallingIdle"
+    | "Idle"
+    | "JumpDown"
+    | "JumpUp"
+    | "LeftStrafeWalking"
+    | "RightStrafeWalking"
+    | "StandardWalk"
+    | "TPose"
+    | "WalkingBackward";
 type GLTFActions = Record<ActionName, THREE.AnimationAction>;
 
 import { applyBasePath } from "../../utils";
 const modelURL = applyBasePath(`/models/glb/ybot.glb`);
 
 export function Ybot(props: JSX.IntrinsicElements["group"]) {
-    const group = useRef<THREE.Group>(new THREE.Group());
+    const group = useRef<THREE.Group>(null!);
     const { nodes, materials, animations } = useGLTF(
         modelURL
     ) as unknown as GLTFResult;
