@@ -13,7 +13,6 @@ import { GLTF } from "three-stdlib";
 
 import { getState, mutation, useStore } from "../store";
 import type { Controls } from "../store";
-import { getWorldPosition, getWorldDirection, lookAtSlerp } from "./utils";
 
 type GLTFResult = GLTF & {
     nodes: {

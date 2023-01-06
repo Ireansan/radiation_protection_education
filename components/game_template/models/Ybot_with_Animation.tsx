@@ -9,11 +9,7 @@ import { GLTF } from "three-stdlib";
 import { useThree, useFrame } from "@react-three/fiber";
 
 import { getState, useStore } from "../store";
-import {
-    objectGetWorldPosition,
-    objectGetWorldDirection,
-    lookAtSlerp,
-} from "./utils";
+import { getWorldPosition, getWorldDirection, lookAtSlerp } from "./utils";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -35,12 +31,14 @@ type GLTFResult = GLTF & {
  * @link https://qiita.com/nemutas/items/a2265fae7e9dea82553b
  */
 type ActionName =
-    | "idle"
-    | "jumpingUp"
-    | "jumpingDown"
-    | "tpose"
-    | "walking"
-    | "walkingBackward";
+    | "Idle"
+    | "JumpDown"
+    | "JumpUp"
+    | "LeftStrafeWalking"
+    | "RightStrafeWalking"
+    | "StandardWalk"
+    | "TPose"
+    | "WalkingBackward";
 type GLTFActions = Record<ActionName, THREE.AnimationAction>;
 
 /**
@@ -48,90 +46,6 @@ type GLTFActions = Record<ActionName, THREE.AnimationAction>;
  */
 interface Actions {
     [key: string]: THREE.AnimationAction | null;
-}
-interface KeyMap {
-    animation: string;
-}
-interface KeyConfig extends KeyMap {
-    keys?: string[];
-}
-const animationKeyConfig = [
-    {
-        keys: ["ArrowUp", "w", "W", "z", "Z"],
-        animation: "walking",
-    },
-    {
-        keys: ["ArrowDown", "s", "S"],
-        animation: "walking",
-    },
-    {
-        keys: ["ArrowLeft", "a", "A", "q", "Q"],
-        animation: "walking",
-    },
-    {
-        keys: ["ArrowRight", "d", "D"],
-        animation: "walking",
-    },
-    {
-        keys: [" "],
-        animation: "jumpingDown",
-    },
-    {
-        keys: ["Shift"],
-        animation: "walking",
-    },
-];
-function useAnimationKeys(actions: Actions, keyConfig: KeyConfig[]) {
-    const [get, set, playerConfig] = useStore((state) => [
-        state.get,
-        state.set,
-        state.playerConfig,
-    ]);
-    const { animationState } = playerConfig;
-
-    useEffect(() => {
-        const keyMap = keyConfig.reduce<{ [key: string]: KeyMap }>(
-            (out, { keys, animation }) => {
-                keys && keys.forEach((key) => (out[key] = { animation }));
-                return out;
-            },
-            {}
-        );
-
-        const downHandler = ({ key, target }: KeyboardEvent) => {
-            if (!keyMap[key] || (target as HTMLElement).nodeName === "INPUT")
-                return;
-            const { animation } = keyMap[key];
-            actions[animation]?.play();
-            set({
-                playerConfig: {
-                    ...get().playerConfig,
-                    animationState: animation,
-                },
-            });
-        };
-
-        const upHandler = ({ key, target }: KeyboardEvent) => {
-            if (!keyMap[key] || (target as HTMLElement).nodeName === "INPUT")
-                return;
-            const { animation } = keyMap[key];
-            actions[animation]?.stop();
-            set({
-                playerConfig: {
-                    ...get().playerConfig,
-                    animationState: "idle",
-                },
-            });
-        };
-
-        window.addEventListener("keydown", downHandler, { passive: true });
-        window.addEventListener("keyup", upHandler, { passive: true });
-
-        return () => {
-            window.removeEventListener("keydown", downHandler);
-            window.removeEventListener("keyup", upHandler);
-        };
-    }, [keyConfig]);
 }
 
 import { applyBasePath } from "../../utils";
@@ -192,12 +106,12 @@ export function Ybot_with_Animation(props: JSX.IntrinsicElements["group"]) {
          */
         if (!editor) {
             // directions
-            const cameraDirection = objectGetWorldDirection(camera);
-            const bodyXYDirection = objectGetWorldDirection(boneRoot, true);
-            const headXYDirection = objectGetWorldDirection(boneHead, true);
+            const cameraDirection = getWorldDirection(camera);
+            const bodyXYDirection = getWorldDirection(boneRoot, true);
+            const headXYDirection = getWorldDirection(boneHead, true);
 
             // body
-            const bodyWorldPosition = objectGetWorldPosition(boneRoot);
+            const bodyWorldPosition = getWorldPosition(boneRoot);
             const bodyLookAtTarget = new THREE.Vector3().copy(bodyXYDirection);
             bodyLookAtTarget.copy(cameraDirection);
 
@@ -224,8 +138,8 @@ export function Ybot_with_Animation(props: JSX.IntrinsicElements["group"]) {
             );
 
             // head
-            const headDirection = objectGetWorldDirection(boneHead);
-            const headWorldPosition = objectGetWorldPosition(boneHead);
+            const headDirection = getWorldDirection(boneHead);
+            const headWorldPosition = getWorldPosition(boneHead);
             const headLookAtTarget = cameraDirection.clone();
             headLookAtTarget.setLength(cameraDistance + 1);
             lookAtSlerp(

@@ -5,7 +5,7 @@ import * as THREE from "three";
  * @param object
  * @returns
  */
-export function objectGetWorldPosition(object: THREE.Object3D): THREE.Vector3 {
+export function getWorldPosition(object: THREE.Object3D): THREE.Vector3 {
     const tmpWorldPosition = new THREE.Vector3();
     object.getWorldPosition(tmpWorldPosition);
 
@@ -18,7 +18,7 @@ export function objectGetWorldPosition(object: THREE.Object3D): THREE.Vector3 {
  * @param xy
  * @returns
  */
-export function objectGetWorldDirection(
+export function getWorldDirection(
     object: THREE.Object3D,
     xy: boolean = false
 ): THREE.Vector3 {
