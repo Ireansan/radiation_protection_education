@@ -47,6 +47,90 @@ type GLTFActions = Record<ActionName, THREE.AnimationAction>;
 interface Actions {
     [key: string]: THREE.AnimationAction | null;
 }
+interface KeyMap {
+    animation: string;
+}
+interface KeyConfig extends KeyMap {
+    keys?: string[];
+}
+const animationKeyConfig = [
+    {
+        keys: ["ArrowUp", "w", "W", "z", "Z"],
+        animation: "walking",
+    },
+    {
+        keys: ["ArrowDown", "s", "S"],
+        animation: "walking",
+    },
+    {
+        keys: ["ArrowLeft", "a", "A", "q", "Q"],
+        animation: "walking",
+    },
+    {
+        keys: ["ArrowRight", "d", "D"],
+        animation: "walking",
+    },
+    {
+        keys: [" "],
+        animation: "jumpingDown",
+    },
+    {
+        keys: ["Shift"],
+        animation: "walking",
+    },
+];
+function useAnimationKeys(actions: Actions, keyConfig: KeyConfig[]) {
+    const [get, set, playerConfig] = useStore((state) => [
+        state.get,
+        state.set,
+        state.playerConfig,
+    ]);
+    const { animationState } = playerConfig;
+
+    useEffect(() => {
+        const keyMap = keyConfig.reduce<{ [key: string]: KeyMap }>(
+            (out, { keys, animation }) => {
+                keys && keys.forEach((key) => (out[key] = { animation }));
+                return out;
+            },
+            {}
+        );
+
+        const downHandler = ({ key, target }: KeyboardEvent) => {
+            if (!keyMap[key] || (target as HTMLElement).nodeName === "INPUT")
+                return;
+            const { animation } = keyMap[key];
+            actions[animation]?.play();
+            set({
+                playerConfig: {
+                    ...get().playerConfig,
+                    animationState: animation,
+                },
+            });
+        };
+
+        const upHandler = ({ key, target }: KeyboardEvent) => {
+            if (!keyMap[key] || (target as HTMLElement).nodeName === "INPUT")
+                return;
+            const { animation } = keyMap[key];
+            actions[animation]?.stop();
+            set({
+                playerConfig: {
+                    ...get().playerConfig,
+                    animationState: "idle",
+                },
+            });
+        };
+
+        window.addEventListener("keydown", downHandler, { passive: true });
+        window.addEventListener("keyup", upHandler, { passive: true });
+
+        return () => {
+            window.removeEventListener("keydown", downHandler);
+            window.removeEventListener("keyup", upHandler);
+        };
+    }, [keyConfig]);
+}
 
 import { applyBasePath } from "../../utils";
 const modelURL = applyBasePath(`/models/glb/ybot.glb`);
