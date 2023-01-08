@@ -43,9 +43,10 @@ const modelURL = applyBasePath(`/models/glb/ybot.glb`);
 
 export function Player(props: JSX.IntrinsicElements["group"]) {
     // Base
-    const [cameraMode, editor, playerConfig] = useStore((state) => [
+    const [cameraMode, editor, debug, playerConfig] = useStore((state) => [
         state.camera,
         state.editor,
+        state.debug,
         state.playerConfig,
     ]);
     const { radius, halfHeight, moveSpeed, boost, cameraDistance } =
@@ -132,7 +133,10 @@ export function Player(props: JSX.IntrinsicElements["group"]) {
 
             if (group.current) {
                 group.current.position.copy(playerPosition);
-                group.current.lookAt(playerDirection);
+
+                if (!editor) {
+                    group.current.lookAt(playerDirection);
+                }
             }
 
             // update camera
@@ -162,8 +166,10 @@ export function Player(props: JSX.IntrinsicElements["group"]) {
             direction
                 .subVectors(frontVector, sideVector)
                 .normalize()
-                .multiplyScalar(moveSpeed * (isBoosting ? boost : 1))
-                .applyEuler(camera.rotation);
+                .multiplyScalar(moveSpeed * (isBoosting ? boost : 1));
+            if (!editor) {
+                direction.applyEuler(camera.rotation);
+            }
             rigidBody.current.setLinvel({
                 x: direction.x,
                 y: velocity.y,
@@ -184,7 +190,7 @@ export function Player(props: JSX.IntrinsicElements["group"]) {
             const grounded =
                 ray && ray.collider && Math.abs(ray.toi) <= radius + halfHeight;
             if (jump && grounded) {
-                rigidBody.current.setLinvel({ x: 0, y: 7.5, z: 0 });
+                rigidBody.current.setLinvel({ x: 0, y: 10, z: 0 });
             }
 
             // animation
@@ -270,6 +276,9 @@ export function Player(props: JSX.IntrinsicElements["group"]) {
                         </skinnedMesh>
                     </group>
                 </group>
+            </group>
+            <group>
+                <skeletonHelper args={[nodes.mixamorigHips]} visible={debug} />
             </group>
         </>
     );
