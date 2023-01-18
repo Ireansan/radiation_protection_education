@@ -8,35 +8,12 @@ import {
     RigidBodyApi,
     useRapier,
 } from "@react-three/rapier";
-import { useGLTF, useMatcapTexture, useAnimations } from "@react-three/drei";
-import { GLTF } from "three-stdlib";
 
 import { getState, mutation, useStore } from "../store";
 import type { Controls } from "../store";
 
-type GLTFResult = GLTF & {
-    nodes: {
-        Alpha_Joints: THREE.SkinnedMesh;
-        Alpha_Surface: THREE.SkinnedMesh;
-        mixamorigHips: THREE.Bone;
-    };
-    materials: {
-        Alpha_Joints_MAT: THREE.MeshStandardMaterial;
-        Alpha_Body_MAT: THREE.MeshStandardMaterial;
-    };
-};
-
-type ActionName =
-    | "FallingIdle"
-    | "Idle"
-    | "JumpDown"
-    | "JumpUp"
-    | "LeftStrafeWalking"
-    | "RightStrafeWalking"
-    | "StandardWalk"
-    | "TPose"
-    | "WalkingBackward";
-type GLTFActions = Record<ActionName, THREE.AnimationAction>;
+import { AnimationStates } from "../controls";
+import { YBot } from "../models";
 
 import { applyBasePath } from "../../utils";
 const modelURL = applyBasePath(`/models/glb/ybot.glb`);
@@ -49,18 +26,16 @@ export function Player(props: JSX.IntrinsicElements["group"]) {
         state.debug,
         state.playerConfig,
     ]);
+    const { set } = useStore(({ set }) => ({
+        set,
+    }));
+
     const { radius, halfHeight, moveSpeed, boost, cameraDistance } =
         playerConfig;
     const { bodyMatcap, jointMatcap } = playerConfig;
 
-    // Model
-    const group = useRef<THREE.Group>(new THREE.Group());
-    const { nodes, materials, animations } = useGLTF(
-        modelURL
-    ) as unknown as GLTFResult;
-    const { actions, mixer } = useAnimations(animations, group);
-    const [BodyMatcap] = useMatcapTexture(bodyMatcap, 512);
-    const [JointMatcap] = useMatcapTexture(jointMatcap, 512);
+    // Animation
+    const { mixer, ref } = AnimationStates();
 
     // RigidBody
     const rigidBody = useRef<RigidBodyApi>(null);
@@ -82,35 +57,6 @@ export function Player(props: JSX.IntrinsicElements["group"]) {
     const playerPosition = new THREE.Vector3();
     const playerDirection = new THREE.Vector3();
 
-    /**
-     * @link https://github.com/mrdoob/three.js/blob/master/examples/webgl_animation_skinning_blending.html
-     */
-    function setWeight(actionName: ActionName, weight: number) {
-        if (actions[actionName]) {
-            actions[actionName]!.enabled = true;
-            // actions[actionName]!.setEffectiveTimeScale(1);
-            actions[actionName]!.setEffectiveWeight(weight);
-        }
-    }
-
-    useEffect(() => {
-        // activate all actions
-        const actionNames: ActionName[] = [
-            "Idle",
-            "StandardWalk",
-            "WalkingBackward",
-            "LeftStrafeWalking",
-            "RightStrafeWalking",
-            "FallingIdle",
-            "TPose",
-        ];
-
-        actionNames.forEach(function (actionName: ActionName) {
-            setWeight(actionName, actionName === "Idle" ? 1 : 0);
-            actions[actionName]?.play();
-        });
-    }, []);
-
     useFrame((state, delta, event) => {
         controls = getState().controls;
         const { forward, backward, left, right, jump } = controls;
@@ -131,11 +77,20 @@ export function Player(props: JSX.IntrinsicElements["group"]) {
                 .multiplyScalar(-1)
                 .add(playerPosition);
 
+            /*
             if (group.current) {
                 group.current.position.copy(playerPosition);
 
                 if (!editor) {
                     group.current.lookAt(playerDirection);
+                }
+            }
+            */
+            if (ref.current) {
+                ref.current.position.copy(playerPosition);
+
+                if (!editor) {
+                    ref.current.lookAt(playerDirection);
                 }
             }
 
@@ -187,48 +142,17 @@ export function Player(props: JSX.IntrinsicElements["group"]) {
                 maxToi,
                 solid
             );
-            const grounded =
-                ray && ray.collider && Math.abs(ray.toi) <= radius + halfHeight;
+            const grounded: boolean = ray
+                ? ray.collider && Math.abs(ray.toi) <= radius + halfHeight
+                : false;
             if (jump && grounded) {
                 rigidBody.current.setLinvel({ x: 0, y: 10, z: 0 });
             }
 
-            // animation
-            var movementSum =
-                Number(forward) +
-                Number(backward) +
-                Number(left) +
-                Number(right);
-            setWeight(
-                "Idle",
-                !jump && grounded && !Boolean(movementSum) ? 1 : 0
-            );
-            setWeight("FallingIdle", !grounded ? 1 : 0);
-            setWeight(
-                "StandardWalk",
-                !jump && grounded ? Number(forward) / movementSum : 0
-            );
-            setWeight(
-                "WalkingBackward",
-                !jump && grounded ? Number(backward) / movementSum : 0
-            );
-            setWeight(
-                "LeftStrafeWalking",
-                !jump && grounded
-                    ? Number((left && !backward) || (right && backward)) /
-                          movementSum
-                    : 0
-            );
-            setWeight(
-                "RightStrafeWalking",
-                !jump && grounded
-                    ? Number((right && !backward) || (left && backward)) /
-                          movementSum
-                    : 0
-            );
-
-            mixer.update(delta);
+            set((state) => ({ controls: { ...state.controls, grounded } }));
         }
+
+        mixer.update(delta);
     });
 
     return (
@@ -244,41 +168,8 @@ export function Player(props: JSX.IntrinsicElements["group"]) {
                 <CapsuleCollider args={[halfHeight, radius]} />
             </RigidBody>
             {/* Y Bot */}
-            <group ref={group} {...props} dispose={null}>
-                <group name="Scene">
-                    <group
-                        name="Armature"
-                        rotation={[Math.PI / 2, 0, 0]}
-                        scale={0.01}
-                    >
-                        <primitive object={nodes.mixamorigHips} />
-                        <skinnedMesh
-                            name="Alpha_Joints"
-                            geometry={nodes.Alpha_Joints.geometry}
-                            material={materials.Alpha_Joints_MAT}
-                            skeleton={nodes.Alpha_Joints.skeleton}
-                        >
-                            <meshMatcapMaterial
-                                attach="material"
-                                matcap={JointMatcap}
-                            />
-                        </skinnedMesh>
-                        <skinnedMesh
-                            name="Alpha_Surface"
-                            geometry={nodes.Alpha_Surface.geometry}
-                            material={materials.Alpha_Body_MAT}
-                            skeleton={nodes.Alpha_Surface.skeleton}
-                        >
-                            <meshMatcapMaterial
-                                attach="material"
-                                matcap={BodyMatcap}
-                            />
-                        </skinnedMesh>
-                    </group>
-                </group>
-            </group>
-            <group>
-                <skeletonHelper args={[nodes.mixamorigHips]} visible={debug} />
+            <group ref={ref}>
+                <YBot />
             </group>
         </>
     );

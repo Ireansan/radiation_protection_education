@@ -18,6 +18,7 @@ const controls = {
     left: false,
     right: false,
     jump: false,
+    grounded: false,
 };
 
 const states = {
@@ -44,14 +45,6 @@ export const matcapList = [
 ] as const;
 export type MatcapList = typeof matcapList[number];
 
-const animationNames = [
-    "idle",
-    "jumpingUp",
-    "tpose",
-    "walking",
-    "walkingBackward",
-];
-
 export const playerConfig = {
     radius: 0.5,
     halfHeight: 0.6,
@@ -60,7 +53,6 @@ export const playerConfig = {
     cameraDistance: 5.0,
     bodyMatcap: matcapList[1],
     jointMatcap: matcapList[0],
-    animationState: animationNames[0],
 } as const;
 
 const actionNames = ["reset"] as const;
