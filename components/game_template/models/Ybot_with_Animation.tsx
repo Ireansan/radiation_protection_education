@@ -85,7 +85,6 @@ function useAnimationKeys(actions: Actions, keyConfig: KeyConfig[]) {
         state.set,
         state.playerConfig,
     ]);
-    const { animationState } = playerConfig;
 
     useEffect(() => {
         const keyMap = keyConfig.reduce<{ [key: string]: KeyMap }>(
@@ -104,7 +103,6 @@ function useAnimationKeys(actions: Actions, keyConfig: KeyConfig[]) {
             set({
                 playerConfig: {
                     ...get().playerConfig,
-                    animationState: animation,
                 },
             });
         };
@@ -117,7 +115,6 @@ function useAnimationKeys(actions: Actions, keyConfig: KeyConfig[]) {
             set({
                 playerConfig: {
                     ...get().playerConfig,
-                    animationState: "idle",
                 },
             });
         };
@@ -145,8 +142,7 @@ export function Ybot_with_Animation(props: JSX.IntrinsicElements["group"]) {
         state.debug,
         state.playerConfig,
     ]);
-    const { cameraDistance, bodyMatcap, jointMatcap, animationState } =
-        playerConfig;
+    const { cameraDistance, bodyMatcap, jointMatcap } = playerConfig;
 
     const { camera } = useThree();
 
@@ -171,12 +167,6 @@ export function Ybot_with_Animation(props: JSX.IntrinsicElements["group"]) {
      * Animation Contorller
      */
     useAnimationKeys(actions, animationKeyConfig);
-
-    useEffect(() => {
-        if (debug) {
-            console.log(animationState);
-        }
-    }, [actions, animationState]);
 
     /**
      * Update
