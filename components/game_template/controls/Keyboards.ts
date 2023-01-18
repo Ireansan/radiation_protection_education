@@ -62,7 +62,7 @@ export function Keyboard() {
 
     useKeys([
         {
-            keys: ["ArrowUp", "w", "W", "z", "Z"],
+            keys: ["ArrowUp", "w", "W"],
             fn: (forward) =>
                 set((state) => ({ controls: { ...state.controls, forward } })),
         },
@@ -72,7 +72,7 @@ export function Keyboard() {
                 set((state) => ({ controls: { ...state.controls, backward } })),
         },
         {
-            keys: ["ArrowLeft", "a", "A", "q", "Q"],
+            keys: ["ArrowLeft", "a", "A"],
             fn: (left) =>
                 set((state) => ({ controls: { ...state.controls, left } })),
         },
