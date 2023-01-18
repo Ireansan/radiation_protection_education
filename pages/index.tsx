@@ -21,13 +21,13 @@ const Home: NextPage = () => {
             </Head>
 
             <main className={styles.main}>
-                <h1 className={styles.title}>
-                    Welcome to <a href="https://nextjs.org">Next.js!</a>
-                </h1>
+                <h1 className={styles.title}>Radiation Protection Education</h1>
 
                 <p className={styles.description}>
-                    Get started by editing{" "}
-                    <code className={styles.code}>pages/index.tsx</code>
+                    <a href="https://nextjs.org">Next.js</a>,
+                    <a href="https://docs.pmnd.rs/react-three-fiber/getting-started/introduction">
+                        React Three Fiber
+                    </a>
                 </p>
                 <p>process.env.NODE_ENV {process.env.NODE_ENV}</p>
 
