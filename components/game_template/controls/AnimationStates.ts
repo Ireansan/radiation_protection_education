@@ -49,8 +49,6 @@ function useAnimationStates(actionConfig: ActionConfig[]) {
 
     useFrame((state) => {
         controls = getState().controls;
-        const { forward, backward, left, right, jump, grounded, boost } =
-            controls;
 
         actionConfig.forEach(({ actionName, fn }) => {
             setWeight(actionName, fn(controls));

@@ -28,7 +28,7 @@ import { applyBasePath } from "../../utils";
 const modelURL = applyBasePath(`/models/glb/Y-Bot.glb`);
 
 export function YBot(props: JSX.IntrinsicElements["group"]) {
-    const group = useRef<THREE.Group>();
+    const group = useRef<THREE.Group>(null!);
     const { nodes, materials, animations } = useGLTF(
         modelURL
     ) as unknown as GLTFResult;

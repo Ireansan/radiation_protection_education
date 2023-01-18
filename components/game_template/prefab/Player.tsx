@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import * as THREE from "three";
 import * as RAPIER from "@dimforge/rapier3d-compat";
 import { useThree, useFrame } from "@react-three/fiber";
@@ -9,21 +9,17 @@ import {
     useRapier,
 } from "@react-three/rapier";
 
-import { getState, mutation, useStore } from "../store";
+import { getState, useStore } from "../store";
 import type { Controls } from "../store";
 
 import { AnimationStates } from "../controls";
 import { YBot } from "../models";
 
-import { applyBasePath } from "../../utils";
-const modelURL = applyBasePath(`/models/glb/ybot.glb`);
-
 export function Player(props: JSX.IntrinsicElements["group"]) {
     // Base
-    const [cameraMode, editor, debug, playerConfig] = useStore((state) => [
+    const [cameraMode, editor, playerConfig] = useStore((state) => [
         state.camera,
         state.editor,
-        state.debug,
         state.playerConfig,
     ]);
     const { set } = useStore(({ set }) => ({
@@ -32,7 +28,6 @@ export function Player(props: JSX.IntrinsicElements["group"]) {
 
     const { radius, halfHeight, moveSpeed, boost, cameraDistance } =
         playerConfig;
-    const { bodyMatcap, jointMatcap } = playerConfig;
 
     // Animation
     const { mixer, ref } = AnimationStates();
@@ -77,15 +72,6 @@ export function Player(props: JSX.IntrinsicElements["group"]) {
                 .multiplyScalar(-1)
                 .add(playerPosition);
 
-            /*
-            if (group.current) {
-                group.current.position.copy(playerPosition);
-
-                if (!editor) {
-                    group.current.lookAt(playerDirection);
-                }
-            }
-            */
             if (ref.current) {
                 ref.current.position.copy(playerPosition);
 
@@ -168,6 +154,7 @@ export function Player(props: JSX.IntrinsicElements["group"]) {
                 <CapsuleCollider args={[halfHeight, radius]} />
             </RigidBody>
             {/* Y Bot */}
+            {/* @ts-ignore */}
             <group ref={ref}>
                 <YBot />
             </group>
