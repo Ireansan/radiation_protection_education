@@ -3,6 +3,8 @@
  */
 
 import { useEffect } from "react";
+import { useThree } from "@react-three/fiber";
+
 import { cameras, useStore } from "../store";
 
 interface KeyConfig extends KeyMap {
@@ -59,6 +61,9 @@ export function Keyboard() {
         reset,
         set,
     }));
+    const [editor] = useStore((state) => [state.editor]);
+
+    const { gl } = useThree();
 
     useKeys([
         {
@@ -95,8 +100,13 @@ export function Keyboard() {
         {
             keys: ["."],
             fn: () => {
-                window.document.exitPointerLock();
                 set((state) => ({ editor: !state.editor, play: !state.play }));
+                // FIXME: flag bug
+                if (editor) {
+                    gl.domElement.requestPointerLock();
+                } else {
+                    window.document.exitPointerLock();
+                }
             },
             up: false,
         },

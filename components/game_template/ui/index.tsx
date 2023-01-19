@@ -1,2 +1,3 @@
 export * from "./Editor";
-export * from "./Intro";
+export * from "./Help";
+export * from "./Menu";
