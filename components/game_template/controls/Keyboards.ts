@@ -3,7 +3,7 @@
  */
 
 import { useEffect } from "react";
-import { useThree } from "@react-three/fiber";
+// import { useThree } from "@react-three/fiber";
 
 import { cameras, useStore } from "../store";
 
@@ -63,7 +63,7 @@ export function Keyboard() {
     }));
     const [editor] = useStore((state) => [state.editor]);
 
-    const { gl } = useThree();
+    // const { gl } = useThree();
 
     useKeys([
         {
@@ -102,11 +102,11 @@ export function Keyboard() {
             fn: () => {
                 set((state) => ({ editor: !state.editor, play: !state.play }));
                 // FIXME: flag bug
-                if (editor) {
-                    gl.domElement.requestPointerLock();
-                } else {
+                // if (editor) {
+                //     gl.domElement.requestPointerLock();
+                // } else {
                     window.document.exitPointerLock();
-                }
+                // }
             },
             up: false,
         },

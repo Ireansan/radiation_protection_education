@@ -78,8 +78,9 @@ export default function App() {
                             }));
                         }}
                     />
-                    <Keyboard />
                 </Canvas>
+                <Keyboard />
+
                 <Help />
                 <ToggledEditor />
                 <ToggledStats />
