@@ -4,19 +4,20 @@
 
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import {
     OrthographicCamera,
     OrbitControls,
     Stats,
     GizmoHelper,
     GizmoViewport,
+    PivotControls,
 } from "@react-three/drei";
 import * as THREE from "three";
 
-import { VolumeControls } from "../../components/volumeRender";
+import { VolumeControls, VolumeObject } from "../../components/volumeRender";
 import * as Models from "../../components/models";
 
 import styles from "../../styles/threejs.module.css";
@@ -55,6 +56,7 @@ function ExampleStent() {
                             [0, -1, 0],
                             [-1, 0, 0],
                         ]}
+                        points={[[0, 0, 0]]}
                     >
                         <Models.Stent rotation={[-Math.PI / 2, 0, 0]} />
                     </VolumeControls>

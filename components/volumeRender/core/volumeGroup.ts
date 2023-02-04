@@ -142,6 +142,34 @@ class VolumeGroup extends THREE.Group {
             }
         }
     }
+
+    /**
+     *
+     * @param position world position
+     * @returns value in the data array
+     */
+    getVolumeValue(position: THREE.Vector3) {
+        const localPosition = this.worldToLocal(position);
+
+        return this.children.map((child, i) =>
+            child instanceof VolumeObject
+                ? child.getVolumeValue(localPosition)
+                : NaN
+        );
+    }
+
+    /**
+     *
+     * @param positions world position array
+     * @returns value array in the data array
+     */
+    getVolumeValues(positions: THREE.Vector3[]) {
+        return this.children.map((child, i) =>
+            child instanceof VolumeObject
+                ? child.getVolumeValues(positions)
+                : []
+        );
+    }
 }
 
 export { VolumeGroup };

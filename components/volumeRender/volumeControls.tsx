@@ -1,6 +1,6 @@
 import React from "react";
 import * as THREE from "three";
-import { extend } from "@react-three/fiber";
+import { extend, ThreeEvent, useFrame } from "@react-three/fiber";
 import { useCursor, TransformControls, PivotControls } from "@react-three/drei";
 import { useControls, folder, Leva } from "leva";
 
@@ -22,8 +22,8 @@ type Target = {
 type planeHelperMeshProps = {
     id: number;
     normal: THREE.Vector3;
-    subsize: number;
-    subcolor: THREE.Color;
+    subPlaneSize: number;
+    subPlaneColor: THREE.Color;
     visible: boolean;
     onClick: (e: THREE.Event, id: number) => void;
     setMatrix: (matrix: THREE.Matrix4) => void;
@@ -31,8 +31,8 @@ type planeHelperMeshProps = {
 function PlaneHelperMesh({
     id,
     normal,
-    subsize,
-    subcolor,
+    subPlaneSize,
+    subPlaneColor,
     visible,
     onClick,
     setMatrix,
@@ -53,7 +53,8 @@ function PlaneHelperMesh({
         <>
             <mesh
                 ref={meshRef}
-                scale={subsize}
+                name={`plane${id}`}
+                scale={subPlaneSize}
                 onClick={(e) => {
                     onClick(e, planeID);
                     setMatrix(meshRef.current.matrixWorld);
@@ -63,7 +64,56 @@ function PlaneHelperMesh({
                 visible={visible}
             >
                 <planeGeometry />
-                <meshBasicMaterial color={subcolor} wireframe={true} />
+                <meshBasicMaterial color={subPlaneColor} wireframe={true} />
+            </mesh>
+        </>
+    );
+}
+
+/**
+ * Point Mesh
+ */
+type pointMeshProps = {
+    id: number;
+    pointSize: number;
+    pointColor: THREE.Color;
+    // visible: boolean;
+    onClick: (e: THREE.Event, id: number) => void;
+    setMatrix: (matrix: THREE.Matrix4) => void;
+};
+function PointMesh({
+    id,
+    pointSize,
+    pointColor,
+    visible,
+    onClick,
+    setMatrix,
+    ...props
+}: pointMeshProps & JSX.IntrinsicElements["mesh"]) {
+    const pointID = id;
+    const meshRef = React.useRef<THREE.Mesh>(new THREE.Mesh());
+    const [hovered, setHovered] = React.useState(false);
+    useCursor(hovered);
+
+    React.useEffect(() => {}, []);
+
+    return (
+        <>
+            <mesh
+                ref={meshRef}
+                name={`point${id}`}
+                scale={pointSize}
+                onClick={(e) => {
+                    onClick(e, pointID);
+                    setMatrix(meshRef.current.matrixWorld);
+                }}
+                onPointerOver={() => setHovered(true)}
+                onPointerOut={() => setHovered(false)}
+                visible={visible}
+                {...props}
+            >
+                <boxBufferGeometry />
+                <meshBasicMaterial color={pointColor} wireframe={true} />
             </mesh>
         </>
     );
@@ -75,15 +125,19 @@ function PlaneHelperMesh({
 type controlsProps = {
     target: Target;
     planes: THREE.Plane[];
+    points: THREE.Vector3[];
 };
 // PivotControls
 type pivotControlsProps = {
     matrix: THREE.Matrix4;
+    onDragPoint: (position: THREE.Vector3) => void;
 } & controlsProps;
 function ClippingPlanesPivotControls({
     target,
     planes,
+    points,
     matrix,
+    onDragPoint,
 }: pivotControlsProps) {
     const pivotRef = React.useRef<THREE.Group>(null!);
 
@@ -102,12 +156,20 @@ function ClippingPlanesPivotControls({
             target.object.position.setFromMatrixPosition(w);
             target.object.rotation.setFromRotationMatrix(rotationMatrix);
 
-            target.object.getWorldDirection(direction);
-            direction.normalize().multiplyScalar(-1);
             position.copy(target.object.position);
 
-            planes[target.id].normal.copy(direction);
-            planes[target.id].constant = -position.dot(direction);
+            const patternPlane = /plane.*/;
+            const patternPoint = /point.*/;
+            if (patternPlane.test(target.object.name)) {
+                target.object.getWorldDirection(direction);
+                direction.normalize().multiplyScalar(-1);
+
+                planes[target.id].normal.copy(direction);
+                planes[target.id].constant = -position.dot(direction);
+            } else if (patternPoint.test(target.object.name)) {
+                console.log("pivot", position);
+                points[target.id].copy(position);
+            }
         }
     }
 
@@ -116,48 +178,9 @@ function ClippingPlanesPivotControls({
             ref={pivotRef}
             matrix={matrix}
             autoTransform={true}
-            onDrag={(l, deltaL, w, deltaW) => onDrag(l, deltaL, w, deltaW)}
-        />
-    );
-}
-
-// TransformControls
-function ClippingPlanesTransformControls({ target, planes }: controlsProps) {
-    const [transformControlsConfig, setTransformControlsConfig] = useControls(
-        "transform",
-        () => ({
-            mode: {
-                value: "translate",
-                options: ["translate", "rotate"],
-            },
-            space: {
-                value: "world",
-                options: ["world", "local"],
-            },
-        })
-    );
-
-    function onObjectChange(e: THREE.Event | undefined) {
-        const direction = new THREE.Vector3();
-        const position = new THREE.Vector3();
-
-        if (target.object) {
-            target.object?.getWorldDirection(direction);
-            direction.normalize().multiplyScalar(-1);
-            position.copy(target.object.position);
-
-            planes[target.id].normal.copy(direction);
-            planes[target.id].constant = -position.dot(direction);
-        }
-    }
-
-    return (
-        <TransformControls
-            object={target.object}
-            mode={transformControlsConfig.mode as modeType}
-            space={transformControlsConfig.space as spaceType}
-            onObjectChange={(e) => {
-                onObjectChange(e);
+            onDrag={(l, deltaL, w, deltaW) => {
+                onDrag(l, deltaL, w, deltaW);
+                onDragPoint(new THREE.Vector3().setFromMatrixPosition(w));
             }}
         />
     );
@@ -171,10 +194,13 @@ export type VolumeControlsProps = JSX.IntrinsicElements["volumeGroup"] & {
         | React.MutableRefObject<VolumeObject>
         | React.MutableRefObject<VolumeGroup>;
     normals?: THREE.Vector3Tuple[];
-    size?: number;
-    color?: THREE.Color;
-    subsize?: number;
-    subcolor?: THREE.Color;
+    planeSize?: number;
+    planeColor?: THREE.Color;
+    subPlaneSize?: number;
+    subPlaneColor?: THREE.Color;
+    points?: THREE.Vector3Tuple[];
+    pointSize?: number;
+    pointColor?: THREE.Color;
 };
 /**
  * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
@@ -187,10 +213,13 @@ export const VolumeControls = React.forwardRef<
         children,
         object,
         normals = [],
-        size = 100,
-        color = new THREE.Color(0xffff00),
-        subsize = 50,
-        subcolor = new THREE.Color(0xaaaaaa),
+        planeSize = 100,
+        planeColor = new THREE.Color(0xffff00),
+        subPlaneSize = 50,
+        subPlaneColor = new THREE.Color(0xaaaaaa),
+        points = [],
+        pointSize = 25,
+        pointColor = new THREE.Color(0xffffff),
         ...props
     },
     ref
@@ -215,6 +244,11 @@ export const VolumeControls = React.forwardRef<
     );
     const [Planes, setPlanes] = React.useState<THREE.Plane[]>(
         Normals.map((n) => new THREE.Plane(n, 0))
+    );
+
+    // Point
+    const [Points, setPoints] = React.useState<THREE.Vector3[]>(
+        points.map((point) => new THREE.Vector3().fromArray(point))
     );
 
     /**
@@ -281,17 +315,29 @@ export const VolumeControls = React.forwardRef<
                 setClipping(e);
             },
         },
-        controlsType: {
-            options: ["PivotControls", "TransformControls"],
-            onChange: (e) => {
-                setControlsType(e);
-            },
-        },
     }));
 
-    /** */
-    function onClick(e: THREE.Event, id: number) {
-        setTarget({ object: e.object, id: id });
+    /**
+     * Event function
+     */
+    function onClickPlane(e: THREE.Event, id: number) {
+        if (clipping) {
+            setTarget({ object: e.object, id: id });
+        }
+    }
+    function onClickPoint(
+        e: THREE.Event | ThreeEvent<MouseEvent>,
+        id?: number
+    ): void {
+        setTarget({ object: e.object, id: id ? id : 0 });
+        console.log("onClickPoint", typeof target.object);
+    }
+    function onDragPoint(position: THREE.Vector3) {
+        console.log(
+            "onDragPoint",
+            position,
+            controls.object ? controls.object.getVolumeValue(position) : -1
+        );
     }
 
     // Volume
@@ -315,36 +361,51 @@ export const VolumeControls = React.forwardRef<
         clipping ? (controls.clippingPlanes = Planes) : null;
     }, [controls, clipping, Planes]);
 
+    // Point
+    React.useEffect(() => {
+        console.log(1);
+    }, [Points]);
+
     return controls ? (
         <>
             <primitive ref={ref} object={controls} />
             <volumeGroup ref={group}>{children}</volumeGroup>
-
-            {/* Clipping Plane Controls */}
-            {clipping ? (
-                controlsType === "PivotControls" ? (
-                    <ClippingPlanesPivotControls
-                        target={target}
-                        planes={Planes}
-                        matrix={matrix}
-                    />
-                ) : (
-                    <ClippingPlanesTransformControls
-                        target={target}
-                        planes={Planes}
-                    />
-                )
-            ) : null}
+            {/* Controls */}
+            <ClippingPlanesPivotControls
+                target={target}
+                planes={Planes}
+                points={Points}
+                matrix={matrix}
+                onDragPoint={onDragPoint}
+            />
+            {/* Clipping Plane */}
             {Planes.map((plane, index) => (
                 <>
-                    <planeHelper plane={plane} size={size} visible={clipping} />
+                    <planeHelper
+                        plane={plane}
+                        size={planeSize}
+                        visible={clipping}
+                    />
                     <PlaneHelperMesh
                         id={index}
                         normal={plane.normal}
-                        subsize={subsize}
-                        subcolor={subcolor}
+                        subPlaneSize={subPlaneSize}
+                        subPlaneColor={subPlaneColor}
                         visible={clipping}
-                        onClick={onClick}
+                        onClick={onClickPlane}
+                        setMatrix={setMatrix}
+                    />
+                </>
+            ))}
+            {/* Point */}
+            {Points.map((point, index) => (
+                <>
+                    <PointMesh
+                        id={index}
+                        position={point}
+                        pointSize={pointSize}
+                        pointColor={pointColor}
+                        onClick={onClickPoint}
                         setMatrix={setMatrix}
                     />
                 </>

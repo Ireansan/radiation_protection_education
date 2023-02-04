@@ -5,7 +5,7 @@ import { VolumeObject, VolumeGroup } from "../core";
  * @link https://github.com/mrdoob/three.js/blob/master/examples/jsm/controls/TransformControls.js
  */
 export class VolumeControls extends THREE.Object3D {
-    object: THREE.Object3D | undefined;
+    object: VolumeObject | VolumeGroup | undefined;
 
     _clim1: number;
     _clim2: number;
@@ -114,7 +114,7 @@ export class VolumeControls extends THREE.Object3D {
         this.object &&
         (this.object instanceof VolumeObject ||
             this.object instanceof VolumeGroup)
-            ? this.object.clippingPlanes = (this._clipping ? planes : [])
+            ? (this.object.clippingPlanes = this._clipping ? planes : [])
             : null;
     }
 

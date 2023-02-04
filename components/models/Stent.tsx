@@ -4,6 +4,7 @@ import {
     ReactThreeFiber,
     useThree,
     useLoader,
+    useFrame,
 } from "@react-three/fiber";
 import { NRRDLoader } from "three/examples/jsm/loaders/NRRDLoader";
 // import { NRRDLoader } from "three-stdlib";
@@ -16,10 +17,9 @@ import { Volume } from "three-stdlib";
 import { applyBasePath } from "../utils";
 const modelURL = applyBasePath(`/models/nrrd/stent.nrrd`);
 
-export function Stent({
-    ref,
-    ...props
-}: JSX.IntrinsicElements["volumeObject"]) {
+export function Stent({ ...props }: JSX.IntrinsicElements["volumeObject"]) {
+    const ref = useRef<VolumeObject>(null!);
+
     const { gl } = useThree();
     gl.localClippingEnabled = true;
 

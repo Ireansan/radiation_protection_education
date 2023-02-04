@@ -19,6 +19,9 @@ export type VolumeGroupProps = ReactThreeFiber.Object3DNode<
     typeof VolumeGroup
 >;
 
+/**
+ * @link https://github.com/pmndrs/react-three-fiber/blob/4121b109a71dd266ea6bdef8b4e0a2970b1a40de/packages/fiber/src/three-types.ts
+ */
 declare module "@react-three/fiber" {
     interface ThreeElements {
         volumeAnimationObject: VolumeAnimationObjectProps;

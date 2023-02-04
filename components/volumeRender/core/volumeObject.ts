@@ -236,6 +236,42 @@ class VolumeObject extends THREE.Object3D {
             }
         }
     }
+
+    /**
+     * 
+     * @param position world position
+     * @returns value in the data array
+     */
+    getVolumeValue(position: THREE.Vector3) {
+        const localPosition = this.worldToLocal(position);
+
+        if (
+            localPosition.x < 0 ||
+            this.volume.xLength <= localPosition.x ||
+            localPosition.y < 0 ||
+            this.volume.yLength <= localPosition.y ||
+            localPosition.z < 0 ||
+            this.volume.zLength <= localPosition.z
+        ) {
+            return NaN;
+        }
+
+        // https://github.com/mrdoob/three.js/blob/cba85c5c6318e7ca53dd99f9f3c25eb3b79d9693/examples/jsm/misc/Volume.js#L211
+        return this.volume.getData(
+            Math.trunc(localPosition.x),
+            Math.trunc(localPosition.y),
+            Math.trunc(localPosition.z)
+        );
+    }
+
+    /**
+     * 
+     * @param positions world position array
+     * @returns value array in the data array
+     */
+    getVolumeValues(positions: THREE.Vector3[]) {
+        return positions.map((position, i) => this.getVolumeValue(position));
+    }
 }
 
 export { VolumeObject };
