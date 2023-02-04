@@ -56,7 +56,7 @@ export function ControlPanel({ ...props }: JSX.IntrinsicElements["mesh"]) {
                 occlude
                 onOcclude={onOcclude}
             >
-                <span>Size</span>
+                <span>サイズ / Size</span>
                 <div
                     style={{
                         display: "grid",
