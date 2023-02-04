@@ -53,7 +53,7 @@ export const playerConfig = {
     cameraDistance: 5.0,
     bodyMatcap: matcapList[1],
     jointMatcap: matcapList[0],
-} as const;
+};
 
 const actionNames = ["reset"] as const;
 export type ActionNames = typeof actionNames[number];

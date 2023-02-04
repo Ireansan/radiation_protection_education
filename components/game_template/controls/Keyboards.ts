@@ -3,7 +3,7 @@
  */
 
 import { useEffect } from "react";
-// import { useThree } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
 
 import { cameras, useStore } from "../store";
 
@@ -61,9 +61,8 @@ export function Keyboard() {
         reset,
         set,
     }));
-    const [editor] = useStore((state) => [state.editor]);
 
-    // const { gl } = useThree();
+    const { gl } = useThree();
 
     useKeys([
         {
@@ -97,19 +96,29 @@ export function Keyboard() {
                 set((state) => ({ controls: { ...state.controls, boost } })),
         },
         { keys: ["r", "R"], fn: reset, up: false },
+        /*
         {
             keys: ["."],
             fn: () => {
-                set((state) => ({ editor: !state.editor, play: !state.play }));
-                // FIXME: flag bug
-                // if (editor) {
-                //     gl.domElement.requestPointerLock();
-                // } else {
-                    window.document.exitPointerLock();
-                // }
+                console.log("press .");
+                set((state) => {
+                    if (!state.editor) {
+                        // editor == false -> Unlock
+                        console.log("editor == false -> Unlock");
+                        window.document.exitPointerLock();
+                    } else {
+                        // editor == true -> Lock
+                        console.log("editor == true -> Lock", gl);
+                        // FIXME:
+                        gl.domElement.requestPointerLock();
+                    }
+
+                    return { editor: !state.editor, play: !state.play };
+                });
             },
             up: false,
         },
+        */
         {
             keys: ["i", "I"],
             fn: () =>

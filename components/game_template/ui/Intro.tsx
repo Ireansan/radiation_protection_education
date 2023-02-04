@@ -10,14 +10,11 @@ import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { useStore } from "../store";
 import { Keys } from "./Help";
 
+import styles from "../../../styles/css/game_template.module.css";
+
 function Ready({ setReady }: { setReady: Dispatch<SetStateAction<boolean>> }) {
     useEffect(() => () => void setReady(true), []);
     return null;
-}
-
-function Loader() {
-    const { progress } = useProgress();
-    return <div>loading {progress.toFixed()} %</div>;
 }
 
 interface IntroProps {
@@ -39,19 +36,19 @@ export function Intro({ children }: IntroProps): JSX.Element {
                 {children}
             </Suspense>
             <div
-                className={`fullscreen bg ${ready ? "ready" : "notready"} ${
-                    clicked && "clicked"
-                }`}
+                className={`${styles.fullscreen} ${styles.bg} ${
+                    ready ? `${styles.ready}` : `${styles.notready}`
+                } ${clicked && `${styles.clicked}`}`}
             >
-                <div className="stack">
+                <div className={`${styles.stack}`}>
                     <div className="intro-keys">
                         <Keys style={{ paddingBottom: 20 }} />
                         <a
-                            className="continue-link"
+                            className={`${styles["continue-link"]}`}
                             href="#"
                             onClick={() => ready && setClicked(true)}
                         >
-                            {!ready ? <Loader /> : "Click to continue"}
+                            {"Click to continue"}
                         </a>
                     </div>
                 </div>
