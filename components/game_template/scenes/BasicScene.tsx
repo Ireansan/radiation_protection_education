@@ -1,6 +1,7 @@
 import { Sky } from "@react-three/drei";
 
 import { Ground, Player, ControlPanel } from "../prefab";
+import { YBot } from "../models";
 
 export function BasicSceneEnv() {
     return (
@@ -18,7 +19,9 @@ export function BasicScenePhysics() {
     return (
         <>
             <Ground />
-            <Player />
+            <Player>
+                <YBot />
+            </Player>
         </>
     );
 }

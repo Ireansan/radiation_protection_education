@@ -15,7 +15,13 @@ import type { Controls } from "../store";
 import { AnimationStates } from "../controls";
 import { YBot } from "../models";
 
-export function Player(props: JSX.IntrinsicElements["group"]) {
+export type playerProps = {
+    children: React.ReactNode;
+};
+export function Player({
+    children,
+    ...props
+}: playerProps & JSX.IntrinsicElements["group"]) {
     // Base
     const [cameraMode, editor, playerConfig] = useStore((state) => [
         state.camera,
@@ -155,9 +161,7 @@ export function Player(props: JSX.IntrinsicElements["group"]) {
             </RigidBody>
             {/* Y Bot */}
             {/* @ts-ignore */}
-            <group ref={ref}>
-                <YBot />
-            </group>
+            <group ref={ref}>{children}</group>
         </>
     );
 }
