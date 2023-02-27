@@ -95,10 +95,10 @@ export function VolumeAnimationGroup({
                 max: childrenLength,
                 step: 0.05,
             },
-            index: {
+            time: {
                 value: 1,
                 min: 0,
-                max: childrenLength,
+                max: childrenLength - 1,
                 step: 1,
                 onEditStart: (value, path, context) => {
                     setEdit(true);
@@ -113,7 +113,7 @@ export function VolumeAnimationGroup({
     useFrame((state, delta) => {
         if (edit) {
             actions["volumeAnimation"]
-                ? (actions["volumeAnimation"].time = animationConfig.index)
+                ? (actions["volumeAnimation"].time = animationConfig.time)
                 : null;
             mixer.update(0);
         } else {
@@ -121,9 +121,10 @@ export function VolumeAnimationGroup({
         }
 
         if (actions["volumeAnimation"]) {
-            actions["volumeAnimation"].time !== animationConfig.index
+            actions["volumeAnimation"].time !== animationConfig.time &&
+            actions["volumeAnimation"].time <= childrenLength - 1
                 ? setAnimationConfig({
-                      index: actions["volumeAnimation"]?.time,
+                      time: actions["volumeAnimation"].time,
                   })
                 : null;
         }
