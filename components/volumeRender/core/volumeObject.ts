@@ -238,11 +238,11 @@ class VolumeObject extends THREE.Object3D {
     }
 
     /**
-     * 
+     *
      * @param position world position
      * @returns value in the data array
      */
-    getVolumeValue(position: THREE.Vector3) {
+    getVolumeValue(position: THREE.Vector3): number {
         const localPosition = this.worldToLocal(position);
 
         if (
@@ -262,15 +262,6 @@ class VolumeObject extends THREE.Object3D {
             Math.trunc(localPosition.y),
             Math.trunc(localPosition.z)
         );
-    }
-
-    /**
-     * 
-     * @param positions world position array
-     * @returns value array in the data array
-     */
-    getVolumeValues(positions: THREE.Vector3[]) {
-        return positions.map((position, i) => this.getVolumeValue(position));
     }
 }
 
