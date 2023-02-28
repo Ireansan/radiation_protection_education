@@ -1,16 +1,16 @@
 import React from "react";
 import * as THREE from "three";
 import { extend, ThreeEvent, useFrame } from "@react-three/fiber";
-import { useCursor, TransformControls, PivotControls } from "@react-three/drei";
+import { useCursor, PivotControls } from "@react-three/drei";
 import { useControls, folder, Leva } from "leva";
 
-import { VolumeObject, VolumeGroup } from "./core";
+import {
+    VolumeObject,
+    VolumeGroup,
+    VolumeControls as VolumeControlsImpl,
+} from "../core";
 extend({ VolumeObject, VolumeGroup });
 
-import { VolumeControls as VolumeControlsImpl } from "./controls";
-
-type modeType = "translate" | "rotate" | "scale" | undefined;
-type spaceType = "world" | "local" | undefined;
 type Target = {
     object: THREE.Object3D | undefined;
     id: number;
@@ -70,6 +70,7 @@ function PlaneHelperMesh({
     );
 }
 
+// TODO: Remove this function
 /**
  * Point Mesh
  */
@@ -132,7 +133,7 @@ type pivotControlsProps = {
     matrix: THREE.Matrix4;
     onDragPoint: (position: THREE.Vector3) => void;
 } & controlsProps;
-function ClippingPlanesPivotControls({
+function VolumePivotControls({
     target,
     planes,
     points,
@@ -186,29 +187,30 @@ function ClippingPlanesPivotControls({
     );
 }
 
-export type VolumeControlsProps = JSX.IntrinsicElements["volumeGroup"] & {
-    children?: React.ReactElement<VolumeObject | VolumeGroup>;
-    object?:
-        | VolumeObject
-        | VolumeGroup
-        | React.MutableRefObject<VolumeObject>
-        | React.MutableRefObject<VolumeGroup>;
-    normals?: THREE.Vector3Tuple[];
-    planeSize?: number;
-    planeColor?: THREE.Color;
-    subPlaneSize?: number;
-    subPlaneColor?: THREE.Color;
-    points?: THREE.Vector3Tuple[];
-    pointSize?: number;
-    pointColor?: THREE.Color;
-};
+export type VolumeParameterControlsProps =
+    JSX.IntrinsicElements["volumeGroup"] & {
+        children?: React.ReactElement<VolumeObject | VolumeGroup>;
+        object?:
+            | VolumeObject
+            | VolumeGroup
+            | React.MutableRefObject<VolumeObject>
+            | React.MutableRefObject<VolumeGroup>;
+        normals?: THREE.Vector3Tuple[];
+        planeSize?: number;
+        planeColor?: THREE.Color;
+        subPlaneSize?: number;
+        subPlaneColor?: THREE.Color;
+        points?: THREE.Vector3Tuple[];
+        pointSize?: number;
+        pointColor?: THREE.Color;
+    };
 /**
  * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
  */
-export const VolumeControls = React.forwardRef<
-    VolumeControlsProps,
-    VolumeControlsProps
->(function VolumeControls(
+export const VolumeParameterControls = React.forwardRef<
+    VolumeParameterControlsProps,
+    VolumeParameterControlsProps
+>(function VolumeParameterControls(
     {
         children,
         object,
@@ -325,6 +327,7 @@ export const VolumeControls = React.forwardRef<
             setTarget({ object: e.object, id: id });
         }
     }
+    // TODO: Remove this function
     function onClickPoint(
         e: THREE.Event | ThreeEvent<MouseEvent>,
         id?: number
@@ -336,11 +339,15 @@ export const VolumeControls = React.forwardRef<
         console.log(
             "onDragPoint",
             position,
-            controls.object ? controls.object.getVolumeValue(position) : -1
+            controls.object
+                ? controls.object instanceof VolumeObject
+                    ? controls.object.getVolumeValue(position)
+                    : -1
+                : -1
         );
     }
 
-    // Volume
+    // Attach volume to controls
     React.useLayoutEffect(() => {
         if (object) {
             controls.attach(
@@ -371,7 +378,7 @@ export const VolumeControls = React.forwardRef<
             <primitive ref={ref} object={controls} />
             <volumeGroup ref={group}>{children}</volumeGroup>
             {/* Controls */}
-            <ClippingPlanesPivotControls
+            <VolumePivotControls
                 target={target}
                 planes={Planes}
                 points={Points}

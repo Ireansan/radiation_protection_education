@@ -1,17 +1,19 @@
 import React from "react";
 import * as THREE from "three";
 import { extend, ReactThreeFiber, useFrame } from "@react-three/fiber";
-import { useControls, folder, button } from "leva";
+import { useControls, folder, button, Leva } from "leva";
 
-import { VolumeObject, VolumeGroup, VolumeAnimationObject } from "./core";
+import { VolumeObject, VolumeGroup, VolumeAnimationObject } from "../core";
 extend({ VolumeAnimationObject });
 
 export type VolumeAnimationGroupProps =
     JSX.IntrinsicElements["volumeAnimationObject"] & {
         children?: React.ReactElement<VolumeObject | VolumeGroup>[];
+        // folderName?: string;
     };
 export function VolumeAnimationGroup({
     children,
+    // folderName,
     ...props
 }: VolumeAnimationGroupProps) {
     const group = React.useRef<VolumeAnimationObject>(null!);
@@ -69,6 +71,7 @@ export function VolumeAnimationGroup({
     const [edit, setEdit] = React.useState<boolean>(false);
     const [animationConfig, setAnimationConfig] = useControls(() => ({
         animation: folder({
+            // [folderName as string]: folder({
             play: {
                 value: true,
                 onChange: (e) => {
@@ -128,6 +131,8 @@ export function VolumeAnimationGroup({
                   })
                 : null;
         }
+
+        group.current.index = Math.floor(animationConfig.time);
     });
 
     return (
