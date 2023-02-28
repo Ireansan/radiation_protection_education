@@ -9,11 +9,11 @@ extend({ VolumeAnimationObject });
 export type VolumeAnimationGroupProps =
     JSX.IntrinsicElements["volumeAnimationObject"] & {
         children?: React.ReactElement<VolumeObject | VolumeGroup>[];
-        // folderName?: string;
+        folderName?: string;
     };
 export function VolumeAnimationGroup({
     children,
-    // folderName,
+    folderName = "animation",
     ...props
 }: VolumeAnimationGroupProps) {
     const group = React.useRef<VolumeAnimationObject>(null!);
@@ -70,8 +70,7 @@ export function VolumeAnimationGroup({
 
     const [edit, setEdit] = React.useState<boolean>(false);
     const [animationConfig, setAnimationConfig] = useControls(() => ({
-        animation: folder({
-            // [folderName as string]: folder({
+        [folderName as string]: folder({
             play: {
                 value: true,
                 onChange: (e) => {

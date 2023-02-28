@@ -133,6 +133,7 @@ export type VolumeClippingControlsProps =
             | VolumeGroup
             | React.MutableRefObject<VolumeObject>
             | React.MutableRefObject<VolumeGroup>;
+        folderName?: string;
         normals?: THREE.Vector3Tuple[];
         planeSize?: number;
         planeColor?: THREE.Color;
@@ -149,6 +150,7 @@ export const VolumeClippingControls = React.forwardRef<
     {
         children,
         object,
+        folderName = "clipping",
         normals = [],
         planeSize = 100,
         planeColor = new THREE.Color(0xffff00),
@@ -182,14 +184,16 @@ export const VolumeClippingControls = React.forwardRef<
      * leva panels
      */
     // Volume
-    const [volumeConfig, setVolume] = useControls("volume", () => ({
-        clipping: {
-            value: false,
-            onChange: (e) => {
-                controls.clipping = e;
-                setClipping(e);
+    const [volumeConfig, setVolume] = useControls(() => ({
+        [folderName as string]: folder({
+            clipping: {
+                value: false,
+                onChange: (e) => {
+                    controls.clipping = e;
+                    setClipping(e);
+                },
             },
-        },
+        }),
     }));
 
     /**
