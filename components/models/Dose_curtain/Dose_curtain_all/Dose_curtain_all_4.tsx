@@ -11,7 +11,7 @@ import { VolumeObject } from "../../../volumeRender"; // FIXME: filepath
 extend({ VolumeObject });
 
 import { applyBasePath } from "../../../utils";
-const modelURL = applyBasePath(`/models/nrrd/dose_curtain_animation/dose_curtain_12.nrrd`);
+const modelURL = applyBasePath(`/models/nrrd/dose_curtain_animation/dose_curtain_4.nrrd`);
 
 export function Dose_curtain_all_4({
     ...props
