@@ -10,6 +10,7 @@ import {
     VolumeControls as VolumeControlsImpl,
 } from "../core";
 extend({ VolumeObject, VolumeGroup });
+import type { VolumeControlsTypes } from "./types";
 
 type Target = {
     object: THREE.Object3D | undefined;
@@ -125,28 +126,21 @@ function ClippingPlanesPivotControls({
     );
 }
 
-export type VolumeClippingControlsProps =
-    JSX.IntrinsicElements["volumeGroup"] & {
-        children?: React.ReactElement<VolumeObject | VolumeGroup>;
-        object?:
-            | VolumeObject
-            | VolumeGroup
-            | React.MutableRefObject<VolumeObject>
-            | React.MutableRefObject<VolumeGroup>;
-        folderName?: string;
-        normals?: THREE.Vector3Tuple[];
-        planeSize?: number;
-        planeColor?: THREE.Color;
-        subPlaneSize?: number;
-        subPlaneColor?: THREE.Color;
-    };
+export type VolumeClippingControlsProps = VolumeControlsTypes & {
+    folderName?: string;
+    normals?: THREE.Vector3Tuple[];
+    planeSize?: number;
+    planeColor?: THREE.Color;
+    subPlaneSize?: number;
+    subPlaneColor?: THREE.Color;
+};
 /**
  * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
  */
 export const VolumeClippingControls = React.forwardRef<
     VolumeClippingControlsProps,
     VolumeClippingControlsProps
->(function VolumeControls(
+>(function VolumeClippingControls(
     {
         children,
         object,
@@ -208,17 +202,23 @@ export const VolumeClippingControls = React.forwardRef<
     // Attach volume to controls
     React.useLayoutEffect(() => {
         if (object) {
-            controls.attach(
-                object instanceof VolumeObject || object instanceof VolumeGroup
-                    ? object
-                    : object.current
-            );
+            if (
+                object instanceof VolumeObject ||
+                object instanceof VolumeGroup
+            ) {
+                controls.attach(object);
+            } else if (
+                object.current instanceof VolumeObject ||
+                object.current instanceof VolumeGroup
+            ) {
+                controls.attach(object.current);
+            }
         } else if (group.current instanceof VolumeGroup) {
             controls.attach(group.current);
         }
 
         return () => void controls.detach();
-    }, [object, children, controls, Planes]);
+    }, [object, controls]);
 
     // Clipping
     React.useEffect(() => {

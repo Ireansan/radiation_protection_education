@@ -17,11 +17,16 @@ import { VolumeGroup } from "./volumeGroup";
  */
 class VolumeAnimationObject extends VolumeGroup {
     volumeAnimationParamAutoUpdate: boolean;
+    childrenLength: number;
+    // animation index
+    index: number;
 
     constructor() {
         super();
 
         this.volumeAnimationParamAutoUpdate = true;
+        this.childrenLength = 0;
+        this.index = 0;
 
         this.type = "Group";
     }
@@ -36,24 +41,34 @@ class VolumeAnimationObject extends VolumeGroup {
 
     updateAnimation() {
         this.children.map((object, i) => (object.visible = false));
-        const childrenLen = this.children.length;
-        const indexArray = [...Array(childrenLen)].map((_, i) => i);
+        this.childrenLength = this.children.length;
+        const indexArray = [...Array(this.childrenLength)].map((_, i) => i);
 
         // Ref: https://qiita.com/suin/items/1b39ce57dd660f12f34b
-        const _track = [...Array(childrenLen)].map(
+        const _track = [...Array(this.childrenLength)].map(
             (_, i) =>
                 new THREE.BooleanKeyframeTrack(
                     `.children[${i}].visible`,
                     indexArray,
-                    [...Array(childrenLen)].map((_, j) =>
+                    [...Array(this.childrenLength)].map((_, j) =>
                         i === j ? true : false
                     )
                 )
         );
 
         this.animations = [
-            new THREE.AnimationClip("volumeAnimation", childrenLen, _track),
+            new THREE.AnimationClip(
+                "volumeAnimation",
+                this.childrenLength,
+                _track
+            ),
         ];
+    }
+
+    getVolumeValue(position: THREE.Vector3): number {
+        let values = this.getVolumeValues(position);
+
+        return values[this.index];
     }
 }
 
