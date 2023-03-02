@@ -94,7 +94,6 @@ class VolumeGroup extends THREE.Group {
     set clippingPlanes(planes: THREE.Plane[]) {
         this._clippingPlanes = planes;
         this.updateVolumeParam(false, true);
-        console.log("group", planes);
     }
 
     // https://github.com/mrdoob/three.js/blob/master/src/core/Object3D.js#L601
@@ -112,21 +111,25 @@ class VolumeGroup extends THREE.Group {
             }
         }
 
-        if (
-            parent !== null &&
-            (parent instanceof VolumeObject || parent instanceof VolumeGroup)
-        ) {
-            this._clim1 = parent._clim1;
-            this._clim2 = parent._clim2;
-            this._colormap = parent._colormap;
-            this._renderstyle = parent._renderstyle;
-            this._isothreshold = parent._isothreshold;
-            this._clipping = parent._clipping;
-            this._clippingPlanes = parent._clippingPlanes;
+        // update this
+        if (parent !== null) {
+            if (
+                parent instanceof VolumeObject ||
+                parent instanceof VolumeGroup
+            ) {
+                this._clim1 = parent._clim1;
+                this._clim2 = parent._clim2;
+                this._colormap = parent._colormap;
+                this._renderstyle = parent._renderstyle;
+                this._isothreshold = parent._isothreshold;
+                this._clipping = parent._clipping;
+                this._clippingPlanes = parent._clippingPlanes;
+            }
         }
 
         // update children
         if (updateChildren === true) {
+            console.log("children", this.children);
             const children = this.children;
 
             for (let i = 0, l = children.length; i < l; i++) {
@@ -138,6 +141,8 @@ class VolumeGroup extends THREE.Group {
                     child.volumeParamAutoUpdate === true
                 ) {
                     child.updateVolumeParam(false, true);
+                } else if (child instanceof THREE.Mesh) {
+                    child.material.clippingPlanes = this._clipping ? this._clippingPlanes : null;
                 }
             }
         }
