@@ -12,7 +12,7 @@ import {
 extend({ VolumeObject, VolumeGroup });
 import type { VolumeControlsTypes } from "./types";
 
-type Target = {
+export type Target = {
     object: THREE.Object3D | undefined;
     id: number;
 };
@@ -20,21 +20,21 @@ type Target = {
 /**
  * Plane Helper Mesh
  */
-type planeHelperMeshProps = {
+export type planeHelperMeshProps = {
     id: number;
     normal: THREE.Vector3;
     subPlaneSize: number;
     subPlaneColor: THREE.Color;
-    visible: boolean;
+    visible?: boolean;
     onClick: (e: THREE.Event, id: number) => void;
     setMatrix: (matrix: THREE.Matrix4) => void;
 };
-function PlaneHelperMesh({
+export function PlaneHelperMesh({
     id,
     normal,
     subPlaneSize,
     subPlaneColor,
-    visible,
+    visible = false,
     onClick,
     setMatrix,
 }: planeHelperMeshProps) {
@@ -127,8 +127,8 @@ function ClippingPlanesPivotControls({
 }
 
 export type VolumeClippingControlsProps = VolumeControlsTypes & {
+    normals: THREE.Vector3Tuple[];
     folderName?: string;
-    normals?: THREE.Vector3Tuple[];
     planeSize?: number;
     planeColor?: THREE.Color;
     subPlaneSize?: number;
@@ -144,8 +144,8 @@ export const VolumeClippingControls = React.forwardRef<
     {
         children,
         object,
-        folderName = "clipping",
         normals = [],
+        folderName = "clipping",
         planeSize = 100,
         planeColor = new THREE.Color(0xffff00),
         subPlaneSize = 50,

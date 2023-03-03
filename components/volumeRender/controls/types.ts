@@ -7,7 +7,5 @@ export type VolumeControlsTypes = JSX.IntrinsicElements["volumeGroup"] & {
         | VolumeObject
         | VolumeGroup
         | React.RefObject<VolumeObject>
-        | React.RefObject<VolumeGroup>
-        | React.MutableRefObject<VolumeObject>
-        | React.MutableRefObject<VolumeGroup>;
+        | React.RefObject<VolumeGroup>;
 };
