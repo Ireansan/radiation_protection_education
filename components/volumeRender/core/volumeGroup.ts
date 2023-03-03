@@ -25,6 +25,10 @@ class VolumeGroup extends THREE.Group {
     _clippingPlanes: THREE.Plane[];
 
     volumeParamAutoUpdate: boolean;
+    volumeClippingAutoUpdate: boolean;
+
+    volumeParamWorldAutoUpdate: boolean;
+    volumeClippingWorldAutoUpdate: boolean;
 
     constructor() {
         super();
@@ -38,6 +42,10 @@ class VolumeGroup extends THREE.Group {
         this._clippingPlanes = [];
 
         this.volumeParamAutoUpdate = true;
+        this.volumeClippingAutoUpdate = true;
+
+        this.volumeParamWorldAutoUpdate = true;
+        this.volumeClippingWorldAutoUpdate = true;
 
         this.type = "Group";
     }
@@ -86,33 +94,35 @@ class VolumeGroup extends THREE.Group {
     }
     set clipping(clipping: boolean) {
         this._clipping = clipping;
-        this.updateVolumeParam(false, true);
+        this.updateVolumeClipping(false, true);
     }
     get clippingPlanes() {
         return this._clippingPlanes;
     }
     set clippingPlanes(planes: THREE.Plane[]) {
         this._clippingPlanes = planes;
-        this.updateVolumeParam(false, true);
+        this.updateVolumeClipping(false, true);
     }
 
-    // https://github.com/mrdoob/three.js/blob/master/src/core/Object3D.js#L601
+    // https://github.com/mrdoob/three.js/blob/47b28bc564b438bf2b80d6e5baf90235292fcbd7/src/core/Object3D.js#L627
     updateVolumeParam(updateParents: boolean, updateChildren: boolean) {
         // update parent
         const parent = this.parent;
-        if (updateParents === true) {
+        if (
+            updateParents === true &&
+            parent !== null &&
+            this.volumeParamWorldAutoUpdate
+        ) {
             if (
-                parent !== null &&
-                (parent instanceof VolumeObject ||
-                    parent instanceof VolumeGroup) &&
-                parent.volumeParamAutoUpdate === true
+                parent instanceof VolumeObject ||
+                parent instanceof VolumeGroup
             ) {
                 parent.updateVolumeParam(true, false);
             }
         }
 
         // update this
-        if (parent !== null) {
+        if (parent !== null && this.volumeParamAutoUpdate) {
             if (
                 parent instanceof VolumeObject ||
                 parent instanceof VolumeGroup
@@ -122,14 +132,11 @@ class VolumeGroup extends THREE.Group {
                 this._colormap = parent._colormap;
                 this._renderstyle = parent._renderstyle;
                 this._isothreshold = parent._isothreshold;
-                this._clipping = parent._clipping;
-                this._clippingPlanes = parent._clippingPlanes;
             }
         }
 
         // update children
         if (updateChildren === true) {
-            console.log("children", this.children);
             const children = this.children;
 
             for (let i = 0, l = children.length; i < l; i++) {
@@ -138,11 +145,60 @@ class VolumeGroup extends THREE.Group {
                 if (
                     (child instanceof VolumeObject ||
                         child instanceof VolumeGroup) &&
-                    child.volumeParamAutoUpdate === true
+                    child.volumeParamWorldAutoUpdate === true
                 ) {
                     child.updateVolumeParam(false, true);
+                }
+            }
+        }
+    }
+
+    updateVolumeClipping(updateParents: boolean, updateChildren: boolean) {
+        // update parent
+        const parent = this.parent;
+        if (
+            updateParents === true &&
+            parent !== null &&
+            this.volumeClippingWorldAutoUpdate
+        ) {
+            if (
+                parent instanceof VolumeObject ||
+                parent instanceof VolumeGroup
+            ) {
+                parent.updateVolumeClipping(true, false);
+            }
+        }
+
+        // update this
+        // FIXME:
+        if (parent !== null && this.volumeClippingAutoUpdate) {
+            if (
+                parent instanceof VolumeObject ||
+                parent instanceof VolumeGroup
+            ) {
+                this._clipping = parent._clipping;
+                this._clippingPlanes = parent._clippingPlanes;
+            }
+        }
+
+        // update children
+        if (updateChildren === true) {
+            const children = this.children;
+
+            for (let i = 0, l = children.length; i < l; i++) {
+                const child = children[i];
+
+                if (
+                    (child instanceof VolumeObject ||
+                        child instanceof VolumeGroup) &&
+                    child.volumeClippingWorldAutoUpdate === true
+                ) {
+                    child.updateVolumeClipping(false, true);
                 } else if (child instanceof THREE.Mesh) {
-                    child.material.clippingPlanes = this._clipping ? this._clippingPlanes : null;
+                    child.material.clipping = this._clipping;
+                    child.material.clippingPlanes = this._clipping
+                        ? this._clippingPlanes
+                        : null;
                 }
             }
         }

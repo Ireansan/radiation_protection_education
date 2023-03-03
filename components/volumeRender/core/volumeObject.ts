@@ -31,6 +31,10 @@ class VolumeObject extends THREE.Object3D {
     _clippingPlanes: THREE.Plane[];
 
     volumeParamAutoUpdate: boolean;
+    volumeClippingAutoUpdate: boolean;
+
+    volumeParamWorldAutoUpdate: boolean;
+    volumeClippingWorldAutoUpdate: boolean;
 
     isMesh: boolean;
     geometry: THREE.BufferGeometry;
@@ -59,6 +63,10 @@ class VolumeObject extends THREE.Object3D {
         this._clippingPlanes = clippingPlanes;
 
         this.volumeParamAutoUpdate = true;
+        this.volumeClippingAutoUpdate = true;
+
+        this.volumeParamWorldAutoUpdate = true;
+        this.volumeClippingWorldAutoUpdate = true;
 
         this.isMesh = true;
 
@@ -164,7 +172,7 @@ class VolumeObject extends THREE.Object3D {
     set clipping(clipping: boolean) {
         this._clipping = clipping;
         this.material.clipping = clipping;
-        this.updateVolumeParam(false, true);
+        this.updateVolumeClipping(false, true);
     }
     get clippingPlanes() {
         return this._clippingPlanes;
@@ -172,7 +180,7 @@ class VolumeObject extends THREE.Object3D {
     set clippingPlanes(planes: THREE.Plane[]) {
         this._clippingPlanes = planes;
         this.material.clippingPlanes = this.material.clipping ? planes : [];
-        this.updateVolumeParam(false, true);
+        this.updateVolumeClipping(false, true);
     }
 
     // FIXME:
@@ -180,44 +188,38 @@ class VolumeObject extends THREE.Object3D {
     updateVolumeParam(updateParents: boolean, updateChildren: boolean) {
         // update parent
         const parent = this.parent;
-        if (updateParents === true) {
-            if (
-                parent !== null &&
-                parent instanceof VolumeObject &&
-                parent.volumeParamAutoUpdate === true
-            ) {
+        if (
+            updateParents === true &&
+            parent !== null &&
+            this.volumeParamWorldAutoUpdate
+        ) {
+            if (parent instanceof VolumeObject) {
                 parent.updateVolumeParam(true, false);
             }
         }
 
-        if (
-            parent !== null &&
-            (parent instanceof VolumeObject || parent instanceof VolumeGroup)
-        ) {
-            this._clim1 = parent._clim1;
-            this._clim2 = parent._clim2;
-            this._colormap = parent._colormap;
-            this._renderstyle = parent._renderstyle;
-            this._isothreshold = parent._isothreshold;
-            this._clipping = parent._clipping;
-            this._clippingPlanes = parent._clipping
-                ? parent._clippingPlanes
-                : [];
+        if (parent !== null && this.volumeParamAutoUpdate) {
+            if (
+                parent instanceof VolumeObject ||
+                parent instanceof VolumeGroup
+            ) {
+                this._clim1 = parent._clim1;
+                this._clim2 = parent._clim2;
+                this._colormap = parent._colormap;
+                this._renderstyle = parent._renderstyle;
+                this._isothreshold = parent._isothreshold;
 
-            this.material.uniforms.u_clim.value.set(
-                parent._clim1,
-                parent._clim2
-            );
-            this.material.uniforms.u_cmdata.value =
-                cmtextures[parent._colormap];
-            this.material.uniforms.u_renderstyle.value =
-                parent._renderstyle === "mip" ? 0 : 1;
-            this.material.uniforms.u_renderthreshold.value =
-                parent._isothreshold;
-            this.material.clipping = parent._clipping;
-            this.material.clippingPlanes = this.material.clipping
-                ? parent._clippingPlanes
-                : null;
+                this.material.uniforms.u_clim.value.set(
+                    parent._clim1,
+                    parent._clim2
+                );
+                this.material.uniforms.u_cmdata.value =
+                    cmtextures[parent._colormap];
+                this.material.uniforms.u_renderstyle.value =
+                    parent._renderstyle === "mip" ? 0 : 1;
+                this.material.uniforms.u_renderthreshold.value =
+                    parent._isothreshold;
+            }
         }
 
         // update children
@@ -229,9 +231,58 @@ class VolumeObject extends THREE.Object3D {
 
                 if (
                     child instanceof VolumeObject &&
-                    child.volumeParamAutoUpdate === true
+                    child.volumeParamWorldAutoUpdate === true
                 ) {
                     child.updateVolumeParam(false, true);
+                }
+            }
+        }
+    }
+
+    updateVolumeClipping(updateParents: boolean, updateChildren: boolean) {
+        // update parent
+        const parent = this.parent;
+        if (
+            updateParents === true &&
+            parent !== null &&
+            this.volumeClippingWorldAutoUpdate
+        ) {
+            if (parent instanceof VolumeObject) {
+                parent.updateVolumeClipping(true, false);
+            }
+        }
+
+        // update this
+        // FIXME:
+        if (parent !== null && this.volumeClippingAutoUpdate) {
+            if (
+                parent instanceof VolumeObject ||
+                parent instanceof VolumeGroup
+            ) {
+                this._clipping = parent._clipping;
+                this._clippingPlanes = parent._clipping
+                    ? parent._clippingPlanes
+                    : [];
+
+                this.material.clipping = parent._clipping;
+                this.material.clippingPlanes = this.material.clipping
+                    ? parent._clippingPlanes
+                    : null;
+            }
+        }
+
+        // update children
+        if (updateChildren === true) {
+            const children = this.children;
+
+            for (let i = 0, l = children.length; i < l; i++) {
+                const child = children[i];
+
+                if (
+                    child instanceof VolumeObject &&
+                    child.volumeClippingWorldAutoUpdate === true
+                ) {
+                    child.updateVolumeClipping(false, true);
                 }
             }
         }
