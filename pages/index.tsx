@@ -49,6 +49,17 @@ const Home: NextPage = () => {
 
                     <div className={styles.card}>
                         <Link
+                            href={
+                                "/volume_visualization/dose_visualization_curtain"
+                            }
+                        >
+                            <h2>Dose Visualization Curtain &rarr;</h2>
+                            <p>Next.js + react-three/fiber, Texture 3D</p>
+                        </Link>
+                    </div>
+
+                    <div className={styles.card}>
+                        <Link
                             href={"/volume_visualization/dose_visualization_VR"}
                         >
                             <h2>Dose Visualization (Ver. VR)&rarr;</h2>
@@ -60,7 +71,7 @@ const Home: NextPage = () => {
                     </div>
 
                     <div className={styles.card}>
-                        <Link href={"/multiplay/game_template_test"}>
+                        <Link href={"/multiplay/game_template"}>
                             <h2>Game Template</h2>
                             <p>Next.js + react-three/fiber</p>
                         </Link>
@@ -172,19 +183,11 @@ const Home: NextPage = () => {
 
             <footer className={styles.footer}>
                 <a
-                    href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+                    href="https://github.com/Ireansan"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    Powered by{" "}
-                    <span className={styles.logo}>
-                        <img
-                            src={logoURL}
-                            alt="Vercel Logo"
-                            width={72}
-                            height={16}
-                        />
-                    </span>
+                    Powered by Ireansan
                 </a>
             </footer>
         </div>
