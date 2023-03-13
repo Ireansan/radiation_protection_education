@@ -193,6 +193,7 @@ void cast_mip(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
 	float max_val=-1e6;
 	int max_i=100;
 	vec3 loc=start_loc;
+	bool updated=false;
 	
 	// Enter the raycasting loop. In WebGL 1 the loop index cannot be compared with
 	// non-constant expression. So we use a hard-coded max, and an additional condition
@@ -212,6 +213,7 @@ void cast_mip(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
 		if(val>max_val&&!clipped){
 			max_val=val;
 			max_i=iter;
+			updated=true;
 		}
 		// Advance location deeper into the volume
 		loc+=step;
@@ -226,7 +228,10 @@ void cast_mip(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
 	}
 	
 	// Resolve final color
-	gl_FragColor=apply_colormap(max_val);
+	if(updated){
+		gl_FragColor=apply_colormap(max_val);
+		return;
+    }
 }
 
 void cast_iso(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
