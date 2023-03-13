@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import * as RAPIER from "@dimforge/rapier3d-compat";
 import { useThree, useFrame } from "@react-three/fiber";
@@ -13,7 +13,6 @@ import { getState, useStore } from "../store";
 import type { Controls } from "../store";
 
 import { AnimationStates } from "../controls";
-import { YBot } from "../models";
 
 export type playerProps = {
     children: React.ReactNode;
@@ -57,8 +56,29 @@ export function Player({
     const rigidbodyPosition = new THREE.Vector3();
     const playerPosition = new THREE.Vector3();
     const playerDirection = new THREE.Vector3();
+    const playerRotation = new THREE.Euler();
+    const refDirection = useRef<THREE.Vector3>(new THREE.Vector3());
 
-    useFrame((state, delta, event) => {
+    // Mouse
+    const pointerActiveRef = useRef<boolean>(false);
+    const onPointerDown = (event: Event) => {
+        pointerActiveRef.current = true;
+    };
+    const onPointerUp = (event: Event) => {
+        pointerActiveRef.current = false;
+    };
+
+    useEffect(() => {
+        window.document.addEventListener("pointerdown", onPointerDown);
+        window.document.addEventListener("pointerup", onPointerUp);
+
+        return () => {
+            window.document.removeEventListener("pointerdown", onPointerDown);
+            window.document.removeEventListener("pointerup", onPointerUp);
+        };
+    }, []);
+
+    useFrame((state, delta) => {
         controls = getState().controls;
         const { forward, backward, left, right, jump } = controls;
         isBoosting = controls.boost;
@@ -72,11 +92,16 @@ export function Player({
             playerPosition.y -= radius + halfHeight;
 
             playerDirection.set(0, 0, 1);
-            playerDirection
-                .applyEuler(camera.rotation)
-                .setY(0)
-                .multiplyScalar(-1)
-                .add(playerPosition);
+            if (pointerActiveRef.current) {
+                playerDirection
+                    .applyEuler(camera.rotation)
+                    .setY(0)
+                    .multiplyScalar(-1);
+                refDirection.current.copy(playerDirection);
+            } else {
+                playerDirection.copy(refDirection.current);
+            }
+            playerDirection.add(playerPosition);
 
             if (ref.current) {
                 ref.current.position.copy(playerPosition);
@@ -84,6 +109,8 @@ export function Player({
                 if (!editor) {
                     ref.current.lookAt(playerDirection);
                 }
+
+                playerRotation.copy(ref.current.rotation);
             }
 
             // update camera
@@ -115,7 +142,7 @@ export function Player({
                 .normalize()
                 .multiplyScalar(moveSpeed * (isBoosting ? boost : 1));
             if (!editor) {
-                direction.applyEuler(camera.rotation);
+                direction.applyEuler(playerRotation).multiplyScalar(-1);
             }
             rigidBody.current.setLinvel({
                 x: direction.x,
@@ -159,7 +186,7 @@ export function Player({
             >
                 <CapsuleCollider args={[halfHeight, radius]} />
             </RigidBody>
-            {/* Y Bot */}
+
             {/* @ts-ignore */}
             <group ref={ref}>{children}</group>
         </>
