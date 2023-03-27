@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import * as RAPIER from "@dimforge/rapier3d-compat";
 import { useThree, useFrame } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
+import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import {
     CapsuleCollider,
     RigidBody,
@@ -30,6 +32,9 @@ export function Player({
     const { set } = useStore(({ set }) => ({
         set,
     }));
+
+    // const cameraControlsRef = useRef<CameraControls>(null!);
+    const orbitControlsRef = useRef<OrbitControlsImpl>(null!);
 
     const { radius, halfHeight, moveSpeed, boost, cameraDistance } =
         playerConfig;
@@ -61,14 +66,27 @@ export function Player({
 
     // Mouse
     const pointerActiveRef = useRef<boolean>(false);
-    const onPointerDown = (event: Event) => {
-        pointerActiveRef.current = true;
+    const onPointerDown = (event: PointerEvent) => {
+        /**
+         * event.button
+         * 0: Left
+         * 2: Right
+         */
+        if (event.button === 2 || cameraMode === "FIRST_PERSON") {
+            pointerActiveRef.current = true;
+        }
     };
-    const onPointerUp = (event: Event) => {
+    const onPointerUp = (event: PointerEvent) => {
         pointerActiveRef.current = false;
     };
 
     useEffect(() => {
+        orbitControlsRef.current.mouseButtons = {
+            LEFT: THREE.MOUSE.ROTATE,
+            MIDDLE: THREE.MOUSE.DOLLY,
+            RIGHT: THREE.MOUSE.ROTATE,
+        };
+
         window.document.addEventListener("pointerdown", onPointerDown);
         window.document.addEventListener("pointerup", onPointerUp);
 
@@ -84,13 +102,15 @@ export function Player({
         isBoosting = controls.boost;
 
         if (rigidBody.current) {
-            // update group position, rotation
             const velocity = rigidBody.current.linvel();
+
+            // calculate position
             rigidbodyPosition.copy(rigidBody.current.translation());
 
             playerPosition.copy(rigidbodyPosition);
             playerPosition.y -= radius + halfHeight;
 
+            // calculate rotation
             playerDirection.set(0, 0, 1);
             if (pointerActiveRef.current) {
                 playerDirection
@@ -103,6 +123,7 @@ export function Player({
             }
             playerDirection.add(playerPosition);
 
+            // update position and rotation
             if (ref.current) {
                 ref.current.position.copy(playerPosition);
 
@@ -120,18 +141,36 @@ export function Player({
                 );
                 headPosition.y += halfHeight;
 
+                const cameraTargetPosition = new THREE.Vector3();
+                const cameraWorldDirection = new THREE.Vector3();
+                camera.getWorldDirection(cameraWorldDirection);
+
                 if (cameraMode === "FIRST_PERSON") {
                     camera.position.copy(headPosition);
+
+                    cameraTargetPosition.addVectors(
+                        headPosition,
+                        cameraWorldDirection
+                    );
                 } else if (cameraMode === "THIRD_PERSON") {
-                    const cameraPositionOffset = new THREE.Vector3();
-                    camera.getWorldDirection(cameraPositionOffset);
-                    cameraPositionOffset.setLength(cameraDistance);
+                    const cameraPositionOffset = new THREE.Vector3()
+                        .copy(cameraWorldDirection)
+                        .setLength(cameraDistance);
 
                     camera.position.subVectors(
                         headPosition,
                         cameraPositionOffset
                     );
+
+                    cameraTargetPosition.copy(headPosition);
                 }
+
+                orbitControlsRef.current.target.set(
+                    cameraTargetPosition.x,
+                    cameraTargetPosition.y,
+                    cameraTargetPosition.z
+                );
+                orbitControlsRef.current.update();
             }
 
             // movement
@@ -189,6 +228,8 @@ export function Player({
 
             {/* @ts-ignore */}
             <group ref={ref}>{children}</group>
+
+            <OrbitControls ref={orbitControlsRef} />
         </>
     );
 }
