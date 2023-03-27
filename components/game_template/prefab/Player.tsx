@@ -72,7 +72,10 @@ export function Player({
          * 0: Left
          * 2: Right
          */
-        if (event.button === 2 || cameraMode === "FIRST_PERSON") {
+        if (
+            cameraMode === "FIRST_PERSON" ||
+            (cameraMode === "THIRD_PERSON" && event.button === 2)
+        ) {
             pointerActiveRef.current = true;
         }
     };
@@ -94,7 +97,7 @@ export function Player({
             window.document.removeEventListener("pointerdown", onPointerDown);
             window.document.removeEventListener("pointerup", onPointerUp);
         };
-    }, []);
+    }, [cameraMode]);
 
     useFrame((state, delta) => {
         controls = getState().controls;
