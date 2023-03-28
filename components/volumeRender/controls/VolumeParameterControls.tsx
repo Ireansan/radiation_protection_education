@@ -35,6 +35,9 @@ export const VolumeParameterControls = React.forwardRef<
             onChange: (e) => {
                 controls.clim1 = e;
             },
+            render: () => {
+                return false;
+            },
         },
         clim2: {
             value: 1,
@@ -42,6 +45,9 @@ export const VolumeParameterControls = React.forwardRef<
             max: 1,
             onChange: (e) => {
                 controls.clim2 = e;
+            },
+            render: () => {
+                return false;
             },
         },
         colormap: {

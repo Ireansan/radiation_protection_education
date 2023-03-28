@@ -17,7 +17,12 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 
-import { VolumeControls, VolumeObject } from "../../components/volumeRender";
+import {
+    VolumeObject,
+    VolumeParameterControls,
+    VolumeClippingControls,
+    VolumeGroup,
+} from "../../components/volumeRender";
 import * as Models from "../../components/models";
 
 import styles from "../../styles/threejs.module.css";
@@ -47,21 +52,34 @@ const Box = ({ ...props }) => {
  * @returns
  */
 function ExampleStent() {
+    const ref = React.useRef<VolumeGroup>(null!);
+
+    /*
+    useFrame((state, scene) => {
+        let values = VolumeGetValueControls(ref, ["point"]);
+    });
+    */
+
     return (
         <div className={styles.container}>
             <div className={styles.canvas}>
                 <Canvas camera={{ position: [64, 128, 64] }}>
-                    <VolumeControls
-                        normals={[
-                            [0, -1, 0],
-                            [-1, 0, 0],
-                        ]}
-                        points={[[0, 0, 0]]}
-                    >
+                    <volumeGroup ref={ref}>
                         <Models.Stent rotation={[-Math.PI / 2, 0, 0]} />
-                    </VolumeControls>
+                    </volumeGroup>
 
-                    <OrthographicCamera />
+                    <VolumeParameterControls object={ref} />
+                    <VolumeClippingControls
+                        object={ref}
+                        folderName="Stent"
+                        normals={[
+                            [0, 0, -1],
+                            // [-1, 0, 0],
+                        ]}
+                        planeSize={100}
+                        subPlaneSize={50}
+                    />
+
                     <OrbitControls makeDefault />
 
                     {/* <Box scale={[10, 10, 10]} position={[-10, 4.6, -3]} /> */}

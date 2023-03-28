@@ -1,100 +1,96 @@
-import React, { useEffect } from "react";
+import React, { useRef } from "react";
 
-import { Canvas } from "@react-three/fiber";
-import {
-    OrthographicCamera,
-    OrbitControls,
-    Sky,
-    Stats,
-    PointerLockControls,
-    GizmoHelper,
-    GizmoViewport,
-    Box,
-    Sphere,
-} from "@react-three/drei";
+import { Sky } from "@react-three/drei";
 import * as THREE from "three";
 import { Physics, Debug } from "@react-three/rapier";
-
-import { VolumeControls } from "../volumeRender";
-import * as MODELS from "../models";
-import * as SCENES from "./index";
-
 import {
-    Keyboard,
-    Ground,
-    Player,
-    ControlPanel,
-    Editor,
-    useToggle,
-} from "../game_template";
+    VolumeGroup,
+    VolumeAnimationObject,
+    VolumeAnimationControls,
+    VolumeParameterControls,
+    VolumeClippingControls,
+} from "../volumeRender";
+import * as Models from "../models";
+
+import { GameTemplate, Ground, Player, YBot } from "../game_template";
 
 function XRayRoomGame() {
-    const ToggledDebug = useToggle(Debug, "debug");
-    const ToggledEditor = useToggle(Editor, "editor");
-    // const ToggledMap = useToggle(Minimap, "map");
-    const ToggledOrbitControls = useToggle(OrbitControls, "editor");
-    const ToggledPointerLockControls = useToggle(PointerLockControls, "play");
-    const ToggledStats = useToggle(Stats, "stats");
+    const ref = useRef<VolumeGroup>(null!);
+    const refAnimation = useRef<VolumeAnimationObject>(null);
+
+    const xOffset: number = -5;
+    const zOffset: number = 0;
 
     return (
         <>
-            <Canvas shadows>
-                {/* Volume Render */}
-                <VolumeControls>
-                    <MODELS.Dose_all_Animation
-                        position={[2.1, 2.2, 2.35]}
-                        rotation={[0, Math.PI, -Math.PI / 2]}
-                        scale={1 / 20}
-                    />
-                </VolumeControls>
-                <group
-                    position={[0, 2, 0]}
-                    rotation={[0, 0, Math.PI]}
-                    scale={(1 / 4) * (1 / 20)}
-                >
-                    <MODELS.Dose_material />
-                    <MODELS.Dose_region />
-                </group>
+            <GameTemplate
+                childrenEnv={
+                    <>
+                        <Sky sunPosition={[100, 20, 100]} />
+                        <ambientLight intensity={0.3} />
+                        <pointLight
+                            castShadow
+                            intensity={0.8}
+                            position={[100, 100, 100]}
+                        />
 
-                {/* Game */}
-                <Sky sunPosition={[100, 20, 100]} />
-                <ambientLight intensity={0.3} />
-                <pointLight
-                    castShadow
-                    intensity={0.8}
-                    position={[100, 100, 100]}
-                />
+                        {/* Volume Render */}
+                        <volumeGroup ref={ref}>
+                            <volumeAnimationObject
+                                ref={refAnimation}
+                                position={[2.1 + xOffset, 2.2, 2.35 + zOffset]}
+                                rotation={[0, Math.PI, -Math.PI / 2]}
+                                scale={1 / 20}
+                            >
+                                <Models.Dose_all_Animation />
+                            </volumeAnimationObject>
+                        </volumeGroup>
 
-                <Physics gravity={[0, -30, 0]}>
-                    <ToggledDebug />
+                        <group
+                            position={[0 + xOffset, 2, 0 + zOffset]}
+                            rotation={[0, 0, Math.PI]}
+                            scale={(1 / 4) * (1 / 20)}
+                        >
+                            <Models.Dose_material />
+                            <Models.Dose_region />
+                        </group>
 
-                    <Ground />
-                    <Player />
-                </Physics>
-                <ControlPanel position={[0, 2, -5]} />
+                        <VolumeAnimationControls
+                            objects={[refAnimation]}
+                            duration={16}
+                        />
+                        <VolumeParameterControls object={ref} />
+                        <VolumeClippingControls
+                            object={ref}
+                            folderName="Stent"
+                            normals={[
+                                [0, 0, -1],
+                                // [-1, 0, 0],
+                            ]}
+                        />
 
-                <ToggledOrbitControls />
-                <ToggledPointerLockControls />
-
-                {/* Camera and Some Helper */}
-                <ambientLight intensity={0.5} />
-                <OrthographicCamera />
-
-                <GizmoHelper
-                    alignment="bottom-right"
-                    margin={[80, 80]}
-                    renderPriority={-1}
-                >
-                    <GizmoViewport
-                        axisColors={["hotpink", "aquamarine", "#3498DB"]}
-                        labelColor="black"
-                    />
-                </GizmoHelper>
-            </Canvas>
-
-            <Keyboard />
-            <ToggledEditor />
-            <ToggledStats />
+                        {/* Helper */}
+                        {/* <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
+                            <GizmoViewport
+                                axisColors={[
+                                    "hotpink",
+                                    "aquamarine",
+                                    "#3498DB",
+                                ]}
+                                labelColor="black"
+                            />
+                        </GizmoHelper> */}
+                    </>
+                }
+                childrenPhysics={
+                    <>
+                        <Ground />
+                        <Player>
+                            <YBot />
+                        </Player>
+                    </>
+                }
+            />
         </>
     );
 }

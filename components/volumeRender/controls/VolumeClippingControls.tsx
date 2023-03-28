@@ -146,9 +146,9 @@ export const VolumeClippingControls = React.forwardRef<
         object,
         normals = [],
         folderName = "clipping",
-        planeSize = 100,
+        planeSize = 2,
         planeColor = new THREE.Color(0xffff00),
-        subPlaneSize = 50,
+        subPlaneSize = 1,
         subPlaneColor = new THREE.Color(0xaaaaaa),
         ...props
     },

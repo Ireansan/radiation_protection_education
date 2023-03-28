@@ -1,91 +1,78 @@
-import React, { useEffect } from "react";
+import React from "react";
 
-import { Canvas } from "@react-three/fiber";
-import {
-    OrthographicCamera,
-    OrbitControls,
-    Sky,
-    Stats,
-    PointerLockControls,
-    GizmoHelper,
-    GizmoViewport,
-    Box,
-    Sphere,
-} from "@react-three/drei";
+import { Sky, GizmoHelper, GizmoViewport } from "@react-three/drei";
 import * as THREE from "three";
-import { Physics, Debug } from "@react-three/rapier";
-
-import { VolumeControls } from "../volumeRender";
-import * as MODELS from "../models";
 
 import {
-    Keyboard,
-    Ground,
-    Player,
-    ControlPanel,
-    Editor,
-    useToggle,
-} from "../game_template";
+    VolumeParameterControls,
+    VolumeClippingControls,
+    VolumeGroup,
+} from "../volumeRender";
+import * as Models from "../models";
+
+import { GameTemplate, Ground, Player, YBot } from "../game_template";
 
 function StentGame() {
-    const ToggledDebug = useToggle(Debug, "debug");
-    const ToggledEditor = useToggle(Editor, "editor");
-    // const ToggledMap = useToggle(Minimap, "map");
-    const ToggledOrbitControls = useToggle(OrbitControls, "editor");
-    const ToggledPointerLockControls = useToggle(PointerLockControls, "play");
-    const ToggledStats = useToggle(Stats, "stats");
+    const ref = React.useRef<VolumeGroup>(null!);
 
     return (
         <>
-            <Canvas shadows>
-                {/* Volume Render */}
-                <VolumeControls>
-                    <MODELS.Stent
-                        position={[0, 1, 0]}
-                        rotation={[-Math.PI / 2, 0, 0]}
-                        scale={1 / 128}
-                    />
-                </VolumeControls>
+            <GameTemplate
+                childrenEnv={
+                    <>
+                        <Sky sunPosition={[100, 20, 100]} />
+                        <ambientLight intensity={0.3} />
+                        <pointLight
+                            castShadow
+                            intensity={0.8}
+                            position={[100, 100, 100]}
+                        />
 
-                {/* Game */}
-                <Sky sunPosition={[100, 20, 100]} />
-                <ambientLight intensity={0.3} />
-                <pointLight
-                    castShadow
-                    intensity={0.8}
-                    position={[100, 100, 100]}
-                />
+                        {/* Volume Render */}
+                        <volumeGroup ref={ref}>
+                            <Models.Stent
+                                position={[-5, 1, -4]}
+                                rotation={[-Math.PI / 2, 0, 0]}
+                                scale={1 / 128}
+                            />
+                        </volumeGroup>
 
-                <Physics gravity={[0, -30, 0]}>
-                    <ToggledDebug />
+                        <VolumeParameterControls object={ref} />
+                        <VolumeClippingControls
+                            object={ref}
+                            folderName="Stent"
+                            normals={[
+                                [0, 0, -1],
+                                // [-1, 0, 0],
+                            ]}
+                        />
 
-                    <Ground />
-                    <Player />
-                </Physics>
-                <ControlPanel position={[0, 2, -5]} />
-
-                <ToggledOrbitControls />
-                <ToggledPointerLockControls />
-
-                {/* Camera and Some Helper */}
-                <ambientLight intensity={0.5} />
-                <OrthographicCamera />
-
-                <GizmoHelper
-                    alignment="bottom-right"
-                    margin={[80, 80]}
-                    renderPriority={-1}
-                >
-                    <GizmoViewport
-                        axisColors={["hotpink", "aquamarine", "#3498DB"]}
-                        labelColor="black"
-                    />
-                </GizmoHelper>
-            </Canvas>
-
-            <Keyboard />
-            <ToggledEditor />
-            <ToggledStats />
+                        {/* Helper */}
+                        <GizmoHelper
+                            alignment="bottom-right"
+                            margin={[80, 80]}
+                            renderPriority={-1}
+                        >
+                            <GizmoViewport
+                                axisColors={[
+                                    "hotpink",
+                                    "aquamarine",
+                                    "#3498DB",
+                                ]}
+                                labelColor="black"
+                            />
+                        </GizmoHelper>
+                    </>
+                }
+                childrenPhysics={
+                    <>
+                        <Ground />
+                        <Player>
+                            <YBot />
+                        </Player>
+                    </>
+                }
+            />
         </>
     );
 }

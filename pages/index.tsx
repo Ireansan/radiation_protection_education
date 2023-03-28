@@ -53,47 +53,53 @@ const Home: NextPage = () => {
                                 "/volume_visualization/dose_visualization_curtain"
                             }
                         >
-                            <h2>Dose Visualization Curtain &rarr;</h2>
+                            <h2>
+                                Dose Visualization Curtain (&alpha;
+                                Version)&rarr;
+                            </h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
                     </div>
 
-                    <div className={styles.card}>
+                    {/* <div className={styles.card}>
                         <Link
                             href={"/volume_visualization/dose_visualization_VR"}
                         >
-                            <h2>Dose Visualization (Ver. VR)&rarr;</h2>
+                            <h2>
+                                Dose Visualization (Ver. VR, &alpha;
+                                Version)&rarr;
+                            </h2>
                             <p>
                                 Next.js + react-three/fiber + react-three/xr,
                                 Texture 3D
                             </p>
                         </Link>
-                    </div>
+                    </div> */}
 
                     <div className={styles.card}>
                         <Link href={"/multiplay/game_template"}>
-                            <h2>Game Template</h2>
+                            <h2>Game Template &rarr;</h2>
                             <p>Next.js + react-three/fiber</p>
                         </Link>
                     </div>
 
-                    <div className={styles.card}>
+                    {/* <div className={styles.card}>
                         <Link href={"/multiplay/the_picture_gallery"}>
-                            <h2>The Picture Gallery</h2>
+                            <h2>The Picture Gallery (Not Support)</h2>
                             <p>Next.js + react-three/fiber</p>
                         </Link>
-                    </div>
+                    </div> */}
 
                     <div className={styles.card}>
                         <Link href={"/multiplay/stent_game"}>
-                            <h2>Stent + Game</h2>
+                            <h2>Stent + Game &rarr;</h2>
                             <p>Next.js + react-three/fiber</p>
                         </Link>
                     </div>
 
                     <div className={styles.card}>
                         <Link href={"/multiplay/xray_game"}>
-                            <h2>XRay + Game</h2>
+                            <h2>XRay + Game &rarr;</h2>
                             <p>Next.js + react-three/fiber</p>
                         </Link>
                     </div>

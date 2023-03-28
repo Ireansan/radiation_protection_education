@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, forwardRef } from "react";
+import React, { useEffect, useRef } from "react";
 
-import { Canvas, extend, ReactThreeFiber } from "@react-three/fiber";
+import { Canvas, extend } from "@react-three/fiber";
 import {
     OrthographicCamera,
     OrbitControls,
@@ -12,52 +12,67 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 
-import { VolumeGroup, VolumeControls } from "../volumeRender";
+import {
+    VolumeGroup,
+    VolumeAnimationObject,
+    VolumeAnimationControls,
+    VolumeClippingControls,
+    VolumeParameterControls,
+} from "../volumeRender";
 extend({ VolumeGroup });
 
 import * as MODELS from "../models";
-import * as SCENES from "./index";
 
 function XRayRoom() {
     // FIXME:
     const ref = useRef<VolumeGroup>(null!);
+    const refAnimation = useRef<VolumeAnimationObject>(null);
+    const refAnimation1 = useRef<VolumeAnimationObject>(null);
 
     useEffect(() => {
         console.log(ref.current);
+        // console.log(refAnimation);
     }, [ref]);
 
     return (
         <>
             <Canvas camera={{ position: [32, 64, 32] }}>
-                {/* <VolumeControls
-                    normals={[
-                        [0, 0, -1],
-                        [-1, 0, 0],
-                    ]}
-                > */}
+                {/* Volume Objects */}
                 <volumeGroup ref={ref}>
-                    <SCENES.Dose_all_Animation
+                    <volumeAnimationObject
+                        ref={refAnimation}
                         position={[45, 0, 48]}
                         rotation={[0, Math.PI, -Math.PI / 2]}
-                    />
+                    >
+                        <MODELS.Dose_all_Animation />
+                    </volumeAnimationObject>
                 </volumeGroup>
-                {/* </VolumeControls> */}
+
+                {/* Three.js Objects */}
                 <group rotation={[0, 0, Math.PI]} scale={1 / 4}>
                     <MODELS.Dose_material />
                     <MODELS.Dose_region />
                 </group>
 
-                <VolumeControls
+                {/* Contorls */}
+                <VolumeAnimationControls
+                    objects={[refAnimation]}
+                    duration={16}
+                />
+                <VolumeParameterControls object={ref} />
+                <VolumeClippingControls
                     object={ref}
+                    folderName="Dose"
                     normals={[
                         [0, 0, -1],
-                        [-1, 0, 0],
+                        // [-1, 0, 0],
                     ]}
+                    planeSize={100}
+                    subPlaneSize={50}
                 />
-                {/* <VolumeAnimationControls object={ref} /> */}
 
                 <ambientLight intensity={0.5} />
-                <OrthographicCamera />
+
                 <OrbitControls makeDefault />
 
                 <GizmoHelper

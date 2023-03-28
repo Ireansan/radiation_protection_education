@@ -84,14 +84,6 @@ function XRayCurtain() {
                     duration={16}
                 />
                 <VolumeParameterControls object={ref} />
-                {/* <VolumeClippingControls
-                    object={refCurtain}
-                    folderName="Dose"
-                    normals={[
-                        [0, 0, -1],
-                        // [-1, 0, 0],
-                    ]}
-                /> */}
                 <VolumeCompareControls
                     object1={refCurtain}
                     object2={refNocurtain}
@@ -99,6 +91,8 @@ function XRayCurtain() {
                         [0, 0, -1],
                         // [-1, 0, 0],
                     ]}
+                    planeSize={100}
+                    subPlaneSize={50}
                 />
 
                 <ambientLight intensity={0.5} />
