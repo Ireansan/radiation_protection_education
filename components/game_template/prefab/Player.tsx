@@ -32,12 +32,18 @@ export function Player({
     const { set } = useStore(({ set }) => ({
         set,
     }));
+    const {
+        radius,
+        halfHeight,
+        moveSpeed,
+        boost,
+        cameraDistance,
+        cameraRotateSpeed,
+        followCameraDirection,
+    } = playerConfig;
 
-    // const cameraControlsRef = useRef<CameraControls>(null!);
+    // Camera control
     const orbitControlsRef = useRef<OrbitControlsImpl>(null!);
-
-    const { radius, halfHeight, moveSpeed, boost, cameraDistance } =
-        playerConfig;
 
     // Animation
     const { mixer, ref } = AnimationStates();
@@ -45,7 +51,7 @@ export function Player({
     // RigidBody
     const rigidBody = useRef<RigidBodyApi>(null);
     const rapier = useRapier();
-    const { camera } = useThree();
+    const { camera, gl } = useThree();
 
     let controls: Controls;
     let isBoosting = false;
@@ -66,28 +72,40 @@ export function Player({
 
     // Mouse
     const pointerActiveRef = useRef<boolean>(false);
-    const onPointerDown = (event: PointerEvent) => {
-        /**
-         * event.button
-         * 0: Left
-         * 2: Right
-         */
-        if (
-            cameraMode === "FIRST_PERSON" ||
-            (cameraMode === "THIRD_PERSON" && event.button === 2)
-        ) {
-            pointerActiveRef.current = true;
-        }
-    };
-    const onPointerUp = (event: PointerEvent) => {
-        pointerActiveRef.current = false;
-    };
 
     useEffect(() => {
         orbitControlsRef.current.mouseButtons = {
             LEFT: THREE.MOUSE.ROTATE,
             MIDDLE: THREE.MOUSE.DOLLY,
             RIGHT: THREE.MOUSE.ROTATE,
+        };
+    }, []);
+
+    useEffect(() => {
+        orbitControlsRef.current.rotateSpeed = cameraRotateSpeed;
+        console.log("Change cameraRotateSpeed");
+    }, [cameraRotateSpeed]);
+    useEffect(() => {
+        /**
+         * event.button
+         * 0: Left
+         * 2: Right
+         */
+        const onPointerDown = (event: PointerEvent) => {
+            if (
+                cameraMode === "FIRST_PERSON" ||
+                (cameraMode === "THIRD_PERSON" &&
+                    event.button === followCameraDirection)
+            ) {
+                pointerActiveRef.current = true;
+            }
+
+            gl.domElement.style.cursor = "none";
+        };
+        const onPointerUp = (event: PointerEvent) => {
+            pointerActiveRef.current = false;
+
+            gl.domElement.style.cursor = "auto";
         };
 
         window.document.addEventListener("pointerdown", onPointerDown);
@@ -97,11 +115,11 @@ export function Player({
             window.document.removeEventListener("pointerdown", onPointerDown);
             window.document.removeEventListener("pointerup", onPointerUp);
         };
-    }, [cameraMode]);
+    }, [cameraMode, followCameraDirection]);
 
     useFrame((state, delta) => {
         controls = getState().controls;
-        const { forward, backward, left, right, jump } = controls;
+        const { forward, backward, left, right, jump, operation } = controls;
         isBoosting = controls.boost;
 
         if (rigidBody.current) {
@@ -175,6 +193,8 @@ export function Player({
                 );
                 orbitControlsRef.current.update();
             }
+
+            orbitControlsRef.current.enableRotate = !operation;
 
             // movement
             frontVector.set(0, 0, Number(backward) - Number(forward));

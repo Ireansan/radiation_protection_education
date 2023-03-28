@@ -19,6 +19,7 @@ const controls = {
     right: false,
     jump: false,
     grounded: false,
+    operation: false,
 };
 
 const states = {
@@ -51,6 +52,8 @@ export const playerConfig = {
     moveSpeed: 5,
     boost: 2,
     cameraDistance: 5.0,
+    cameraRotateSpeed: 1.0,
+    followCameraDirection: 0,
     bodyMatcap: matcapList[1],
     jointMatcap: matcapList[0],
 };

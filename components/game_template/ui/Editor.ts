@@ -34,6 +34,8 @@ export function Editor() {
         moveSpeed,
         boost,
         cameraDistance,
+        cameraRotateSpeed,
+        // followCameraDirection,
         bodyMatcap,
         jointMatcap,
     } = playerConfig;
@@ -109,6 +111,30 @@ export function Editor() {
                             playerConfig: {
                                 ...get().playerConfig,
                                 cameraDistance: value,
+                            },
+                        }),
+                },
+                cameraRotateSpeed: {
+                    value: cameraRotateSpeed,
+                    min: 0.5,
+                    max: 1.5,
+                    step: 0.01,
+                    onChange: (value) =>
+                        set({
+                            playerConfig: {
+                                ...get().playerConfig,
+                                cameraRotateSpeed: value,
+                            },
+                        }),
+                },
+                followCameraDirection: {
+                    value: "Left",
+                    options: ["Left", "Right"],
+                    onChange: (value) =>
+                        set({
+                            playerConfig: {
+                                ...get().playerConfig,
+                                followCameraDirection: value === "Left" ? 0 : 2,
                             },
                         }),
                 },

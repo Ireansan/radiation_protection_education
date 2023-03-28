@@ -35,6 +35,9 @@ export function Menu({ ...props }: MenuProps): JSX.Element {
                             // href="#"
                             onClick={() => {
                                 console.log("onClick");
+                                set((state) => ({
+                                    menu: false,
+                                }));
                             }}
                         >
                             <Button variant="contained">
@@ -42,15 +45,16 @@ export function Menu({ ...props }: MenuProps): JSX.Element {
                             </Button>
                         </div>
                     </div>
-                    <Setting />
                 </div>
                 <footer>
                     <a href="https://github.com/pmndrs/react-three-fiber">
                         @react-three/fiber
                     </a>
+                    <br />
                     <a href="https://github.com/pmndrs/racing-game">
                         /racing-game
                     </a>
+                    <br />
                     <a href="https://codesandbox.io/s/vkgi6">/minecraft</a>
                 </footer>
             </div>

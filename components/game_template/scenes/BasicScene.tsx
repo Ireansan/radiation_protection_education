@@ -1,6 +1,12 @@
 import { Sky } from "@react-three/drei";
 
-import { Ground, Player, ControlPanel } from "../prefab";
+import {
+    Ground,
+    Player,
+    ControlPanel,
+    BodyMatcapSelect,
+    JointMatcapSelect,
+} from "../prefab";
 import { YBot } from "../models";
 
 export function BasicSceneEnv() {
@@ -11,6 +17,8 @@ export function BasicSceneEnv() {
             <pointLight castShadow intensity={0.8} position={[100, 100, 100]} />
 
             <ControlPanel position={[0, 2, -5]} />
+            <BodyMatcapSelect position={[-5, 1, -5]} scale={0.5} />
+            <JointMatcapSelect position={[-10, 1, -5]} scale={0.5} />
         </>
     );
 }
