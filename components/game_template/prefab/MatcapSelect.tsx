@@ -18,10 +18,11 @@ export function MatcapBox({
 
     const [Matcap] = useMatcapTexture(matcapID, 512);
 
-    useFrame((state) => {
-        ref.current.rotation.x += rotateOffset;
-        ref.current.rotation.y += rotateOffset;
-        ref.current.rotation.z += rotateOffset;
+    useFrame((state, delta) => {
+        ref.current.rotation.x =
+            ref.current.rotation.y =
+            ref.current.rotation.z +=
+                rotateOffset;
     });
 
     return (
@@ -33,10 +34,10 @@ export function MatcapBox({
 }
 
 type matcapSelectProps = {
-    onDoubleClickFunction?: (event: THREE.Event, matcapID: any) => void;
+    onClickFunction?: (event: THREE.Event, matcapID: any) => void;
 };
 export function MatcapSelect({
-    onDoubleClickFunction = (event, matcapID) => {},
+    onClickFunction = (event, matcapID) => {},
     ...props
 }: matcapSelectProps & JSX.IntrinsicElements["group"]) {
     const groupRef = useRef<THREE.Group>(null!);
@@ -44,7 +45,6 @@ export function MatcapSelect({
     return (
         <group ref={groupRef} {...props}>
             <>
-                {/* {colorList.map((v, i) => ( */}
                 {matcapList.map((v, i) => (
                     <>
                         <MatcapBox
@@ -56,11 +56,10 @@ export function MatcapSelect({
                                     1.5,
                                 0,
                             ]}
-                            onDoubleClick={(event) =>
-                                onDoubleClickFunction(event, v)
-                            }
+                            onClick={(event) => {
+                                onClickFunction(event, v);
+                            }}
                         />
-                        ;
                     </>
                 ))}
             </>
@@ -71,7 +70,7 @@ export function MatcapSelect({
 export function BodyMatcapSelect({ ...props }: JSX.IntrinsicElements["group"]) {
     const [get, set] = useStore((state) => [state.get, state.set]);
 
-    const onDoubleClick = (event: THREE.Event, matcapID: any) => {
+    const onClick = (event: THREE.Event, matcapID: any) => {
         set({
             playerConfig: {
                 ...get().playerConfig,
@@ -80,7 +79,7 @@ export function BodyMatcapSelect({ ...props }: JSX.IntrinsicElements["group"]) {
         });
     };
 
-    return <MatcapSelect onDoubleClickFunction={onDoubleClick} {...props} />;
+    return <MatcapSelect onClickFunction={onClick} {...props} />;
 }
 
 export function JointMatcapSelect({
@@ -88,7 +87,7 @@ export function JointMatcapSelect({
 }: JSX.IntrinsicElements["group"]) {
     const [get, set] = useStore((state) => [state.get, state.set]);
 
-    const onDoubleClick = (event: THREE.Event, matcapID: any) => {
+    const onClick = (event: THREE.Event, matcapID: any) => {
         set({
             playerConfig: {
                 ...get().playerConfig,
@@ -97,5 +96,5 @@ export function JointMatcapSelect({
         });
     };
 
-    return <MatcapSelect onDoubleClickFunction={onDoubleClick} {...props} />;
+    return <MatcapSelect onClickFunction={onClick} {...props} />;
 }

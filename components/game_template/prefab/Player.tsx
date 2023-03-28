@@ -74,12 +74,20 @@ export function Player({
     const pointerActiveRef = useRef<boolean>(false);
 
     useEffect(() => {
-        orbitControlsRef.current.mouseButtons = {
-            LEFT: THREE.MOUSE.ROTATE,
-            MIDDLE: THREE.MOUSE.DOLLY,
-            RIGHT: THREE.MOUSE.ROTATE,
-        };
-    }, []);
+        if (!editor) {
+            orbitControlsRef.current.mouseButtons = {
+                LEFT: THREE.MOUSE.ROTATE,
+                MIDDLE: THREE.MOUSE.DOLLY,
+                RIGHT: THREE.MOUSE.ROTATE,
+            };
+        } else {
+            orbitControlsRef.current.mouseButtons = {
+                LEFT: THREE.MOUSE.ROTATE,
+                MIDDLE: THREE.MOUSE.DOLLY,
+                RIGHT: THREE.MOUSE.PAN,
+            };
+        }
+    }, [editor]);
 
     useEffect(() => {
         orbitControlsRef.current.rotateSpeed = cameraRotateSpeed;
