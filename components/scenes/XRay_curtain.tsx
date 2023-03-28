@@ -100,7 +100,7 @@ function XRayCurtain() {
                 />
 
                 <ambientLight intensity={0.5} />
-                <OrthographicCamera />
+
                 <OrbitControls makeDefault />
 
                 <GizmoHelper
