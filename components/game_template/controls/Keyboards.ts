@@ -96,29 +96,12 @@ export function Keyboard() {
                 set((state) => ({ controls: { ...state.controls, boost } })),
         },
         { keys: ["r", "R"], fn: reset, up: false },
-        /*
         {
             keys: ["."],
-            fn: () => {
-                console.log("press .");
-                set((state) => {
-                    if (!state.editor) {
-                        // editor == false -> Unlock
-                        console.log("editor == false -> Unlock");
-                        window.document.exitPointerLock();
-                    } else {
-                        // editor == true -> Lock
-                        console.log("editor == true -> Lock", gl);
-                        // FIXME:
-                        gl.domElement.requestPointerLock();
-                    }
-
-                    return { editor: !state.editor, play: !state.play };
-                });
-            },
+            fn: () =>
+                set((state) => ({ editor: !state.editor, play: !state.play })),
             up: false,
         },
-        */
         {
             keys: ["i", "I"],
             fn: () =>
@@ -151,6 +134,14 @@ export function Keyboard() {
                     camera: cameras[
                         (cameras.indexOf(state.camera) + 1) % cameras.length
                     ],
+                })),
+            up: false,
+        },
+        {
+            keys: ["Escape"],
+            fn: () =>
+                set((state) => ({
+                    menu: !state.editor ? !state.menu : false,
                 })),
             up: false,
         },

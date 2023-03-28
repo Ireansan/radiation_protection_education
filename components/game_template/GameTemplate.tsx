@@ -3,13 +3,9 @@
  */
 import { ReactNode } from "react";
 import { Canvas } from "@react-three/fiber";
-import {
-    Sky,
-    OrbitControls,
-    PointerLockControls,
-    Stats,
-} from "@react-three/drei";
+import { Sky, OrbitControls, Stats } from "@react-three/drei";
 import { Physics, Debug } from "@react-three/rapier";
+import { Leva } from "leva";
 
 import { Keyboard } from "./controls";
 import { Ground, Player, ControlPanel } from "./prefab";
@@ -36,48 +32,34 @@ export function GameTemplate({
     // const ToggledPointerLockControls = useToggle(PointerLockControls, "play");
     const ToggledStats = useToggle(Stats, "stats");
 
-    const [set] = useStore((state) => [state.set]);
+    const [menu, set] = useStore((state) => [state.menu, state.set]);
     const editor = useStore((state) => state.editor);
 
     return (
         <>
             <div className={styles.root}>
-                <Canvas shadows camera={{ fov: 45 }} id={"mainCanvas"}>
-                    {childrenEnv}
+                <div
+                    className={`${styles.fullscreen}
+                    ${menu && `${styles.clicked}`}`}
+                >
+                    <Canvas shadows camera={{ fov: 45 }} id={"mainCanvas"}>
+                        {childrenEnv}
 
-                    <Physics gravity={[0, -30, 0]}>
-                        <ToggledDebug />
-                        {childrenPhysics}
-                    </Physics>
-                    <ControlPanel position={[0, 2, -5]} />
+                        <Physics gravity={[0, -30, 0]}>
+                            <ToggledDebug />
+                            {childrenPhysics}
+                        </Physics>
+                        <ControlPanel position={[0, 2, -5]} />
 
-                    <ToggledOrbitControls />
-                    {/* <ToggledPointerLockControls */}
-                    <PointerLockControls
-                        selector={"#instructions"}
-                        // FIXME: flag bug
-                        onLock={() => {
-                            console.log("onLock");
+                        <Keyboard />
+                    </Canvas>
+                    <Help />
+                    <Leva />
+                </div>
 
-                            set((state) => ({
-                                menu: false,
-                            }));
-                        }}
-                        onUnlock={() => {
-                            console.log("onUnlock");
-
-                            set((state) => ({
-                                menu: !state.editor ? !state.menu : false,
-                            }));
-                        }}
-                    />
-                    <Keyboard />
-                </Canvas>
-
-                <Help />
-                <ToggledEditor />
-                <ToggledStats />
                 <Menu />
+                <ToggledStats />
+                <ToggledEditor />
             </div>
         </>
     );
