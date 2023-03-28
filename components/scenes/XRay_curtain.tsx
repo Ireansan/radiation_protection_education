@@ -7,8 +7,6 @@ import {
     Stats,
     GizmoHelper,
     GizmoViewport,
-    Box,
-    Sphere,
 } from "@react-three/drei";
 import * as THREE from "three";
 
@@ -54,7 +52,10 @@ function XRayCurtain() {
                         >
                             <MODELS.Dose_curtain_all_Animation />
                         </volumeAnimationObject>
-                        <Sphere position={[-50, 0, 0]} scale={25} />
+
+                        <mesh position={[-50, 0, 0]} scale={25}>
+                            <sphereBufferGeometry />
+                        </mesh>
                     </volumeGroup>
                     {/* Nocurtain */}
                     <volumeGroup
@@ -68,7 +69,10 @@ function XRayCurtain() {
                         >
                             <MODELS.Dose_nocurtain_all_Animation />
                         </volumeAnimationObject>
-                        <Box position={[50, 0, 0]} scale={25} />
+
+                        <mesh position={[50, 0, 0]} scale={25}>
+                            <boxBufferGeometry />
+                        </mesh>
                     </volumeGroup>
                 </volumeGroup>
 
