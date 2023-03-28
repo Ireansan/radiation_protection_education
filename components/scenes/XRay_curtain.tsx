@@ -2,7 +2,6 @@ import React, { useEffect, useRef, forwardRef } from "react";
 
 import { Canvas, extend, ReactThreeFiber } from "@react-three/fiber";
 import {
-    OrthographicCamera,
     OrbitControls,
     Stats,
     GizmoHelper,

@@ -1,7 +1,6 @@
 import React from "react";
 import { Canvas } from "@react-three/fiber";
 import {
-    OrthographicCamera,
     OrbitControls,
     Stats,
     GizmoHelper,
@@ -25,7 +24,7 @@ export function Scene({
 
                 {/* Camera, Control and Some Helper */}
                 <ambientLight intensity={0.5} />
-                <OrthographicCamera />
+
                 <OrbitControls makeDefault />
 
                 <GizmoHelper

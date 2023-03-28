@@ -2,13 +2,10 @@ import React, { useEffect, useRef } from "react";
 
 import { Canvas, extend } from "@react-three/fiber";
 import {
-    OrthographicCamera,
     OrbitControls,
     Stats,
     GizmoHelper,
     GizmoViewport,
-    Box,
-    Sphere,
 } from "@react-three/drei";
 import * as THREE from "three";
 

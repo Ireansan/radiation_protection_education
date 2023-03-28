@@ -8,7 +8,6 @@ import React, { useState, useEffect, useRef } from "react";
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
-    OrthographicCamera,
     OrbitControls,
     Stats,
     GizmoHelper,
