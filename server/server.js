@@ -6,14 +6,12 @@
  */
 
 var os = require('os');
-var nodeStatic = require('node-static');
+var express = require('express');
 var http = require('http');
 const { Server } = require("socket.io");
 
-var fileServer = new (nodeStatic.Server)();
-var server = http.createServer(function (req, res) {
-    fileServer.serve(req, res);
-}).listen(8080);
+var app = express();
+var server = http.createServer(app).listen(8080);
 
 const io = new Server(server);
 
