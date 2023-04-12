@@ -27,6 +27,7 @@
         "react-dom": "18.2.0",
         "skyway-js": "^4.4.5",
         "socket.io": "^4.6.1",
+        "socket.io-client": "^4.6.1",
         "three": "^0.142.0",
         "three-stdlib": "^2.13.1",
         "valtio": "^1.6.1",
