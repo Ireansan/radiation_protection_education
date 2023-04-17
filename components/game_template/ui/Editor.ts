@@ -138,28 +138,6 @@ export function Editor() {
                             },
                         }),
                 },
-                bodyMatcap: {
-                    value: bodyMatcap,
-                    options: matcapList,
-                    onChange: (value) =>
-                    set({
-                        playerConfig: {
-                            ...get().playerConfig,
-                            bodyMatcap: value,
-                        },
-                    }),
-                },
-                jointMatcap: {
-                    value: jointMatcap,
-                    options: matcapList,
-                    onChange: (value) =>
-                        set({
-                            playerConfig: {
-                                ...get().playerConfig,
-                                jointMatcap: value,
-                            },
-                        }),
-                },
             },
             { collapsed: true }
         ),
