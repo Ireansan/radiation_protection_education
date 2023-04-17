@@ -64,8 +64,20 @@ export function AnimationStates() {
         const { forward, backward, left, right } = rest;
         const moveArray = [forward, backward, left, right];
 
+        // [x, z]
+        let tmp = [
+            Number(right) - Number(left),
+            Number(forward) - Number(backward),
+        ];
+        let tmpRad = Math.atan2(tmp[1], tmp[0]);
+        console.log(Math.cos(tmpRad), Math.sin(tmpRad));
+
+        const isGround = !jump && grounded;
+        const isMoving = forward || backward || left || right || !isGround;
+
         return {
-            isGround: !jump && grounded,
+            isGround: isGround,
+            isMoving: isMoving,
             moveSum: moveArray.reduce((acc: number, val: boolean): number => {
                 return acc + Number(val);
             }, 0),
@@ -78,7 +90,7 @@ export function AnimationStates() {
         return moveSum ? Number(isGround && state) / moveSum : 0;
     };
 
-    const glbPath = `/models/glb/animations`
+    const glbPath = `/models/glb/animations`;
 
     return useAnimationStates([
         {
