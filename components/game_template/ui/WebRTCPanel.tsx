@@ -16,7 +16,8 @@ import {
     onSnapshot,
 } from "firebase/firestore"; // runs firebase side effects
 
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, IconButton } from "@mui/material";
+import { ContentCopy } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 
 import { firestore } from "../utils";
@@ -84,7 +85,7 @@ export function WebRTCPanel({ ...props }): JSX.Element {
 
     //
     const [currentRoom, setCurrentRoom] = useState<string>("");
-    const [isInRoom, setIsInRoom] = useState<boolean>(false);
+    const [currentState, setCurrentState] = useState<string>("");
 
     const [disabledCameraBtn, setDisabledCameraBtn] = useState<boolean>(false);
     const [disabledCreateBtn, setDisabledCreateBtn] = useState<boolean>(true);
@@ -408,6 +409,7 @@ export function WebRTCPanel({ ...props }): JSX.Element {
     return (
         <>
             <div className={`${styles.stack}`}>
+                {/* --------------- Open Media --------------- */}
                 <div style={{ textAlign: "center" }}>
                     <CustomButton
                         variant="contained"
@@ -424,7 +426,7 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                         Open camera & microphone
                     </CustomButton>
                 </div>
-                {/* Create Room */}
+                {/* --------------- Create Room --------------- */}
                 <div style={{ textAlign: "center" }}>
                     <CustomButton
                         variant="contained"
@@ -432,9 +434,8 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                         onClick={(event) => {
                             createRoom();
 
-                            setCurrentRoom(
-                                `Current room is ${roomIdRef.current} - You are the caller!`
-                            );
+                            setCurrentState("caller");
+                            setCurrentRoom(roomIdRef.current);
 
                             setDisabledCreateBtn(true);
                             setDisabledJoinBtn(true);
@@ -443,7 +444,7 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                         Create room
                     </CustomButton>
                 </div>
-                {/* Join Room */}
+                {/* --------------- Join Room --------------- */}
                 <div style={{ textAlign: "center" }}>
                     <CustomTextField
                         disabled={disabledJoinBtn}
@@ -460,13 +461,10 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                         variant="contained"
                         disabled={disabledJoinBtn}
                         onClick={async (event) => {
-                            setCurrentRoom(
-                                `Current room is ${inputRef.current.value} - You are the callee!`
-                            );
+                            setCurrentState("callee");
+                            setCurrentRoom(inputRef.current.value);
 
                             await joinRoomById(inputRef.current.value);
-
-                            setIsInRoom(true);
 
                             setDisabledCreateBtn(true);
                             setDisabledJoinBtn(true);
@@ -475,7 +473,7 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                         Join room
                     </CustomButton>
                 </div>
-                {/* Hungup */}
+                {/* --------------- Hungup --------------- */}
                 <div style={{ textAlign: "center" }}>
                     <CustomButton
                         variant="contained"
@@ -484,6 +482,7 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                             hangUp();
 
                             setCurrentRoom("");
+                            setCurrentState("");
 
                             setDisabledCameraBtn(false);
                             setDisabledCreateBtn(true);
@@ -494,7 +493,27 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                         Hangup
                     </CustomButton>
                 </div>
-                <p>{currentRoom}</p>
+                {/* --------------- Current State --------------- */}
+                {currentRoom !== "" ? (
+                    <>
+                        <p>Current room is</p>
+                        <p>
+                            {currentRoom}
+                            <IconButton
+                                color="primary"
+                                size="small"
+                                onClick={async () => {
+                                    await global.navigator.clipboard.writeText(
+                                        currentRoom
+                                    );
+                                }}
+                            >
+                                <ContentCopy fontSize="small" />
+                            </IconButton>
+                        </p>
+                        <p> - You are the {currentState}!</p>
+                    </>
+                ) : null}
             </div>
         </>
     );
