@@ -16,6 +16,9 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
+# Install the Firebase Command Line Interface
+RUN npm -g install firebase-tools
+
 COPY . .
 
 CMD npm run dev
