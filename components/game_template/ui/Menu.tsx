@@ -2,14 +2,17 @@
  * @link https://codesandbox.io/s/lo6kp?file=/src/ui/Intro.tsx
  */
 
-import { useEffect, useState } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import type { TextFieldProps } from "@mui/material";
 
 import { useStore } from "../store";
 import { Keys } from "./Help";
+import { WebRTCPanel } from "./WebRTCPanel";
 import { Setting } from "./Setting";
 
 import styles from "../../../styles/css/game_template.module.css";
@@ -26,25 +29,24 @@ export function Menu({ ...props }: MenuProps): JSX.Element {
                     ${styles.ready}
                     ${!menu && `${styles.clicked}`}`}
             >
-                <div className={`${styles.stack}`}>
-                    <div className="intro-keys">
+                <div className={`${styles.stacks}`}>
+                    <div className={`${styles.stack}`}>
                         <Keys style={{ paddingBottom: 20 }} />
-                        <div
-                            id="instructions"
-                            // className={`${styles["continue-link"]}`}
-                            // href="#"
-                            onClick={() => {
-                                console.log("onClick");
-                                set((state) => ({
-                                    menu: false,
-                                }));
-                            }}
-                        >
-                            <Button variant="contained">
+                        <div style={{ textAlign: "center" }}>
+                            <Button
+                                variant="contained"
+                                onClick={() => {
+                                    console.log("onClick");
+                                    set((state) => ({
+                                        menu: false,
+                                    }));
+                                }}
+                            >
                                 Click to continue
                             </Button>
                         </div>
                     </div>
+                    <WebRTCPanel />
                 </div>
                 <footer>
                     <a href="https://github.com/pmndrs/react-three-fiber">

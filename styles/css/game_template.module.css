@@ -22,11 +22,17 @@
   align-items: center;
   transition: all 1s;
   z-index: 9999;
+  flex-wrap: wrap;
+}
+
+.stacks {
+  display: flex;
 }
 
 .stack {
-  width: 100%;
-  display: flex;
+  margin: 1rem;
+  padding: 1.5rem;
+  flex-direction: column;
   justify-content: space-around;
   align-items: center;
   color: #606060;
