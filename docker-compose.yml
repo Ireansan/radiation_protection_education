@@ -18,6 +18,24 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+    env_file:
+      - .env
     ports:
       - 3000:3000
-      - 5000:5000
+    tty: true
+  firebase:
+    container_name: firebase
+    build:
+      context: .
+      dockerfile: ./firebase/firebase.Dockerfile
+    working_dir: /usr/src
+    volumes:
+      - ./firebase:/usr/src
+    ports:
+      - 9099:9099 # auth
+      - 5001:5001 # functions
+      - 8080:8080 # firestore
+      - 9000:9000 # database
+      - 5000:5000 # hosting
+      - 4000:4000 # ui
+    tty: true
