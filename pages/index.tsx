@@ -29,7 +29,7 @@ const Home: NextPage = () => {
                         React Three Fiber
                     </a>
                 </p>
-                <p>process.env.NODE_ENV {process.env.NODE_ENV}</p>
+                {/* <p>process.env.NODE_ENV {process.env.NODE_ENV}</p> */}
 
                 <h2>Content</h2>
                 <div className={styles.grid}>
