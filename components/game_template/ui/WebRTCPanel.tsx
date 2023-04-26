@@ -170,6 +170,7 @@ export function WebRTCPanel({ ...props }): JSX.Element {
             "Create PeerConnection with configuration: ",
             configuration
         );
+        console.log("roomRef: ", roomRef);
         peerConnectionRef.current = new RTCPeerConnection(configuration);
         registerPeerConnectionListeners();
 
@@ -200,7 +201,7 @@ export function WebRTCPanel({ ...props }): JSX.Element {
             addDoc(callerCandidatesCollection, event.candidate.toJSON());
         });
 
-        // Creating a room below
+        // Creating a room
         const offer = await peerConnectionRef.current.createOffer();
         await peerConnectionRef.current.setLocalDescription(offer);
         console.log("Created offer:", offer);
@@ -212,14 +213,9 @@ export function WebRTCPanel({ ...props }): JSX.Element {
             },
         };
         await setDoc(roomRef, roomWithOffer);
+        console.log("Set Document:", roomWithOffer);
         roomIdRef.current = roomRef.id;
         console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
-        /*
-        // FIXME:
-        document.querySelector(
-            "#currentRoom"
-        ).innerText = `Current room is ${roomRef.id} - You are the caller!`;
-        */
 
         peerConnectionRef.current.addEventListener("track", (event) => {
             console.log("Got remote track:", event.streams[0]);
@@ -277,11 +273,8 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                 "Create PeerConnection with configuration: ",
                 configuration
             );
-            // FIXME:
-            /*
-            setPeerConnection(new RTCPeerConnection(configuration));
+            peerConnectionRef.current = new RTCPeerConnection(configuration);
             registerPeerConnectionListeners();
-            */
             localStreamRef.current.getTracks().forEach((track) => {
                 peerConnectionRef.current.addTrack(
                     track,

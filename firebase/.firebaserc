@@ -1,0 +1,7 @@
+{
+    "projects": {
+        "default": "multiplay-webrtc-develop"
+    },
+    "targets": {},
+    "etags": {}
+}
