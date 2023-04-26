@@ -42,11 +42,12 @@ yarn-error.log*
 /components/game_template/assets/blend
 /components/volumeRender/textures/python/colormap/__pycache__/*
 
-*.log
-
-# Not use data
+# not use data
 public/models/pcd
 public/models/rar
+
+# log data
+*.log
 
 # Skecths
 /shell
