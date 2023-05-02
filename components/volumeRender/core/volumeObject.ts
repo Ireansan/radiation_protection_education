@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { Volume } from "three-stdlib";
 
-import volumeRenderShader from "../shaders/volumeShader";
+import volumeShader from "../shaders/volumeShader";
 import { cmtextures } from "../textures";
 import { VolumeGroup } from "./volumeGroup";
 
@@ -21,6 +21,9 @@ import { VolumeGroup } from "./volumeGroup";
  */
 class VolumeObject extends THREE.Object3D {
     volume: Volume;
+    width: number;
+    height: number;
+    depth: number;
 
     _clim1: number;
     _clim2: number;
@@ -54,6 +57,10 @@ class VolumeObject extends THREE.Object3D {
         super();
 
         this.volume = volume;
+        this.width = this.volume.xLength;
+        this.height = this.volume.yLength;
+        this.depth = this.volume.zLength;
+
         this._clim1 = clim1;
         this._clim2 = clim2;
         this._colormap = colormap;
@@ -74,9 +81,9 @@ class VolumeObject extends THREE.Object3D {
         const texture = new THREE.Data3DTexture(
             // @ts-ignore
             this.volume.data,
-            this.volume.xLength,
-            this.volume.yLength,
-            this.volume.zLength
+            this.width,
+            this.height,
+            this.depth
         );
         texture.format = THREE.RedFormat;
         texture.type = THREE.FloatType;
@@ -85,12 +92,12 @@ class VolumeObject extends THREE.Object3D {
         texture.needsUpdate = true;
 
         // Material
-        const uniforms = THREE.UniformsUtils.clone(volumeRenderShader.uniforms);
+        const uniforms = THREE.UniformsUtils.clone(volumeShader.uniforms);
         uniforms.u_data.value = texture;
         uniforms.u_size.value.set(
-            this.volume.xLength,
-            this.volume.yLength,
-            this.volume.zLength
+            this.width,
+            this.height,
+            this.depth
         );
         uniforms.u_clim.value.set(this.clim1, this.clim2);
         uniforms.u_renderstyle.value = this.renderstyle == "mip" ? 0 : 1; // 0: MIP, 1: ISO
@@ -101,8 +108,8 @@ class VolumeObject extends THREE.Object3D {
 
         this.material = new THREE.ShaderMaterial({
             uniforms: uniforms,
-            vertexShader: volumeRenderShader.vertexShader,
-            fragmentShader: volumeRenderShader.fragmentShader,
+            vertexShader: volumeShader.vertexShader,
+            fragmentShader: volumeShader.fragmentShader,
             side: THREE.BackSide, // The volume shader uses the backface as its "reference point"
             clipping: clipping,
             clippingPlanes: clippingPlanes,
@@ -110,14 +117,14 @@ class VolumeObject extends THREE.Object3D {
 
         // Geometry
         this.geometry = new THREE.BoxGeometry(
-            this.volume.xLength,
-            this.volume.yLength,
-            this.volume.zLength
+            this.width,
+            this.height,
+            this.depth
         );
         this.geometry.translate(
-            this.volume.xLength / 2 - 0.5,
-            this.volume.yLength / 2 - 0.5,
-            this.volume.zLength / 2 - 0.5
+            this.width / 2 - 0.5,
+            this.height / 2 - 0.5,
+            this.depth / 2 - 0.5
         );
     }
 
@@ -300,7 +307,7 @@ class VolumeObject extends THREE.Object3D {
             localPosition.x < 0 ||
             this.volume.xLength <= localPosition.x ||
             localPosition.y < 0 ||
-            this.volume.yLength <= localPosition.y ||
+            this.height <= localPosition.y ||
             localPosition.z < 0 ||
             this.volume.zLength <= localPosition.z
         ) {
