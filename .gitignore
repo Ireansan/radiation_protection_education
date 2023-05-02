@@ -55,3 +55,4 @@ public/models/rar
 docs/**/*.mp4
 docs/reference
 docs/NOTE.md
+docs/Notes/*
