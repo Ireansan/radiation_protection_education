@@ -2,7 +2,7 @@
 
 # dependencies
 /node_modules
-*/node_modules
+**/node_modules
 /.pnp
 .pnp.js
 
@@ -48,6 +48,9 @@ public/models/rar
 
 # log data
 *.log
+
+# Firebase
+firebase/functions/lib
 
 # Skecths
 /shell
