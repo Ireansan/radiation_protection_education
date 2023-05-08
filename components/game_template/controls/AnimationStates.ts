@@ -70,7 +70,7 @@ export function AnimationStates() {
             Number(forward) - Number(backward),
         ];
         let tmpRad = Math.atan2(tmp[1], tmp[0]);
-        console.log(Math.cos(tmpRad), Math.sin(tmpRad));
+        // console.log(Math.cos(tmpRad), Math.sin(tmpRad));
 
         const isGround = !jump && grounded;
         const isMoving = forward || backward || left || right || !isGround;
