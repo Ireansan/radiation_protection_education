@@ -58,6 +58,8 @@ export function Menu({ ...props }: MenuProps): JSX.Element {
                     </a>
                     <br />
                     <a href="https://codesandbox.io/s/vkgi6">minecraft</a>
+                    <br />
+                    <a href="https://www.mixamo.com/#/">Mixamo</a>
                 </footer>
             </div>
         </>
