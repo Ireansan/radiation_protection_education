@@ -216,6 +216,8 @@ export function WebRTCPanel({ ...props }): JSX.Element {
         console.log("Set Document:", roomWithOffer);
         roomIdRef.current = roomRef.id;
         console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
+        setCurrentState("caller");
+        setCurrentRoom(roomIdRef.current);
 
         peerConnectionRef.current.addEventListener("track", (event) => {
             console.log("Got remote track:", event.streams[0]);
@@ -263,6 +265,9 @@ export function WebRTCPanel({ ...props }): JSX.Element {
      *
      */
     async function joinRoomById(roomId: string) {
+        setCurrentState("callee");
+        setCurrentRoom(inputRef.current.value);
+
         console.log(`roomid: ${roomId}`);
         const roomRef = doc(collection(db, "rooms"), `${roomId}`);
         const roomSnapshot = await getDoc(roomRef);
@@ -396,6 +401,9 @@ export function WebRTCPanel({ ...props }): JSX.Element {
             await deleteDoc(roomRef);
         }
 
+        setCurrentRoom("");
+        setCurrentState("");
+
         // document.location.reload();
     }
 
@@ -427,9 +435,6 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                         onClick={(event) => {
                             createRoom();
 
-                            setCurrentState("caller");
-                            setCurrentRoom(roomIdRef.current);
-
                             setDisabledCreateBtn(true);
                             setDisabledJoinBtn(true);
                         }}
@@ -454,9 +459,6 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                         variant="contained"
                         disabled={disabledJoinBtn}
                         onClick={async (event) => {
-                            setCurrentState("callee");
-                            setCurrentRoom(inputRef.current.value);
-
                             await joinRoomById(inputRef.current.value);
 
                             setDisabledCreateBtn(true);
@@ -473,9 +475,6 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                         disabled={disabledHangupBtn}
                         onClick={(event) => {
                             hangUp();
-
-                            setCurrentRoom("");
-                            setCurrentState("");
 
                             setDisabledCameraBtn(false);
                             setDisabledCreateBtn(true);
