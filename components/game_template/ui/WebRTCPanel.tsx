@@ -1,4 +1,4 @@
-import React, { useState, FormEvent, ChangeEvent, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 /**
  * @link https://webrtc.org/getting-started/firebase-rtc-codelab?hl=ja
  * @link https://github.com/webrtc/FirebaseRTC/tree/solution
@@ -83,6 +83,9 @@ export function WebRTCPanel({ ...props }): JSX.Element {
     const remoteStreamRef = React.useRef<MediaStream>(null!);
     const roomIdRef = React.useRef<string>(null!);
 
+    const localVideoRef = React.useRef<HTMLVideoElement>(null!);
+    const remoteVideoRef = React.useRef<HTMLVideoElement>(null!);
+
     //
     const [currentRoom, setCurrentRoom] = useState<string>("");
     const [currentState, setCurrentState] = useState<string>("");
@@ -94,21 +97,11 @@ export function WebRTCPanel({ ...props }): JSX.Element {
 
     const inputRef = useRef<HTMLInputElement>(null!);
 
-    /*
-    //initialize firebase apps if there are no initialized apps
-    const firebaseApp = !getApps().length
-        ? initializeApp(firebaseConfig)
-        : getApp();
-
-    //since we will be interracting with firestore, we
-    //grab a refference to the firestore database object and export it from this file
-    const db = getFirestore(firebaseApp);
-    */
     const db = firestore;
 
-    /**
-     *
-     */
+    /*************************
+     * registerPeerConnectionListeners
+     *************************/
     function registerPeerConnectionListeners() {
         peerConnectionRef.current.addEventListener(
             "icegatheringstatechange",
@@ -144,6 +137,9 @@ export function WebRTCPanel({ ...props }): JSX.Element {
         );
     }
 
+    /*************************
+     * registerDataChannelListeners
+     *************************/
     function registerDataChannelListeners() {
         dataChannelRef.current.addEventListener("error", (error) => {
             console.log(`Data Channel Error: ${error}`);
@@ -159,9 +155,9 @@ export function WebRTCPanel({ ...props }): JSX.Element {
         });
     }
 
-    /**
-     *
-     */
+    /*************************
+     * createRoom
+     *************************/
     async function createRoom() {
         const roomRef = await doc(collection(db, "rooms"));
 
@@ -182,6 +178,7 @@ export function WebRTCPanel({ ...props }): JSX.Element {
         console.log("Created send data channel: ", dataChannelRef.current);
         registerDataChannelListeners();
 
+        // Stream Data
         localStreamRef.current.getTracks().forEach((track) => {
             peerConnectionRef.current.addTrack(track, localStreamRef.current);
         });
@@ -261,9 +258,9 @@ export function WebRTCPanel({ ...props }): JSX.Element {
         });
     }
 
-    /**
-     *
-     */
+    /*************************
+     * joinRoomById
+     *************************/
     async function joinRoomById(roomId: string) {
         setCurrentState("callee");
         setCurrentRoom(inputRef.current.value);
@@ -274,12 +271,29 @@ export function WebRTCPanel({ ...props }): JSX.Element {
         console.log("Got room:", roomSnapshot.exists());
 
         if (roomSnapshot.exists()) {
+            // Peer Connection
             console.log(
                 "Create PeerConnection with configuration: ",
                 configuration
             );
             peerConnectionRef.current = new RTCPeerConnection(configuration);
             registerPeerConnectionListeners();
+
+            // Data Channel
+            peerConnectionRef.current.addEventListener(
+                "datachannel",
+                (event) => {
+                    console.log("Data Chaneel Event", event.channel);
+                    dataChannelRef.current = event.channel;
+                    console.log(
+                        "Created send data channel: ",
+                        dataChannelRef.current
+                    );
+                    registerDataChannelListeners();
+                }
+            );
+
+            // Stream Data
             localStreamRef.current.getTracks().forEach((track) => {
                 peerConnectionRef.current.addTrack(
                     track,
@@ -351,7 +365,9 @@ export function WebRTCPanel({ ...props }): JSX.Element {
         }
     }
 
-    /** */
+    /*************************
+     * openUserMedia
+     *************************/
     async function openUserMedia() {
         const stream = await navigator.mediaDevices.getUserMedia({
             video: true,
@@ -364,9 +380,14 @@ export function WebRTCPanel({ ...props }): JSX.Element {
         /*
         console.log("Stream:", document.querySelector("#localVideo").srcObject);
         */
+
+        localVideoRef.current.srcObject = localStreamRef.current;
+        remoteVideoRef.current.srcObject = remoteStreamRef.current;
     }
 
-    /** */
+    /*************************
+     * hangUp
+     *************************/
     async function hangUp() {
         const tracks = localStreamRef.current.getTracks();
         tracks.forEach((track) => {
@@ -407,6 +428,8 @@ export function WebRTCPanel({ ...props }): JSX.Element {
         // document.location.reload();
     }
 
+    useEffect(() => {}, []);
+
     return (
         <>
             <div className={`${styles.stack}`}>
@@ -434,6 +457,19 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                         disabled={disabledCreateBtn}
                         onClick={(event) => {
                             createRoom();
+                            setInterval(function () {
+                                // FIXME: Test
+                                if (
+                                    dataChannelRef.current &&
+                                    dataChannelRef.current.readyState === "open"
+                                ) {
+                                    console.log(
+                                        "Caller Send",
+                                        dataChannelRef.current
+                                    );
+                                    dataChannelRef.current.send("Caller");
+                                }
+                            }, 1000);
 
                             setDisabledCreateBtn(true);
                             setDisabledJoinBtn(true);
@@ -460,6 +496,19 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                         disabled={disabledJoinBtn}
                         onClick={async (event) => {
                             await joinRoomById(inputRef.current.value);
+                            setInterval(function () {
+                                // FIXME: Test
+                                if (
+                                    dataChannelRef.current &&
+                                    dataChannelRef.current.readyState === "open"
+                                ) {
+                                    console.log(
+                                        "Callee Send",
+                                        dataChannelRef.current
+                                    );
+                                    dataChannelRef.current.send("Callee");
+                                }
+                            }, 1000);
 
                             setDisabledCreateBtn(true);
                             setDisabledJoinBtn(true);
@@ -506,6 +555,23 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                         <p> - You are the {currentState}!</p>
                     </>
                 ) : null}
+                {/* --------------- Local Video --------------- */}
+                <video
+                    id="localVideo"
+                    ref={localVideoRef}
+                    muted
+                    autoPlay
+                    playsInline
+                    style={{ width: "100%" }}
+                ></video>
+                {/* --------------- Remote Video --------------- */}
+                <video
+                    id="remoteVideo"
+                    ref={remoteVideoRef}
+                    autoPlay
+                    playsInline
+                    style={{ width: "100%" }}
+                ></video>
             </div>
         </>
     );
