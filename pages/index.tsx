@@ -50,6 +50,17 @@ const Home: NextPage = () => {
                     <div className={styles.card}>
                         <Link
                             href={
+                                "/volume_visualization/dose_visualization_multi-object"
+                            }
+                        >
+                            <h2>Dose Visualization Multi-Object&rarr;</h2>
+                            <p>Next.js + react-three/fiber, Texture 3D</p>
+                        </Link>
+                    </div>
+
+                    <div className={styles.card}>
+                        <Link
+                            href={
                                 "/volume_visualization/dose_visualization_curtain"
                             }
                         >
