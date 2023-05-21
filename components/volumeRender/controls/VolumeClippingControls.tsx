@@ -10,12 +10,7 @@ import {
     VolumeControls as VolumeControlsImpl,
 } from "../core";
 extend({ VolumeObject, VolumeGroup });
-import type { VolumeControlsTypes } from "./types";
-
-export type Target = {
-    object: THREE.Object3D | undefined;
-    id: number;
-};
+import type { Target, VolumeControlsTypes } from "./types";
 
 /**
  * Plane Helper Mesh
