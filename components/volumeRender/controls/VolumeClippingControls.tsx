@@ -76,11 +76,13 @@ type controlsProps = {
 // PivotControls
 type pivotControlsProps = {
     matrix: THREE.Matrix4;
+    flip: Boolean;
 } & controlsProps;
 function ClippingPlanesPivotControls({
     target,
     planes,
     matrix,
+    flip,
 }: pivotControlsProps) {
     const pivotRef = React.useRef<THREE.Group>(null!);
 
@@ -102,7 +104,9 @@ function ClippingPlanesPivotControls({
             position.copy(target.object.position);
 
             target.object.getWorldDirection(direction);
-            direction.normalize().multiplyScalar(-1);
+            if (flip) {
+                direction.normalize().multiplyScalar(-1);
+            }
 
             planes[target.id].normal.copy(direction);
             planes[target.id].constant = -position.dot(direction);
@@ -158,6 +162,7 @@ export const VolumeClippingControls = React.forwardRef<
 
     // Plane
     const [clipping, setClipping] = React.useState<boolean>(false);
+    const [flip, setFlip] = React.useState<boolean>(true);
     const [target, setTarget] = React.useState<Target>({
         object: undefined,
         id: 0,
@@ -180,6 +185,12 @@ export const VolumeClippingControls = React.forwardRef<
                 onChange: (e) => {
                     controls.clipping = e;
                     setClipping(e);
+                },
+            },
+            flip: {
+                value: true,
+                onChange: (e) => {
+                    setFlip(e);
                 },
             },
         }),
@@ -221,6 +232,13 @@ export const VolumeClippingControls = React.forwardRef<
         clipping ? (controls.clippingPlanes = Planes) : null;
     }, [controls, clipping, Planes]);
 
+    React.useEffect(() => {
+        Planes.forEach((plane, index) => {
+            plane.normal.multiplyScalar(-1);
+            plane.constant *= -1;
+        });
+    }, [clipping, flip, Planes]);
+
     return controls ? (
         <>
             <primitive ref={ref} object={controls} />
@@ -230,6 +248,7 @@ export const VolumeClippingControls = React.forwardRef<
                 target={target}
                 planes={Planes}
                 matrix={matrix}
+                flip={flip}
             />
             {/* Clipping Plane */}
             {Planes.map((plane, index) => (
