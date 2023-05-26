@@ -14,6 +14,7 @@ export class VolumeControls extends THREE.Object3D {
     _isothreshold: number;
     _clipping: boolean;
     _clippingPlanes: THREE.Plane[];
+    _clipIntersection: boolean;
 
     isVolumeControls: boolean;
 
@@ -30,6 +31,7 @@ export class VolumeControls extends THREE.Object3D {
         this._isothreshold = 0.1;
         this._clipping = false;
         this._clippingPlanes = [];
+        this._clipIntersection = false;
 
         this.isVolumeControls = true;
     }
@@ -115,6 +117,18 @@ export class VolumeControls extends THREE.Object3D {
         (this.object instanceof VolumeObject ||
             this.object instanceof VolumeGroup)
             ? (this.object.clippingPlanes = this._clipping ? planes : [])
+            : null;
+    }
+
+    get clipIntersection() {
+        return this._clipIntersection;
+    }
+    set clipIntersection(clipIntersection: boolean) {
+        this._clipIntersection = clipIntersection;
+        this.object &&
+        (this.object instanceof VolumeObject ||
+            this.object instanceof VolumeGroup)
+            ? (this.object.clipIntersection = clipIntersection)
             : null;
     }
 

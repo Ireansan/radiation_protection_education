@@ -162,6 +162,8 @@ export const VolumeClippingControls = React.forwardRef<
 
     // Plane
     const [clipping, setClipping] = React.useState<boolean>(false);
+    const [clipIntersection, setClipIntersection] =
+        React.useState<boolean>(false);
     const [flip, setFlip] = React.useState<boolean>(true);
     const [target, setTarget] = React.useState<Target>({
         object: undefined,
@@ -185,6 +187,13 @@ export const VolumeClippingControls = React.forwardRef<
                 onChange: (e) => {
                     controls.clipping = e;
                     setClipping(e);
+                },
+            },
+            intersection: {
+                value: false,
+                onChange: (e) => {
+                    controls.clipIntersection = e;
+                    setClipIntersection(e);
                 },
             },
             flip: {
@@ -230,7 +239,8 @@ export const VolumeClippingControls = React.forwardRef<
     React.useEffect(() => {
         controls.clipping = clipping;
         clipping ? (controls.clippingPlanes = Planes) : null;
-    }, [controls, clipping, Planes]);
+        controls.clipIntersection = clipIntersection;
+    }, [controls, clipping, Planes, clipIntersection]);
 
     React.useEffect(() => {
         Planes.forEach((plane, index) => {

@@ -23,6 +23,7 @@ class VolumeGroup extends THREE.Group {
     _isothreshold: number;
     _clipping: boolean;
     _clippingPlanes: THREE.Plane[];
+    _clipIntersection: boolean;
 
     volumeParamAutoUpdate: boolean;
     volumeClippingAutoUpdate: boolean;
@@ -40,6 +41,7 @@ class VolumeGroup extends THREE.Group {
         this._isothreshold = 0.1;
         this._clipping = false;
         this._clippingPlanes = [];
+        this._clipIntersection = false;
 
         this.volumeParamAutoUpdate = true;
         this.volumeClippingAutoUpdate = true;
@@ -101,6 +103,13 @@ class VolumeGroup extends THREE.Group {
     }
     set clippingPlanes(planes: THREE.Plane[]) {
         this._clippingPlanes = planes;
+        this.updateVolumeClipping(false, true);
+    }
+    get clipIntersection() {
+        return this._clipIntersection;
+    }
+    set clipIntersection(clipIntersection: boolean) {
+        this._clipIntersection = clipIntersection;
         this.updateVolumeClipping(false, true);
     }
 
@@ -178,6 +187,7 @@ class VolumeGroup extends THREE.Group {
             ) {
                 this._clipping = parent._clipping;
                 this._clippingPlanes = parent._clippingPlanes;
+                this._clipIntersection = parent._clipIntersection;
             }
         }
 
@@ -199,6 +209,7 @@ class VolumeGroup extends THREE.Group {
                     child.material.clippingPlanes = this._clipping
                         ? this._clippingPlanes
                         : null;
+                    child.material.clipIntersection = this._clipIntersection;
                 }
             }
         }

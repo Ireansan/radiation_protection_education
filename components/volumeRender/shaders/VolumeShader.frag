@@ -106,7 +106,9 @@ bool within_boundaries(vec3 position){
         clipped=clipped||(dot(position,plane.xyz)>plane.w);
     }
     #pragma unroll_loop_end
+    
     #if UNION_CLIPPING_PLANES<NUM_CLIPPING_PLANES
+    clipped=true;
     #pragma unroll_loop_start
     for(int i=UNION_CLIPPING_PLANES;i<NUM_CLIPPING_PLANES;i++){
         plane=clippingPlanes[i];
@@ -144,7 +146,6 @@ void cast_mip(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
         // Sample from the 3D texture
         float val=sample1(loc);
         
-        // FIXME:
         vec3 uv_position=u_size*loc;
         vec3 vClipPosition=clip_position(uv_position);
         bool clipped=within_boundaries(vClipPosition);
@@ -193,7 +194,6 @@ void cast_iso(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
         // Sample from the 3D texture
         float val=sample1(loc);
         
-        // FIXME:
         vec3 uv_position=u_size*loc;
         vec3 vClipPosition=clip_position(uv_position);
         bool clipped=within_boundaries(vClipPosition);

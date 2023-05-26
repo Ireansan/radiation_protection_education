@@ -32,6 +32,7 @@ class VolumeObject extends THREE.Object3D {
     _isothreshold: number;
     _clipping: boolean;
     _clippingPlanes: THREE.Plane[];
+    _clipIntersection: boolean;
 
     volumeParamAutoUpdate: boolean;
     volumeClippingAutoUpdate: boolean;
@@ -51,7 +52,8 @@ class VolumeObject extends THREE.Object3D {
         renderstyle = "mip",
         isothreshold = 0.1,
         clipping = false,
-        clippingPlanes = []
+        clippingPlanes = [],
+        clipIntersection = false
     ) {
         // Init
         super();
@@ -68,6 +70,7 @@ class VolumeObject extends THREE.Object3D {
         this._isothreshold = isothreshold;
         this._clipping = clipping;
         this._clippingPlanes = clippingPlanes;
+        this._clipIntersection = clipIntersection;
 
         this.volumeParamAutoUpdate = true;
         this.volumeClippingAutoUpdate = true;
@@ -94,11 +97,7 @@ class VolumeObject extends THREE.Object3D {
         // Material
         const uniforms = THREE.UniformsUtils.clone(volumeShader.uniforms);
         uniforms.u_data.value = texture;
-        uniforms.u_size.value.set(
-            this.width,
-            this.height,
-            this.depth
-        );
+        uniforms.u_size.value.set(this.width, this.height, this.depth);
         uniforms.u_clim.value.set(this.clim1, this.clim2);
         uniforms.u_renderstyle.value = this.renderstyle == "mip" ? 0 : 1; // 0: MIP, 1: ISO
         uniforms.u_renderthreshold.value = this.isothreshold; // For ISO renderstyle
@@ -113,6 +112,7 @@ class VolumeObject extends THREE.Object3D {
             side: THREE.BackSide, // The volume shader uses the backface as its "reference point"
             clipping: clipping,
             clippingPlanes: clippingPlanes,
+            clipIntersection: clipIntersection,
         });
 
         // Geometry
@@ -187,6 +187,14 @@ class VolumeObject extends THREE.Object3D {
     set clippingPlanes(planes: THREE.Plane[]) {
         this._clippingPlanes = planes;
         this.material.clippingPlanes = this.material.clipping ? planes : [];
+        this.updateVolumeClipping(false, true);
+    }
+    get clipIntersection() {
+        return this._clipIntersection;
+    }
+    set clipIntersection(clipIntersection: boolean) {
+        this._clipIntersection = clipIntersection;
+        this.material.clipIntersection = clipIntersection;
         this.updateVolumeClipping(false, true);
     }
 
@@ -270,11 +278,13 @@ class VolumeObject extends THREE.Object3D {
                 this._clippingPlanes = parent._clipping
                     ? parent._clippingPlanes
                     : [];
+                this._clipIntersection = parent._clipIntersection;
 
                 this.material.clipping = parent._clipping;
                 this.material.clippingPlanes = this.material.clipping
                     ? parent._clippingPlanes
                     : null;
+                this.material.clipIntersection = parent._clipIntersection;
             }
         }
 
