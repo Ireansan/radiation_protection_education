@@ -1,20 +1,13 @@
 import * as THREE from "three";
-import { VolumeObject, VolumeGroup } from "../core";
+import { VolumeBase } from "./volumeBase";
 
 /**
  * @link https://github.com/mrdoob/three.js/blob/master/examples/jsm/controls/TransformControls.js
  */
-export class VolumeControls extends THREE.Object3D {
-    object: VolumeObject | VolumeGroup | undefined;
+class VolumeControls extends VolumeBase {
+    object: VolumeBase | undefined;
 
-    _clim1: number;
-    _clim2: number;
-    _colormap: string;
-    _renderstyle: string;
-    _isothreshold: number;
-    _clipping: boolean;
-    _clippingPlanes: THREE.Plane[];
-    _clipIntersection: boolean;
+    regionId: number | undefined;
 
     isVolumeControls: boolean;
 
@@ -24,116 +17,76 @@ export class VolumeControls extends THREE.Object3D {
         this.object = undefined;
         this.visible = false;
 
-        this._clim1 = 0;
-        this._clim2 = 1;
-        this._colormap = "viridis";
-        this._renderstyle = "mip";
-        this._isothreshold = 0.1;
-        this._clipping = false;
-        this._clippingPlanes = [];
-        this._clipIntersection = false;
-
         this.isVolumeControls = true;
     }
 
-    get clim1() {
-        return this._clim1;
-    }
     set clim1(clim1: number) {
         this._clim1 = clim1;
-        this.object &&
-        (this.object instanceof VolumeObject ||
-            this.object instanceof VolumeGroup)
-            ? (this.object.clim1 = clim1)
-            : null;
-    }
-
-    get clim2() {
-        return this._clim2;
+        this.updateVolumeParam();
     }
     set clim2(clim2: number) {
         this._clim2 = clim2;
-        this.object &&
-        (this.object instanceof VolumeObject ||
-            this.object instanceof VolumeGroup)
-            ? (this.object.clim2 = clim2)
-            : null;
+        this.updateVolumeParam();
     }
 
-    get colormap() {
-        return this._colormap;
-    }
     set colormap(colormap: string) {
         this._colormap = colormap;
-        this.object &&
-        (this.object instanceof VolumeObject ||
-            this.object instanceof VolumeGroup)
-            ? (this.object.colormap = colormap)
-            : null;
+        this.updateVolumeParam();
     }
 
-    get renderstyle() {
-        return this._renderstyle;
-    }
     set renderstyle(renderstyle: string) {
         this._renderstyle = renderstyle;
-        this.object &&
-        (this.object instanceof VolumeObject ||
-            this.object instanceof VolumeGroup)
-            ? (this.object.renderstyle = renderstyle)
-            : null;
+        this.updateVolumeParam();
     }
 
-    get isothreshold() {
-        return this._isothreshold;
-    }
     set isothreshold(isothreshold: number) {
         this._isothreshold = isothreshold;
-        this.object &&
-        (this.object instanceof VolumeObject ||
-            this.object instanceof VolumeGroup)
-            ? (this.object.isothreshold = isothreshold)
-            : null;
+        this.updateVolumeParam();
     }
 
-    get clipping() {
-        return this._clipping;
-    }
     set clipping(clipping: boolean) {
         this._clipping = clipping;
-        this.object &&
-        (this.object instanceof VolumeObject ||
-            this.object instanceof VolumeGroup)
-            ? (this.object.clipping = clipping)
-            : null;
-    }
-
-    get clippingPlanes() {
-        return this._clippingPlanes;
+        this.updateVolumeClipping();
     }
     set clippingPlanes(planes: THREE.Plane[]) {
         this._clippingPlanes = planes;
-        this.object &&
-        (this.object instanceof VolumeObject ||
-            this.object instanceof VolumeGroup)
-            ? (this.object.clippingPlanes = this._clipping ? planes : [])
-            : null;
-    }
-
-    get clipIntersection() {
-        return this._clipIntersection;
+        this.updateVolumeClipping();
     }
     set clipIntersection(clipIntersection: boolean) {
         this._clipIntersection = clipIntersection;
-        this.object &&
-        (this.object instanceof VolumeObject ||
-            this.object instanceof VolumeGroup)
-            ? (this.object.clipIntersection = clipIntersection)
-            : null;
+        this.updateVolumeClipping();
+    }
+
+    updateVolumeParam() {
+        // update attached object
+        if (this.object && this.object instanceof VolumeBase) {
+            this.object.clim1 = this._clim1;
+            this.object.clim2 = this._clim2;
+            this.object.colormap = this._colormap;
+            this.object.renderstyle = this._renderstyle;
+            this.object.isothreshold = this._isothreshold;
+        }
+    }
+
+    updateVolumeClipping() {
+        // update attached object
+        if (this.object && this.object instanceof VolumeBase) {
+            if (this.regionId === undefined) {
+                this.regionId = this.object.clippingPlanesObjects.length;
+                this.object.push(this._clippingPlanes, this._clipping, this._clipIntersection);
+            } else {
+                this.object.setClippingPlanesObjects(
+                    this.regionId,
+                    this._clipping,
+                    this._clippingPlanes,
+                    this._clipIntersection
+                );
+            }
+        }
     }
 
     // Set current object
-    attach(object: VolumeObject | VolumeGroup) {
+    attach(object: VolumeBase) {
         this.object = object;
         this.visible = true;
 
@@ -148,3 +101,5 @@ export class VolumeControls extends THREE.Object3D {
         return this;
     }
 }
+
+export { VolumeControls };

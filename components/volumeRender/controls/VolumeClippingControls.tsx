@@ -5,6 +5,7 @@ import { useCursor, PivotControls } from "@react-three/drei";
 import { useControls, folder, Leva } from "leva";
 
 import {
+    VolumeBase,
     VolumeObject,
     VolumeGroup,
     VolumeControls as VolumeControlsImpl,
@@ -69,15 +70,12 @@ export function PlaneHelperMesh({
 /**
  * Controls
  */
-type controlsProps = {
+type pivotControlsProps = {
     target: Target;
     planes: THREE.Plane[];
-};
-// PivotControls
-type pivotControlsProps = {
     matrix: THREE.Matrix4;
     flip: Boolean;
-} & controlsProps;
+};
 function ClippingPlanesPivotControls({
     target,
     planes,
@@ -165,6 +163,7 @@ export const VolumeClippingControls = React.forwardRef<
     const [clipIntersection, setClipIntersection] =
         React.useState<boolean>(false);
     const [flip, setFlip] = React.useState<boolean>(true);
+    const [visible, setVisible] = React.useState<boolean>(true);
     const [target, setTarget] = React.useState<Target>({
         object: undefined,
         id: 0,
@@ -202,6 +201,12 @@ export const VolumeClippingControls = React.forwardRef<
                     setFlip(e);
                 },
             },
+            visible: {
+                value: true,
+                onChange: (e) => {
+                    setVisible(e);
+                },
+            },
         }),
     }));
 
@@ -217,15 +222,9 @@ export const VolumeClippingControls = React.forwardRef<
     // Attach volume to controls
     React.useLayoutEffect(() => {
         if (object) {
-            if (
-                object instanceof VolumeObject ||
-                object instanceof VolumeGroup
-            ) {
+            if (object instanceof VolumeBase) {
                 controls.attach(object);
-            } else if (
-                object.current instanceof VolumeObject ||
-                object.current instanceof VolumeGroup
-            ) {
+            } else if (object.current instanceof VolumeBase) {
                 controls.attach(object.current);
             }
         } else if (group.current instanceof VolumeGroup) {
@@ -235,12 +234,16 @@ export const VolumeClippingControls = React.forwardRef<
         return () => void controls.detach();
     }, [object, controls]);
 
-    // Clipping
+    // Push Planes
+    React.useEffect(() => {
+        controls.clippingPlanes = Planes;
+    }, [controls, Planes]);
+
+    // Clipping, Intersection
     React.useEffect(() => {
         controls.clipping = clipping;
-        clipping ? (controls.clippingPlanes = Planes) : null;
         controls.clipIntersection = clipIntersection;
-    }, [controls, clipping, Planes, clipIntersection]);
+    }, [controls, clipping, clipIntersection]);
 
     React.useEffect(() => {
         Planes.forEach((plane, index) => {
@@ -266,14 +269,14 @@ export const VolumeClippingControls = React.forwardRef<
                     <planeHelper
                         plane={plane}
                         size={planeSize}
-                        visible={clipping}
+                        visible={clipping ? visible : false}
                     />
                     <PlaneHelperMesh
                         id={index}
                         normal={plane.normal}
                         subPlaneSize={subPlaneSize}
                         subPlaneColor={subPlaneColor}
-                        visible={clipping}
+                        visible={clipping ? visible : false}
                         onClick={onClickPlane}
                         setMatrix={setMatrix}
                     />

@@ -28,6 +28,10 @@ const float shininess=40.;
 // https://github.com/mrdoob/three.js/blob/dev/src/renderers/shaders/ShaderChunk/clipping_planes_pars_fragment.glsl.js
 #if NUM_CLIPPING_PLANES>0
 uniform vec4 clippingPlanes[NUM_CLIPPING_PLANES];
+uniform bool u_clippedInitValue[NUM_CLIPPING_PLANES];
+uniform int u_clippingPlanesRegion[NUM_CLIPPING_PLANES];
+uniform bool u_clippingPlanesEnabled[NUM_CLIPPING_PLANES];
+bool regionResults[NUM_CLIPPING_PLANES];
 #endif
 
 void cast_mip(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray);
@@ -99,23 +103,56 @@ bool within_boundaries(vec3 position){
     
     #if NUM_CLIPPING_PLANES>0
     vec4 plane;
+    int regionIndex;
+    bool enabled;
+    bool initValue;
     
+    // clipIntersection == false
     #pragma unroll_loop_start
     for(int i=0;i<UNION_CLIPPING_PLANES;i++){
         plane=clippingPlanes[i];
-        clipped=clipped||(dot(position,plane.xyz)>plane.w);
+        regionIndex=u_clippingPlanesRegion[i];
+        enabled=u_clippingPlanesEnabled[i];
+        
+        clipped=clipped||((dot(position,plane.xyz)>plane.w)&&enabled);
+        regionResults[regionIndex]=clipped;
     }
     #pragma unroll_loop_end
     
+    // clipIntersection == true
     #if UNION_CLIPPING_PLANES<NUM_CLIPPING_PLANES
-    clipped=true;
+    #pragma unroll_loop_start
+    for(int i=UNION_CLIPPING_PLANES;i<NUM_CLIPPING_PLANES;i++){
+        regionIndex=u_clippingPlanesRegion[i];
+        initValue=u_clippedInitValue[regionIndex];
+        
+        regionResults[regionIndex]=initValue;
+    }
+    #pragma unroll_loop_end
+    
+    // combine results
     #pragma unroll_loop_start
     for(int i=UNION_CLIPPING_PLANES;i<NUM_CLIPPING_PLANES;i++){
         plane=clippingPlanes[i];
-        clipped=(dot(position,plane.xyz)>plane.w)&&clipped;
+        regionIndex=u_clippingPlanesRegion[i];
+        enabled=u_clippingPlanesEnabled[i];
+        
+        clipped=regionResults[regionIndex];
+        clipped=((dot(position,plane.xyz)>plane.w)&&enabled)&&clipped;
+        regionResults[regionIndex]=clipped;
     }
     #pragma unroll_loop_end
     #endif
+    
+    bool regionResult;
+    clipped=regionResults[0];
+    
+    #pragma unroll_loop_start
+    for(int i=1;i<NUM_CLIPPING_PLANES;i++){
+        regionResult=regionResults[i];
+        clipped=(regionResult)||clipped;
+    }
+    #pragma unroll_loop_end
     #endif
     
     return clipped;

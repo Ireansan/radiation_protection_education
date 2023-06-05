@@ -3,13 +3,14 @@ import { Volume } from "three-stdlib";
 
 import volumeShader from "../shaders/volumeShader";
 import { cmtextures } from "../textures";
+import { VolumeBase } from "./volumeBase";
 import { VolumeGroup } from "./volumeGroup";
 
 /**
  * @link https://github.com/mrdoob/three.js/blob/master/examples/webgl2_materials_texture3d.html
  * @link https://github.com/mrdoob/three.js/blob/master/src/objects/Mesh.js
  *
- * @abstract Core
+ * @abstract Volume Object
  * @param volume any
  * @param clim1 number, Default 0
  * @param clim2 number, Default 1
@@ -19,26 +20,11 @@ import { VolumeGroup } from "./volumeGroup";
  * @param clipping boolean, Default false
  * @param planes THREE.Plane
  */
-class VolumeObject extends THREE.Object3D {
+class VolumeObject extends VolumeBase {
     volume: Volume;
     width: number;
     height: number;
     depth: number;
-
-    _clim1: number;
-    _clim2: number;
-    _colormap: string;
-    _renderstyle: string;
-    _isothreshold: number;
-    _clipping: boolean;
-    _clippingPlanes: THREE.Plane[];
-    _clipIntersection: boolean;
-
-    volumeParamAutoUpdate: boolean;
-    volumeClippingAutoUpdate: boolean;
-
-    volumeParamWorldAutoUpdate: boolean;
-    volumeClippingWorldAutoUpdate: boolean;
 
     isMesh: boolean;
     geometry: THREE.BufferGeometry;
@@ -68,15 +54,14 @@ class VolumeObject extends THREE.Object3D {
         this._colormap = colormap;
         this._renderstyle = renderstyle;
         this._isothreshold = isothreshold;
+
         this._clipping = clipping;
         this._clippingPlanes = clippingPlanes;
         this._clipIntersection = clipIntersection;
 
-        this.volumeParamAutoUpdate = true;
-        this.volumeClippingAutoUpdate = true;
-
-        this.volumeParamWorldAutoUpdate = true;
-        this.volumeClippingWorldAutoUpdate = true;
+        this._clippedInitValue = [];
+        this._clippingPlanesRegion = [];
+        this._clippingPlanesEnabled = [];
 
         this.isMesh = true;
 
@@ -105,6 +90,10 @@ class VolumeObject extends THREE.Object3D {
         this.updateMatrixWorld();
         uniforms.u_modelMatrix.value = this.matrixWorld;
 
+        uniforms.u_clippedInitValue.value = this._clippedInitValue;
+        uniforms.u_clippingPlanesRegion.value = this._clippingPlanesRegion;
+        uniforms.u_clippingPlanesEnabled.value = this._clippingPlanesEnabled;
+
         this.material = new THREE.ShaderMaterial({
             uniforms: uniforms,
             vertexShader: volumeShader.vertexShader,
@@ -128,102 +117,65 @@ class VolumeObject extends THREE.Object3D {
         );
     }
 
-    get clim1() {
-        return this._clim1;
-    }
     set clim1(clim1: number) {
         this._clim1 = clim1;
-        this.material.uniforms.u_clim.value.set(clim1, this.clim2);
         this.updateVolumeParam(false, true);
-    }
-    get clim2() {
-        return this._clim2;
     }
     set clim2(clim2: number) {
         this._clim2 = clim2;
-        this.material.uniforms.u_clim.value.set(this.clim1, clim2);
         this.updateVolumeParam(false, true);
     }
 
-    get colormap() {
-        return this._colormap;
-    }
     set colormap(colormap: string) {
         this._colormap = colormap;
-        this.material.uniforms.u_cmdata.value = cmtextures[colormap];
         this.updateVolumeParam(false, true);
     }
 
-    get renderstyle() {
-        return this._renderstyle;
-    }
     set renderstyle(renderstyle: string) {
         this._renderstyle = renderstyle;
-        this.material.uniforms.u_renderstyle.value =
-            renderstyle === "mip" ? 0 : 1;
         this.updateVolumeParam(false, true);
     }
 
-    get isothreshold() {
-        return this._isothreshold;
-    }
     set isothreshold(isothreshold: number) {
         this._isothreshold = isothreshold;
-        this.material.uniforms.u_renderthreshold.value = isothreshold;
         this.updateVolumeParam(false, true);
     }
 
-    get clipping() {
-        return this._clipping;
-    }
     set clipping(clipping: boolean) {
         this._clipping = clipping;
-        this.material.clipping = clipping;
         this.updateVolumeClipping(false, true);
-    }
-    get clippingPlanes() {
-        return this._clippingPlanes;
     }
     set clippingPlanes(planes: THREE.Plane[]) {
         this._clippingPlanes = planes;
-        this.material.clippingPlanes = this.material.clipping ? planes : [];
         this.updateVolumeClipping(false, true);
-    }
-    get clipIntersection() {
-        return this._clipIntersection;
     }
     set clipIntersection(clipIntersection: boolean) {
         this._clipIntersection = clipIntersection;
-        this.material.clipIntersection = clipIntersection;
         this.updateVolumeClipping(false, true);
     }
 
-    // FIXME:
     // https://github.com/mrdoob/three.js/blob/master/src/core/Object3D.js#L601
     updateVolumeParam(updateParents: boolean, updateChildren: boolean) {
-        // update parent
+        // ----------
+        // update this
+        // ----------
+        this.material.uniforms.u_clim.value.set(this._clim1, this._clim2);
+        this.material.uniforms.u_cmdata.value = cmtextures[this._colormap];
+        this.material.uniforms.u_renderstyle.value =
+            this._renderstyle === "mip" ? 0 : 1;
+        this.material.uniforms.u_renderthreshold.value = this._isothreshold;
+
+        // ----------
+        // update parent, children
+        // ----------
+        super.updateVolumeParam(updateParents, updateChildren);
+
+        // ----------
+        // update this by parent
+        // ----------
         const parent = this.parent;
-        if (
-            updateParents === true &&
-            parent !== null &&
-            this.volumeParamWorldAutoUpdate
-        ) {
-            if (parent instanceof VolumeObject) {
-                parent.updateVolumeParam(true, false);
-            }
-        }
-
         if (parent !== null && this.volumeParamAutoUpdate) {
-            if (
-                parent instanceof VolumeObject ||
-                parent instanceof VolumeGroup
-            ) {
-                this._clim1 = parent._clim1;
-                this._clim2 = parent._clim2;
-                this._colormap = parent._colormap;
-                this._renderstyle = parent._renderstyle;
-                this._isothreshold = parent._isothreshold;
-
+            if (parent instanceof VolumeBase) {
                 this.material.uniforms.u_clim.value.set(
                     parent._clim1,
                     parent._clim2
@@ -236,71 +188,59 @@ class VolumeObject extends THREE.Object3D {
                     parent._isothreshold;
             }
         }
-
-        // update children
-        if (updateChildren === true) {
-            const children = this.children;
-
-            for (let i = 0, l = children.length; i < l; i++) {
-                const child = children[i];
-
-                if (
-                    child instanceof VolumeObject &&
-                    child.volumeParamWorldAutoUpdate === true
-                ) {
-                    child.updateVolumeParam(false, true);
-                }
-            }
-        }
     }
 
     updateVolumeClipping(updateParents: boolean, updateChildren: boolean) {
-        // update parent
-        const parent = this.parent;
-        if (
-            updateParents === true &&
-            parent !== null &&
-            this.volumeClippingWorldAutoUpdate
-        ) {
-            if (parent instanceof VolumeObject) {
-                parent.updateVolumeClipping(true, false);
-            }
-        }
+        // ----------
+        // update parent, children
+        // ----------
+        super.updateVolumeClipping(updateParents, updateChildren);
 
+        // ----------
         // update this
-        // FIXME:
-        if (parent !== null && this.volumeClippingAutoUpdate) {
-            if (
-                parent instanceof VolumeObject ||
-                parent instanceof VolumeGroup
-            ) {
-                this._clipping = parent._clipping;
-                this._clippingPlanes = parent._clipping
-                    ? parent._clippingPlanes
-                    : [];
-                this._clipIntersection = parent._clipIntersection;
+        // ----------
+        this.material.clipping = this._clipping;
+        this.material.clippingPlanes = this.material.clipping
+            ? this._clippingPlanes
+            : [];
+        this.material.clipIntersection = this._clipIntersection;
 
+        this.material.uniforms.u_clippedInitValue.value = this.material.clipping
+            ? this._clippedInitValue
+            : null;
+        this.material.uniforms.u_clippingPlanesRegion.value = this.material
+            .clipping
+            ? this._clippingPlanesRegion
+            : null;
+        this.material.uniforms.u_clippingPlanesEnabled.value = this.material
+            .clipping
+            ? this._clippingPlanesEnabled
+            : null;
+
+        // ----------
+        // update this by parent
+        // ----------
+        const parent = this.parent;
+        if (parent !== null && this.volumeClippingAutoUpdate) {
+            if (parent instanceof VolumeBase) {
                 this.material.clipping = parent._clipping;
                 this.material.clippingPlanes = this.material.clipping
                     ? parent._clippingPlanes
                     : null;
                 this.material.clipIntersection = parent._clipIntersection;
-            }
-        }
 
-        // update children
-        if (updateChildren === true) {
-            const children = this.children;
-
-            for (let i = 0, l = children.length; i < l; i++) {
-                const child = children[i];
-
-                if (
-                    child instanceof VolumeObject &&
-                    child.volumeClippingWorldAutoUpdate === true
-                ) {
-                    child.updateVolumeClipping(false, true);
-                }
+                this.material.uniforms.u_clippedInitValue.value = this.material
+                    .clipping
+                    ? parent._clippedInitValue
+                    : null;
+                this.material.uniforms.u_clippingPlanesRegion.value = this
+                    .material.clipping
+                    ? parent._clippingPlanesRegion
+                    : null;
+                this.material.uniforms.u_clippingPlanesEnabled.value = this
+                    .material.clipping
+                    ? parent._clippingPlanesEnabled
+                    : null;
             }
         }
     }
