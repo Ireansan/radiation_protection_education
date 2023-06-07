@@ -74,7 +74,7 @@ function XRayRoomBoardPrototype() {
                     planeSize={100}
                     subPlaneSize={50}
                 /> */}
-                {/* <VolumeClippingControls
+                <VolumeClippingControls
                     object={ref}
                     folderName="Dose 2"
                     normals={[
@@ -86,7 +86,7 @@ function XRayRoomBoardPrototype() {
                     ]}
                     planeSize={100}
                     subPlaneSize={50}
-                /> */}
+                />
                 <VolumeBoardControls
                     object={ref}
                     origin={new THREE.Vector3(0, 0, 0)}

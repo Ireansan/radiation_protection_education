@@ -5,17 +5,20 @@ class ClippingPlanesObject {
     planes: THREE.Plane[];
     enabled: boolean;
     intersection: boolean;
+    invert: boolean;
 
     constructor(
         id: number,
         planes: THREE.Plane[],
         enabled: boolean,
-        intersection: boolean
+        intersection: boolean,
+        invert: boolean
     ) {
         this.id = id;
         this.planes = planes;
         this.enabled = enabled;
         this.intersection = intersection;
+        this.invert = invert;
     }
 }
 
@@ -39,6 +42,7 @@ class VolumeBase extends THREE.Object3D {
     _clippedInitValue: boolean[];
     _clippingPlanesRegion: number[];
     _clippingPlanesEnabled: boolean[];
+    _clippedInvert: boolean[];
 
     clippingPlanesObjects: ClippingPlanesObject[];
 
@@ -64,6 +68,7 @@ class VolumeBase extends THREE.Object3D {
         this._clippedInitValue = [];
         this._clippingPlanesRegion = [];
         this._clippingPlanesEnabled = [];
+        this._clippedInvert = [];
 
         this.clippingPlanesObjects = [];
 
@@ -129,6 +134,7 @@ class VolumeBase extends THREE.Object3D {
         this._clipIntersection = clipIntersection;
         this.updateVolumeClipping(false, true);
     }
+
     get clippedInitValue() {
         return this._clippedInitValue;
     }
@@ -150,27 +156,51 @@ class VolumeBase extends THREE.Object3D {
         this._clippingPlanesEnabled = planesEnabled;
         this.updateVolumeClipping(false, true);
     }
+    get clippedInvert() {
+        return this._clippedInvert;
+    }
+    set clippedInvert(invert: boolean[]) {
+        this._clippedInvert = invert;
+        this.updateVolumeClipping(false, true);
+    }
 
     push(
         planes: THREE.Plane[],
         clipping: boolean = false,
-        intersection: boolean = false
+        intersection: boolean = false,
+        invert: boolean = false
     ) {
         let index = this.clippingPlanesObjects.length;
         this.clippingPlanesObjects.push(
-            new ClippingPlanesObject(index, planes, clipping, intersection)
+            new ClippingPlanesObject(
+                index,
+                planes,
+                clipping,
+                intersection,
+                invert
+            )
         );
         this.updateVolumeClipping(false, true);
     }
     setClippingPlanesObjects(
         id: number,
-        clipping: boolean,
-        planes: THREE.Plane[],
-        intersection: boolean
+        clipping?: boolean,
+        planes?: THREE.Plane[],
+        intersection?: boolean,
+        invert?: boolean
     ) {
-        this.clippingPlanesObjects[id].enabled = clipping;
-        this.clippingPlanesObjects[id].planes = planes;
-        this.clippingPlanesObjects[id].intersection = intersection;
+        clipping !== undefined
+            ? (this.clippingPlanesObjects[id].enabled = clipping)
+            : null;
+        planes !== undefined
+            ? (this.clippingPlanesObjects[id].planes = planes)
+            : null;
+        intersection !== undefined
+            ? (this.clippingPlanesObjects[id].intersection = intersection)
+            : null;
+        invert !== undefined
+            ? (this.clippingPlanesObjects[id].invert = invert)
+            : null;
         this.updateVolumeClipping(false, true);
     }
 
@@ -252,8 +282,11 @@ class VolumeBase extends THREE.Object3D {
                 this._clippingPlanesRegion.concat(regionArray);
         }
 
-        // Init Value
+        // Init Value, Invert
         this._clippedInitValue = new Array(this._clippingPlanes.length).fill(
+            false
+        );
+        this._clippedInvert = new Array(this._clippingPlanes.length).fill(
             false
         );
 
@@ -261,6 +294,8 @@ class VolumeBase extends THREE.Object3D {
             let element = this.clippingPlanesObjects[i];
             this._clippedInitValue[i] =
                 this._clipIntersection && element.enabled;
+            this._clippedInvert[i] = element.invert && element.enabled;
+            console.log(element);
         }
 
         // ----------
@@ -296,6 +331,9 @@ class VolumeBase extends THREE.Object3D {
                     : [];
                 this._clippingPlanesEnabled = parent._clipping
                     ? parent._clippingPlanesEnabled
+                    : [];
+                this._clippedInvert = parent._clipping
+                    ? parent._clippedInvert
                     : [];
             }
         }

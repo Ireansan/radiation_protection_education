@@ -31,6 +31,7 @@ uniform vec4 clippingPlanes[NUM_CLIPPING_PLANES];
 uniform bool u_clippedInitValue[NUM_CLIPPING_PLANES];
 uniform int u_clippingPlanesRegion[NUM_CLIPPING_PLANES];
 uniform bool u_clippingPlanesEnabled[NUM_CLIPPING_PLANES];
+uniform bool u_clippedInvert[NUM_CLIPPING_PLANES];
 bool regionResults[NUM_CLIPPING_PLANES];
 #endif
 
@@ -144,12 +145,17 @@ bool within_boundaries(vec3 position){
     #pragma unroll_loop_end
     #endif
     
+    bool invert;
     bool regionResult;
-    clipped=regionResults[0];
+    
+    clipped=false;
     
     #pragma unroll_loop_start
-    for(int i=1;i<NUM_CLIPPING_PLANES;i++){
+    for(int i=0;i<NUM_CLIPPING_PLANES;i++){
         regionResult=regionResults[i];
+        invert=u_clippedInvert[i];
+        regionResult=regionResult^^invert;
+        
         clipped=(regionResult)||clipped;
     }
     #pragma unroll_loop_end

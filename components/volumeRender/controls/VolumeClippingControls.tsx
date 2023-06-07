@@ -74,13 +74,11 @@ type pivotControlsProps = {
     target: Target;
     planes: THREE.Plane[];
     matrix: THREE.Matrix4;
-    flip: Boolean;
 };
 function ClippingPlanesPivotControls({
     target,
     planes,
     matrix,
-    flip,
 }: pivotControlsProps) {
     const pivotRef = React.useRef<THREE.Group>(null!);
 
@@ -102,9 +100,7 @@ function ClippingPlanesPivotControls({
             position.copy(target.object.position);
 
             target.object.getWorldDirection(direction);
-            if (flip) {
-                direction.normalize().multiplyScalar(-1);
-            }
+            direction.normalize().multiplyScalar(-1);
 
             planes[target.id].normal.copy(direction);
             planes[target.id].constant = -position.dot(direction);
@@ -162,7 +158,8 @@ export const VolumeClippingControls = React.forwardRef<
     const [clipping, setClipping] = React.useState<boolean>(false);
     const [clipIntersection, setClipIntersection] =
         React.useState<boolean>(false);
-    const [flip, setFlip] = React.useState<boolean>(true);
+    const [invert, setInvert] = React.useState<boolean>(false);
+
     const [visible, setVisible] = React.useState<boolean>(true);
     const [target, setTarget] = React.useState<Target>({
         object: undefined,
@@ -184,21 +181,19 @@ export const VolumeClippingControls = React.forwardRef<
             clipping: {
                 value: false,
                 onChange: (e) => {
-                    controls.clipping = e;
                     setClipping(e);
                 },
             },
             intersection: {
                 value: false,
                 onChange: (e) => {
-                    controls.clipIntersection = e;
                     setClipIntersection(e);
                 },
             },
-            flip: {
-                value: true,
+            invert: {
+                value: false,
                 onChange: (e) => {
-                    setFlip(e);
+                    setInvert(e);
                 },
             },
             visible: {
@@ -243,14 +238,8 @@ export const VolumeClippingControls = React.forwardRef<
     React.useEffect(() => {
         controls.clipping = clipping;
         controls.clipIntersection = clipIntersection;
-    }, [controls, clipping, clipIntersection]);
-
-    React.useEffect(() => {
-        Planes.forEach((plane, index) => {
-            plane.normal.multiplyScalar(-1);
-            plane.constant *= -1;
-        });
-    }, [clipping, flip, Planes]);
+        controls.invert = invert;
+    }, [controls, clipping, clipIntersection, invert]);
 
     return controls ? (
         <>
@@ -261,7 +250,6 @@ export const VolumeClippingControls = React.forwardRef<
                 target={target}
                 planes={Planes}
                 matrix={matrix}
-                flip={flip}
             />
             {/* Clipping Plane */}
             {Planes.map((plane, index) => (

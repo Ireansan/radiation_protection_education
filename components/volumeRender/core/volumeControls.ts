@@ -7,6 +7,8 @@ import { VolumeBase } from "./volumeBase";
 class VolumeControls extends VolumeBase {
     object: VolumeBase | undefined;
 
+    _invert: boolean;
+
     regionId: number | undefined;
 
     isVolumeControls: boolean;
@@ -16,6 +18,8 @@ class VolumeControls extends VolumeBase {
 
         this.object = undefined;
         this.visible = false;
+
+        this._invert = false;
 
         this.isVolumeControls = true;
     }
@@ -57,6 +61,14 @@ class VolumeControls extends VolumeBase {
         this.updateVolumeClipping();
     }
 
+    get invert() {
+        return this._invert;
+    }
+    set invert(invert: boolean) {
+        this._invert = invert;
+        this.updateVolumeClipping();
+    }
+
     updateVolumeParam() {
         // update attached object
         if (this.object && this.object instanceof VolumeBase) {
@@ -73,13 +85,19 @@ class VolumeControls extends VolumeBase {
         if (this.object && this.object instanceof VolumeBase) {
             if (this.regionId === undefined) {
                 this.regionId = this.object.clippingPlanesObjects.length;
-                this.object.push(this._clippingPlanes, this._clipping, this._clipIntersection);
+                this.object.push(
+                    this._clippingPlanes,
+                    this._clipping,
+                    this._clipIntersection,
+                    this._invert
+                );
             } else {
                 this.object.setClippingPlanesObjects(
                     this.regionId,
                     this._clipping,
                     this._clippingPlanes,
-                    this._clipIntersection
+                    this._clipIntersection,
+                    this._invert
                 );
             }
         }
