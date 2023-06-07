@@ -16,7 +16,7 @@ import type { Target, VolumeControlsTypes } from "./types";
 /**
  * Plane Helper Mesh
  */
-export type planeHelperMeshProps = {
+type planeHelperMeshProps = {
     id: number;
     normal: THREE.Vector3;
     subPlaneSize: number;
@@ -25,7 +25,7 @@ export type planeHelperMeshProps = {
     onClick: (e: THREE.Event, id: number) => void;
     setMatrix: (matrix: THREE.Matrix4) => void;
 };
-export function PlaneHelperMesh({
+function PlaneHelperMesh({
     id,
     normal,
     subPlaneSize,
