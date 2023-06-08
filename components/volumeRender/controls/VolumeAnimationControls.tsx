@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { extend, useFrame } from "@react-three/fiber";
 import { useControls, folder, button, Leva } from "leva";
 
-import { VolumeAnimationObject } from "../core";
+import { VolumeAnimationObject } from "../../../src";
 extend({ VolumeAnimationObject });
 
 export type VolumeAnimationControlsProps = {

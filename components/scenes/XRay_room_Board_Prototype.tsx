@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-import { Canvas, extend } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import {
     OrbitControls,
     Stats,
@@ -9,15 +9,13 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 
+import { VolumeGroup, VolumeAnimationObject } from "../../src";
 import {
-    VolumeGroup,
-    VolumeAnimationObject,
     VolumeAnimationControls,
     VolumeBoardControls,
     VolumeClippingControls,
     VolumeParameterControls,
 } from "../volumeRender";
-extend({ VolumeGroup });
 
 import * as MODELS from "../models";
 

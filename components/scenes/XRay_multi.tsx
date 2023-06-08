@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, forwardRef } from "react";
 
-import { Canvas, extend, ReactThreeFiber } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import {
     OrbitControls,
     Stats,
@@ -9,14 +9,12 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 
+import { VolumeAnimationObject, VolumeGroup } from "../../src";
 import {
-    VolumeAnimationObject,
-    VolumeGroup,
     VolumeAnimationControls,
     VolumeClippingControls,
     VolumeParameterControls,
 } from "../volumeRender";
-extend({ VolumeGroup });
 
 import { VolumeCompareControls } from "../volumeRender/VolumeCompareControls";
 

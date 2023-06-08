@@ -1,5 +1,5 @@
 import React from "react";
-import { VolumeObject, VolumeGroup } from "../core";
+import { VolumeObject, VolumeGroup } from "../../../src";
 
 export type Target = {
     object: THREE.Object3D | undefined;

@@ -5,14 +5,12 @@ import { VRButton, XR, Interactive, Controllers } from "@react-three/xr";
 import { Stats } from "@react-three/drei";
 import * as THREE from "three";
 
+import { VolumeGroup, VolumeAnimationObject } from "../../src";
 import {
-    VolumeGroup,
-    VolumeAnimationObject,
     VolumeAnimationControls,
     VolumeClippingControls,
     VolumeParameterControls,
 } from "../volumeRender";
-extend({ VolumeGroup });
 
 import * as MODELS from "../models";
 import * as SCENES from "./index";

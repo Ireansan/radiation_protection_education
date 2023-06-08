@@ -16,11 +16,10 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 
+import { VolumeObject, VolumeGroup } from "../../src";
 import {
-    VolumeObject,
     VolumeParameterControls,
     VolumeClippingControls,
-    VolumeGroup,
 } from "../../components/volumeRender";
 import * as Models from "../../components/models";
 

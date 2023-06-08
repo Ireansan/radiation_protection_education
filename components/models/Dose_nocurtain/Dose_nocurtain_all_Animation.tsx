@@ -2,7 +2,7 @@ import React from "react";
 import { extend } from "@react-three/fiber";
 
 import * as DOSE_NOCURTAIN_ALL from "./Dose_nocurtain_all";
-import { VolumeAnimationObject } from "../../volumeRender";
+import { VolumeAnimationObject } from "../../../src";
 extend({ VolumeAnimationObject });
 
 export function Dose_nocurtain_all_Animation({

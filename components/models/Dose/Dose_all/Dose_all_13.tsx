@@ -7,7 +7,7 @@ import {
 } from "@react-three/fiber";
 import { Volume, NRRDLoader } from "three-stdlib";
 
-import { VolumeObject } from "../../../volumeRender"; // FIXME: filepath
+import { VolumeObject } from "../../../../src"; // FIXME: filepath
 extend({ VolumeObject });
 
 import { applyBasePath } from "../../../utils";

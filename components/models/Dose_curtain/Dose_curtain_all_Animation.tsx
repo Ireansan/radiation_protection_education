@@ -2,7 +2,7 @@ import React from "react";
 import { extend } from "@react-three/fiber";
 
 import * as DOSE_CURTAIN_ALL from "./Dose_curtain_all";
-import { VolumeAnimationObject } from "../../volumeRender";
+import { VolumeAnimationObject } from "../../../src";
 extend({ VolumeAnimationObject });
 
 export function Dose_curtain_all_Animation({

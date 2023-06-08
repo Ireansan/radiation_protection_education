@@ -9,7 +9,7 @@ import {
     VolumeObject,
     VolumeGroup,
     VolumeControls as VolumeControlsImpl,
-} from "../core";
+} from "../../../src";
 extend({ VolumeObject, VolumeGroup });
 import type { Target, VolumeControlsTypes } from "./types";
 
