@@ -5,22 +5,18 @@ import { useCursor, PivotControls } from "@react-three/drei";
 import { useControls, folder, Leva } from "leva";
 
 import {
+    VolumeBase,
     VolumeObject,
     VolumeGroup,
     VolumeControls as VolumeControlsImpl,
-} from "../core";
+} from "../../../src";
 extend({ VolumeObject, VolumeGroup });
-import type { VolumeControlsTypes } from "./types";
-
-export type Target = {
-    object: THREE.Object3D | undefined;
-    id: number;
-};
+import type { Target, VolumeControlsTypes } from "./types";
 
 /**
  * Plane Helper Mesh
  */
-export type planeHelperMeshProps = {
+type planeHelperMeshProps = {
     id: number;
     normal: THREE.Vector3;
     subPlaneSize: number;
@@ -29,7 +25,7 @@ export type planeHelperMeshProps = {
     onClick: (e: THREE.Event, id: number) => void;
     setMatrix: (matrix: THREE.Matrix4) => void;
 };
-export function PlaneHelperMesh({
+function PlaneHelperMesh({
     id,
     normal,
     subPlaneSize,
@@ -74,14 +70,11 @@ export function PlaneHelperMesh({
 /**
  * Controls
  */
-type controlsProps = {
+type pivotControlsProps = {
     target: Target;
     planes: THREE.Plane[];
-};
-// PivotControls
-type pivotControlsProps = {
     matrix: THREE.Matrix4;
-} & controlsProps;
+};
 function ClippingPlanesPivotControls({
     target,
     planes,
@@ -163,6 +156,11 @@ export const VolumeClippingControls = React.forwardRef<
 
     // Plane
     const [clipping, setClipping] = React.useState<boolean>(false);
+    const [clipIntersection, setClipIntersection] =
+        React.useState<boolean>(false);
+    const [invert, setInvert] = React.useState<boolean>(false);
+
+    const [visible, setVisible] = React.useState<boolean>(true);
     const [target, setTarget] = React.useState<Target>({
         object: undefined,
         id: 0,
@@ -183,8 +181,25 @@ export const VolumeClippingControls = React.forwardRef<
             clipping: {
                 value: false,
                 onChange: (e) => {
-                    controls.clipping = e;
                     setClipping(e);
+                },
+            },
+            intersection: {
+                value: false,
+                onChange: (e) => {
+                    setClipIntersection(e);
+                },
+            },
+            invert: {
+                value: false,
+                onChange: (e) => {
+                    setInvert(e);
+                },
+            },
+            visible: {
+                value: true,
+                onChange: (e) => {
+                    setVisible(e);
                 },
             },
         }),
@@ -202,15 +217,9 @@ export const VolumeClippingControls = React.forwardRef<
     // Attach volume to controls
     React.useLayoutEffect(() => {
         if (object) {
-            if (
-                object instanceof VolumeObject ||
-                object instanceof VolumeGroup
-            ) {
+            if (object instanceof VolumeBase) {
                 controls.attach(object);
-            } else if (
-                object.current instanceof VolumeObject ||
-                object.current instanceof VolumeGroup
-            ) {
+            } else if (object.current instanceof VolumeBase) {
                 controls.attach(object.current);
             }
         } else if (group.current instanceof VolumeGroup) {
@@ -220,11 +229,17 @@ export const VolumeClippingControls = React.forwardRef<
         return () => void controls.detach();
     }, [object, controls]);
 
-    // Clipping
+    // Push Planes
+    React.useEffect(() => {
+        controls.clippingPlanes = Planes;
+    }, [controls, Planes]);
+
+    // Clipping, Intersection
     React.useEffect(() => {
         controls.clipping = clipping;
-        clipping ? (controls.clippingPlanes = Planes) : null;
-    }, [controls, clipping, Planes]);
+        controls.clipIntersection = clipIntersection;
+        controls.invert = invert;
+    }, [controls, clipping, clipIntersection, invert]);
 
     return controls ? (
         <>
@@ -242,14 +257,14 @@ export const VolumeClippingControls = React.forwardRef<
                     <planeHelper
                         plane={plane}
                         size={planeSize}
-                        visible={clipping}
+                        visible={clipping ? visible : false}
                     />
                     <PlaneHelperMesh
                         id={index}
                         normal={plane.normal}
                         subPlaneSize={subPlaneSize}
                         subPlaneColor={subPlaneColor}
-                        visible={clipping}
+                        visible={clipping ? visible : false}
                         onClick={onClickPlane}
                         setMatrix={setMatrix}
                     />

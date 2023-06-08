@@ -3,7 +3,7 @@ import { extend, useThree, useLoader } from "@react-three/fiber";
 import { NRRDLoader } from "three/examples/jsm/loaders/NRRDLoader";
 // import { NRRDLoader } from "three-stdlib";
 
-import { VolumeObject } from "../core"; // FIXME: filepath
+import { VolumeObject } from "../../../src"; // FIXME: filepath
 extend({ VolumeObject });
 
 import { Volume } from "three-stdlib";

@@ -4,7 +4,7 @@ import { extend, ReactThreeFiber } from "@react-three/fiber";
 import { useAnimations } from "@react-three/drei";
 
 import * as DOSE_ALL from "./Dose_all";
-import { VolumeAnimationObject } from "../../volumeRender";
+import { VolumeAnimationObject } from "../../../src";
 extend({ VolumeAnimationObject });
 
 export function Dose_all_Animation({

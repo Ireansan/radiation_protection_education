@@ -8,18 +8,23 @@ import {
     VolumeObject,
     VolumeGroup,
     VolumeControls as VolumeControlsImpl,
-} from "../core";
+} from "../../../src";
 extend({ VolumeObject, VolumeGroup });
 import type { VolumeControlsTypes } from "./types";
 
-export type VolumeParameterControlsProps = VolumeControlsTypes;
+export type VolumeParameterControlsProps = {
+    folderName?: string;
+} & VolumeControlsTypes;
 /**
  * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
  */
 export const VolumeParameterControls = React.forwardRef<
     VolumeParameterControlsProps,
     VolumeParameterControlsProps
->(function VolumeParameterControls({ children, object, ...props }, ref) {
+>(function VolumeParameterControls(
+    { children, object, folderName = "volume", ...props },
+    ref
+) {
     const controls = React.useMemo(() => new VolumeControlsImpl(), []);
     const group = React.useRef<VolumeGroup>(null);
 
@@ -27,65 +32,67 @@ export const VolumeParameterControls = React.forwardRef<
      * leva panels
      */
     // Volume
-    const [volumeConfig, setVolume] = useControls("volume", () => ({
-        clim1: {
-            value: 0,
-            min: 0,
-            max: 1,
-            onChange: (e) => {
-                controls.clim1 = e;
+    const [volumeConfig, setVolume] = useControls(() => ({
+        [folderName as string]: folder({
+            clim1: {
+                value: 0,
+                min: 0,
+                max: 1,
+                onChange: (e) => {
+                    controls.clim1 = e;
+                },
+                render: () => {
+                    return false;
+                },
             },
-            render: () => {
-                return false;
+            clim2: {
+                value: 1,
+                min: 0,
+                max: 1,
+                onChange: (e) => {
+                    controls.clim2 = e;
+                },
+                render: () => {
+                    return false;
+                },
             },
-        },
-        clim2: {
-            value: 1,
-            min: 0,
-            max: 1,
-            onChange: (e) => {
-                controls.clim2 = e;
+            colormap: {
+                value: "viridis",
+                options: [
+                    "parula",
+                    "heat",
+                    "jet",
+                    "turbo",
+                    "hot",
+                    "gray",
+                    "magma",
+                    "inferno",
+                    "plasma",
+                    "viridis",
+                    "cividis",
+                    "github",
+                    "cubehelix",
+                ],
+                onChange: (e) => {
+                    controls.colormap = e;
+                },
             },
-            render: () => {
-                return false;
+            renderstyle: {
+                options: ["mip", "iso"],
+                onChange: (e) => {
+                    controls.renderstyle = e;
+                    console.log("leva renderstyle", object);
+                },
             },
-        },
-        colormap: {
-            value: "viridis",
-            options: [
-                "parula",
-                "heat",
-                "jet",
-                "turbo",
-                "hot",
-                "gray",
-                "magma",
-                "inferno",
-                "plasma",
-                "viridis",
-                "cividis",
-                "github",
-                "cubehelix",
-            ],
-            onChange: (e) => {
-                controls.colormap = e;
+            isothreshold: {
+                value: 0.15,
+                min: 0,
+                max: 1,
+                onChange: (e) => {
+                    controls.isothreshold = e;
+                },
             },
-        },
-        renderstyle: {
-            options: ["mip", "iso"],
-            onChange: (e) => {
-                controls.renderstyle = e;
-                console.log("leva renderstyle", object);
-            },
-        },
-        isothreshold: {
-            value: 0.15,
-            min: 0,
-            max: 1,
-            onChange: (e) => {
-                controls.isothreshold = e;
-            },
-        },
+        }),
     }));
 
     // Attach volume to controls

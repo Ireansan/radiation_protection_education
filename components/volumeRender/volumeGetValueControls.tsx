@@ -6,7 +6,7 @@ import {
     VolumeObject,
     VolumeGroup,
     VolumeControls as VolumeControlsImpl,
-} from "./core";
+} from "../../src";
 extend({ VolumeObject, VolumeGroup });
 
 type Target = {
