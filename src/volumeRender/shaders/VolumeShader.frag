@@ -4,6 +4,8 @@ precision mediump sampler3D;
 uniform vec3 u_size;
 uniform int u_renderstyle;
 uniform float u_renderthreshold;
+uniform float u_coefficient;
+uniform float u_offset;
 uniform vec2 u_clim;
 
 uniform sampler3D u_data;
@@ -166,7 +168,7 @@ bool within_boundaries(vec3 position){
 
 float sample1(vec3 texcoords){
     /* Sample float value from a 3D texture. Assumes intensity data. */
-    return texture(u_data,texcoords.xyz).r;
+    return(u_coefficient*texture(u_data,texcoords.xyz).r)+u_offset;
 }
 
 vec4 apply_colormap(float val){

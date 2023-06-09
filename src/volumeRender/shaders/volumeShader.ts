@@ -8,7 +8,7 @@
 
 import * as THREE from "three";
 
-const vertexShader = /*glsl*/`
+const vertexShader = /*glsl*/ `
 varying vec4 v_nearpos;
 varying vec4 v_farpos;
 varying vec3 v_position;
@@ -52,6 +52,8 @@ precision mediump sampler3D;
 uniform vec3 u_size;
 uniform int u_renderstyle;
 uniform float u_renderthreshold;
+uniform float u_coefficient;
+uniform float u_offset;
 uniform vec2 u_clim;
 
 uniform sampler3D u_data;
@@ -214,7 +216,7 @@ bool within_boundaries(vec3 position){
 
 float sample1(vec3 texcoords){
     /* Sample float value from a 3D texture. Assumes intensity data. */
-    return texture(u_data,texcoords.xyz).r;
+    return(u_coefficient*texture(u_data,texcoords.xyz).r)+u_offset;
 }
 
 vec4 apply_colormap(float val){
@@ -380,6 +382,8 @@ const volumeRenderShader = {
         u_size: { value: new THREE.Vector3(1, 1, 1) },
         u_renderstyle: { value: 0 },
         u_renderthreshold: { value: 0.5 },
+        u_coefficient: { value: 1.0 },
+        u_offset: { value: 0.0 },
         u_clim: { value: new THREE.Vector2(1, 1) },
         u_clippedInitValue: { value: [] },
         u_clippingPlanesRegion: { value: [] },

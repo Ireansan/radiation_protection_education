@@ -31,6 +31,8 @@ class VolumeObject extends VolumeBase {
 
     constructor(
         volume = new Volume(),
+        coefficient = 1.0,
+        offset = 0.0,
         clim1 = 0,
         clim2 = 1,
         colormap = "viridis",
@@ -47,6 +49,9 @@ class VolumeObject extends VolumeBase {
         this.width = this.volume.xLength;
         this.height = this.volume.yLength;
         this.depth = this.volume.zLength;
+
+        this._coefficient = coefficient;
+        this._offset = offset;
 
         this._clim1 = clim1;
         this._clim2 = clim2;
@@ -78,6 +83,8 @@ class VolumeObject extends VolumeBase {
         const uniforms = THREE.UniformsUtils.clone(volumeShader.uniforms);
         uniforms.u_data.value = texture;
         uniforms.u_size.value.set(this.width, this.height, this.depth);
+        uniforms.u_coefficient.value = this._coefficient;
+        uniforms.u_offset.value = this._offset;
         uniforms.u_clim.value.set(this.clim1, this.clim2);
         uniforms.u_renderstyle.value = this.renderstyle == "mip" ? 0 : 1; // 0: MIP, 1: ISO
         uniforms.u_renderthreshold.value = this.isothreshold; // For ISO renderstyle
@@ -111,6 +118,15 @@ class VolumeObject extends VolumeBase {
             this.height / 2 - 0.5,
             this.depth / 2 - 0.5
         );
+    }
+
+    set coefficient(coefficient: number) {
+        this._coefficient = coefficient;
+        this.material.uniforms.u_coefficient.value = coefficient;
+    }
+    set offset(offset: number) {
+        this._offset = offset;
+        this.material.uniforms.u_offset.value = offset;
     }
 
     set clim1(clim1: number) {

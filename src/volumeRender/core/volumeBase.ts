@@ -29,6 +29,9 @@ class ClippingPlanesObject {
  * @abstract Volume Base
  */
 class VolumeBase extends THREE.Object3D {
+    _coefficient: number; // multiply coefficient and volume.data
+    _offset: number; // add offset and volume.data
+
     _clim1: number;
     _clim2: number;
     _colormap: string;
@@ -55,6 +58,9 @@ class VolumeBase extends THREE.Object3D {
     constructor() {
         super();
 
+        this._coefficient = 1.0;
+        this._offset = 0.0;
+
         this._clim1 = 0;
         this._clim2 = 1;
         this._colormap = "viridis";
@@ -77,6 +83,19 @@ class VolumeBase extends THREE.Object3D {
 
         this.volumeParamWorldAutoUpdate = true;
         this.volumeClippingWorldAutoUpdate = true;
+    }
+
+    get coefficient() {
+        return this._coefficient;
+    }
+    set coefficient(coefficient: number) {
+        this._coefficient = coefficient;
+    }
+    get offset() {
+        return this._offset;
+    }
+    set offset(offset: number) {
+        this._offset = offset;
     }
 
     get clim1() {
