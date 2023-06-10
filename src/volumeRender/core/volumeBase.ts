@@ -32,6 +32,7 @@ class VolumeBase extends THREE.Object3D {
     _coefficient: number; // multiply coefficient and volume.data
     _offset: number; // add offset and volume.data
 
+    _opacity: number;
     _clim1: number;
     _clim2: number;
     _colormap: string;
@@ -61,6 +62,7 @@ class VolumeBase extends THREE.Object3D {
         this._coefficient = 1.0;
         this._offset = 0.0;
 
+        this._opacity = 1.0;
         this._clim1 = 0;
         this._clim2 = 1;
         this._colormap = "viridis";
@@ -98,17 +100,26 @@ class VolumeBase extends THREE.Object3D {
         this._offset = offset;
     }
 
+    get opacity() {
+        return this._opacity;
+    }
+    set opacity(opacity: number) {
+        this._opacity = opacity;
+        this.updateVolumeParam(false, true);
+    }
     get clim1() {
         return this._clim1;
     }
     set clim1(clim1: number) {
         this._clim1 = clim1;
+        this.updateVolumeParam(false, true);
     }
     get clim2() {
         return this._clim2;
     }
     set clim2(clim2: number) {
         this._clim2 = clim2;
+        this.updateVolumeParam(false, true);
     }
 
     get colormap() {
@@ -116,6 +127,7 @@ class VolumeBase extends THREE.Object3D {
     }
     set colormap(colormap: string) {
         this._colormap = colormap;
+        this.updateVolumeParam(false, true);
     }
 
     get renderstyle() {
@@ -123,6 +135,7 @@ class VolumeBase extends THREE.Object3D {
     }
     set renderstyle(renderstyle: string) {
         this._renderstyle = renderstyle;
+        this.updateVolumeParam(false, true);
     }
 
     get isothreshold() {
@@ -130,6 +143,7 @@ class VolumeBase extends THREE.Object3D {
     }
     set isothreshold(isothreshold: number) {
         this._isothreshold = isothreshold;
+        this.updateVolumeParam(false, true);
     }
 
     get clipping() {
@@ -183,7 +197,7 @@ class VolumeBase extends THREE.Object3D {
         this.updateVolumeClipping(false, true);
     }
 
-    push(
+    pushClippingPlanesObjects(
         planes: THREE.Plane[],
         clipping: boolean = false,
         intersection: boolean = false,
@@ -240,6 +254,7 @@ class VolumeBase extends THREE.Object3D {
         // update this by parent
         if (parent !== null && this.volumeParamAutoUpdate) {
             if (parent instanceof VolumeBase) {
+                this._opacity = parent._opacity;
                 this._clim1 = parent._clim1;
                 this._clim2 = parent._clim2;
                 this._colormap = parent._colormap;

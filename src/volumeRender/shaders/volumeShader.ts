@@ -54,6 +54,7 @@ uniform int u_renderstyle;
 uniform float u_renderthreshold;
 uniform float u_coefficient;
 uniform float u_offset;
+uniform float u_opacity;
 uniform vec2 u_clim;
 
 uniform sampler3D u_data;
@@ -264,6 +265,7 @@ void cast_mip(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
     // Resolve final color
     if(updated){
         gl_FragColor=apply_colormap(max_val);
+        gl_FragColor.a=u_opacity;
         return;
     }
 }
@@ -301,6 +303,7 @@ void cast_iso(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
                 clipped=within_boundaries(uv_position);
                 if(val>u_renderthreshold||clipped){
                     gl_FragColor=add_lighting(val,iloc,dstep,view_ray);
+                    gl_FragColor.a=u_opacity;
                     return;
                 }
                 iloc+=istep;
@@ -384,6 +387,7 @@ const volumeRenderShader = {
         u_renderthreshold: { value: 0.5 },
         u_coefficient: { value: 1.0 },
         u_offset: { value: 0.0 },
+        u_opacity: { value: 1.0 },
         u_clim: { value: new THREE.Vector2(1, 1) },
         u_clippedInitValue: { value: [] },
         u_clippingPlanesRegion: { value: [] },

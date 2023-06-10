@@ -33,6 +33,7 @@ class VolumeObject extends VolumeBase {
         volume = new Volume(),
         coefficient = 1.0,
         offset = 0.0,
+        opacity = 1.0,
         clim1 = 0,
         clim2 = 1,
         colormap = "viridis",
@@ -53,6 +54,7 @@ class VolumeObject extends VolumeBase {
         this._coefficient = coefficient;
         this._offset = offset;
 
+        this._opacity = opacity;
         this._clim1 = clim1;
         this._clim2 = clim2;
         this._colormap = colormap;
@@ -85,6 +87,7 @@ class VolumeObject extends VolumeBase {
         uniforms.u_size.value.set(this.width, this.height, this.depth);
         uniforms.u_coefficient.value = this._coefficient;
         uniforms.u_offset.value = this._offset;
+        uniforms.u_opacity.value = opacity;
         uniforms.u_clim.value.set(this.clim1, this.clim2);
         uniforms.u_renderstyle.value = this.renderstyle == "mip" ? 0 : 1; // 0: MIP, 1: ISO
         uniforms.u_renderthreshold.value = this.isothreshold; // For ISO renderstyle
@@ -102,6 +105,9 @@ class VolumeObject extends VolumeBase {
             vertexShader: volumeShader.vertexShader,
             fragmentShader: volumeShader.fragmentShader,
             side: THREE.BackSide, // The volume shader uses the backface as its "reference point"
+            transparent: true,
+            depthTest: false,
+            depthWrite: false,
             clipping: clipping,
             clippingPlanes: clippingPlanes,
             clipIntersection: clipIntersection,
@@ -129,6 +135,10 @@ class VolumeObject extends VolumeBase {
         this.material.uniforms.u_offset.value = offset;
     }
 
+    set opacity(opacity: number) {
+        this._opacity = opacity;
+        this.updateVolumeParam(false, true);
+    }
     set clim1(clim1: number) {
         this._clim1 = clim1;
         this.updateVolumeParam(false, true);
@@ -171,6 +181,7 @@ class VolumeObject extends VolumeBase {
         // ----------
         // update this
         // ----------
+        this.material.uniforms.u_opacity.value = this._opacity;
         this.material.uniforms.u_clim.value.set(this._clim1, this._clim2);
         this.material.uniforms.u_cmdata.value = cmtextures[this._colormap];
         this.material.uniforms.u_renderstyle.value =
@@ -188,6 +199,7 @@ class VolumeObject extends VolumeBase {
         const parent = this.parent;
         if (parent !== null && this.volumeParamAutoUpdate) {
             if (parent instanceof VolumeBase) {
+                this.material.uniforms.u_opacity.value = parent._opacity;
                 this.material.uniforms.u_clim.value.set(
                     parent._clim1,
                     parent._clim2

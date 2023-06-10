@@ -24,6 +24,10 @@ class VolumeControls extends VolumeBase {
         this.isVolumeControls = true;
     }
 
+    set opacity(opacity: number) {
+        this._opacity = opacity;
+        this.updateVolumeParam();
+    }
     set clim1(clim1: number) {
         this._clim1 = clim1;
         this.updateVolumeParam();
@@ -72,6 +76,7 @@ class VolumeControls extends VolumeBase {
     updateVolumeParam() {
         // update attached object
         if (this.object && this.object instanceof VolumeBase) {
+            this.object.opacity = this._opacity;
             this.object.clim1 = this._clim1;
             this.object.clim2 = this._clim2;
             this.object.colormap = this._colormap;
@@ -85,7 +90,7 @@ class VolumeControls extends VolumeBase {
         if (this.object && this.object instanceof VolumeBase) {
             if (this.regionId === undefined) {
                 this.regionId = this.object.clippingPlanesObjects.length;
-                this.object.push(
+                this.object.pushClippingPlanesObjects(
                     this._clippingPlanes,
                     this._clipping,
                     this._clipIntersection,
