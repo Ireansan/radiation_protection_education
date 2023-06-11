@@ -9,7 +9,7 @@ import {
 import { NRRDLoader } from "three/examples/jsm/loaders/NRRDLoader";
 // import { NRRDLoader } from "three-stdlib";
 
-import { VolumeObject } from "../volumeRender/core/volumeObject";
+import { VolumeObject } from "../../src";
 extend({ VolumeObject });
 
 import { Volume } from "three-stdlib";

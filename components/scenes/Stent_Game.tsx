@@ -1,12 +1,13 @@
 import React from "react";
 
+import { extend } from "@react-three/fiber";
 import { Sky, GizmoHelper, GizmoViewport } from "@react-three/drei";
 import * as THREE from "three";
 
+import { VolumeGroup } from "../../src";
 import {
     VolumeParameterControls,
     VolumeClippingControls,
-    VolumeGroup,
 } from "../volumeRender";
 import * as Models from "../models";
 

@@ -16,11 +16,10 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 
+import { VolumeObject, VolumeGroup } from "../../src";
 import {
-    VolumeObject,
     VolumeParameterControls,
     VolumeClippingControls,
-    VolumeGroup,
 } from "../../components/volumeRender";
 import * as Models from "../../components/models";
 
@@ -64,7 +63,15 @@ function ExampleStent() {
             <div className={styles.canvas}>
                 <Canvas camera={{ position: [64, 128, 64] }}>
                     <volumeGroup ref={ref}>
-                        <Models.Stent rotation={[-Math.PI / 2, 0, 0]} />
+                        <Models.Stent
+                            position={[-75, 0, 0]}
+                            rotation={[-Math.PI / 2, 0, 0]}
+                        />
+                        <Models.Stent
+                            position={[75, 0, 0]}
+                            rotation={[-Math.PI / 2, 0, 0]}
+                            coefficient={0.5}
+                        />
                     </volumeGroup>
 
                     <VolumeParameterControls object={ref} />

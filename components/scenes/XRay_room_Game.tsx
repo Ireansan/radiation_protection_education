@@ -3,9 +3,9 @@ import React, { useRef } from "react";
 import { Sky } from "@react-three/drei";
 import * as THREE from "three";
 import { Physics, Debug } from "@react-three/rapier";
+
+import { VolumeGroup, VolumeAnimationObject } from "../../src";
 import {
-    VolumeGroup,
-    VolumeAnimationObject,
     VolumeAnimationControls,
     VolumeParameterControls,
     VolumeClippingControls,
