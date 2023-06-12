@@ -22,8 +22,8 @@ import * as MODELS from "../models";
 function XRayRoomBoardPrototype() {
     // FIXME:
     const ref = useRef<VolumeGroup>(null!);
-    const refAnimation = useRef<VolumeAnimationObject>(null);
     const refAnimation1 = useRef<VolumeAnimationObject>(null);
+    const refAnimation2 = useRef<VolumeAnimationObject>(null);
 
     useEffect(() => {
         console.log(ref.current);
@@ -35,12 +35,23 @@ function XRayRoomBoardPrototype() {
             <Canvas camera={{ position: [32, 64, 32] }}>
                 {/* Volume Objects */}
                 <volumeGroup ref={ref} renderOrder={3}>
+                    {/* Original Data */}
                     <volumeAnimationObject
-                        ref={refAnimation}
+                        ref={refAnimation1}
                         position={[45, 0, 48]}
                         rotation={[0, Math.PI, -Math.PI / 2]}
+                        volumeClippingAutoUpdate={false}
                     >
                         <MODELS.Dose_all_Animation />
+                    </volumeAnimationObject>
+                    {/* Data * 0.01 */}
+                    <volumeAnimationObject
+                        ref={refAnimation2}
+                        position={[45, 0, 48]}
+                        rotation={[0, Math.PI, -Math.PI / 2]}
+                        volumeClippingAutoUpdate={false}
+                    >
+                        <MODELS.Dose_all_Animation_centi />
                     </volumeAnimationObject>
                     {/* <mesh position={[0, 0, 0]} scale={25}>
                         <sphereBufferGeometry />
@@ -55,7 +66,7 @@ function XRayRoomBoardPrototype() {
 
                 {/* Contorls */}
                 <VolumeAnimationControls
-                    objects={[refAnimation]}
+                    objects={[refAnimation1, refAnimation2]}
                     duration={16}
                 />
                 <VolumeParameterControls object={ref} />
@@ -86,13 +97,18 @@ function XRayRoomBoardPrototype() {
                     subPlaneSize={50}
                 />
                 <VolumeBoardControls
-                    object={ref}
+                    object1={refAnimation1}
+                    object2={refAnimation2}
                     origin={new THREE.Vector3(0, 0, 0)}
                     width={20}
                     height={50}
                     planeSize={100}
                     subPlaneSize={50}
-                />
+                >
+                    <mesh position={[0, 0, 0]}>
+                        <boxBufferGeometry args={[20, 50, 0.05]} />
+                    </mesh>
+                </VolumeBoardControls>
 
                 <mesh position={[0, 0, 0]} scale={10} renderOrder={2}>
                     <sphereBufferGeometry />

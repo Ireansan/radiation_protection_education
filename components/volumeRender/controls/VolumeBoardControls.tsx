@@ -41,7 +41,10 @@ export function PlaneHelperMesh({
     );
 }
 
-export type VolumeBoardControlsProps = VolumeControlsTypes & {
+export type VolumeBoardControlsProps = {
+    children?: React.ReactElement<THREE.Object3D>;
+    object1: React.RefObject<VolumeObject> | React.RefObject<VolumeGroup>;
+    object2: React.RefObject<VolumeObject> | React.RefObject<VolumeGroup>;
     origin: THREE.Vector3 | THREE.Object3D;
     width?: number;
     height?: number;
@@ -60,7 +63,8 @@ export const VolumeBoardControls = React.forwardRef<
 >(function VolumeBoardControls(
     {
         children,
-        object,
+        object1,
+        object2,
         origin,
         width = 1,
         height = 1,
@@ -73,14 +77,16 @@ export const VolumeBoardControls = React.forwardRef<
     },
     ref
 ) {
-    const controls = React.useMemo(() => new VolumeControlsImpl(), []);
-    const group = React.useRef<VolumeGroup>(null);
+    const controls1 = React.useMemo(() => new VolumeControlsImpl(), []);
+    const controls2 = React.useMemo(() => new VolumeControlsImpl(), []);
+
     const [matrix, setMatrix] = React.useState<THREE.Matrix4>(
         new THREE.Matrix4()
     );
 
     const pivotRef = React.useRef<THREE.Group>(null!);
     const boardRef = React.useRef<THREE.Group>(null!);
+    const helperRef = React.useRef<THREE.Group>(null!);
 
     const [visible, setVisible] = React.useState<boolean>(true);
 
@@ -158,11 +164,13 @@ export const VolumeBoardControls = React.forwardRef<
             boardRef.current.rotation.setFromRotationMatrix(rotationMatrix);
 
             boardRef.current.getWorldDirection(boardDirection);
+        }
 
+        if (helperRef.current) {
             // Record world positions of Board main, top, right, bottom, left
             for (let i = 0; i < table.length; i++) {
                 let tmp = table[i];
-                let tmpObject = boardRef.current.children.find(
+                let tmpObject = helperRef.current.children.find(
                     (element, index) => element.name === tmp.name
                 );
 
@@ -202,7 +210,7 @@ export const VolumeBoardControls = React.forwardRef<
                 // Set direction from Normal
                 let tmpTargetPosition = Positions[tmp.index];
                 tmpTargetPosition.add(Normals[tmp.index]);
-                boardRef.current.children
+                helperRef.current.children
                     .find((element, index) => element.name === tmp.name)
                     ?.lookAt(tmpTargetPosition);
             }
@@ -213,78 +221,106 @@ export const VolumeBoardControls = React.forwardRef<
      *
      */
     // Attach volume to controls
+    // Object 1
     React.useLayoutEffect(() => {
-        if (object) {
-            if (object instanceof VolumeBase) {
-                controls.attach(object);
-            } else if (object.current instanceof VolumeBase) {
-                controls.attach(object.current);
+        if (object1.current) {
+            if (
+                object1.current instanceof VolumeObject ||
+                object1.current instanceof VolumeGroup
+            ) {
+                controls1.attach(object1.current);
             }
         }
 
-        return () => void controls.detach();
-    }, [object, controls]);
+        return () => void controls1.detach();
+    }, [object1, controls1]);
+
+    // Object 2
+    React.useLayoutEffect(() => {
+        if (object2.current) {
+            if (
+                object2.current instanceof VolumeObject ||
+                object2.current instanceof VolumeGroup
+            ) {
+                controls2.attach(object2.current);
+            }
+        }
+
+        return () => void controls2.detach();
+    }, [object2, controls2]);
 
     // Push Planes
     React.useEffect(() => {
-        controls.clippingPlanes = Planes;
-        controls.clipIntersection = true;
-    }, [controls, Planes]);
+        controls1.clippingPlanes = Planes;
+        controls1.clipIntersection = true;
+    }, [controls1, Planes]);
+    React.useEffect(() => {
+        controls2.clippingPlanes = Planes;
+        controls2.clipIntersection = true;
+        controls2.invert = true;
+    }, [controls2, Planes]);
 
     // Clipping
     React.useEffect(() => {
-        controls.clipping = clipping;
-    }, [controls, clipping]);
+        controls1.clipping = clipping;
+    }, [controls1, clipping]);
+    React.useEffect(() => {
+        controls2.clipping = clipping;
+    }, [controls2, clipping]);
 
-    return controls ? (
+    return controls1 && controls2 ? (
         <>
-            <primitive ref={ref} object={controls} />
+            <primitive ref={ref} object={controls1} />
+            <primitive object={controls2} />
 
-            {/* Main and Helper */}
-            <group ref={boardRef}>
-                <mesh name="board" visible={visible} position={[0, 0, 0]}>
-                    <boxBufferGeometry args={[width, height, 0.05]} />
-                    <meshBasicMaterial color={subPlaneColor} wireframe={true} />
-                </mesh>
-                <PlaneHelperMesh
-                    width={width}
-                    height={height}
-                    name="top"
-                    position={[0, height / 2, 0]}
-                    visible={visible}
-                    subPlaneColor={new THREE.Color(0xaa0000)} // Red
-                />
-                <PlaneHelperMesh
-                    width={height}
-                    height={width}
-                    name="right"
-                    position={[width / 2, 0, 0]}
-                    visible={visible}
-                    subPlaneColor={new THREE.Color(0x00aa00)} // Green
-                />
-                <PlaneHelperMesh
-                    width={width}
-                    height={height}
-                    name="bottom"
-                    position={[0, -height / 2, 0]}
-                    visible={visible}
-                    subPlaneColor={new THREE.Color(0x0000aa)} // Blue
-                />
-                <PlaneHelperMesh
-                    width={height}
-                    height={width}
-                    name="left"
-                    position={[-width / 2, 0, 0]}
-                    visible={visible}
-                    subPlaneColor={new THREE.Color(0xaa00aa)} // Purple
-                />
+            <group ref={boardRef} visible={clipping}>
+                {/* 3D Object */}
+                {children}
+                <group ref={helperRef} visible={clipping ? visible : false}>
+                    {/* Main and Helper */}
+                    <mesh name="board" position={[0, 0, 0]}>
+                        <boxBufferGeometry args={[width, height, 0.05]} />
+                        <meshBasicMaterial
+                            color={subPlaneColor}
+                            wireframe={true}
+                        />
+                    </mesh>
+                    <PlaneHelperMesh
+                        width={width}
+                        height={height}
+                        name="top"
+                        position={[0, height / 2, 0]}
+                        subPlaneColor={new THREE.Color(0xaa0000)} // Red
+                    />
+                    <PlaneHelperMesh
+                        width={height}
+                        height={width}
+                        name="right"
+                        position={[width / 2, 0, 0]}
+                        subPlaneColor={new THREE.Color(0x00aa00)} // Green
+                    />
+                    <PlaneHelperMesh
+                        width={width}
+                        height={height}
+                        name="bottom"
+                        position={[0, -height / 2, 0]}
+                        subPlaneColor={new THREE.Color(0x0000aa)} // Blue
+                    />
+                    <PlaneHelperMesh
+                        width={height}
+                        height={width}
+                        name="left"
+                        position={[-width / 2, 0, 0]}
+                        subPlaneColor={new THREE.Color(0xaa00aa)} // Purple
+                    />
+                </group>
             </group>
             {Planes.map((plane, index) => (
                 <>
                     <planeHelper
                         plane={plane}
                         size={planeSize}
-                        visible={clipping}
+                        visible={clipping ? visible : false}
                     />
                 </>
             ))}
