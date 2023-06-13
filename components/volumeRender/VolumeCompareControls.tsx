@@ -205,7 +205,7 @@ export const VolumeCompareControls = React.forwardRef<
                         subPlaneSize={subPlaneSize}
                         subPlaneColor={subPlaneColor}
                         visible={true}
-                        onClick={onClickPlane}
+                        onClick={(event) => onClickPlane(event, index)}
                         setMatrix={setMatrix}
                     />
                 </>
