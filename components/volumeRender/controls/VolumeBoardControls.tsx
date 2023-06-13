@@ -11,35 +11,7 @@ import {
     VolumeControls as VolumeControlsImpl,
 } from "../../../src";
 extend({ VolumeObject, VolumeGroup });
-import type { Target, VolumeControlsTypes } from "./types";
-
-/**
- * Plane Helper Mesh
- */
-export type planeHelperMeshProps = {
-    width?: number;
-    height?: number;
-    subPlaneColor?: THREE.Color;
-    visible?: boolean;
-} & JSX.IntrinsicElements["mesh"];
-export function PlaneHelperMesh({
-    width = 1,
-    height = 1,
-    subPlaneColor = new THREE.Color(0xaaaaaa),
-    visible = false,
-    ...props
-}: planeHelperMeshProps) {
-    const meshRef = React.useRef<THREE.Mesh>(new THREE.Mesh());
-
-    return (
-        <>
-            <mesh ref={meshRef} visible={visible} {...props}>
-                <planeGeometry args={[width, height]} />
-                <meshBasicMaterial color={subPlaneColor} wireframe={true} />
-            </mesh>
-        </>
-    );
-}
+import { PlaneHelperMesh } from "./PlaneHelper";
 
 export type VolumeBoardControlsProps = {
     children?: React.ReactElement<THREE.Object3D>;
