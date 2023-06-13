@@ -40,7 +40,6 @@ function XRayRoomBoardPrototype() {
                         ref={refAnimation1}
                         position={[45, 0, 48]}
                         rotation={[0, Math.PI, -Math.PI / 2]}
-                        volumeClippingAutoUpdate={false}
                     >
                         <MODELS.Dose_all_Animation />
                     </volumeAnimationObject>
@@ -49,7 +48,6 @@ function XRayRoomBoardPrototype() {
                         ref={refAnimation2}
                         position={[45, 0, 48]}
                         rotation={[0, Math.PI, -Math.PI / 2]}
-                        volumeClippingAutoUpdate={false}
                     >
                         <MODELS.Dose_all_Animation_centi />
                     </volumeAnimationObject>

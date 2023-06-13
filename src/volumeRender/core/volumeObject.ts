@@ -216,12 +216,12 @@ class VolumeObject extends VolumeBase {
 
     updateVolumeClipping(updateParents: boolean, updateChildren: boolean) {
         // ----------
-        // update parent, children
+        // update parent, this, and children
         // ----------
         super.updateVolumeClipping(updateParents, updateChildren);
 
         // ----------
-        // update this
+        // update material
         // ----------
         this.material.clipping = this._clipping;
         this.material.clippingPlanes = this.material.clipping
@@ -243,37 +243,6 @@ class VolumeObject extends VolumeBase {
         this.material.uniforms.u_clippedInvert.value = this.material.clipping
             ? this._clippedInvert
             : null;
-
-        // ----------
-        // update this by parent
-        // ----------
-        const parent = this.parent;
-        if (parent !== null && this.volumeClippingAutoUpdate) {
-            if (parent instanceof VolumeBase) {
-                this.material.clipping = parent._clipping;
-                this.material.clippingPlanes = this.material.clipping
-                    ? parent._clippingPlanes
-                    : null;
-                this.material.clipIntersection = parent._clipIntersection;
-
-                this.material.uniforms.u_clippedInitValue.value = this.material
-                    .clipping
-                    ? parent._clippedInitValue
-                    : null;
-                this.material.uniforms.u_clippingPlanesRegion.value = this
-                    .material.clipping
-                    ? parent._clippingPlanesRegion
-                    : null;
-                this.material.uniforms.u_clippingPlanesEnabled.value = this
-                    .material.clipping
-                    ? parent._clippingPlanesEnabled
-                    : null;
-                this.material.uniforms.u_clippedInvert.value = this.material
-                    .clipping
-                    ? parent._clippedInvert
-                    : null;
-            }
-        }
     }
 
     /**
