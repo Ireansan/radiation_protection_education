@@ -1,6 +1,7 @@
 import React from "react";
 import * as THREE from "three";
 import { useCursor, PivotControls } from "@react-three/drei";
+import type { Target } from "./types";
 
 /**
  * Controls
