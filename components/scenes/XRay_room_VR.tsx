@@ -22,11 +22,13 @@ function XRayRoomVR() {
     return (
         <>
             <VRButton />
-            <Canvas>
-                <ambientLight intensity={0.5} />
 
+            {/* ================================================== */}
+            {/* Three.js Canvas */}
+            <Canvas>
                 <XR>
-                    {/* Volume Objects */}
+                    {/* -------------------------------------------------- */}
+                    {/* Volume Object */}
                     <volumeGroup ref={ref}>
                         <volumeAnimationObject
                             ref={refAnimation}
@@ -37,13 +39,8 @@ function XRayRoomVR() {
                         </volumeAnimationObject>
                     </volumeGroup>
 
-                    {/* Three.js Objects */}
-                    <group rotation={[0, 0, Math.PI]} scale={1 / 4}>
-                        <VOLUMEDATA.Dose_material />
-                        <VOLUMEDATA.Dose_region />
-                    </group>
-
-                    {/* Contorls */}
+                    {/* -------------------------------------------------- */}
+                    {/* Volume Contorls */}
                     <VolumeAnimationControls
                         objects={[refAnimation]}
                         duration={16}
@@ -59,9 +56,22 @@ function XRayRoomVR() {
                         planeSize={100}
                         subPlaneSize={50}
                     />
+
+                    {/* -------------------------------------------------- */}
+                    {/* Three.js Object */}
+                    <group rotation={[0, 0, Math.PI]} scale={1 / 4}>
+                        <VOLUMEDATA.Dose_material />
+                        <VOLUMEDATA.Dose_region />
+                    </group>
                 </XR>
+
+                {/* -------------------------------------------------- */}
+                {/* Enviroment */}
+                <ambientLight intensity={0.5} />
             </Canvas>
 
+            {/* ================================================== */}
+            {/* UI */}
             <Stats />
         </>
     );

@@ -32,8 +32,11 @@ function XRayRoomBoardPrototype() {
 
     return (
         <>
+            {/* ================================================== */}
+            {/* Three.js Canvas */}
             <Canvas camera={{ position: [32, 64, 32] }}>
-                {/* Volume Objects */}
+                {/* -------------------------------------------------- */}
+                {/* Volume Object */}
                 <volumeGroup ref={ref} renderOrder={3}>
                     {/* Original Data */}
                     <volumeAnimationObject
@@ -43,6 +46,7 @@ function XRayRoomBoardPrototype() {
                     >
                         <VOLUMEDATA.Dose_all_Animation />
                     </volumeAnimationObject>
+
                     {/* Data * 0.01 */}
                     <volumeAnimationObject
                         ref={refAnimation2}
@@ -51,18 +55,14 @@ function XRayRoomBoardPrototype() {
                     >
                         <VOLUMEDATA.Dose_all_Animation_centi />
                     </volumeAnimationObject>
+
                     {/* <mesh position={[0, 0, 0]} scale={25}>
                         <sphereBufferGeometry />
                     </mesh> */}
                 </volumeGroup>
 
-                {/* Three.js Objects */}
-                <group rotation={[0, 0, Math.PI]} scale={1 / 4} renderOrder={1}>
-                    <VOLUMEDATA.Dose_material />
-                    <VOLUMEDATA.Dose_region />
-                </group>
-
-                {/* Contorls */}
+                {/* -------------------------------------------------- */}
+                {/* Volume Contorls */}
                 <VolumeAnimationControls
                     objects={[refAnimation1, refAnimation2]}
                     duration={16}
@@ -108,14 +108,18 @@ function XRayRoomBoardPrototype() {
                     </mesh>
                 </VolumeBoardControls>
 
+                {/* -------------------------------------------------- */}
+                {/* Three.js Object */}
+                <group rotation={[0, 0, Math.PI]} scale={1 / 4} renderOrder={1}>
+                    <VOLUMEDATA.Dose_material />
+                    <VOLUMEDATA.Dose_region />
+                </group>
+
                 <mesh position={[0, 0, 0]} scale={10} renderOrder={2}>
                     <sphereBufferGeometry />
                 </mesh>
 
-                <ambientLight intensity={0.5} />
-
-                <OrbitControls makeDefault />
-
+                {/* Helper */}
                 <GizmoHelper
                     alignment="bottom-right"
                     margin={[80, 80]}
@@ -126,7 +130,15 @@ function XRayRoomBoardPrototype() {
                         labelColor="black"
                     />
                 </GizmoHelper>
+
+                {/* -------------------------------------------------- */}
+                {/* Enviroment */}
+                <ambientLight intensity={0.5} />
+                <OrbitControls makeDefault />
             </Canvas>
+
+            {/* ================================================== */}
+            {/* UI */}
             <Stats />
         </>
     );

@@ -34,8 +34,11 @@ function XRayMulti() {
 
     return (
         <>
+            {/* ================================================== */}
+            {/* Three.js Canvas */}
             <Canvas camera={{ position: [32, 64, 32] }}>
-                {/* Volume Objects */}
+                {/* -------------------------------------------------- */}
+                {/* Volume Object */}
                 <volumeGroup ref={ref}>
                     {/* Curtain */}
                     <volumeGroup ref={refCurtain} position={[50, 0, 0]}>
@@ -47,6 +50,7 @@ function XRayMulti() {
                             <VOLUMEDATA.Dose_curtain_all_Animation />
                         </volumeAnimationObject>
                     </volumeGroup>
+
                     {/* Nocurtain */}
                     <volumeGroup ref={refNocurtain} position={[-50, 0, 0]}>
                         <volumeAnimationObject
@@ -59,7 +63,26 @@ function XRayMulti() {
                     </volumeGroup>
                 </volumeGroup>
 
-                {/* Three.js Objects */}
+                {/* -------------------------------------------------- */}
+                {/* Volume Contorls */}
+                <VolumeAnimationControls
+                    objects={[refCurtainAnimation, refNocurtainAnimation]}
+                    duration={16}
+                />
+                <VolumeParameterControls object={ref} />
+                <VolumeClippingControls
+                    object={ref}
+                    folderName="Dose"
+                    normals={[
+                        [0, 0, -1],
+                        // [-1, 0, 0],
+                    ]}
+                    planeSize={100}
+                    subPlaneSize={50}
+                />
+
+                {/* -------------------------------------------------- */}
+                {/* Three.js Object */}
                 <group
                     position={[50, 0, 0]}
                     rotation={[0, 0, Math.PI]}
@@ -77,27 +100,7 @@ function XRayMulti() {
                     <VOLUMEDATA.Dose_region />
                 </group>
 
-                {/* Contorls */}
-                <VolumeAnimationControls
-                    objects={[refCurtainAnimation, refNocurtainAnimation]}
-                    duration={16}
-                />
-                <VolumeParameterControls object={ref} />
-                <VolumeClippingControls
-                    object={ref}
-                    folderName="Dose"
-                    normals={[
-                        [0, 0, -1],
-                        // [-1, 0, 0],
-                    ]}
-                    planeSize={100}
-                    subPlaneSize={50}
-                />
-
-                <ambientLight intensity={0.5} />
-
-                <OrbitControls makeDefault />
-
+                {/* Helper */}
                 <GizmoHelper
                     alignment="bottom-right"
                     margin={[80, 80]}
@@ -108,7 +111,15 @@ function XRayMulti() {
                         labelColor="black"
                     />
                 </GizmoHelper>
+
+                {/* -------------------------------------------------- */}
+                {/* Enviroment */}
+                <ambientLight intensity={0.5} />
+                <OrbitControls makeDefault />
             </Canvas>
+
+            {/* ================================================== */}
+            {/* UI */}
             <Stats />
         </>
     );

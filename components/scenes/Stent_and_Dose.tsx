@@ -32,9 +32,11 @@ function StentAndDose() {
 
     return (
         <>
+            {/* ================================================== */}
+            {/* Three.js Canvas */}
             <Canvas camera={{ position: [32, 64, 32] }}>
-                {/* ================================================== */}
-                {/* Volume Objects */}
+                {/* -------------------------------------------------- */}
+                {/* Volume Object */}
                 <volumeGroup ref={ref}>
                     {/* Stent */}
                     <volumeGroup
@@ -62,7 +64,7 @@ function StentAndDose() {
                     </volumeGroup>
                 </volumeGroup>
 
-                {/* ================================================== */}
+                {/* -------------------------------------------------- */}
                 {/* Three.js Objects */}
                 <group
                     position={[-70, 50, -100]}
@@ -73,8 +75,8 @@ function StentAndDose() {
                     <VOLUMEDATA.Dose_region />
                 </group>
 
-                {/* ================================================== */}
-                {/* Contorls */}
+                {/* -------------------------------------------------- */}
+                {/* Volume Contorls */}
                 <VolumeAnimationControls
                     objects={[refDoseAnimation]}
                     duration={16}
@@ -113,6 +115,9 @@ function StentAndDose() {
                     />
                 </GizmoHelper>
             </Canvas>
+
+            {/* ================================================== */}
+            {/* UI */}
             <Stats />
         </>
     );

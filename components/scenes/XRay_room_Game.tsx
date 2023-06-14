@@ -1,9 +1,30 @@
 import React, { useRef } from "react";
-
-import { Sky } from "@react-three/drei";
 import * as THREE from "three";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, Sky, Stats } from "@react-three/drei";
 import { Physics, Debug } from "@react-three/rapier";
+import { Leva } from "leva";
 
+import {
+    // ----------
+    // controls
+    Keyboard,
+    // ----------
+    // prefab
+    Ground,
+    Player,
+    YBot,
+    // ----------
+    // ui
+    ControlPanel,
+    Editor,
+    Help,
+    Menu,
+    // ----------
+    // hook
+    useStore,
+    useToggle,
+} from "../game_template";
 import { VolumeGroup, VolumeAnimationObject } from "../../src";
 import {
     VolumeAnimationControls,
@@ -12,7 +33,7 @@ import {
 } from "../volumeRender";
 import * as Models from "../models/VolumeData";
 
-import { GameTemplate, Ground, Player, YBot } from "../game_template";
+import styles from "../../styles/css/game_template.module.css";
 
 function XRayRoomGame() {
     const ref = useRef<VolumeGroup>(null!);
@@ -21,21 +42,28 @@ function XRayRoomGame() {
     const xOffset: number = -5;
     const zOffset: number = 0;
 
+    const ToggledDebug = useToggle(Debug, "debug");
+    const ToggledEditor = useToggle(Editor, "editor");
+    const ToggledOrbitControls = useToggle(OrbitControls, "editor");
+    const ToggledStats = useToggle(Stats, "stats");
+
+    const [menu, set] = useStore((state) => [state.menu, state.set]);
+    const editor = useStore((state) => state.editor);
+
     return (
         <>
-            <GameTemplate
-                childrenEnv={
-                    <>
-                        <Sky sunPosition={[100, 20, 100]} />
-                        <ambientLight intensity={0.3} />
-                        <pointLight
-                            castShadow
-                            intensity={0.8}
-                            position={[100, 100, 100]}
-                        />
-
-                        {/* Volume Render */}
+            <div className={styles.root}>
+                <div
+                    className={`${styles.fullscreen}
+                    ${menu && `${styles.clicked}`}`}
+                >
+                    {/* ================================================== */}
+                    {/* Three.js Canvas */}
+                    <Canvas shadows camera={{ fov: 45 }} id={"mainCanvas"}>
+                        {/* -------------------------------------------------- */}
+                        {/* Volume Objects */}
                         <volumeGroup ref={ref}>
+                            {/* Dose */}
                             <volumeAnimationObject
                                 ref={refAnimation}
                                 position={[2.1 + xOffset, 2.2, 2.35 + zOffset]}
@@ -46,15 +74,8 @@ function XRayRoomGame() {
                             </volumeAnimationObject>
                         </volumeGroup>
 
-                        <group
-                            position={[0 + xOffset, 2, 0 + zOffset]}
-                            rotation={[0, 0, Math.PI]}
-                            scale={(1 / 4) * (1 / 20)}
-                        >
-                            <Models.Dose_material />
-                            <Models.Dose_region />
-                        </group>
-
+                        {/* -------------------------------------------------- */}
+                        {/* Volume Contorls */}
                         <VolumeAnimationControls
                             objects={[refAnimation]}
                             duration={16}
@@ -69,28 +90,53 @@ function XRayRoomGame() {
                             ]}
                         />
 
-                        {/* Helper */}
-                        {/* <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
-                            <GizmoViewport
-                                axisColors={[
-                                    "hotpink",
-                                    "aquamarine",
-                                    "#3498DB",
-                                ]}
-                                labelColor="black"
-                            />
-                        </GizmoHelper> */}
-                    </>
-                }
-                childrenPhysics={
-                    <>
-                        <Ground />
-                        <Player>
-                            <YBot />
-                        </Player>
-                    </>
-                }
-            />
+                        {/* -------------------------------------------------- */}
+                        {/* Three.js Object */}
+                        <group
+                            position={[0 + xOffset, 2, 0 + zOffset]}
+                            rotation={[0, 0, Math.PI]}
+                            scale={(1 / 4) * (1 / 20)}
+                        >
+                            <Models.Dose_material />
+                            <Models.Dose_region />
+                        </group>
+                        <ControlPanel position={[0, 2, -5]} />
+
+                        {/* -------------------------------------------------- */}
+                        {/* Enviroment */}
+                        <Sky sunPosition={[100, 20, 100]} />
+                        <ambientLight intensity={0.3} />
+                        <pointLight
+                            castShadow
+                            intensity={0.8}
+                            position={[100, 100, 100]}
+                        />
+
+                        {/* -------------------------------------------------- */}
+                        {/* Physics */}
+                        <Physics gravity={[0, -30, 0]}>
+                            <ToggledDebug />
+                            <Ground />
+                            <Player>
+                                <YBot />
+                            </Player>
+                        </Physics>
+
+                        {/* -------------------------------------------------- */}
+                        {/* Player Contorls */}
+                        <Keyboard />
+                    </Canvas>
+
+                    {/* ================================================== */}
+                    {/* UI */}
+                    <Help />
+                    <Leva />
+                </div>
+
+                <Menu />
+                <ToggledStats />
+                <ToggledEditor />
+            </div>
         </>
     );
 }

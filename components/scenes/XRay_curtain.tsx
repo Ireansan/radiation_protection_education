@@ -34,7 +34,10 @@ function XRayCurtain() {
 
     return (
         <>
+            {/* ================================================== */}
+            {/* Three.js Canvas */}
             <Canvas camera={{ position: [32, 64, 32] }}>
+                {/* -------------------------------------------------- */}
                 {/* Volume Objects */}
                 <volumeGroup ref={ref}>
                     {/* Curtain */}
@@ -54,6 +57,7 @@ function XRayCurtain() {
                             <sphereBufferGeometry />
                         </mesh>
                     </volumeGroup>
+
                     {/* Nocurtain */}
                     <volumeGroup
                         ref={refNocurtain}
@@ -73,13 +77,8 @@ function XRayCurtain() {
                     </volumeGroup>
                 </volumeGroup>
 
-                {/* Three.js Objects */}
-                <group rotation={[0, 0, Math.PI]} scale={1 / 4}>
-                    <VOLUMEDATA.Dose_material />
-                    <VOLUMEDATA.Dose_region />
-                </group>
-
-                {/* Contorls */}
+                {/* -------------------------------------------------- */}
+                {/* Volume Contorls */}
                 <VolumeAnimationControls
                     objects={[refCurtainAnimation, refNocurtainAnimation]}
                     duration={16}
@@ -96,10 +95,14 @@ function XRayCurtain() {
                     subPlaneSize={50}
                 /> */}
 
-                <ambientLight intensity={0.5} />
+                {/* -------------------------------------------------- */}
+                {/* Three.js Object */}
+                <group rotation={[0, 0, Math.PI]} scale={1 / 4}>
+                    <VOLUMEDATA.Dose_material />
+                    <VOLUMEDATA.Dose_region />
+                </group>
 
-                <OrbitControls makeDefault />
-
+                {/* Helper */}
                 <GizmoHelper
                     alignment="bottom-right"
                     margin={[80, 80]}
@@ -110,7 +113,15 @@ function XRayCurtain() {
                         labelColor="black"
                     />
                 </GizmoHelper>
+
+                {/* -------------------------------------------------- */}
+                {/* Enviroment */}
+                <ambientLight intensity={0.5} />
+                <OrbitControls makeDefault />
             </Canvas>
+
+            {/* ================================================== */}
+            {/* UI */}
             <Stats />
         </>
     );

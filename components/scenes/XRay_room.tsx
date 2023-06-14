@@ -32,9 +32,13 @@ function XRayRoom() {
 
     return (
         <>
+            {/* ================================================== */}
+            {/* Three.js Canvas */}
             <Canvas camera={{ position: [32, 64, 32] }}>
-                {/* Volume Objects */}
+                {/* -------------------------------------------------- */}
+                {/* Volume Object */}
                 <volumeGroup ref={ref}>
+                    {/* Dose */}
                     <volumeAnimationObject
                         ref={refAnimation}
                         position={[45, 0, 48]}
@@ -44,13 +48,8 @@ function XRayRoom() {
                     </volumeAnimationObject>
                 </volumeGroup>
 
-                {/* Three.js Objects */}
-                <group rotation={[0, 0, Math.PI]} scale={1 / 4}>
-                    <VOLUMEDATA.Dose_material />
-                    <VOLUMEDATA.Dose_region />
-                </group>
-
-                {/* Contorls */}
+                {/* -------------------------------------------------- */}
+                {/* Volume Contorls */}
                 <VolumeAnimationControls
                     objects={[refAnimation]}
                     duration={16}
@@ -67,10 +66,14 @@ function XRayRoom() {
                     subPlaneSize={50}
                 />
 
-                <ambientLight intensity={0.5} />
+                {/* -------------------------------------------------- */}
+                {/* Three.js Object */}
+                <group rotation={[0, 0, Math.PI]} scale={1 / 4}>
+                    <VOLUMEDATA.Dose_material />
+                    <VOLUMEDATA.Dose_region />
+                </group>
 
-                <OrbitControls makeDefault />
-
+                {/* Helper */}
                 <GizmoHelper
                     alignment="bottom-right"
                     margin={[80, 80]}
@@ -81,7 +84,15 @@ function XRayRoom() {
                         labelColor="black"
                     />
                 </GizmoHelper>
+
+                {/* -------------------------------------------------- */}
+                {/* Enviroment */}
+                <ambientLight intensity={0.5} />
+                <OrbitControls makeDefault />
             </Canvas>
+
+            {/* ================================================== */}
+            {/* UI */}
             <Stats />
         </>
     );
