@@ -65,18 +65,7 @@ function StentAndDose() {
                 </volumeGroup>
 
                 {/* -------------------------------------------------- */}
-                {/* Three.js Objects */}
-                <group
-                    position={[-70, 50, -100]}
-                    rotation={[0, 0, Math.PI]}
-                    scale={1 / 2}
-                >
-                    <VOLUMEDATA.Dose_material />
-                    <VOLUMEDATA.Dose_region />
-                </group>
-
-                {/* -------------------------------------------------- */}
-                {/* Volume Contorls */}
+                {/* Volume Controls */}
                 <VolumeAnimationControls
                     objects={[refDoseAnimation]}
                     duration={16}
@@ -100,9 +89,28 @@ function StentAndDose() {
                     subPlaneSize={50}
                 />
 
+                {/* -------------------------------------------------- */}
+                {/* Three.js Objects */}
+                <group
+                    position={[-70, 50, -100]}
+                    rotation={[0, 0, Math.PI]}
+                    scale={1 / 2}
+                >
+                    <VOLUMEDATA.Dose_material />
+                    <VOLUMEDATA.Dose_region />
+                </group>
+
+                {/* -------------------------------------------------- */}
+                {/* Three.js Controls */}
+                <OrbitControls makeDefault />
+
+                {/* -------------------------------------------------- */}
+                {/* Enviroment */}
                 <ambientLight intensity={0.5} />
 
-                <OrbitControls makeDefault />
+                {/* -------------------------------------------------- */}
+                {/* UI */}
+                <Stats />
 
                 <GizmoHelper
                     alignment="bottom-right"
@@ -115,10 +123,6 @@ function StentAndDose() {
                     />
                 </GizmoHelper>
             </Canvas>
-
-            {/* ================================================== */}
-            {/* UI */}
-            <Stats />
         </>
     );
 }

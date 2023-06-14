@@ -73,7 +73,7 @@ function StentGame() {
                         </volumeGroup>
 
                         {/* -------------------------------------------------- */}
-                        {/* Volume Contorls */}
+                        {/* Volume Controls */}
                         <VolumeParameterControls object={ref} />
                         <VolumeClippingControls
                             object={ref}

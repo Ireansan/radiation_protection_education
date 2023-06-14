@@ -40,7 +40,7 @@ function XRayRoomVR() {
                     </volumeGroup>
 
                     {/* -------------------------------------------------- */}
-                    {/* Volume Contorls */}
+                    {/* Volume Controls */}
                     <VolumeAnimationControls
                         objects={[refAnimation]}
                         duration={16}
@@ -68,11 +68,11 @@ function XRayRoomVR() {
                 {/* -------------------------------------------------- */}
                 {/* Enviroment */}
                 <ambientLight intensity={0.5} />
-            </Canvas>
 
-            {/* ================================================== */}
-            {/* UI */}
-            <Stats />
+                {/* -------------------------------------------------- */}
+                {/* UI */}
+                <Stats />
+            </Canvas>
         </>
     );
 }

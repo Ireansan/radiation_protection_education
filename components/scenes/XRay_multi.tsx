@@ -64,7 +64,7 @@ function XRayMulti() {
                 </volumeGroup>
 
                 {/* -------------------------------------------------- */}
-                {/* Volume Contorls */}
+                {/* Volume Controls */}
                 <VolumeAnimationControls
                     objects={[refCurtainAnimation, refNocurtainAnimation]}
                     duration={16}
@@ -100,7 +100,18 @@ function XRayMulti() {
                     <VOLUMEDATA.Dose_region />
                 </group>
 
-                {/* Helper */}
+                {/* -------------------------------------------------- */}
+                {/* Three.js Controls */}
+                <OrbitControls makeDefault />
+
+                {/* -------------------------------------------------- */}
+                {/* Enviroment */}
+                <ambientLight intensity={0.5} />
+
+                {/* -------------------------------------------------- */}
+                {/* UI */}
+                <Stats />
+
                 <GizmoHelper
                     alignment="bottom-right"
                     margin={[80, 80]}
@@ -111,16 +122,7 @@ function XRayMulti() {
                         labelColor="black"
                     />
                 </GizmoHelper>
-
-                {/* -------------------------------------------------- */}
-                {/* Enviroment */}
-                <ambientLight intensity={0.5} />
-                <OrbitControls makeDefault />
             </Canvas>
-
-            {/* ================================================== */}
-            {/* UI */}
-            <Stats />
         </>
     );
 }

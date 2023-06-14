@@ -9,12 +9,12 @@ import {
 import { NRRDLoader } from "three/examples/jsm/loaders/NRRDLoader";
 // import { NRRDLoader } from "three-stdlib";
 
-import { VolumeObject } from "../../src";
+import { VolumeObject } from "../../../src";
 extend({ VolumeObject });
 
 import { Volume } from "three-stdlib";
 
-import { applyBasePath } from "../utils";
+import { applyBasePath } from "../../utils";
 const modelURL = applyBasePath(`/models/nrrd/stent.nrrd`);
 
 export function Stent({ ...props }: JSX.IntrinsicElements["volumeObject"]) {

@@ -75,7 +75,7 @@ function XRayRoomGame() {
                         </volumeGroup>
 
                         {/* -------------------------------------------------- */}
-                        {/* Volume Contorls */}
+                        {/* Volume Controls */}
                         <VolumeAnimationControls
                             objects={[refAnimation]}
                             duration={16}

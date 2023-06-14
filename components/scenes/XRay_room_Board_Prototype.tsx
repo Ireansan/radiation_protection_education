@@ -62,7 +62,7 @@ function XRayRoomBoardPrototype() {
                 </volumeGroup>
 
                 {/* -------------------------------------------------- */}
-                {/* Volume Contorls */}
+                {/* Volume Controls */}
                 <VolumeAnimationControls
                     objects={[refAnimation1, refAnimation2]}
                     duration={16}
@@ -115,11 +115,22 @@ function XRayRoomBoardPrototype() {
                     <VOLUMEDATA.Dose_region />
                 </group>
 
+                {/* -------------------------------------------------- */}
+                {/* Three.js Controls */}
+                <OrbitControls makeDefault />
+
                 <mesh position={[0, 0, 0]} scale={10} renderOrder={2}>
                     <sphereBufferGeometry />
                 </mesh>
 
-                {/* Helper */}
+                {/* -------------------------------------------------- */}
+                {/* Enviroment */}
+                <ambientLight intensity={0.5} />
+
+                {/* -------------------------------------------------- */}
+                {/* UI */}
+                <Stats />
+
                 <GizmoHelper
                     alignment="bottom-right"
                     margin={[80, 80]}
@@ -130,16 +141,7 @@ function XRayRoomBoardPrototype() {
                         labelColor="black"
                     />
                 </GizmoHelper>
-
-                {/* -------------------------------------------------- */}
-                {/* Enviroment */}
-                <ambientLight intensity={0.5} />
-                <OrbitControls makeDefault />
             </Canvas>
-
-            {/* ================================================== */}
-            {/* UI */}
-            <Stats />
         </>
     );
 }
