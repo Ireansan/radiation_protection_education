@@ -18,7 +18,7 @@ import {
 
 import { VolumeCompareControls } from "../volumeRender/VolumeCompareControls";
 
-import * as MODELS from "../models";
+import * as VOLUMEDATA from "../models/VolumeData";
 
 function StentAndDose() {
     const ref = useRef<VolumeGroup>(null!);
@@ -42,7 +42,7 @@ function StentAndDose() {
                         position={[70, 0, 0]}
                         volumeParamAutoUpdate={false}
                     >
-                        <MODELS.Stent rotation={[-Math.PI / 2, 0, 0]} />
+                        <VOLUMEDATA.Stent rotation={[-Math.PI / 2, 0, 0]} />
                     </volumeGroup>
 
                     {/* Dose */}
@@ -57,7 +57,7 @@ function StentAndDose() {
                             position={[45, 0, 48]}
                             rotation={[0, Math.PI, -Math.PI / 2]}
                         >
-                            <MODELS.Dose_nocurtain_all_Animation />
+                            <VOLUMEDATA.Dose_nocurtain_all_Animation />
                         </volumeAnimationObject>
                     </volumeGroup>
                 </volumeGroup>
@@ -69,8 +69,8 @@ function StentAndDose() {
                     rotation={[0, 0, Math.PI]}
                     scale={1 / 2}
                 >
-                    <MODELS.Dose_material />
-                    <MODELS.Dose_region />
+                    <VOLUMEDATA.Dose_material />
+                    <VOLUMEDATA.Dose_region />
                 </group>
 
                 {/* ================================================== */}

@@ -17,7 +17,7 @@ import {
     VolumeParameterControls,
 } from "../volumeRender";
 
-import * as MODELS from "../models";
+import * as VOLUMEDATA from "../models/VolumeData";
 
 function XRayRoomBoardPrototype() {
     // FIXME:
@@ -41,7 +41,7 @@ function XRayRoomBoardPrototype() {
                         position={[45, 0, 48]}
                         rotation={[0, Math.PI, -Math.PI / 2]}
                     >
-                        <MODELS.Dose_all_Animation />
+                        <VOLUMEDATA.Dose_all_Animation />
                     </volumeAnimationObject>
                     {/* Data * 0.01 */}
                     <volumeAnimationObject
@@ -49,7 +49,7 @@ function XRayRoomBoardPrototype() {
                         position={[45, 0, 48]}
                         rotation={[0, Math.PI, -Math.PI / 2]}
                     >
-                        <MODELS.Dose_all_Animation_centi />
+                        <VOLUMEDATA.Dose_all_Animation_centi />
                     </volumeAnimationObject>
                     {/* <mesh position={[0, 0, 0]} scale={25}>
                         <sphereBufferGeometry />
@@ -58,8 +58,8 @@ function XRayRoomBoardPrototype() {
 
                 {/* Three.js Objects */}
                 <group rotation={[0, 0, Math.PI]} scale={1 / 4} renderOrder={1}>
-                    <MODELS.Dose_material />
-                    <MODELS.Dose_region />
+                    <VOLUMEDATA.Dose_material />
+                    <VOLUMEDATA.Dose_region />
                 </group>
 
                 {/* Contorls */}

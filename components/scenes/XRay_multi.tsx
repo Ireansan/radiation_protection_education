@@ -18,7 +18,7 @@ import {
 
 import { VolumeCompareControls } from "../volumeRender/VolumeCompareControls";
 
-import * as MODELS from "../models";
+import * as VOLUMEDATA from "../models/VolumeData";
 
 function XRayMulti() {
     // FIXME:
@@ -44,7 +44,7 @@ function XRayMulti() {
                             position={[45, 0, 48]}
                             rotation={[0, Math.PI, -Math.PI / 2]}
                         >
-                            <MODELS.Dose_curtain_all_Animation />
+                            <VOLUMEDATA.Dose_curtain_all_Animation />
                         </volumeAnimationObject>
                     </volumeGroup>
                     {/* Nocurtain */}
@@ -54,7 +54,7 @@ function XRayMulti() {
                             position={[45, 0, 48]}
                             rotation={[0, Math.PI, -Math.PI / 2]}
                         >
-                            <MODELS.Dose_nocurtain_all_Animation />
+                            <VOLUMEDATA.Dose_nocurtain_all_Animation />
                         </volumeAnimationObject>
                     </volumeGroup>
                 </volumeGroup>
@@ -65,16 +65,16 @@ function XRayMulti() {
                     rotation={[0, 0, Math.PI]}
                     scale={1 / 4}
                 >
-                    <MODELS.Dose_material />
-                    <MODELS.Dose_region />
+                    <VOLUMEDATA.Dose_material />
+                    <VOLUMEDATA.Dose_region />
                 </group>
                 <group
                     position={[-50, 0, 0]}
                     rotation={[0, 0, Math.PI]}
                     scale={1 / 4}
                 >
-                    <MODELS.Dose_material />
-                    <MODELS.Dose_region />
+                    <VOLUMEDATA.Dose_material />
+                    <VOLUMEDATA.Dose_region />
                 </group>
 
                 {/* Contorls */}

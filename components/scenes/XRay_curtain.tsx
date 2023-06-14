@@ -18,7 +18,7 @@ import {
 
 import { VolumeCompareControls } from "../volumeRender/VolumeCompareControls";
 
-import * as MODELS from "../models";
+import * as VOLUMEDATA from "../models/VolumeData";
 
 function XRayCurtain() {
     // FIXME:
@@ -47,7 +47,7 @@ function XRayCurtain() {
                             position={[45, 0, 48]}
                             rotation={[0, Math.PI, -Math.PI / 2]}
                         >
-                            <MODELS.Dose_curtain_all_Animation />
+                            <VOLUMEDATA.Dose_curtain_all_Animation />
                         </volumeAnimationObject>
 
                         <mesh position={[-50, 0, 0]} scale={25}>
@@ -64,7 +64,7 @@ function XRayCurtain() {
                             position={[45, 0, 48]}
                             rotation={[0, Math.PI, -Math.PI / 2]}
                         >
-                            <MODELS.Dose_nocurtain_all_Animation />
+                            <VOLUMEDATA.Dose_nocurtain_all_Animation />
                         </volumeAnimationObject>
 
                         <mesh position={[50, 0, 0]} scale={25}>
@@ -75,8 +75,8 @@ function XRayCurtain() {
 
                 {/* Three.js Objects */}
                 <group rotation={[0, 0, Math.PI]} scale={1 / 4}>
-                    <MODELS.Dose_material />
-                    <MODELS.Dose_region />
+                    <VOLUMEDATA.Dose_material />
+                    <VOLUMEDATA.Dose_region />
                 </group>
 
                 {/* Contorls */}

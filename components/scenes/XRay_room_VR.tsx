@@ -12,7 +12,7 @@ import {
     VolumeParameterControls,
 } from "../volumeRender";
 
-import * as MODELS from "../models";
+import * as VOLUMEDATA from "../models/VolumeData";
 import * as SCENES from "./index";
 
 function XRayRoomVR() {
@@ -33,14 +33,14 @@ function XRayRoomVR() {
                             position={[45, 0, 48]}
                             rotation={[0, Math.PI, -Math.PI / 2]}
                         >
-                            <MODELS.Dose_all_Animation />
+                            <VOLUMEDATA.Dose_all_Animation />
                         </volumeAnimationObject>
                     </volumeGroup>
 
                     {/* Three.js Objects */}
                     <group rotation={[0, 0, Math.PI]} scale={1 / 4}>
-                        <MODELS.Dose_material />
-                        <MODELS.Dose_region />
+                        <VOLUMEDATA.Dose_material />
+                        <VOLUMEDATA.Dose_region />
                     </group>
 
                     {/* Contorls */}

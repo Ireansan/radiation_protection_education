@@ -10,7 +10,7 @@ import {
     VolumeParameterControls,
     VolumeClippingControls,
 } from "../volumeRender";
-import * as Models from "../models";
+import * as Models from "../models/VolumeData";
 
 import { GameTemplate, Ground, Player, YBot } from "../game_template";
 
