@@ -10,6 +10,7 @@ import { GLTF } from "three-stdlib";
 
 type GLTFResult = GLTF & {
     nodes: {
+        Base: THREE.SkinnedMesh;
         Bed: THREE.SkinnedMesh;
         Root: THREE.Bone;
     };
@@ -24,12 +25,22 @@ const modelURL = applyBasePath(
 export function BedRough(props: JSX.IntrinsicElements["group"]) {
     const { nodes, materials } = useGLTF(modelURL) as GLTFResult;
 
-    const [BedMatcap] = useMatcapTexture("28292A_D3DAE5_A3ACB8_818183", 512);
+    const [BaseMatcap] = useMatcapTexture("28292A_D3DAE5_A3ACB8_818183", 512);
+    const [BedMatcap] = useMatcapTexture("2A2A2A_DBDBDB_6A6A6A_949494", 512);
 
     return (
         <group {...props} dispose={null}>
             <primitive object={nodes.Root} />
             <skinnedMesh
+                name="Base"
+                geometry={nodes.Base.geometry}
+                material={nodes.Base.material}
+                skeleton={nodes.Base.skeleton}
+            >
+                <meshMatcapMaterial attach="material" matcap={BaseMatcap} />
+            </skinnedMesh>
+            <skinnedMesh
+                name="Bed"
                 geometry={nodes.Bed.geometry}
                 material={nodes.Bed.material}
                 skeleton={nodes.Bed.skeleton}

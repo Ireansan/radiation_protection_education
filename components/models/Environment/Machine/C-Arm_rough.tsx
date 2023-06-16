@@ -15,7 +15,7 @@ type GLTFResult = GLTF & {
         Armsub1: THREE.SkinnedMesh;
         Armsub2: THREE.SkinnedMesh;
         Body: THREE.SkinnedMesh;
-        Body_1: THREE.Bone;
+        Root: THREE.Bone;
     };
     materials: {};
 };
@@ -45,7 +45,7 @@ export function CArmRough(props: JSX.IntrinsicElements["group"]) {
 
     return (
         <group {...props} dispose={null}>
-            <primitive object={nodes.Body_1} />
+            <primitive object={nodes.Root} />
             <skinnedMesh
                 geometry={nodes.Arm.geometry}
                 material={nodes.Arm.material}
