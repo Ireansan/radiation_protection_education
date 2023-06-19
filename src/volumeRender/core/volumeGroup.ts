@@ -19,6 +19,10 @@ class VolumeGroup extends VolumeBase {
         this.type = "Group";
     }
 
+    set opacity(opacity: number) {
+        this._opacity = opacity;
+        this.updateVolumeParam(false, true);
+    }
     set clim1(clim1: number) {
         this._clim1 = clim1;
         this.updateVolumeParam(false, true);

@@ -11,7 +11,7 @@ import {
 } from "../../src";
 extend({ VolumeObject, VolumeGroup });
 
-import { PlaneHelperMesh } from "./controls";
+import { PlaneHelperTargetMesh } from "./controls";
 import type { Target } from "./controls";
 
 /**
@@ -199,7 +199,7 @@ export const VolumeCompareControls = React.forwardRef<
                         size={planeSize}
                         visible={true}
                     />
-                    <PlaneHelperMesh
+                    <PlaneHelperTargetMesh
                         id={index}
                         normal={plane.normal}
                         subPlaneSize={subPlaneSize}

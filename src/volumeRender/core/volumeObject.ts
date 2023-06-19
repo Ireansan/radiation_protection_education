@@ -31,6 +31,9 @@ class VolumeObject extends VolumeBase {
 
     constructor(
         volume = new Volume(),
+        coefficient = 1.0,
+        offset = 0.0,
+        opacity = 1.0,
         clim1 = 0,
         clim2 = 1,
         colormap = "viridis",
@@ -48,6 +51,10 @@ class VolumeObject extends VolumeBase {
         this.height = this.volume.yLength;
         this.depth = this.volume.zLength;
 
+        this._coefficient = coefficient;
+        this._offset = offset;
+
+        this._opacity = opacity;
         this._clim1 = clim1;
         this._clim2 = clim2;
         this._colormap = colormap;
@@ -78,6 +85,9 @@ class VolumeObject extends VolumeBase {
         const uniforms = THREE.UniformsUtils.clone(volumeShader.uniforms);
         uniforms.u_data.value = texture;
         uniforms.u_size.value.set(this.width, this.height, this.depth);
+        uniforms.u_coefficient.value = this._coefficient;
+        uniforms.u_offset.value = this._offset;
+        uniforms.u_opacity.value = opacity;
         uniforms.u_clim.value.set(this.clim1, this.clim2);
         uniforms.u_renderstyle.value = this.renderstyle == "mip" ? 0 : 1; // 0: MIP, 1: ISO
         uniforms.u_renderthreshold.value = this.isothreshold; // For ISO renderstyle
@@ -95,6 +105,9 @@ class VolumeObject extends VolumeBase {
             vertexShader: volumeShader.vertexShader,
             fragmentShader: volumeShader.fragmentShader,
             side: THREE.BackSide, // The volume shader uses the backface as its "reference point"
+            transparent: true,
+            depthTest: false,
+            depthWrite: false,
             clipping: clipping,
             clippingPlanes: clippingPlanes,
             clipIntersection: clipIntersection,
@@ -113,6 +126,19 @@ class VolumeObject extends VolumeBase {
         );
     }
 
+    set coefficient(coefficient: number) {
+        this._coefficient = coefficient;
+        this.material.uniforms.u_coefficient.value = coefficient;
+    }
+    set offset(offset: number) {
+        this._offset = offset;
+        this.material.uniforms.u_offset.value = offset;
+    }
+
+    set opacity(opacity: number) {
+        this._opacity = opacity;
+        this.updateVolumeParam(false, true);
+    }
     set clim1(clim1: number) {
         this._clim1 = clim1;
         this.updateVolumeParam(false, true);
@@ -155,6 +181,7 @@ class VolumeObject extends VolumeBase {
         // ----------
         // update this
         // ----------
+        this.material.uniforms.u_opacity.value = this._opacity;
         this.material.uniforms.u_clim.value.set(this._clim1, this._clim2);
         this.material.uniforms.u_cmdata.value = cmtextures[this._colormap];
         this.material.uniforms.u_renderstyle.value =
@@ -172,6 +199,7 @@ class VolumeObject extends VolumeBase {
         const parent = this.parent;
         if (parent !== null && this.volumeParamAutoUpdate) {
             if (parent instanceof VolumeBase) {
+                this.material.uniforms.u_opacity.value = parent._opacity;
                 this.material.uniforms.u_clim.value.set(
                     parent._clim1,
                     parent._clim2
@@ -188,12 +216,12 @@ class VolumeObject extends VolumeBase {
 
     updateVolumeClipping(updateParents: boolean, updateChildren: boolean) {
         // ----------
-        // update parent, children
+        // update parent, this, and children
         // ----------
         super.updateVolumeClipping(updateParents, updateChildren);
 
         // ----------
-        // update this
+        // update material
         // ----------
         this.material.clipping = this._clipping;
         this.material.clippingPlanes = this.material.clipping
@@ -215,37 +243,6 @@ class VolumeObject extends VolumeBase {
         this.material.uniforms.u_clippedInvert.value = this.material.clipping
             ? this._clippedInvert
             : null;
-
-        // ----------
-        // update this by parent
-        // ----------
-        const parent = this.parent;
-        if (parent !== null && this.volumeClippingAutoUpdate) {
-            if (parent instanceof VolumeBase) {
-                this.material.clipping = parent._clipping;
-                this.material.clippingPlanes = this.material.clipping
-                    ? parent._clippingPlanes
-                    : null;
-                this.material.clipIntersection = parent._clipIntersection;
-
-                this.material.uniforms.u_clippedInitValue.value = this.material
-                    .clipping
-                    ? parent._clippedInitValue
-                    : null;
-                this.material.uniforms.u_clippingPlanesRegion.value = this
-                    .material.clipping
-                    ? parent._clippingPlanesRegion
-                    : null;
-                this.material.uniforms.u_clippingPlanesEnabled.value = this
-                    .material.clipping
-                    ? parent._clippingPlanesEnabled
-                    : null;
-                this.material.uniforms.u_clippedInvert.value = this.material
-                    .clipping
-                    ? parent._clippedInvert
-                    : null;
-            }
-        }
     }
 
     /**

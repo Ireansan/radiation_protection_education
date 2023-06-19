@@ -4,6 +4,9 @@ precision mediump sampler3D;
 uniform vec3 u_size;
 uniform int u_renderstyle;
 uniform float u_renderthreshold;
+uniform float u_coefficient;
+uniform float u_offset;
+uniform float u_opacity;
 uniform vec2 u_clim;
 
 uniform sampler3D u_data;
@@ -103,6 +106,9 @@ bool within_boundaries(vec3 position){
     bool clipped;
     
     #if NUM_CLIPPING_PLANES>0
+    regionResults=u_clippedInitValue;
+    bool regionResult;
+    
     vec4 plane;
     int regionIndex;
     bool enabled;
@@ -124,16 +130,6 @@ bool within_boundaries(vec3 position){
     #if UNION_CLIPPING_PLANES<NUM_CLIPPING_PLANES
     #pragma unroll_loop_start
     for(int i=UNION_CLIPPING_PLANES;i<NUM_CLIPPING_PLANES;i++){
-        regionIndex=u_clippingPlanesRegion[i];
-        initValue=u_clippedInitValue[regionIndex];
-        
-        regionResults[regionIndex]=initValue;
-    }
-    #pragma unroll_loop_end
-    
-    // combine results
-    #pragma unroll_loop_start
-    for(int i=UNION_CLIPPING_PLANES;i<NUM_CLIPPING_PLANES;i++){
         plane=clippingPlanes[i];
         regionIndex=u_clippingPlanesRegion[i];
         enabled=u_clippingPlanesEnabled[i];
@@ -146,8 +142,6 @@ bool within_boundaries(vec3 position){
     #endif
     
     bool invert;
-    bool regionResult;
-    
     clipped=false;
     
     #pragma unroll_loop_start
@@ -156,7 +150,7 @@ bool within_boundaries(vec3 position){
         invert=u_clippedInvert[i];
         regionResult=regionResult^^invert;
         
-        clipped=(regionResult)||clipped;
+        clipped=regionResult||clipped;
     }
     #pragma unroll_loop_end
     #endif
@@ -166,7 +160,7 @@ bool within_boundaries(vec3 position){
 
 float sample1(vec3 texcoords){
     /* Sample float value from a 3D texture. Assumes intensity data. */
-    return texture(u_data,texcoords.xyz).r;
+    return(u_coefficient*texture(u_data,texcoords.xyz).r)+u_offset;
 }
 
 vec4 apply_colormap(float val){
@@ -214,6 +208,7 @@ void cast_mip(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
     // Resolve final color
     if(updated){
         gl_FragColor=apply_colormap(max_val);
+        gl_FragColor.a=u_opacity;
         return;
     }
 }
@@ -251,6 +246,7 @@ void cast_iso(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
                 clipped=within_boundaries(uv_position);
                 if(val>u_renderthreshold||clipped){
                     gl_FragColor=add_lighting(val,iloc,dstep,view_ray);
+                    gl_FragColor.a=u_opacity;
                     return;
                 }
                 iloc+=istep;

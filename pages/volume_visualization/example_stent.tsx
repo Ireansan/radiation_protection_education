@@ -63,7 +63,15 @@ function ExampleStent() {
             <div className={styles.canvas}>
                 <Canvas camera={{ position: [64, 128, 64] }}>
                     <volumeGroup ref={ref}>
-                        <Models.Stent rotation={[-Math.PI / 2, 0, 0]} />
+                        <Models.Stent
+                            position={[-75, 0, 0]}
+                            rotation={[-Math.PI / 2, 0, 0]}
+                        />
+                        <Models.Stent
+                            position={[75, 0, 0]}
+                            rotation={[-Math.PI / 2, 0, 0]}
+                            coefficient={0.5}
+                        />
                     </volumeGroup>
 
                     <VolumeParameterControls object={ref} />
