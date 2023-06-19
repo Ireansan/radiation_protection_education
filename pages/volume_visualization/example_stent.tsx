@@ -21,7 +21,7 @@ import {
     VolumeParameterControls,
     VolumeClippingControls,
 } from "../../components/volumeRender";
-import * as Models from "../../components/models";
+import * as Models from "../../components/models/VolumeData";
 
 import styles from "../../styles/threejs.module.css";
 
