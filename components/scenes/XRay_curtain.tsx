@@ -18,7 +18,7 @@ import {
 
 import { VolumeCompareControls } from "../volumeRender/VolumeCompareControls";
 
-import * as MODELS from "../models";
+import * as VOLUMEDATA from "../models/VolumeData";
 
 function XRayCurtain() {
     // FIXME:
@@ -34,7 +34,10 @@ function XRayCurtain() {
 
     return (
         <>
+            {/* ================================================== */}
+            {/* Three.js Canvas */}
             <Canvas camera={{ position: [32, 64, 32] }}>
+                {/* -------------------------------------------------- */}
                 {/* Volume Objects */}
                 <volumeGroup ref={ref}>
                     {/* Curtain */}
@@ -47,13 +50,14 @@ function XRayCurtain() {
                             position={[45, 0, 48]}
                             rotation={[0, Math.PI, -Math.PI / 2]}
                         >
-                            <MODELS.Dose_curtain_all_Animation />
+                            <VOLUMEDATA.Dose_curtain_all_Animation />
                         </volumeAnimationObject>
 
                         <mesh position={[-50, 0, 0]} scale={25}>
                             <sphereBufferGeometry />
                         </mesh>
                     </volumeGroup>
+
                     {/* Nocurtain */}
                     <volumeGroup
                         ref={refNocurtain}
@@ -64,7 +68,7 @@ function XRayCurtain() {
                             position={[45, 0, 48]}
                             rotation={[0, Math.PI, -Math.PI / 2]}
                         >
-                            <MODELS.Dose_nocurtain_all_Animation />
+                            <VOLUMEDATA.Dose_nocurtain_all_Animation />
                         </volumeAnimationObject>
 
                         <mesh position={[50, 0, 0]} scale={25}>
@@ -73,13 +77,8 @@ function XRayCurtain() {
                     </volumeGroup>
                 </volumeGroup>
 
-                {/* Three.js Objects */}
-                <group rotation={[0, 0, Math.PI]} scale={1 / 4}>
-                    <MODELS.Dose_material />
-                    <MODELS.Dose_region />
-                </group>
-
-                {/* Contorls */}
+                {/* -------------------------------------------------- */}
+                {/* Volume Controls */}
                 <VolumeAnimationControls
                     objects={[refCurtainAnimation, refNocurtainAnimation]}
                     duration={16}
@@ -96,9 +95,24 @@ function XRayCurtain() {
                     subPlaneSize={50}
                 /> */}
 
+                {/* -------------------------------------------------- */}
+                {/* Three.js Object */}
+                <group rotation={[0, 0, Math.PI]} scale={1 / 4}>
+                    <VOLUMEDATA.Dose_material />
+                    <VOLUMEDATA.Dose_region />
+                </group>
+
+                {/* -------------------------------------------------- */}
+                {/* Three.js Controls */}
+                <OrbitControls makeDefault />
+
+                {/* -------------------------------------------------- */}
+                {/* Enviroment */}
                 <ambientLight intensity={0.5} />
 
-                <OrbitControls makeDefault />
+                {/* -------------------------------------------------- */}
+                {/* UI */}
+                <Stats />
 
                 <GizmoHelper
                     alignment="bottom-right"
@@ -111,7 +125,6 @@ function XRayCurtain() {
                     />
                 </GizmoHelper>
             </Canvas>
-            <Stats />
         </>
     );
 }

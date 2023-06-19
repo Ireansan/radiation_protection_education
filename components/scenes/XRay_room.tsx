@@ -17,7 +17,7 @@ import {
     VolumeParameterControls,
 } from "../volumeRender";
 
-import * as MODELS from "../models";
+import * as VOLUMEDATA from "../models/VolumeData";
 
 function XRayRoom() {
     // FIXME:
@@ -32,25 +32,24 @@ function XRayRoom() {
 
     return (
         <>
+            {/* ================================================== */}
+            {/* Three.js Canvas */}
             <Canvas camera={{ position: [32, 64, 32] }}>
-                {/* Volume Objects */}
+                {/* -------------------------------------------------- */}
+                {/* Volume Object */}
                 <volumeGroup ref={ref}>
+                    {/* Dose */}
                     <volumeAnimationObject
                         ref={refAnimation}
                         position={[45, 0, 48]}
                         rotation={[0, Math.PI, -Math.PI / 2]}
                     >
-                        <MODELS.Dose_all_Animation />
+                        <VOLUMEDATA.Dose_all_Animation />
                     </volumeAnimationObject>
                 </volumeGroup>
 
-                {/* Three.js Objects */}
-                <group rotation={[0, 0, Math.PI]} scale={1 / 4}>
-                    <MODELS.Dose_material />
-                    <MODELS.Dose_region />
-                </group>
-
-                {/* Contorls */}
+                {/* -------------------------------------------------- */}
+                {/* Volume Controls */}
                 <VolumeAnimationControls
                     objects={[refAnimation]}
                     duration={16}
@@ -67,9 +66,24 @@ function XRayRoom() {
                     subPlaneSize={50}
                 />
 
+                {/* -------------------------------------------------- */}
+                {/* Three.js Object */}
+                <group rotation={[0, 0, Math.PI]} scale={1 / 4}>
+                    <VOLUMEDATA.Dose_material />
+                    <VOLUMEDATA.Dose_region />
+                </group>
+
+                {/* -------------------------------------------------- */}
+                {/* Three.js Controls */}
+                <OrbitControls makeDefault />
+
+                {/* -------------------------------------------------- */}
+                {/* Enviroment */}
                 <ambientLight intensity={0.5} />
 
-                <OrbitControls makeDefault />
+                {/* -------------------------------------------------- */}
+                {/* UI */}
+                <Stats />
 
                 <GizmoHelper
                     alignment="bottom-right"
@@ -82,7 +96,6 @@ function XRayRoom() {
                     />
                 </GizmoHelper>
             </Canvas>
-            <Stats />
         </>
     );
 }
