@@ -23,6 +23,9 @@ export function Player({
     children,
     ...props
 }: playerProps & JSX.IntrinsicElements["group"]) {
+    // ====================
+    // Variable
+    // --------------------
     // Base
     const [cameraMode, editor, playerConfig] = useStore((state) => [
         state.camera,
@@ -42,12 +45,15 @@ export function Player({
         followCameraDirection,
     } = playerConfig;
 
+    // --------------------
     // Camera control
     const orbitControlsRef = useRef<OrbitControlsImpl>(null!);
 
+    // --------------------
     // Animation
     const { mixer, ref } = AnimationStates();
 
+    // --------------------
     // RigidBody
     const rigidBody = useRef<RigidBodyApi>(null);
     const rapier = useRapier();
@@ -58,11 +64,13 @@ export function Player({
     let maxToi = 5.0;
     let solid = false;
 
+    // --------------------
     // Movement
     const direction = new THREE.Vector3();
     const frontVector = new THREE.Vector3();
     const sideVector = new THREE.Vector3();
 
+    // --------------------
     // Plyaer
     const rigidbodyPosition = new THREE.Vector3();
     const playerPosition = new THREE.Vector3();
@@ -70,9 +78,12 @@ export function Player({
     const playerRotation = new THREE.Euler();
     const refDirection = useRef<THREE.Vector3>(new THREE.Vector3());
 
+    // --------------------
     // Mouse
     const pointerActiveRef = useRef<boolean>(false);
 
+    // ====================
+    // Hook
     useEffect(() => {
         if (!editor) {
             orbitControlsRef.current.mouseButtons = {
@@ -125,6 +136,8 @@ export function Player({
         };
     }, [cameraMode, followCameraDirection]);
 
+    // ====================
+    //
     useFrame((state, delta) => {
         controls = getState().controls;
         const { forward, backward, left, right, jump, operation } = controls;
@@ -260,7 +273,7 @@ export function Player({
             {/* @ts-ignore */}
             <group ref={ref}>{children}</group>
 
-            <OrbitControls ref={orbitControlsRef} />
+            <OrbitControls ref={orbitControlsRef} makeDefault />
         </>
     );
 }
