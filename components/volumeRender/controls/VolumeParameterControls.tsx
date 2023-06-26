@@ -35,8 +35,8 @@ export const VolumeParameterControls = React.forwardRef<
     const [volumeConfig, setVolume] = useControls(() => ({
         [folderName as string]: folder({
             opacity: {
-                value: 1,
-                min: 0,
+                value: 0.75,
+                min: 0.05,
                 max: 1,
                 onChange: (e) => {
                     controls.opacity = e;
