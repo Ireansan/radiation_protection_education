@@ -1,4 +1,4 @@
-import { GameTemplateApp } from "../../components/game_template";
+import { GameTemplateApp } from "../../components/game";
 
 export default function App() {
     return <GameTemplateApp />;
