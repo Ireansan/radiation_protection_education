@@ -30,7 +30,7 @@ import {
     // hook
     useStore,
     useToggle,
-} from "../game_template";
+} from "../game";
 import { VolumeGroup } from "../../src";
 import {
     VolumeParameterControls,

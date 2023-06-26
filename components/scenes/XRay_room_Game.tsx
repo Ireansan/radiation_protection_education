@@ -24,7 +24,7 @@ import {
     // hook
     useStore,
     useToggle,
-} from "../game_template";
+} from "../game";
 import { VolumeGroup, VolumeAnimationObject } from "../../src";
 import {
     VolumeAnimationControls,
