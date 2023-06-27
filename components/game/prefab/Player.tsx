@@ -176,6 +176,18 @@ export function Player({
                 playerRotation.copy(ref.current.rotation);
             }
 
+            set((state) => ({
+                playerProperties: {
+                    ...state.playerProperties,
+                    position: ref.current
+                        ? ref.current.position
+                        : new THREE.Vector3(),
+                    quaternion: ref.current
+                        ? ref.current.quaternion
+                        : new THREE.Quaternion(),
+                },
+            }));
+
             // update camera
             if (!editor) {
                 const headPosition = new THREE.Vector3().copy(

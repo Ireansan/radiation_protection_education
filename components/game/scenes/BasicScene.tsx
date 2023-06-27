@@ -3,6 +3,7 @@ import { Sky } from "@react-three/drei";
 import {
     Ground,
     Player,
+    OnlinePlayer,
     ControlPanel,
     BodyMatcapSelect,
     JointMatcapSelect,
@@ -19,6 +20,8 @@ export function BasicSceneEnv() {
             <ControlPanel position={[0, 2, -5]} />
             <BodyMatcapSelect position={[-5, 1, -5]} scale={0.5} />
             <JointMatcapSelect position={[-10, 1, -5]} scale={0.5} />
+
+            <OnlinePlayer />
         </>
     );
 }
