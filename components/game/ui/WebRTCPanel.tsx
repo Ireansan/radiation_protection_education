@@ -9,66 +9,9 @@ import { Button, TextField, IconButton } from "@mui/material";
 import { ContentCopy } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 
-// import { useWebRTC } from "./useWebRTC";
-import { FirebaseWebRTC } from "../../../src";
-import { firestore } from "../utils";
+import { CustomButton, CustomTextField, RTCPlayer } from "../utils";
+import { useStore } from "../store";
 import styles from "../../../styles/css/game_template.module.css";
-
-/**
- * WebRTC configs
- */
-const configuration = {
-    iceServers: [
-        {
-            // STUN
-            urls: [
-                "stun:stun1.l.google.com:19302",
-                "stun:stun2.l.google.com:19302",
-            ],
-            // TURN
-        },
-    ],
-    iceCandidatePoolSize: 10,
-};
-const dataChannelParams = { ordered: false };
-
-/**
- * Custom MUI Button and Field
- */
-const CustomButton = styled(Button)({
-    "&:disabled": {
-        backgroundColor: "#202020",
-        color: "#404040",
-    },
-});
-const CustomTextField = styled(TextField)({
-    "& label": {
-        color: "#606060",
-        "&.Mui-focused": {
-            color: "#606060",
-        },
-        "&.Mui-disabled": {
-            color: "#202020",
-        },
-    },
-    "& .MuiInput-underline:after": {
-        borderColor: "#606060",
-    },
-    "& .MuiOutlinedInput-root": {
-        "& fieldset": {
-            borderColor: "#808080",
-        },
-        "&:hover fieldset": {
-            borderColor: "#606060",
-        },
-        "&.Mui-focused fieldset": {
-            borderColor: "#606060",
-        },
-        "&.Mui-disabled fieldset": {
-            borderColor: "#202020",
-        },
-    },
-});
 
 /**
  * WebRTCPanel
@@ -77,7 +20,6 @@ const CustomTextField = styled(TextField)({
 export function WebRTCPanel({ ...props }): JSX.Element {
     const localVideoRef = React.useRef<HTMLVideoElement>(null!);
     const remoteVideoRef = React.useRef<HTMLVideoElement>(null!);
-    const [firebaseWebRTC, setFirebaseWebRTC] = useState<FirebaseWebRTC>(null!);
 
     const currentRoomRef = useRef<string>("");
     const currentStateRef = useRef<string>("");
@@ -89,19 +31,43 @@ export function WebRTCPanel({ ...props }): JSX.Element {
 
     const inputRef = useRef<HTMLInputElement>(null!);
 
+    const [set, playerProperties, onlinePlayers] = useStore((state) => [
+        state.set,
+        state.playerProperties,
+        state.onlinePlayers,
+    ]);
+
     useEffect(() => {
         // https://stackoverflow.com/questions/68838976/why-do-i-get-referenceerror-rtcpeerconnection-is-not-defined-in-next-js
-        setFirebaseWebRTC(
-            new FirebaseWebRTC(firestore, configuration, dataChannelParams)
-        );
+        set((state) => ({
+            onlinePlayers: {
+                ...state.onlinePlayers,
+                player1: new RTCPlayer(),
+            },
+        }));
     }, []);
 
     useEffect(() => {
-        if (firebaseWebRTC) {
-            localVideoRef.current.srcObject = firebaseWebRTC.localStream;
-            remoteVideoRef.current.srcObject = firebaseWebRTC.remoteStream;
+        if (onlinePlayers.player1) {
+            localVideoRef.current.srcObject = onlinePlayers.player1.localStream;
+            remoteVideoRef.current.srcObject =
+                onlinePlayers.player1.remoteStream;
         }
-    }, [firebaseWebRTC]);
+    }, [onlinePlayers]);
+
+    function sendData() {
+        if (onlinePlayers.player1?.dataChannel.readyState === "open") {
+            let data = {
+                type: "properties",
+                data: {
+                    position: playerProperties.position.toArray(),
+                    quaternion: playerProperties.quaternion.toArray(),
+                },
+            };
+
+            onlinePlayers.player1?.dataChannel.send(JSON.stringify(data));
+        }
+    }
 
     return (
         <>
@@ -112,7 +78,7 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                         variant="contained"
                         disabled={disabledCameraBtn}
                         onClick={(event) => {
-                            firebaseWebRTC.openUserMedia();
+                            onlinePlayers.player1?.openUserMedia();
 
                             setDisabledCameraBtn(true);
                             setDisabledCreateBtn(false);
@@ -129,31 +95,22 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                         variant="contained"
                         disabled={disabledCreateBtn}
                         onClick={(event) => {
-                            firebaseWebRTC.createRoom();
+                            onlinePlayers.player1?.createRoom();
 
                             console.log(
                                 "Create Room - roomId",
-                                firebaseWebRTC.roomId
+                                onlinePlayers.player1?.roomId
                             );
-                            currentRoomRef.current = firebaseWebRTC.roomId
-                                ? firebaseWebRTC.roomId
+                            currentRoomRef.current = onlinePlayers.player1
+                                ?.roomId
+                                ? onlinePlayers.player1?.roomId
                                 : "";
                             currentStateRef.current = "caller";
                             setDisabledCreateBtn(true);
                             setDisabledJoinBtn(true);
 
-                            setInterval(function () {
-                                // FIXME: Test
-                                if (
-                                    firebaseWebRTC.dataChannel.readyState ===
-                                    "open"
-                                ) {
-                                    console.log(
-                                        "Caller Send",
-                                        firebaseWebRTC.dataChannel
-                                    );
-                                    firebaseWebRTC.dataChannel.send("Caller");
-                                }
+                            setInterval(() => {
+                                sendData();
                             }, 1000);
                         }}
                     >
@@ -182,22 +139,12 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                             setDisabledCreateBtn(true);
                             setDisabledJoinBtn(true);
 
-                            await firebaseWebRTC.joinRoomById(
+                            await onlinePlayers.player1?.joinRoomById(
                                 inputRef.current.value
                             );
 
-                            setInterval(function () {
-                                // FIXME: Test
-                                if (
-                                    firebaseWebRTC.dataChannel.readyState ===
-                                    "open"
-                                ) {
-                                    console.log(
-                                        "Callee Send",
-                                        firebaseWebRTC.dataChannel
-                                    );
-                                    firebaseWebRTC.dataChannel.send("Callee");
-                                }
+                            setInterval(() => {
+                                sendData();
                             }, 1000);
                         }}
                     >
@@ -210,7 +157,7 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                         variant="contained"
                         disabled={disabledHangupBtn}
                         onClick={(event) => {
-                            firebaseWebRTC.hangUp();
+                            onlinePlayers.player1?.hangUp();
 
                             setDisabledCameraBtn(false);
                             setDisabledCreateBtn(true);

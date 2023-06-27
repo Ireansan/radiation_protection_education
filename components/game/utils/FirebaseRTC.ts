@@ -32,4 +32,22 @@ const firestore = getFirestore(app);
 // FIXME: add case
 connectFirestoreEmulator(firestore, "0.0.0.0", 8080);
 
-export { firestore };
+/********************
+ * WebRTC configs
+ ********************/
+const webRtcConfiguration = {
+    iceServers: [
+        {
+            // STUN
+            urls: [
+                "stun:stun1.l.google.com:19302",
+                "stun:stun2.l.google.com:19302",
+            ],
+            // TURN
+        },
+    ],
+    iceCandidatePoolSize: 10,
+};
+const dataChannelParams = { ordered: false };
+
+export { firestore, webRtcConfiguration, dataChannelParams };

@@ -8,6 +8,8 @@ import shallow from "zustand/shallow";
 import * as THREE from "three";
 import type { Object3D } from "three";
 
+import { RTCPlayer } from "./utils";
+
 export const angularVelocity = [0, 0.5, 0] as const;
 export const cameras = ["FIRST_PERSON", "THIRD_PERSON"] as const;
 
@@ -44,7 +46,7 @@ export const matcapList = [
     92, 45, 20, 21, 25, 28, 26, 39, 58, 540, 544, 546, 550, 580, 586, 613, 635,
     639,
 ] as const;
-export type MatcapList = typeof matcapList[number];
+export type MatcapList = (typeof matcapList)[number];
 
 export const playerConfig = {
     radius: 0.5,
@@ -58,10 +60,19 @@ export const playerConfig = {
     jointMatcap: matcapList[0],
 };
 
-const actionNames = ["reset"] as const;
-export type ActionNames = typeof actionNames[number];
+const playerProperties = {
+    position: new THREE.Vector3(),
+    quaternion: new THREE.Quaternion(),
+};
 
-type Camera = typeof cameras[number];
+const onlinePlayers = {
+    player1: undefined,
+};
+
+const actionNames = ["reset"] as const;
+export type ActionNames = (typeof actionNames)[number];
+
+type Camera = (typeof cameras)[number];
 export type Controls = typeof controls;
 export type States = typeof states;
 
@@ -73,6 +84,10 @@ type Getter = StoreApi<IState>["getState"];
 export type Setter = StoreApi<IState>["setState"];
 
 export type PlayerConfig = typeof playerConfig;
+export type PlayerProperties = typeof playerProperties;
+export type OnlinePlayers = {
+    player1: RTCPlayer | undefined;
+};
 
 const booleans = [
     "debug",
@@ -87,7 +102,7 @@ const booleans = [
     "sound",
     "stats",
 ] as const;
-type Booleans = typeof booleans[number];
+type Booleans = (typeof booleans)[number];
 
 type BaseState = {
     [K in Booleans]: boolean;
@@ -101,6 +116,8 @@ export interface IState extends BaseState {
     get: Getter;
     set: Setter;
     playerConfig: PlayerConfig;
+    playerProperties: PlayerProperties;
+    onlinePlayers: OnlinePlayers;
 }
 
 const useStoreImpl = create<IState>(
@@ -136,6 +153,8 @@ const useStoreImpl = create<IState>(
             states,
             stats,
             playerConfig,
+            playerProperties,
+            onlinePlayers,
         };
     }
 );
