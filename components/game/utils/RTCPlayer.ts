@@ -52,7 +52,7 @@ class RTCPlayer extends FirebaseWebRTC {
     }
 
     async joinRoomById(roomId: string) {
-        super.joinRoomById(roomId);
+        await super.joinRoomById(roomId);
 
         this.dataChannel.addEventListener("message", (event) => {
             console.log(`Data channel message: ${event.data}`);
