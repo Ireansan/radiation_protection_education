@@ -2,11 +2,7 @@
  *
  */
 
-import { GameTemplate } from "./GameTemplate";
-
-import { BasicSceneEnv, BasicScenePhysics } from "./scenes/BasicScene";
-
-import styles from "../../styles/css/game_template.module.css";
+import { SampleScene } from "./scenes/SampleScene";
 
 export default function App() {
     /**
@@ -18,10 +14,7 @@ export default function App() {
      */
     return (
         <>
-            <GameTemplate
-                childrenEnv={<BasicSceneEnv />}
-                childrenPhysics={<BasicScenePhysics />}
-            />
+            <SampleScene />
         </>
     );
 }

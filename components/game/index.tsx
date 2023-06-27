@@ -1,4 +1,4 @@
-export { default as GameTemplateApp } from "./App";
+export { default as GameSampleApp } from "./App";
 export * from "./GameTemplate";
 export * from "./controls";
 export * from "./models";
