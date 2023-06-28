@@ -13,7 +13,7 @@ import {
 extend({ VolumeObject, VolumeGroup });
 import { PlaneHelperMesh } from "./PlaneHelper";
 
-export type VolumeBoardControlsProps = {
+export type DoseBoardControlsProps = {
     children?: React.ReactElement<THREE.Object3D>;
     object1: React.RefObject<VolumeObject> | React.RefObject<VolumeGroup>;
     object2: React.RefObject<VolumeObject> | React.RefObject<VolumeGroup>;
@@ -29,10 +29,10 @@ export type VolumeBoardControlsProps = {
 /**
  * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
  */
-export const VolumeBoardControls = React.forwardRef<
-    VolumeBoardControlsProps,
-    VolumeBoardControlsProps
->(function VolumeBoardControls(
+export const DoseBoardControls = React.forwardRef<
+    DoseBoardControlsProps,
+    DoseBoardControlsProps
+>(function DoseBoardControls(
     {
         children,
         object1,

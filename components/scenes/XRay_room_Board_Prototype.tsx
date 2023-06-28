@@ -12,7 +12,7 @@ import * as THREE from "three";
 import { VolumeGroup, VolumeAnimationObject } from "../../src";
 import {
     VolumeAnimationControls,
-    VolumeBoardControls,
+    DoseBoardControls,
     VolumeClippingControls,
     VolumeParameterControls,
 } from "../volumeRender";
@@ -94,7 +94,7 @@ function XRayRoomBoardPrototype() {
                     planeSize={100}
                     subPlaneSize={50}
                 />
-                <VolumeBoardControls
+                <DoseBoardControls
                     object1={refAnimation1}
                     object2={refAnimation2}
                     origin={new THREE.Vector3(0, 0, 0)}
@@ -106,7 +106,7 @@ function XRayRoomBoardPrototype() {
                     <mesh position={[0, 0, 0]}>
                         <boxBufferGeometry args={[20, 50, 0.05]} />
                     </mesh>
-                </VolumeBoardControls>
+                </DoseBoardControls>
 
                 {/* -------------------------------------------------- */}
                 {/* Three.js Object */}
