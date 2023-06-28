@@ -1,22 +1,27 @@
 import React from "react";
 import { extend, ReactThreeFiber } from "@react-three/fiber";
 
+import { DoseObject } from "./doseObject";
 import { VolumeAnimationObject } from "./volumeAnimationObject";
 import { VolumeGroup } from "./volumeGroup";
 import { VolumeObject } from "./volumeObject";
-extend({ VolumeAnimationObject, VolumeGroup, VolumeObject });
+extend({ DoseObject, VolumeAnimationObject, VolumeGroup, VolumeObject });
 
+export type DoseObjectProps = ReactThreeFiber.Object3DNode<
+    DoseObject,
+    typeof DoseObject
+>;
 export type VolumeAnimationObjectProps = ReactThreeFiber.Object3DNode<
     VolumeAnimationObject,
     typeof VolumeAnimationObject
 >;
-export type VolumeObjectProps = ReactThreeFiber.Object3DNode<
-    VolumeObject,
-    typeof VolumeObject
->;
 export type VolumeGroupProps = ReactThreeFiber.Object3DNode<
     VolumeGroup,
     typeof VolumeGroup
+>;
+export type VolumeObjectProps = ReactThreeFiber.Object3DNode<
+    VolumeObject,
+    typeof VolumeObject
 >;
 
 /**
@@ -24,8 +29,9 @@ export type VolumeGroupProps = ReactThreeFiber.Object3DNode<
  */
 declare module "@react-three/fiber" {
     interface ThreeElements {
+        doseObject: DoseObject;
         volumeAnimationObject: VolumeAnimationObjectProps;
-        volumeObject: VolumeObjectProps;
         volumeGroup: VolumeGroupProps;
+        volumeObject: VolumeObjectProps;
     }
 }

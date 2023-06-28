@@ -8,6 +8,7 @@ class VolumeControls extends VolumeBase {
     object: VolumeBase | undefined;
 
     _invert: boolean;
+    _isType?: string;
 
     regionId: number | undefined;
 
@@ -72,6 +73,13 @@ class VolumeControls extends VolumeBase {
         this._invert = invert;
         this.updateVolumeClipping();
     }
+    get isType() {
+        return this._isType;
+    }
+    set isType(type: string | undefined) {
+        this._isType = type;
+        this.updateVolumeClipping();
+    }
 
     updateVolumeParam() {
         // update attached object
@@ -94,7 +102,8 @@ class VolumeControls extends VolumeBase {
                     this._clippingPlanes,
                     this._clipping,
                     this._clipIntersection,
-                    this._invert
+                    this._invert,
+                    this._isType
                 );
             } else {
                 this.object.setClippingPlanesObjects(
@@ -102,7 +111,8 @@ class VolumeControls extends VolumeBase {
                     this._clipping,
                     this._clippingPlanes,
                     this._clipIntersection,
-                    this._invert
+                    this._invert,
+                    this._isType
                 );
             }
         }

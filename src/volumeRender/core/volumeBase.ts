@@ -6,19 +6,22 @@ class ClippingPlanesObject {
     enabled: boolean;
     intersection: boolean;
     invert: boolean;
+    isType?: string;
 
     constructor(
         id: number,
         planes: THREE.Plane[],
         enabled: boolean,
         intersection: boolean,
-        invert: boolean
+        invert: boolean,
+        isType?: string
     ) {
         this.id = id;
         this.planes = planes;
         this.enabled = enabled;
         this.intersection = intersection;
         this.invert = invert;
+        isType ? (this.isType = isType) : null;
     }
 }
 
@@ -207,7 +210,8 @@ class VolumeBase extends THREE.Object3D {
         planes: THREE.Plane[],
         clipping: boolean = false,
         intersection: boolean = false,
-        invert: boolean = false
+        invert: boolean = false,
+        isType?: string
     ) {
         let index = this.clippingPlanesObjects.length;
         this.clippingPlanesObjects.push(
@@ -216,7 +220,8 @@ class VolumeBase extends THREE.Object3D {
                 planes,
                 clipping,
                 intersection,
-                invert
+                invert,
+                isType
             )
         );
         this.updateVolumeClipping(false, true);
@@ -226,7 +231,8 @@ class VolumeBase extends THREE.Object3D {
         clipping?: boolean,
         planes?: THREE.Plane[],
         intersection?: boolean,
-        invert?: boolean
+        invert?: boolean,
+        isType?: string
     ) {
         clipping !== undefined
             ? (this.clippingPlanesObjects[id].enabled = clipping)
@@ -239,6 +245,9 @@ class VolumeBase extends THREE.Object3D {
             : null;
         invert !== undefined
             ? (this.clippingPlanesObjects[id].invert = invert)
+            : null;
+        isType !== undefined
+            ? (this.clippingPlanesObjects[id].isType = isType)
             : null;
         this.updateVolumeClipping(false, true);
     }

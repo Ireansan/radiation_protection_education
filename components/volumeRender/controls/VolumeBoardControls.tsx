@@ -225,11 +225,15 @@ export const VolumeBoardControls = React.forwardRef<
     React.useEffect(() => {
         controls1.clippingPlanes = Planes;
         controls1.clipIntersection = true;
+
+        controls1.isType = "board";
     }, [controls1, Planes]);
     React.useEffect(() => {
         controls2.clippingPlanes = Planes;
         controls2.clipIntersection = true;
+
         controls2.invert = true;
+        controls2.isType = "board";
     }, [controls2, Planes]);
 
     // Clipping
