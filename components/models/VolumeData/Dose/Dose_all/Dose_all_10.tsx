@@ -7,15 +7,10 @@ import {
 } from "@react-three/fiber";
 import { Volume, NRRDLoader } from "three-stdlib";
 
-import { VolumeObject } from "../../../../../src"; // FIXME: filepath
-extend({ VolumeObject });
-
 import { applyBasePath } from "../../../../utils";
 const modelURL = applyBasePath(`/models/nrrd/dose_animation/dose_10.nrrd`);
 
-export function Dose_all_10({
-    ...props
-}: JSX.IntrinsicElements["volumeObject"]) {
+export function Dose_all_10({ ...props }: JSX.IntrinsicElements["doseObject"]) {
     const { gl } = useThree();
     gl.localClippingEnabled = true;
 
@@ -24,7 +19,7 @@ export function Dose_all_10({
 
     return (
         <>
-            <volumeObject args={[volume]} {...props} />
+            <doseObject args={[volume]} {...props} />
         </>
     );
 }

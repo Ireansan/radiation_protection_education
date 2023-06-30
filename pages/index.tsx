@@ -109,8 +109,8 @@ const Home: NextPage = () => {
                     </div> */}
 
                     <div className={styles.card}>
-                        <Link href={"/multiplay/game_template"}>
-                            <h2>Game Template &rarr;</h2>
+                        <Link href={"/multiplay/game_sample"}>
+                            <h2>Game Sample &rarr;</h2>
                             <p>Next.js + react-three/fiber</p>
                         </Link>
                     </div>

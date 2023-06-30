@@ -1,1 +1,1 @@
-export * from "./BasicScene";
+export * from "./SampleScene";

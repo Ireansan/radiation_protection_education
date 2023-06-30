@@ -12,7 +12,7 @@ import * as THREE from "three";
 import { VolumeGroup, VolumeAnimationObject } from "../../src";
 import {
     VolumeAnimationControls,
-    VolumeBoardControls,
+    DoseBoardControls,
     VolumeClippingControls,
     VolumeParameterControls,
 } from "../volumeRender";
@@ -68,19 +68,6 @@ function XRayRoomBoardPrototype() {
                     duration={16}
                 />
                 <VolumeParameterControls object={ref} />
-                {/* <VolumeClippingControls
-                    object={ref}
-                    folderName="Dose"
-                    normals={[
-                        [0, 0, -1],
-                        // [1, 0, 0],
-                        [-1, 0, 0],
-                        // [0, 1, 0],
-                        // [0, -1, 0],
-                    ]}
-                    planeSize={100}
-                    subPlaneSize={50}
-                /> */}
                 <VolumeClippingControls
                     object={ref}
                     folderName="Dose 2"
@@ -94,10 +81,10 @@ function XRayRoomBoardPrototype() {
                     planeSize={100}
                     subPlaneSize={50}
                 />
-                <VolumeBoardControls
+                <DoseBoardControls
                     object1={refAnimation1}
                     object2={refAnimation2}
-                    origin={new THREE.Vector3(0, 0, 0)}
+                    origin={new THREE.Vector3(0, -20, 0)}
                     width={20}
                     height={50}
                     planeSize={100}
@@ -106,7 +93,7 @@ function XRayRoomBoardPrototype() {
                     <mesh position={[0, 0, 0]}>
                         <boxBufferGeometry args={[20, 50, 0.05]} />
                     </mesh>
-                </VolumeBoardControls>
+                </DoseBoardControls>
 
                 {/* -------------------------------------------------- */}
                 {/* Three.js Object */}
@@ -114,14 +101,13 @@ function XRayRoomBoardPrototype() {
                     <VOLUMEDATA.Dose_material />
                     <VOLUMEDATA.Dose_region />
                 </group>
+                <mesh position={[0, -20, 0]} scale={10} renderOrder={2}>
+                    <sphereBufferGeometry />
+                </mesh>
 
                 {/* -------------------------------------------------- */}
                 {/* Three.js Controls */}
                 <OrbitControls makeDefault />
-
-                <mesh position={[0, 0, 0]} scale={10} renderOrder={2}>
-                    <sphereBufferGeometry />
-                </mesh>
 
                 {/* -------------------------------------------------- */}
                 {/* Enviroment */}
