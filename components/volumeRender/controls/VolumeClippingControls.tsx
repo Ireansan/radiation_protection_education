@@ -11,8 +11,61 @@ import {
     VolumeControls as VolumeControlsImpl,
 } from "../../../src";
 extend({ VolumeObject, VolumeGroup });
-import { PlaneHelperTargetMesh } from "./PlaneHelper";
 import type { Target, VolumeControlsTypes } from "./types";
+
+/**
+ * Plane Helper Mesh
+ */
+type planeHelperMeshProps = {
+    id: number;
+    normal: THREE.Vector3;
+    subPlaneSize: number;
+    subPlaneColor: THREE.Color;
+    visible?: boolean;
+    onClick: (e: THREE.Event, id: number) => void;
+    setMatrix: (matrix: THREE.Matrix4) => void;
+};
+function PlaneHelperMesh({
+    id,
+    normal,
+    subPlaneSize,
+    subPlaneColor,
+    visible = false,
+    onClick,
+    setMatrix,
+}: planeHelperMeshProps) {
+    const planeID = id;
+    const meshRef = React.useRef<THREE.Mesh>(new THREE.Mesh());
+    const [hovered, setHovered] = React.useState(false);
+    useCursor(hovered);
+
+    React.useEffect(() => {
+        const normal_clone = new THREE.Vector3()
+            .copy(normal)
+            .multiplyScalar(-1);
+        meshRef.current.lookAt(normal_clone);
+    }, []);
+
+    return (
+        <>
+            <mesh
+                ref={meshRef}
+                name={`plane${id}`}
+                scale={subPlaneSize}
+                onClick={(e) => {
+                    onClick(e, planeID);
+                    setMatrix(meshRef.current.matrixWorld);
+                }}
+                onPointerOver={() => setHovered(true)}
+                onPointerOut={() => setHovered(false)}
+                visible={visible}
+            >
+                <planeGeometry />
+                <meshBasicMaterial color={subPlaneColor} wireframe={true} />
+            </mesh>
+        </>
+    );
+}
 
 /**
  * Controls
@@ -206,7 +259,7 @@ export const VolumeClippingControls = React.forwardRef<
                         size={planeSize}
                         visible={clipping ? visible : false}
                     />
-                    <PlaneHelperTargetMesh
+                    <PlaneHelperMesh
                         id={index}
                         normal={plane.normal}
                         subPlaneSize={subPlaneSize}
