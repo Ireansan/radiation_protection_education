@@ -50,9 +50,7 @@ function XRayScale() {
                     {/* Three.js Canvas */}
                     <Canvas
                         orthographic
-                        camera={{
-                            position: cameraInitPosition,
-                        }}
+                        camera={{ position: cameraInitPosition, zoom: 50 }}
                     >
                         {/* -------------------------------------------------- */}
                         {/* Volume Object */}
@@ -116,9 +114,6 @@ function XRayScale() {
                             args={[10.5, 10.5]}
                             cellColor={"#3f3f3f"}
                             sectionColor={"#9d4b4b"}
-                            matrixWorldAutoUpdate={undefined}
-                            getObjectsByProperty={undefined}
-                            getVertexPosition={undefined}
                         />
 
                         {/* -------------------------------------------------- */}
