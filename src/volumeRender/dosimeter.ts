@@ -1,16 +1,24 @@
 import * as THREE from "three";
-import { VolumeBase } from "./core";
+import {
+    VolumeAnimationObject,
+    VolumeBase,
+    VolumeGroup,
+    VolumeObject,
+} from "./core";
 
+type ResultsByName = {
+    name: string;
+    data: number | number[];
+};
 /**
  *
  */
 class Dosimeter extends VolumeBase {
     object: THREE.Object3D | undefined;
-    names: string[] | undefined;
+    _names: string[] | undefined;
     targets: (VolumeBase | undefined)[] | undefined;
-    results: number[]; // FIXME: will change type "number" to custom class
 
-    regionId: number | undefined;
+    results: ResultsByName[];
 
     isDoseControls: boolean;
 
@@ -18,13 +26,21 @@ class Dosimeter extends VolumeBase {
         super();
 
         this.targets = undefined;
-        this.names = undefined;
+        this._names = undefined;
         this.object = undefined;
+
         this.results = [];
 
         this.visible = false;
 
         this.isDoseControls = true;
+    }
+
+    get names() {
+        return this._names;
+    }
+    set names(nameList: string[] | undefined) {
+        this._names = nameList;
     }
 
     attach(object: THREE.Object3D<THREE.Event>) {
@@ -52,8 +68,47 @@ class Dosimeter extends VolumeBase {
         return this;
     }
 
+    getValueByName(name: string | undefined): number | number[] {
+        let objectByName: THREE.Object3D | undefined;
+
+        if (this.object) {
+            objectByName = this.object;
+            if (name) {
+                objectByName = this.object.getObjectByName(name);
+            }
+        }
+
+        if (this.targets && objectByName) {
+            let position = new THREE.Vector3();
+            objectByName.getWorldPosition(position);
+
+            for (let i = 0; i < this.targets.length; i++) {
+                let target = this.targets[i];
+                return target
+                    ? target instanceof VolumeObject ||
+                      target instanceof VolumeAnimationObject
+                        ? target.getVolumeValue(position)
+                        : target instanceof VolumeGroup
+                        ? target.getVolumeValues(position)
+                        : NaN
+                    : NaN;
+            }
+        }
+
+        return NaN;
+    }
     updateResults() {
-        // TODO:
+        this.results = [];
+
+        if (this._names) {
+            for (let i = 0; i < this._names.length; i++) {
+                let name = this._names[i];
+                this.results.push({
+                    name: name,
+                    data: this.getValueByName(name),
+                });
+            }
+        }
     }
 }
 
