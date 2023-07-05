@@ -36,7 +36,7 @@ import {
     VolumeParameterControls,
     VolumeClippingControls,
 } from "../volumeRender";
-import * as Models from "../models/VolumeData";
+import * as VOLUMEDATA from "../models/VolumeData";
 
 import styles from "../../styles/css/game_template.module.css";
 
@@ -65,10 +65,12 @@ function StentGame() {
                         {/* Volume Object */}
                         {/* Stent */}
                         <volumeGroup ref={ref}>
-                            <Models.Stent
+                            <VOLUMEDATA.Stent
                                 position={[-5, 1, -4]}
-                                rotation={[-Math.PI / 2, 0, 0]}
-                                scale={1 / 128}
+                                rotation={
+                                    VOLUMEDATA.Stent_Configure.volume.rotation
+                                }
+                                scale={VOLUMEDATA.Stent_Configure.volume.scale}
                             />
                         </volumeGroup>
 

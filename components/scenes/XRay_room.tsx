@@ -34,15 +34,16 @@ function XRayRoom() {
         <>
             {/* ================================================== */}
             {/* Three.js Canvas */}
-            <Canvas camera={{ position: [32, 64, 32] }}>
+            <Canvas orthographic camera={{ position: [4, 8, 4], zoom: 50 }}>
                 {/* -------------------------------------------------- */}
                 {/* Volume Object */}
                 <volumeGroup ref={ref}>
                     {/* Dose */}
                     <volumeAnimationObject
                         ref={refAnimation}
-                        position={[45, 0, 48]}
-                        rotation={[0, Math.PI, -Math.PI / 2]}
+                        position={VOLUMEDATA.Dose_Configure.volume.position}
+                        rotation={VOLUMEDATA.Dose_Configure.volume.rotation}
+                        scale={VOLUMEDATA.Dose_Configure.volume.scale}
                     >
                         <VOLUMEDATA.Dose_all_Animation />
                     </volumeAnimationObject>
@@ -62,13 +63,20 @@ function XRayRoom() {
                         [0, 0, -1],
                         // [-1, 0, 0],
                     ]}
-                    planeSize={100}
-                    subPlaneSize={50}
+                    planeSize={2}
+                    subPlaneSize={1}
                 />
 
                 {/* -------------------------------------------------- */}
                 {/* Three.js Object */}
-                <group rotation={[0, 0, Math.PI]} scale={1 / 4}>
+                <group
+                    position={VOLUMEDATA.Dose_Configure.object3d.position}
+                    rotation={VOLUMEDATA.Dose_Configure.object3d.rotation}
+                    scale={
+                        VOLUMEDATA.Dose_Configure.volume.scale *
+                        VOLUMEDATA.Dose_Configure.object3d.scale
+                    }
+                >
                     <VOLUMEDATA.Dose_material />
                     <VOLUMEDATA.Dose_region />
                 </group>
@@ -88,7 +96,7 @@ function XRayRoom() {
                 <GizmoHelper
                     alignment="bottom-right"
                     margin={[80, 80]}
-                    renderPriority={-1}
+                    renderPriority={1}
                 >
                     <GizmoViewport
                         axisColors={["hotpink", "aquamarine", "#3498DB"]}

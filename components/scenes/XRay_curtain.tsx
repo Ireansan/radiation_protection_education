@@ -36,7 +36,7 @@ function XRayCurtain() {
         <>
             {/* ================================================== */}
             {/* Three.js Canvas */}
-            <Canvas camera={{ position: [32, 64, 32] }}>
+            <Canvas orthographic camera={{ position: [4, 8, 4], zoom: 50 }}>
                 {/* -------------------------------------------------- */}
                 {/* Volume Objects */}
                 <volumeGroup ref={ref}>
@@ -47,13 +47,22 @@ function XRayCurtain() {
                     >
                         <volumeAnimationObject
                             ref={refCurtainAnimation}
-                            position={[45, 0, 48]}
-                            rotation={[0, Math.PI, -Math.PI / 2]}
+                            position={
+                                VOLUMEDATA.Dose_curtain_Configure.volume
+                                    .position
+                            }
+                            rotation={
+                                VOLUMEDATA.Dose_curtain_Configure.volume
+                                    .rotation
+                            }
+                            scale={
+                                VOLUMEDATA.Dose_curtain_Configure.volume.scale
+                            }
                         >
                             <VOLUMEDATA.Dose_curtain_all_Animation />
                         </volumeAnimationObject>
 
-                        <mesh position={[-50, 0, 0]} scale={25}>
+                        <mesh position={[-5, 0, 0]}>
                             <sphereBufferGeometry />
                         </mesh>
                     </volumeGroup>
@@ -65,13 +74,22 @@ function XRayCurtain() {
                     >
                         <volumeAnimationObject
                             ref={refNocurtainAnimation}
-                            position={[45, 0, 48]}
-                            rotation={[0, Math.PI, -Math.PI / 2]}
+                            position={
+                                VOLUMEDATA.Dose_nocurtain_Configure.volume
+                                    .position
+                            }
+                            rotation={
+                                VOLUMEDATA.Dose_nocurtain_Configure.volume
+                                    .rotation
+                            }
+                            scale={
+                                VOLUMEDATA.Dose_nocurtain_Configure.volume.scale
+                            }
                         >
                             <VOLUMEDATA.Dose_nocurtain_all_Animation />
                         </volumeAnimationObject>
 
-                        <mesh position={[50, 0, 0]} scale={25}>
+                        <mesh position={[5, 0, 0]}>
                             <boxBufferGeometry />
                         </mesh>
                     </volumeGroup>
@@ -97,7 +115,15 @@ function XRayCurtain() {
 
                 {/* -------------------------------------------------- */}
                 {/* Three.js Object */}
-                <group rotation={[0, 0, Math.PI]} scale={1 / 4}>
+                <group
+                    position={
+                        VOLUMEDATA.Dose_curtain_Configure.object3d.position
+                    }
+                    rotation={
+                        VOLUMEDATA.Dose_curtain_Configure.object3d.rotation
+                    }
+                    scale={VOLUMEDATA.Dose_curtain_Configure.object3d.scale}
+                >
                     <VOLUMEDATA.Dose_material />
                     <VOLUMEDATA.Dose_region />
                 </group>

@@ -32,8 +32,9 @@ function XRayRoomVR() {
                     <volumeGroup ref={ref}>
                         <volumeAnimationObject
                             ref={refAnimation}
-                            position={[45, 0, 48]}
-                            rotation={[0, Math.PI, -Math.PI / 2]}
+                            position={VOLUMEDATA.Dose_Configure.volume.position}
+                            rotation={VOLUMEDATA.Dose_Configure.volume.rotation}
+                            scale={VOLUMEDATA.Dose_Configure.volume.scale}
                         >
                             <VOLUMEDATA.Dose_all_Animation />
                         </volumeAnimationObject>
@@ -53,13 +54,20 @@ function XRayRoomVR() {
                             [0, 0, -1],
                             // [-1, 0, 0],
                         ]}
-                        planeSize={100}
-                        subPlaneSize={50}
+                        planeSize={2}
+                        subPlaneSize={1}
                     />
 
                     {/* -------------------------------------------------- */}
                     {/* Three.js Object */}
-                    <group rotation={[0, 0, Math.PI]} scale={1 / 4}>
+                    <group
+                        position={VOLUMEDATA.Dose_Configure.object3d.position}
+                        rotation={VOLUMEDATA.Dose_Configure.object3d.rotation}
+                        scale={
+                            VOLUMEDATA.Dose_Configure.volume.scale *
+                            VOLUMEDATA.Dose_Configure.object3d.scale
+                        }
+                    >
                         <VOLUMEDATA.Dose_material />
                         <VOLUMEDATA.Dose_region />
                     </group>

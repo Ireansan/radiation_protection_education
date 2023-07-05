@@ -34,30 +34,36 @@ function StentAndDose() {
         <>
             {/* ================================================== */}
             {/* Three.js Canvas */}
-            <Canvas camera={{ position: [32, 64, 32] }}>
+            <Canvas orthographic camera={{ position: [4, 8, 4], zoom: 50 }}>
                 {/* -------------------------------------------------- */}
                 {/* Volume Object */}
                 <volumeGroup ref={ref}>
                     {/* Stent */}
                     <volumeGroup
                         ref={refStent}
-                        position={[70, 0, 0]}
+                        position={[2.5, 0, 0]}
+                        scale={2}
                         volumeParamAutoUpdate={false}
                     >
-                        <VOLUMEDATA.Stent rotation={[-Math.PI / 2, 0, 0]} />
+                        <VOLUMEDATA.Stent
+                            rotation={
+                                VOLUMEDATA.Stent_Configure.volume.rotation
+                            }
+                            scale={VOLUMEDATA.Stent_Configure.volume.scale}
+                        />
                     </volumeGroup>
 
                     {/* Dose */}
                     <volumeGroup
                         ref={refDose}
-                        position={[-100, 50, -100]}
-                        scale={2}
+                        position={[-2.5, 0, 0]}
                         volumeParamAutoUpdate={false}
                     >
                         <volumeAnimationObject
                             ref={refDoseAnimation}
-                            position={[45, 0, 48]}
-                            rotation={[0, Math.PI, -Math.PI / 2]}
+                            position={VOLUMEDATA.Dose_Configure.volume.position}
+                            rotation={VOLUMEDATA.Dose_Configure.volume.rotation}
+                            scale={VOLUMEDATA.Dose_Configure.volume.scale}
                         >
                             <VOLUMEDATA.Dose_nocurtain_all_Animation />
                         </volumeAnimationObject>
@@ -85,19 +91,24 @@ function StentAndDose() {
                         [0, 0, -1],
                         // [-1, 0, 0],
                     ]}
-                    planeSize={100}
-                    subPlaneSize={50}
+                    planeSize={2}
+                    subPlaneSize={1}
                 />
 
                 {/* -------------------------------------------------- */}
                 {/* Three.js Objects */}
-                <group
-                    position={[-70, 50, -100]}
-                    rotation={[0, 0, Math.PI]}
-                    scale={1 / 2}
-                >
-                    <VOLUMEDATA.Dose_material />
-                    <VOLUMEDATA.Dose_region />
+                <group position={[-2.5, 0, 0]}>
+                    <group
+                        position={VOLUMEDATA.Dose_Configure.object3d.position}
+                        rotation={VOLUMEDATA.Dose_Configure.object3d.rotation}
+                        scale={
+                            VOLUMEDATA.Dose_Configure.volume.scale *
+                            VOLUMEDATA.Dose_Configure.object3d.scale
+                        }
+                    >
+                        <VOLUMEDATA.Dose_material />
+                        <VOLUMEDATA.Dose_region />
+                    </group>
                 </group>
 
                 {/* -------------------------------------------------- */}

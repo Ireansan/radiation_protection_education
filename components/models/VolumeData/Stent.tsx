@@ -35,3 +35,10 @@ export function Stent({ ...props }: JSX.IntrinsicElements["volumeObject"]) {
         </>
     );
 }
+
+export const Stent_Configure = {
+    volume: {
+        rotation: [-Math.PI / 2, 0, 0] as THREE.Vector3Tuple,
+        scale: 1 / 128,
+    },
+};

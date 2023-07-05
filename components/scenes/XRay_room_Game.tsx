@@ -31,7 +31,7 @@ import {
     VolumeParameterControls,
     VolumeClippingControls,
 } from "../volumeRender";
-import * as Models from "../models/VolumeData";
+import * as VOLUMEDATA from "../models/VolumeData";
 
 import styles from "../../styles/css/game_template.module.css";
 
@@ -62,15 +62,19 @@ function XRayRoomGame() {
                     <Canvas shadows camera={{ fov: 45 }} id={"mainCanvas"}>
                         {/* -------------------------------------------------- */}
                         {/* Volume Objects */}
-                        <volumeGroup ref={ref}>
+                        <volumeGroup ref={ref} position={[xOffset, 0, zOffset]}>
                             {/* Dose */}
                             <volumeAnimationObject
                                 ref={refAnimation}
-                                position={[2.1 + xOffset, 2.2, 2.35 + zOffset]}
-                                rotation={[0, Math.PI, -Math.PI / 2]}
-                                scale={1 / 20}
+                                position={
+                                    VOLUMEDATA.Dose_Configure.volume.position
+                                }
+                                rotation={
+                                    VOLUMEDATA.Dose_Configure.volume.rotation
+                                }
+                                scale={VOLUMEDATA.Dose_Configure.volume.scale}
                             >
-                                <Models.Dose_all_Animation />
+                                <VOLUMEDATA.Dose_all_Animation />
                             </volumeAnimationObject>
                         </volumeGroup>
 
@@ -92,13 +96,22 @@ function XRayRoomGame() {
 
                         {/* -------------------------------------------------- */}
                         {/* Three.js Object */}
-                        <group
-                            position={[0 + xOffset, 2, 0 + zOffset]}
-                            rotation={[0, 0, Math.PI]}
-                            scale={(1 / 4) * (1 / 20)}
-                        >
-                            <Models.Dose_material />
-                            <Models.Dose_region />
+                        <group position={[xOffset, 0, zOffset]}>
+                            <group
+                                position={
+                                    VOLUMEDATA.Dose_Configure.object3d.position
+                                }
+                                rotation={
+                                    VOLUMEDATA.Dose_Configure.object3d.rotation
+                                }
+                                scale={
+                                    VOLUMEDATA.Dose_Configure.volume.scale *
+                                    VOLUMEDATA.Dose_Configure.object3d.scale
+                                }
+                            >
+                                <VOLUMEDATA.Dose_material />
+                                <VOLUMEDATA.Dose_region />
+                            </group>
                         </group>
                         <ControlPanel position={[0, 2, -5]} />
 

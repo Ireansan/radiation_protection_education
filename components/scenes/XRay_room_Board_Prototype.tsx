@@ -34,15 +34,16 @@ function XRayRoomBoardPrototype() {
         <>
             {/* ================================================== */}
             {/* Three.js Canvas */}
-            <Canvas camera={{ position: [32, 64, 32] }}>
+            <Canvas orthographic camera={{ position: [4, 8, 4], zoom: 50 }}>
                 {/* -------------------------------------------------- */}
                 {/* Volume Object */}
-                <volumeGroup ref={ref} renderOrder={3}>
+                <volumeGroup ref={ref}>
                     {/* Original Data */}
                     <volumeAnimationObject
                         ref={refAnimation1}
-                        position={[45, 0, 48]}
-                        rotation={[0, Math.PI, -Math.PI / 2]}
+                        position={VOLUMEDATA.Dose_Configure.volume.position}
+                        rotation={VOLUMEDATA.Dose_Configure.volume.rotation}
+                        scale={VOLUMEDATA.Dose_Configure.volume.scale}
                     >
                         <VOLUMEDATA.Dose_all_Animation />
                     </volumeAnimationObject>
@@ -50,8 +51,9 @@ function XRayRoomBoardPrototype() {
                     {/* Data * 0.01 */}
                     <volumeAnimationObject
                         ref={refAnimation2}
-                        position={[45, 0, 48]}
-                        rotation={[0, Math.PI, -Math.PI / 2]}
+                        position={VOLUMEDATA.Dose_Configure.volume.position}
+                        rotation={VOLUMEDATA.Dose_Configure.volume.rotation}
+                        scale={VOLUMEDATA.Dose_Configure.volume.scale}
                     >
                         <VOLUMEDATA.Dose_all_Animation_centi />
                     </volumeAnimationObject>
@@ -78,31 +80,38 @@ function XRayRoomBoardPrototype() {
                         // [0, 1, 0],
                         [0, -1, 0],
                     ]}
-                    planeSize={100}
-                    subPlaneSize={50}
+                    planeSize={2}
+                    subPlaneSize={1}
                 />
                 <DoseBoardControls
                     object1={refAnimation1}
                     object2={refAnimation2}
-                    origin={new THREE.Vector3(0, -20, 0)}
-                    width={20}
-                    height={50}
-                    planeSize={100}
-                    subPlaneSize={50}
+                    origin={new THREE.Vector3(0, 1, 0)}
+                    width={1}
+                    height={2}
+                    planeSize={2}
+                    subPlaneSize={1}
                 >
-                    <mesh position={[0, 0, 0]}>
-                        <boxBufferGeometry args={[20, 50, 0.05]} />
+                    <mesh>
+                        <boxBufferGeometry args={[1, 2, 0.05]} />
                     </mesh>
                 </DoseBoardControls>
 
                 {/* -------------------------------------------------- */}
                 {/* Three.js Object */}
-                <group rotation={[0, 0, Math.PI]} scale={1 / 4} renderOrder={1}>
+                <group
+                    position={VOLUMEDATA.Dose_Configure.object3d.position}
+                    rotation={VOLUMEDATA.Dose_Configure.object3d.rotation}
+                    scale={
+                        VOLUMEDATA.Dose_Configure.volume.scale *
+                        VOLUMEDATA.Dose_Configure.object3d.scale
+                    }
+                >
                     <VOLUMEDATA.Dose_material />
                     <VOLUMEDATA.Dose_region />
                 </group>
-                <mesh position={[0, -20, 0]} scale={10} renderOrder={2}>
-                    <sphereBufferGeometry />
+                <mesh position={[0, 1, 0]}>
+                    <sphereBufferGeometry args={[0.25]} />
                 </mesh>
 
                 {/* -------------------------------------------------- */}
@@ -120,7 +129,7 @@ function XRayRoomBoardPrototype() {
                 <GizmoHelper
                     alignment="bottom-right"
                     margin={[80, 80]}
-                    renderPriority={-1}
+                    renderPriority={1}
                 >
                     <GizmoViewport
                         axisColors={["hotpink", "aquamarine", "#3498DB"]}
