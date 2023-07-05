@@ -11,7 +11,6 @@ import {
     VolumeControls as VolumeControlsImpl,
 } from "../../../src";
 extend({ VolumeObject, VolumeGroup });
-import { PlaneHelperMesh } from "./PlaneHelper";
 
 export type DoseBoardControlsProps = {
     children?: React.ReactElement<THREE.Object3D>;
@@ -44,7 +43,6 @@ export const DoseBoardControls = React.forwardRef<
         planeSize = 2,
         planeColor = new THREE.Color(0xffff00),
         subPlaneSize = 1,
-        subPlaneColor = new THREE.Color(0xaaaaaa),
         ...props
     },
     ref
@@ -87,11 +85,6 @@ export const DoseBoardControls = React.forwardRef<
             return new THREE.Vector3();
         })
     );
-    const [Positions, setPositions] = React.useState<THREE.Vector3[]>(
-        new Array(5).fill(new THREE.Vector3()).map(() => {
-            return new THREE.Vector3();
-        })
-    );
 
     /**
      * leva panels
@@ -127,8 +120,9 @@ export const DoseBoardControls = React.forwardRef<
 
         const A = new THREE.Vector3();
         const B = new THREE.Vector3();
+        let Positions = new Array<THREE.Vector3>();
 
-        matrix.copy(w);
+        // matrix.copy(w);
 
         if (boardRef.current) {
             var rotationMatrix = new THREE.Matrix4().extractRotation(w);
@@ -140,16 +134,14 @@ export const DoseBoardControls = React.forwardRef<
 
         if (helperRef.current) {
             // Record world positions of Board main, top, right, bottom, left
-            for (let i = 0; i < table.length; i++) {
-                let tmp = table[i];
-                let tmpObject = helperRef.current.children.find(
-                    (element, index) => element.name === tmp.name
-                );
+            Positions = table.map((value, index) => {
+                let tmpObject = helperRef.current.getObjectByName(value.name);
+                let tmpVector3 = new THREE.Vector3();
 
-                if (tmpObject) {
-                    tmpObject.getWorldPosition(Positions[tmp.index]);
-                }
-            }
+                return tmpObject
+                    ? tmpVector3.setFromMatrixPosition(tmpObject.matrixWorld)
+                    : tmpVector3;
+            });
 
             // Calc each plane normal
             for (let i = 0; i < table.length; i++) {
@@ -157,17 +149,17 @@ export const DoseBoardControls = React.forwardRef<
 
                 // Calc Normal
                 if (tmp.name === "board") {
-                    A.copy(Positions[4]).sub(Positions[0]); // A = P_left - P_board
-                    B.copy(Positions[1]).sub(Positions[0]); // B = P_top - P_board
-                    Normals[tmp.index].copy(A.cross(B)).normalize(); // A x B
+                    A.subVectors(Positions[4], Positions[0]); // A = P_left - P_board
+                    B.subVectors(Positions[1], Positions[0]); // B = P_top - P_board
                 } else {
-                    A.copy(Positions[tmp.index]).sub(Origin); // A = P_i - Origin
-                    B.copy(Positions[tmp.cross]).sub(Positions[0]); // B = P_i_cross - P_board
-                    Normals[tmp.index].copy(A.cross(B)).normalize(); // A x B
+                    A.subVectors(Positions[tmp.index], Origin); // A = P_i - Origin
+                    B.subVectors(Positions[tmp.cross], Positions[0]); // B = P_i_cross - P_board
                 }
+                Normals[tmp.index].crossVectors(A, B); // A x B
+                Normals[tmp.index].normalize();
 
                 // check direction
-                A.copy(Positions[0]).sub(Origin); // A = P_board - Origin
+                A.subVectors(Positions[0], Origin); // A = P_board - Origin
                 B.copy(boardDirection);
                 if (A.dot(B) < 0) {
                     Normals[tmp.index].multiplyScalar(-1);
@@ -180,11 +172,10 @@ export const DoseBoardControls = React.forwardRef<
                 );
 
                 // Set direction from Normal
-                let tmpTargetPosition = Positions[tmp.index];
+                let tmpTargetPosition = Positions[tmp.index].clone();
                 tmpTargetPosition.add(Normals[tmp.index]);
-                helperRef.current.children
-                    .find((element, index) => element.name === tmp.name)
-                    ?.lookAt(tmpTargetPosition);
+                let tmpObject = helperRef.current.getObjectByName(tmp.name);
+                tmpObject?.lookAt(tmpTargetPosition);
             }
         }
     }
@@ -257,38 +248,38 @@ export const DoseBoardControls = React.forwardRef<
                     <mesh name="board" position={[0, 0, 0]}>
                         <boxBufferGeometry args={[width, height, 0.05]} />
                         <meshBasicMaterial
-                            color={subPlaneColor}
+                            color={new THREE.Color(0xaaaaaa)}
                             wireframe={true}
                         />
                     </mesh>
-                    <PlaneHelperMesh
-                        width={width}
-                        height={height}
-                        name="top"
-                        position={[0, height / 2, 0]}
-                        subPlaneColor={new THREE.Color(0xaa0000)} // Red
-                    />
-                    <PlaneHelperMesh
-                        width={height}
-                        height={width}
-                        name="right"
-                        position={[width / 2, 0, 0]}
-                        subPlaneColor={new THREE.Color(0x00aa00)} // Green
-                    />
-                    <PlaneHelperMesh
-                        width={width}
-                        height={height}
-                        name="bottom"
-                        position={[0, -height / 2, 0]}
-                        subPlaneColor={new THREE.Color(0x0000aa)} // Blue
-                    />
-                    <PlaneHelperMesh
-                        width={height}
-                        height={width}
-                        name="left"
-                        position={[-width / 2, 0, 0]}
-                        subPlaneColor={new THREE.Color(0xaa00aa)} // Purple
-                    />
+                    <mesh name="top" position={[0, height / 2, 0]}>
+                        <planeGeometry args={[width, height]} />
+                        <meshBasicMaterial
+                            color={new THREE.Color(0xaa0000)} // Red
+                            wireframe={true}
+                        />
+                    </mesh>
+                    <mesh name="right" position={[width / 2, 0, 0]}>
+                        <planeGeometry args={[height, width]} />
+                        <meshBasicMaterial
+                            color={new THREE.Color(0x00aa00)} // Green
+                            wireframe={true}
+                        />
+                    </mesh>
+                    <mesh name="bottom" position={[0, -height / 2, 0]}>
+                        <planeGeometry args={[width, height]} />
+                        <meshBasicMaterial
+                            color={new THREE.Color(0x0000aa)} // Blue
+                            wireframe={true}
+                        />
+                    </mesh>
+                    <mesh name="left" position={[-width / 2, 0, 0]}>
+                        <planeGeometry args={[height, width]} />
+                        <meshBasicMaterial
+                            color={new THREE.Color(0xaa00aa)} // Purple
+                            wireframe={true}
+                        />
+                    </mesh>
                 </group>
             </group>
             {Planes.map((plane, index) => (
@@ -306,13 +297,12 @@ export const DoseBoardControls = React.forwardRef<
                 ref={pivotRef}
                 matrix={matrix}
                 autoTransform={true}
-                scale={50} // FIXME
+                scale={subPlaneSize}
                 onDrag={(l, deltaL, w, deltaW) => {
                     onDrag(l, deltaL, w, deltaW);
                 }}
-                onDragEnd={() => {
-                    console.log(boardRef.current, Planes, Normals, Positions);
-                }}
+                onDragStart={() => {}}
+                onDragEnd={() => {}}
             />
         </>
     ) : null;
