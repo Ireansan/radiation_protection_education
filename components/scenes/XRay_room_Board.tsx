@@ -19,7 +19,7 @@ import {
 
 import * as VOLUMEDATA from "../models/VolumeData";
 
-function XRayRoomBoardPrototype() {
+function XRayRoomBoard() {
     // FIXME:
     const ref = useRef<VolumeGroup>(null!);
     const refAnimation1 = useRef<VolumeAnimationObject>(null);
@@ -141,4 +141,4 @@ function XRayRoomBoardPrototype() {
     );
 }
 
-export default XRayRoomBoardPrototype;
+export default XRayRoomBoard;

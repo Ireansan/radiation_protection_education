@@ -75,12 +75,11 @@ const Home: NextPage = () => {
                     <div className={styles.card}>
                         <Link
                             href={
-                                "/volume_visualization/dose_visualization_board_prototype"
+                                "/volume_visualization/dose_visualization_board"
                             }
                         >
                             <h2>
-                                Dose Visualization Board Prototype (&alpha;
-                                Version)&rarr;
+                                Dose Visualization Board (&alpha; Version)&rarr;
                             </h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
@@ -144,7 +143,15 @@ const Home: NextPage = () => {
                     </div>
                     <div className={styles.card}>
                         <Link href={"/rough_scenes/XRay_position_scale_rough"}>
-                            <h2>XRay Scale Scene &rarr;</h2>
+                            <h2>XRay Position & Scale Scene &rarr;</h2>
+                            <p>Next.js + react-three/fiber</p>
+                        </Link>
+                    </div>
+                    <div className={styles.card}>
+                        <Link
+                            href={"/rough_scenes/XRay_room_Dosimeter_Prototype"}
+                        >
+                            <h2>XRay Dosimeter Scene &rarr;</h2>
                             <p>Next.js + react-three/fiber</p>
                         </Link>
                     </div>

@@ -1,41 +1,35 @@
-import { NextPage } from "next";
-import dynamic from "next/dynamic";
-import React, { useState, useEffect, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import React, { useEffect, useRef } from "react";
+
+import { Canvas } from "@react-three/fiber";
 import {
     OrbitControls,
     Stats,
     GizmoHelper,
     GizmoViewport,
     PivotControls,
-    Sphere,
-    Grid,
 } from "@react-three/drei";
 import * as THREE from "three";
-import { useControls, folder, button } from "leva";
 
 import { VolumeGroup, VolumeAnimationObject } from "../../src";
 import {
     VolumeAnimationControls,
+    DoseBoardControls,
     VolumeClippingControls,
     VolumeParameterControls,
 } from "../../components/volumeRender";
-import * as Models from "../../components/models";
+
 import * as VOLUMEDATA from "../../components/models/VolumeData";
+import { YBot } from "../../components/models";
 
 import styles from "../../styles/threejs.module.css";
 
-function XRayPositionScale() {
+function XRayRoomDosimeterPrototype() {
     // FIXME:
     const ref = useRef<VolumeGroup>(null!);
-    const refAnimation = useRef<VolumeAnimationObject>(null);
+    const refAnimation1 = useRef<VolumeAnimationObject>(null);
+    const refAnimation2 = useRef<VolumeAnimationObject>(null);
 
-    // NOTE: This params is use
-    const cameraInitPosition = new THREE.Vector3(4, 8, 4);
-    const doseWorldPosition = new THREE.Vector3(2.1, 2.2, 2.35);
-    const doseScale = 1 / 19;
-    const materialsWorldPosition = new THREE.Vector3(-0.195, 2.05, -0.19);
-    const materialsScale = 1 / 5;
+    const yBotRef = useRef<THREE.Group>(null!);
 
     useEffect(() => {
         console.log(ref.current);
@@ -50,74 +44,111 @@ function XRayPositionScale() {
                     {/* Three.js Canvas */}
                     <Canvas
                         orthographic
-                        camera={{ position: cameraInitPosition, zoom: 50 }}
+                        camera={{ position: [4, 8, 4], zoom: 50 }}
                     >
                         {/* -------------------------------------------------- */}
                         {/* Volume Object */}
-
-                        <volumeGroup
-                            ref={ref}
-                            position={doseWorldPosition}
-                            scale={doseScale}
-                        >
-                            {/* Dose */}
+                        <volumeGroup ref={ref}>
+                            {/* Original Data */}
                             <volumeAnimationObject
-                                ref={refAnimation}
-                                // position={[45, 0, 48]}
-                                rotation={[0, Math.PI, -Math.PI / 2]}
+                                ref={refAnimation1}
+                                position={
+                                    VOLUMEDATA.Dose_Configure.volume.position
+                                }
+                                rotation={
+                                    VOLUMEDATA.Dose_Configure.volume.rotation
+                                }
+                                scale={VOLUMEDATA.Dose_Configure.volume.scale}
                             >
                                 <VOLUMEDATA.Dose_all_Animation />
+                            </volumeAnimationObject>
+
+                            {/* Data * 0.01 */}
+                            <volumeAnimationObject
+                                ref={refAnimation2}
+                                position={
+                                    VOLUMEDATA.Dose_Configure.volume.position
+                                }
+                                rotation={
+                                    VOLUMEDATA.Dose_Configure.volume.rotation
+                                }
+                                scale={VOLUMEDATA.Dose_Configure.volume.scale}
+                            >
+                                <VOLUMEDATA.Dose_all_Animation_centi />
                             </volumeAnimationObject>
                         </volumeGroup>
 
                         {/* -------------------------------------------------- */}
                         {/* Volume Controls */}
                         <VolumeAnimationControls
-                            objects={[refAnimation]}
+                            objects={[refAnimation1, refAnimation2]}
                             duration={16}
                         />
                         <VolumeParameterControls object={ref} />
                         <VolumeClippingControls
                             object={ref}
-                            folderName="Dose"
+                            folderName="Dose 2"
                             normals={[
-                                [0, 0, -1],
+                                // [0, 0, -1],
+                                // [1, 0, 0],
                                 // [-1, 0, 0],
+                                // [0, 1, 0],
+                                [0, -1, 0],
                             ]}
-                            planeSize={5}
+                            planeSize={2}
                             subPlaneSize={1}
                         />
+                        {/* 
+                <DoseBoardControls
+                    object1={refAnimation1}
+                    object2={refAnimation2}
+                    origin={new THREE.Vector3(0, 1, 0)}
+                    width={1}
+                    height={2}
+                    planeSize={2}
+                    subPlaneSize={1}
+                >
+                    <mesh position={[0, 0, 0]}>
+                        <boxBufferGeometry args={[1, 2, 0.05]} />
+                    </mesh>
+                </DoseBoardControls>
+                 */}
 
                         {/* -------------------------------------------------- */}
                         {/* Three.js Object */}
                         <group
-                            position={materialsWorldPosition}
-                            rotation={[0, 0, Math.PI]}
-                            scale={doseScale * materialsScale} // 1 / 20
+                            position={
+                                VOLUMEDATA.Dose_Configure.object3d.position
+                            }
+                            rotation={
+                                VOLUMEDATA.Dose_Configure.object3d.rotation
+                            }
+                            scale={
+                                VOLUMEDATA.Dose_Configure.volume.scale *
+                                VOLUMEDATA.Dose_Configure.object3d.scale
+                            }
                         >
                             <VOLUMEDATA.Dose_material />
                             <VOLUMEDATA.Dose_region />
                         </group>
+                        <mesh position={[0, 1, 0]}>
+                            <sphereBufferGeometry args={[0.25]} />
+                        </mesh>
+
                         <PivotControls
-                            matrix={new THREE.Matrix4().setPosition(4, 0, 0)}
+                            // offset={[0, 0, -0.5]}
+                            // rotation={[0, Math.PI, 0]}
                             activeAxes={[true, false, true]}
+                            onDragEnd={() => {
+                                console.log(yBotRef);
+                            }}
                         >
-                            <Models.YBot />
+                            <YBot ref={yBotRef} />
                         </PivotControls>
 
                         {/* -------------------------------------------------- */}
                         {/* Three.js Controls */}
                         <OrbitControls makeDefault />
-
-                        <Grid
-                            position={[0, -0.01, 0]}
-                            args={[10.5, 10.5]}
-                            cellColor={"#3f3f3f"}
-                            sectionColor={"#9d4b4b"}
-                            matrixWorldAutoUpdate={undefined}
-                            getObjectsByProperty={undefined}
-                            getVertexPosition={undefined}
-                        />
 
                         {/* -------------------------------------------------- */}
                         {/* Enviroment */}
@@ -148,4 +179,4 @@ function XRayPositionScale() {
     );
 }
 
-export default XRayPositionScale;
+export default XRayRoomDosimeterPrototype;
