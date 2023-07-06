@@ -10,10 +10,11 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 
-import { VolumeGroup, VolumeAnimationObject } from "../../src";
+import { Dosimeter, VolumeGroup, VolumeAnimationObject } from "../../src";
 import {
-    VolumeAnimationControls,
     DoseBoardControls,
+    DosimeterControls,
+    VolumeAnimationControls,
     VolumeClippingControls,
     VolumeParameterControls,
 } from "../../components/volumeRender";
@@ -29,7 +30,8 @@ function XRayRoomDosimeterPrototype() {
     const refAnimation1 = useRef<VolumeAnimationObject>(null);
     const refAnimation2 = useRef<VolumeAnimationObject>(null);
 
-    const yBotRef = useRef<THREE.Group>(null!);
+    const dosimeterRef = useRef<Dosimeter>(null);
+    const yBotRef = useRef<THREE.Group>(null);
 
     useEffect(() => {
         console.log(ref.current);
@@ -85,7 +87,7 @@ function XRayRoomDosimeterPrototype() {
                             duration={16}
                         />
                         <VolumeParameterControls object={ref} />
-                        <VolumeClippingControls
+                        {/* <VolumeClippingControls
                             object={ref}
                             folderName="Dose 2"
                             normals={[
@@ -97,22 +99,26 @@ function XRayRoomDosimeterPrototype() {
                             ]}
                             planeSize={2}
                             subPlaneSize={1}
+                        /> */}
+                        {/* <DoseBoardControls
+                            object1={refAnimation1}
+                            object2={refAnimation2}
+                            origin={new THREE.Vector3(0, 1, 0)}
+                            width={1}
+                            height={2}
+                            planeSize={2}
+                            subPlaneSize={1}
+                        >
+                            <mesh position={[0, 0, 0]}>
+                                <boxBufferGeometry args={[1, 2, 0.05]} />
+                            </mesh>
+                        </DoseBoardControls> */}
+                        <DosimeterControls
+                            ref={dosimeterRef}
+                            object={yBotRef}
+                            names={["mixamorigNeck"]}
+                            targets={[refAnimation1, refAnimation2]}
                         />
-                        {/* 
-                <DoseBoardControls
-                    object1={refAnimation1}
-                    object2={refAnimation2}
-                    origin={new THREE.Vector3(0, 1, 0)}
-                    width={1}
-                    height={2}
-                    planeSize={2}
-                    subPlaneSize={1}
-                >
-                    <mesh position={[0, 0, 0]}>
-                        <boxBufferGeometry args={[1, 2, 0.05]} />
-                    </mesh>
-                </DoseBoardControls>
-                 */}
 
                         {/* -------------------------------------------------- */}
                         {/* Three.js Object */}
@@ -140,10 +146,20 @@ function XRayRoomDosimeterPrototype() {
                             // rotation={[0, Math.PI, 0]}
                             activeAxes={[true, false, true]}
                             onDragEnd={() => {
-                                console.log(yBotRef);
+                                if (dosimeterRef.current) {
+                                    dosimeterRef.current.updateResults();
+                                    console.log(
+                                        // dosimeterRef.current,
+                                        // yBotRef.current,
+                                        dosimeterRef.current.results
+                                        // dosimeterRef.current?.object
+                                    );
+                                }
                             }}
                         >
-                            <YBot ref={yBotRef} />
+                            <group ref={yBotRef}>
+                                <YBot />
+                            </group>
                         </PivotControls>
 
                         {/* -------------------------------------------------- */}
