@@ -265,11 +265,12 @@ class VolumeObject extends VolumeBase {
         }
 
         // https://github.com/mrdoob/three.js/blob/cba85c5c6318e7ca53dd99f9f3c25eb3b79d9693/examples/jsm/misc/Volume.js#L211
-        return this.volume.getData(
+        let volumeData = this.volume.getData(
             Math.trunc(localPosition.x),
             Math.trunc(localPosition.y),
             Math.trunc(localPosition.z)
         );
+        return this._coefficient * volumeData + this._offset;
     }
 }
 
