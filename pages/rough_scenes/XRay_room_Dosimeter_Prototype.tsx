@@ -100,7 +100,7 @@ function XRayRoomDosimeterPrototype() {
                             planeSize={2}
                             subPlaneSize={1}
                         /> */}
-                        {/* <DoseBoardControls
+                        <DoseBoardControls
                             object1={refAnimation1}
                             object2={refAnimation2}
                             origin={new THREE.Vector3(0, 1, 0)}
@@ -112,7 +112,7 @@ function XRayRoomDosimeterPrototype() {
                             <mesh position={[0, 0, 0]}>
                                 <boxBufferGeometry args={[1, 2, 0.05]} />
                             </mesh>
-                        </DoseBoardControls> */}
+                        </DoseBoardControls>
                         <DosimeterControls
                             ref={dosimeterRef}
                             object={yBotRef}
@@ -150,7 +150,7 @@ function XRayRoomDosimeterPrototype() {
                                     dosimeterRef.current.updateResults();
                                     console.log(
                                         // dosimeterRef.current,
-                                        // yBotRef.current,
+                                        // yBotRef.current?.position,
                                         dosimeterRef.current.results
                                         // dosimeterRef.current?.object
                                     );
