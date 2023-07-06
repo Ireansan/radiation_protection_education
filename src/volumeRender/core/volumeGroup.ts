@@ -92,11 +92,9 @@ class VolumeGroup extends VolumeBase {
      * @returns value in the data array
      */
     getVolumeValues(position: THREE.Vector3): number[] {
-        const localPosition = this.worldToLocal(position);
-
         return this.children.map((child, i) =>
             child instanceof VolumeObject
-                ? child.getVolumeValue(localPosition)
+                ? child.getVolumeValue(position.clone())
                 : NaN
         );
     }

@@ -8,7 +8,7 @@ import {
 
 type ResultsByName = {
     name: string;
-    data: number | number[];
+    data: (number | number[])[];
 };
 /**
  *
@@ -68,22 +68,23 @@ class Dosimeter extends VolumeBase {
         return this;
     }
 
-    getValueByName(name: string | undefined): number | number[] {
+    getValueByName(name: string | undefined): (number | number[])[] {
         let objectByName: THREE.Object3D | undefined;
 
         if (this.object) {
             objectByName = this.object;
+
             if (name) {
                 objectByName = this.object.getObjectByName(name);
             }
         }
 
+        let tmpResults: (number | number[])[] = new Array();
         if (this.targets && objectByName) {
             let position = new THREE.Vector3();
             objectByName.getWorldPosition(position);
 
-            for (let i = 0; i < this.targets.length; i++) {
-                let target = this.targets[i];
+            tmpResults = this.targets.map((target) => {
                 return target
                     ? target instanceof VolumeObject ||
                       target instanceof VolumeAnimationObject
@@ -92,10 +93,10 @@ class Dosimeter extends VolumeBase {
                         ? target.getVolumeValues(position)
                         : NaN
                     : NaN;
-            }
+            });
         }
 
-        return NaN;
+        return tmpResults;
     }
     updateResults() {
         this.results = [];

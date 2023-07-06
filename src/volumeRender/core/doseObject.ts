@@ -42,7 +42,7 @@ class DoseObject extends VolumeObject {
         // if clipped, retrun NaN
         let planes;
         let plane;
-        let clipped = true;
+        let clipped = boards.length > 0 ? true : false;
         for (let i = 0; i < boards.length; i++) {
             planes = boards[i].planes;
 
