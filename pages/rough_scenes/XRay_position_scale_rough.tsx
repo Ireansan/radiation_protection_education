@@ -109,19 +109,22 @@ function XRayPositionScale() {
                         {/* Three.js Controls */}
                         <OrbitControls makeDefault />
 
+                        {/* -------------------------------------------------- */}
+                        {/* Enviroment */}
+                        <ambientLight intensity={0.5} />
+
                         <Grid
                             position={[0, -0.01, 0]}
                             args={[10.5, 10.5]}
-                            cellColor={"#3f3f3f"}
-                            sectionColor={"#9d4b4b"}
+                            cellColor={"#121d7d"}
+                            sectionColor={"#262640"}
+                            fadeDistance={20}
+                            followCamera
+                            infiniteGrid
                             matrixWorldAutoUpdate={undefined}
                             getObjectsByProperty={undefined}
                             getVertexPosition={undefined}
                         />
-
-                        {/* -------------------------------------------------- */}
-                        {/* Enviroment */}
-                        <ambientLight intensity={0.5} />
 
                         {/* -------------------------------------------------- */}
                         {/* UI */}

@@ -9,6 +9,7 @@ import {
     GizmoViewport,
     PivotControls,
     Sphere,
+    Grid,
 } from "@react-three/drei";
 import * as THREE from "three";
 import { useControls, folder, button } from "leva";
@@ -162,6 +163,19 @@ function CArmSceneRough() {
                     {/* -------------------------------------------------- */}
                     {/* Enviroment */}
                     <ambientLight intensity={0.5} />
+
+                    <Grid
+                        position={[0, -0.01, 0]}
+                        args={[10.5, 10.5]}
+                        cellColor={"#121d7d"}
+                        sectionColor={"#262640"}
+                        fadeDistance={20}
+                        followCamera
+                        infiniteGrid
+                        matrixWorldAutoUpdate={undefined}
+                        getObjectsByProperty={undefined}
+                        getVertexPosition={undefined}
+                    />
 
                     {/* -------------------------------------------------- */}
                     {/* UI */}
