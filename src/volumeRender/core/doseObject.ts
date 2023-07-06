@@ -35,24 +35,37 @@ class DoseObject extends VolumeObject {
     }
 
     getVolumeValue(position: THREE.Vector3): number {
-        let boards = this.clippingPlanesObjects.filter(
+        let boards = this.totalClippingPlanesObjects.filter(
             (element) => element.isType === "board"
         );
 
-        // if clipped, retrun NaN
-        let planes;
-        let plane;
-        let clipped = boards.length > 0 ? true : false;
-        for (let i = 0; i < boards.length; i++) {
-            planes = boards[i].planes;
+        const XOR = (a: boolean, b: boolean) => {
+            return (a || b) && !(a && b);
+        };
 
+        // if clipped, retrun NaN
+        let planes: THREE.Plane[];
+        let board;
+        let clipped = false;
+        for (let i = 0; i < boards.length; i++) {
+            board = boards[i];
+            planes = board.planes;
+
+            let plane: THREE.Plane;
+            let tmpClipped = true;
             for (let j = 0; j < planes.length; j++) {
                 plane = planes[j];
 
-                clipped =
-                    clipped && position.dot(plane.normal) > plane.constant;
+                let normal = plane.normal.clone().multiplyScalar(-1);
+
+                tmpClipped =
+                    tmpClipped && position.dot(normal) > plane.constant;
             }
+            tmpClipped = XOR(tmpClipped, board.invert);
+
+            clipped = clipped || tmpClipped;
         }
+
         if (clipped) {
             return NaN;
         }

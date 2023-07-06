@@ -56,6 +56,7 @@ class VolumeBase extends THREE.Object3D {
     parentRegionOffset: number;
     planesLength: number;
     clippingPlanesObjects: ClippingPlanesObject[];
+    totalClippingPlanesObjects: ClippingPlanesObject[];
 
     volumeParamAutoUpdate: boolean;
     volumeClippingAutoUpdate: boolean;
@@ -88,6 +89,7 @@ class VolumeBase extends THREE.Object3D {
         this.parentRegionOffset = 0;
         this.planesLength = 0;
         this.clippingPlanesObjects = [];
+        this.totalClippingPlanesObjects = [];
 
         this.volumeParamAutoUpdate = true;
         this.volumeClippingAutoUpdate = true;
@@ -325,6 +327,8 @@ class VolumeBase extends THREE.Object3D {
         this._clippingPlanesRegion = [];
         this._clippedInvert = [];
 
+        this.totalClippingPlanesObjects = [];
+
         // ----------
         // update this by parent
         // ----------
@@ -350,6 +354,10 @@ class VolumeBase extends THREE.Object3D {
                 : [];
             this._clippedInvert = parent._clipping
                 ? parent._clippedInvert.concat()
+                : [];
+
+            this.totalClippingPlanesObjects = parent._clipping
+                ? parent.totalClippingPlanesObjects.concat()
                 : [];
 
             this.parentRegionOffset = parent._clipping
@@ -413,6 +421,9 @@ class VolumeBase extends THREE.Object3D {
             this._clippedInvert[i + this.parentRegionOffset] =
                 element.invert && element.enabled;
         }
+
+        this.totalClippingPlanesObjects =
+            this.totalClippingPlanesObjects.concat(this.clippingPlanesObjects);
 
         // ----------
         // update children
