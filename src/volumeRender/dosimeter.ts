@@ -18,6 +18,7 @@ class Dosimeter extends VolumeBase {
     _names: string[] | undefined;
     targets: (VolumeBase | undefined)[] | undefined;
 
+    objectsByName: (THREE.Object3D | undefined)[];
     results: ResultsByName[];
 
     isDoseControls: boolean;
@@ -29,6 +30,7 @@ class Dosimeter extends VolumeBase {
         this._names = undefined;
         this.object = undefined;
 
+        this.objectsByName = [];
         this.results = [];
 
         this.visible = false;
@@ -41,11 +43,13 @@ class Dosimeter extends VolumeBase {
     }
     set names(nameList: string[] | undefined) {
         this._names = nameList;
+        this.updateObjectsByName();
     }
 
     attach(object: THREE.Object3D<THREE.Event>) {
         this.object = object;
         this.visible = true;
+        this.updateObjectsByName();
 
         return this;
     }
@@ -68,17 +72,17 @@ class Dosimeter extends VolumeBase {
         return this;
     }
 
-    getValueByName(name: string | undefined): (number | number[])[] {
-        let objectByName: THREE.Object3D | undefined;
-
-        if (this.object) {
-            objectByName = this.object;
-
-            if (name) {
-                objectByName = this.object.getObjectByName(name);
-            }
+    updateObjectsByName() {
+        if (this._names) {
+            this.objectsByName = this._names.map((name) =>
+                this.object?.getObjectByName(name)
+            );
         }
+    }
 
+    getValueByName(
+        objectByName: THREE.Object3D | undefined
+    ): (number | number[])[] {
         let tmpResults: (number | number[])[] = new Array();
         if (this.targets && objectByName) {
             let position = new THREE.Vector3();
@@ -102,13 +106,12 @@ class Dosimeter extends VolumeBase {
         this.results = [];
 
         if (this._names) {
-            for (let i = 0; i < this._names.length; i++) {
-                let name = this._names[i];
-                this.results.push({
+            this.results = this._names.map((name, index) => {
+                return {
                     name: name,
-                    data: this.getValueByName(name),
-                });
-            }
+                    data: this.getValueByName(this.objectsByName[index]),
+                };
+            });
         }
     }
 }
