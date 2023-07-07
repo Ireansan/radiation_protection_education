@@ -11,7 +11,7 @@ import { styled } from "@mui/material/styles";
 
 import { CustomButton, CustomTextField, RTCPlayer } from "../utils";
 import { useStore } from "../../store";
-import styles from "../../../styles/css/game_template.module.css";
+import styles from "../../../styles/css/game.module.css";
 
 /**
  * WebRTCPanel

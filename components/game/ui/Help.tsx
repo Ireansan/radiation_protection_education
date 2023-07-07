@@ -5,7 +5,7 @@ import type { HTMLAttributes } from "react";
 
 import { useStore } from "../../store";
 
-import styles from "../../../styles/css/game_template.module.css";
+import styles from "../../../styles/css/game.module.css";
 
 const controlOptions = [
     { keys: ["↑", "W"], action: "Forward" },

@@ -38,7 +38,7 @@ import {
 } from "../volumeRender";
 import * as VOLUMEDATA from "../models/VolumeData";
 
-import styles from "../../styles/css/game_template.module.css";
+import styles from "../../styles/css/game.module.css";
 
 function StentGame() {
     const ref = React.useRef<VolumeGroup>(null!);

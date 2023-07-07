@@ -26,7 +26,7 @@ import { Editor, Help, Menu } from "../ui";
 import { useStore } from "../../store";
 import { useToggle } from "../useToggle";
 
-import styles from "../../../styles/css/game_template.module.css";
+import styles from "../../../styles/css/game.module.css";
 
 export function SampleScene() {
     const ToggledDebug = useToggle(Debug, "debug");

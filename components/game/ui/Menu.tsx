@@ -15,7 +15,7 @@ import { Keys } from "./Help";
 import { WebRTCPanel } from "./WebRTCPanel";
 import { Setting } from "./Setting";
 
-import styles from "../../../styles/css/game_template.module.css";
+import styles from "../../../styles/css/game.module.css";
 
 interface MenuProps {}
 

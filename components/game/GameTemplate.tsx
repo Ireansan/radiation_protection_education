@@ -14,7 +14,7 @@ import { useToggle } from "./useToggle";
 
 import { useStore } from "../store";
 
-import styles from "../../styles/css/game_template.module.css";
+import styles from "../../styles/css/game.module.css";
 import { Children } from "react";
 
 interface gameTemplateProps {

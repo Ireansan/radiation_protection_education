@@ -10,7 +10,7 @@ import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { useStore } from "../../store";
 import { Keys } from "./Help";
 
-import styles from "../../../styles/css/game_template.module.css";
+import styles from "../../../styles/css/game.module.css";
 
 function Ready({ setReady }: { setReady: Dispatch<SetStateAction<boolean>> }) {
     useEffect(() => () => void setReady(true), []);
