@@ -8,7 +8,7 @@ import shallow from "zustand/shallow";
 import * as THREE from "three";
 import type { Object3D } from "three";
 
-import { RTCPlayer } from "./utils";
+import { RTCPlayer } from "./game/utils";
 
 export const angularVelocity = [0, 0.5, 0] as const;
 export const cameras = ["FIRST_PERSON", "THIRD_PERSON"] as const;

@@ -11,7 +11,7 @@ import {
     stats,
     useStore,
     playerConfig,
-} from "../store";
+} from "../../store";
 
 const initialValues = {
     shadows,

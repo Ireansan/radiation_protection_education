@@ -3,7 +3,7 @@
  */
 import type { HTMLAttributes } from "react";
 
-import { useStore } from "../store";
+import { useStore } from "../../store";
 
 import styles from "../../../styles/css/game_template.module.css";
 

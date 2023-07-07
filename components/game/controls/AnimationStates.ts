@@ -2,8 +2,8 @@ import { useMemo, useEffect } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 
-import { useStore, getState } from "../store";
-import type { Controls, States } from "../store";
+import { useStore, getState } from "../../store";
+import type { Controls, States } from "../../store";
 
 import { applyBasePath } from "../../utils";
 

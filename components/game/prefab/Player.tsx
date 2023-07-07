@@ -11,8 +11,8 @@ import {
     useRapier,
 } from "@react-three/rapier";
 
-import { getState, useStore } from "../store";
-import type { Controls } from "../store";
+import { getState, useStore } from "../../store";
+import type { Controls } from "../../store";
 
 import { AnimationStates } from "../controls";
 

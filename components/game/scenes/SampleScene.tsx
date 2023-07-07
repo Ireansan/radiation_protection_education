@@ -23,7 +23,7 @@ import {
 import { Editor, Help, Menu } from "../ui";
 // ----------
 // hook
-import { useStore } from "../store";
+import { useStore } from "../../store";
 import { useToggle } from "../useToggle";
 
 import styles from "../../../styles/css/game_template.module.css";

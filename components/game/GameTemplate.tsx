@@ -12,7 +12,7 @@ import { Ground, Player, ControlPanel } from "./prefab";
 import { Editor, Help, Menu } from "./ui";
 import { useToggle } from "./useToggle";
 
-import { useStore } from "./store";
+import { useStore } from "../store";
 
 import styles from "../../styles/css/game_template.module.css";
 import { Children } from "react";

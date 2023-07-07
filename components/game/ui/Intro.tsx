@@ -7,7 +7,7 @@ import { useProgress } from "@react-three/drei";
 
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 
-import { useStore } from "../store";
+import { useStore } from "../../store";
 import { Keys } from "./Help";
 
 import styles from "../../../styles/css/game_template.module.css";

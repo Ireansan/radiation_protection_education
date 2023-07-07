@@ -7,7 +7,7 @@ import React, { useRef } from "react";
 import { useGLTF, useMatcapTexture, useAnimations } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 
-import { useStore } from "../store";
+import { useStore } from "../../store";
 
 type GLTFResult = GLTF & {
     nodes: {
