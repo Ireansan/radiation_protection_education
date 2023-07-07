@@ -6,8 +6,11 @@ import {
     VolumeObject,
 } from "./core";
 
-type ResultsByName = {
+export type Names = {
     name: string;
+    displayName?: string;
+};
+export type ResultsByName = Names & {
     data: (number | number[])[];
 };
 /**
@@ -15,7 +18,7 @@ type ResultsByName = {
  */
 class Dosimeter extends VolumeBase {
     object: THREE.Object3D | undefined;
-    _names: string[] | undefined;
+    _namesData: Names[] | undefined;
     targets: (VolumeBase | undefined)[] | undefined;
 
     objectsByName: (THREE.Object3D | undefined)[];
@@ -27,7 +30,7 @@ class Dosimeter extends VolumeBase {
         super();
 
         this.targets = undefined;
-        this._names = undefined;
+        this._namesData = undefined;
         this.object = undefined;
 
         this.objectsByName = [];
@@ -38,11 +41,11 @@ class Dosimeter extends VolumeBase {
         this.isDoseControls = true;
     }
 
-    get names() {
-        return this._names;
+    get namesData() {
+        return this._namesData;
     }
-    set names(nameList: string[] | undefined) {
-        this._names = nameList;
+    set namesData(nameList: Names[] | undefined) {
+        this._namesData = nameList;
         this.updateObjectsByName();
     }
 
@@ -55,7 +58,7 @@ class Dosimeter extends VolumeBase {
     }
     detach() {
         this.object = undefined;
-        this.names = undefined;
+        this._namesData = undefined;
         this.visible = false;
 
         return this;
@@ -73,9 +76,9 @@ class Dosimeter extends VolumeBase {
     }
 
     updateObjectsByName() {
-        if (this._names) {
-            this.objectsByName = this._names.map((name) =>
-                this.object?.getObjectByName(name)
+        if (this._namesData) {
+            this.objectsByName = this._namesData.map((data) =>
+                this.object?.getObjectByName(data.name)
             );
         }
     }
@@ -105,10 +108,11 @@ class Dosimeter extends VolumeBase {
     updateResults() {
         this.results = [];
 
-        if (this._names) {
-            this.results = this._names.map((name, index) => {
+        if (this._namesData) {
+            this.results = this._namesData.map((data, index) => {
                 return {
-                    name: name,
+                    name: data.name,
+                    displayName: data.displayName,
                     data: this.getValueByName(this.objectsByName[index]),
                 };
             });

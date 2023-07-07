@@ -10,6 +10,9 @@ import {
     VolumeBase,
 } from "../../../src";
 extend({ VolumeObject, VolumeGroup });
+import { useStore } from "../../store";
+
+import type { Names } from "../../../src";
 
 /**
  *
@@ -17,7 +20,7 @@ extend({ VolumeObject, VolumeGroup });
 type DosimeterControlsProps = {
     children?: React.ReactElement<VolumeObject | VolumeGroup>;
     object: React.RefObject<THREE.Object3D>;
-    names: string[];
+    names: Names[];
     targets: React.RefObject<VolumeBase>[];
 };
 export const DosimeterControls = React.forwardRef<
@@ -29,6 +32,8 @@ export const DosimeterControls = React.forwardRef<
 ) {
     const controls = React.useMemo(() => new DosimeterImpl(), []);
     const group = React.useRef<THREE.Group>(null);
+
+    const [set] = useStore((state) => [state.set]);
 
     // Init
     React.useEffect(() => {
@@ -44,10 +49,10 @@ export const DosimeterControls = React.forwardRef<
     }, [object, children, controls]);
 
     React.useEffect(() => {
-        controls.names = names;
+        controls.namesData = names;
 
         return () => {
-            controls.names = undefined;
+            controls.namesData = undefined;
         };
     }, [names, controls]);
 
@@ -69,6 +74,12 @@ export const DosimeterControls = React.forwardRef<
 
     useFrame(() => {
         controls.updateResults();
+        set((state) => ({
+            sceneProperties: {
+                ...state.sceneProperties,
+                dosimeterResults: controls.results,
+            },
+        }));
     });
 
     return (

@@ -18,6 +18,7 @@ import {
     VolumeAnimationControls,
     VolumeClippingControls,
     VolumeParameterControls,
+    DosimeterDisplayUI,
 } from "../../components/volumeRender";
 
 import * as VOLUMEDATA from "../../components/models/VolumeData";
@@ -117,7 +118,7 @@ function XRayRoomDosimeterPrototype() {
                         <DosimeterControls
                             ref={dosimeterRef}
                             object={yBotRef}
-                            names={["mixamorigNeck"]}
+                            names={[{ name: "mixamorigNeck" }]}
                             targets={[refAnimation1, refAnimation2]}
                         />
 
@@ -203,6 +204,7 @@ function XRayRoomDosimeterPrototype() {
                             />
                         </GizmoHelper>
                     </Canvas>
+                    <DosimeterDisplayUI />
                 </div>
             </div>
         </>

@@ -9,6 +9,7 @@ import * as THREE from "three";
 import type { Object3D } from "three";
 
 import { RTCPlayer } from "./game/utils";
+import type { ResultsByName } from "../src";
 
 export const angularVelocity = [0, 0.5, 0] as const;
 export const cameras = ["FIRST_PERSON", "THIRD_PERSON"] as const;
@@ -69,6 +70,10 @@ const onlinePlayers = {
     player1: undefined,
 };
 
+const sceneProperties = {
+    dosimeterResults: [] as ResultsByName[],
+};
+
 const actionNames = ["reset"] as const;
 export type ActionNames = (typeof actionNames)[number];
 
@@ -88,6 +93,7 @@ export type PlayerProperties = typeof playerProperties;
 export type OnlinePlayers = {
     player1: RTCPlayer | undefined;
 };
+export type SceneProperties = typeof sceneProperties;
 
 const booleans = [
     "debug",
@@ -118,6 +124,7 @@ export interface IState extends BaseState {
     playerConfig: PlayerConfig;
     playerProperties: PlayerProperties;
     onlinePlayers: OnlinePlayers;
+    sceneProperties: SceneProperties;
 }
 
 const useStoreImpl = create<IState>(
@@ -155,6 +162,7 @@ const useStoreImpl = create<IState>(
             playerConfig,
             playerProperties,
             onlinePlayers,
+            sceneProperties,
         };
     }
 );
