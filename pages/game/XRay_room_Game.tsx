@@ -31,13 +31,15 @@ import {
 // Volume
 // ----------
 // object
-import { VolumeGroup, VolumeAnimationObject } from "../../src";
+import { Dosimeter, VolumeGroup, VolumeAnimationObject } from "../../src";
 // ----------
 // data
 import * as VOLUMEDATA from "../../components/models/VolumeData";
 // ----------
 // controls
 import {
+    DosimeterControls,
+    DosimeterDisplayUI,
     VolumeAnimationControls,
     VolumeParameterControls,
     VolumeClippingControls,
@@ -52,6 +54,9 @@ import styles from "../../styles/css/game.module.css";
 function XRayRoomGame() {
     const ref = useRef<VolumeGroup>(null!);
     const refAnimation = useRef<VolumeAnimationObject>(null);
+
+    const dosimeterRef = useRef<Dosimeter>(null);
+    const yBotRef = useRef<THREE.Group>(null);
 
     const xOffset: number = -5;
     const zOffset: number = 0;
@@ -101,11 +106,28 @@ function XRayRoomGame() {
                         <VolumeParameterControls object={ref} />
                         <VolumeClippingControls
                             object={ref}
-                            folderName="Stent"
+                            folderName="Dose"
                             normals={[
                                 [0, 0, -1],
                                 // [-1, 0, 0],
                             ]}
+                        />
+
+                        <DosimeterControls
+                            ref={dosimeterRef}
+                            object={yBotRef}
+                            names={[
+                                { name: "mixamorigNeck", displayName: "Neck" },
+                                {
+                                    name: "mixamorigLeftHand",
+                                    displayName: "Left Hand",
+                                },
+                                {
+                                    name: "mixamorigRightHand",
+                                    displayName: "Right Hand",
+                                },
+                            ]}
+                            targets={[refAnimation]}
                         />
 
                         {/* -------------------------------------------------- */}
@@ -145,7 +167,9 @@ function XRayRoomGame() {
                             <ToggledDebug />
                             <Ground />
                             <Player>
-                                <YBot />
+                                <group ref={yBotRef}>
+                                    <YBot />
+                                </group>
                             </Player>
                         </Physics>
 
@@ -158,6 +182,7 @@ function XRayRoomGame() {
                     {/* UI */}
                     <Help />
                     <Leva />
+                    <DosimeterDisplayUI />
                 </div>
 
                 <Menu />

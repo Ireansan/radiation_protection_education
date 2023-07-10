@@ -27,10 +27,10 @@ import * as VOLUMEDATA from "../../components/models/VolumeData";
 import {
     DoseBoardControls,
     DosimeterControls,
+    DosimeterDisplayUI,
     VolumeAnimationControls,
     VolumeClippingControls,
     VolumeParameterControls,
-    DosimeterDisplayUI,
 } from "../../components/volumeRender";
 
 import styles from "../../styles/threejs.module.css";
@@ -110,6 +110,7 @@ function XRayRoomDosimeterPrototype() {
                             planeSize={2}
                             subPlaneSize={1}
                         /> */}
+
                         <DoseBoardControls
                             object1={refAnimation1}
                             object2={refAnimation2}
