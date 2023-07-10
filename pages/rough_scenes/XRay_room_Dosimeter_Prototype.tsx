@@ -122,11 +122,11 @@ function XRayRoomDosimeterPrototype() {
                                 { name: "mixamorigNeck", displayName: "Neck" },
                                 {
                                     name: "mixamorigLeftHand",
-                                    displayName: "LeftHand",
+                                    displayName: "Left Hand",
                                 },
                                 {
                                     name: "mixamorigRightHand",
-                                    displayName: "RightHand",
+                                    displayName: "Right Hand",
                                 },
                             ]}
                             targets={[refAnimation1, refAnimation2]}
