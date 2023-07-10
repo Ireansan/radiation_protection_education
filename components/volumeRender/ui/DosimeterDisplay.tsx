@@ -9,6 +9,7 @@ export function DosimeterDisplayUI({ ...props }) {
             <div
                 id={"DosimeterDisplayUI"}
                 style={{
+                    position: "absolute",
                     bottom: "5px",
                     left: "50px",
                     width: "200px",
