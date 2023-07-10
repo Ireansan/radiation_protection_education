@@ -11,7 +11,7 @@ export type Names = {
     displayName?: string;
 };
 export type ResultsByName = Names & {
-    data: (number | number[])[];
+    data: number[];
 };
 /**
  *
@@ -83,10 +83,8 @@ class Dosimeter extends VolumeBase {
         }
     }
 
-    getValueByName(
-        objectByName: THREE.Object3D | undefined
-    ): (number | number[])[] {
-        let tmpResults: (number | number[])[] = new Array();
+    getValueByName(objectByName: THREE.Object3D | undefined): number[] {
+        let tmpResults: number[] = new Array();
         if (this.targets && objectByName) {
             let position = new THREE.Vector3();
             objectByName.getWorldPosition(position);
@@ -96,8 +94,6 @@ class Dosimeter extends VolumeBase {
                     ? target instanceof VolumeObject ||
                       target instanceof VolumeAnimationObject
                         ? target.getVolumeValue(position)
-                        : target instanceof VolumeGroup
-                        ? target.getVolumeValues(position)
                         : NaN
                     : NaN;
             });
