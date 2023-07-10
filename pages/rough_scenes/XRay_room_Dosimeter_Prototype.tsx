@@ -118,7 +118,17 @@ function XRayRoomDosimeterPrototype() {
                         <DosimeterControls
                             ref={dosimeterRef}
                             object={yBotRef}
-                            names={[{ name: "mixamorigNeck" }]}
+                            names={[
+                                { name: "mixamorigNeck", displayName: "Neck" },
+                                {
+                                    name: "mixamorigLeftHand",
+                                    displayName: "LeftHand",
+                                },
+                                {
+                                    name: "mixamorigRightHand",
+                                    displayName: "RightHand",
+                                },
+                            ]}
                             targets={[refAnimation1, refAnimation2]}
                         />
 
