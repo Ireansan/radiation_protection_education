@@ -1,51 +1,48 @@
 import React from "react";
-import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
-import {
-    GizmoHelper,
-    GizmoViewport,
-    OrbitControls,
-    Sky,
-    Stats,
-} from "@react-three/drei";
+import { Sky, OrbitControls, Stats } from "@react-three/drei";
 import { Physics, Debug } from "@react-three/rapier";
 import { Leva } from "leva";
 
+// ==========
+// Game
 import {
     // ----------
     // controls
     Keyboard,
     // ----------
-    // prefab
-    Ground,
-    Player,
+    // models
     YBot,
     // ----------
-    // ui
+    // prefab
     ControlPanel,
+    Ground,
+    BodyMatcapSelect,
+    JointMatcapSelect,
+    OnlinePlayer,
+    Player,
+    // ----------
+    // ui
     Editor,
     Help,
     Menu,
     // ----------
     // hook
-    useStore,
     useToggle,
-} from "../game";
-import { VolumeGroup } from "../../src";
-import {
-    VolumeParameterControls,
-    VolumeClippingControls,
-} from "../volumeRender";
-import * as VOLUMEDATA from "../models/VolumeData";
+} from "../../components/game";
+
+// ==========
+// Store
+import { useStore } from "../../components/store";
 
 import styles from "../../styles/css/game.module.css";
 
-function StentGame() {
-    const ref = React.useRef<VolumeGroup>(null!);
-
+export function SampleScene() {
     const ToggledDebug = useToggle(Debug, "debug");
     const ToggledEditor = useToggle(Editor, "editor");
+    // const ToggledMap = useToggle(Minimap, "map");
     const ToggledOrbitControls = useToggle(OrbitControls, "editor");
+    // const ToggledPointerLockControls = useToggle(PointerLockControls, "play");
     const ToggledStats = useToggle(Stats, "stats");
 
     const [menu, set] = useStore((state) => [state.menu, state.set]);
@@ -62,49 +59,15 @@ function StentGame() {
                     {/* Three.js Canvas */}
                     <Canvas shadows camera={{ fov: 45 }} id={"mainCanvas"}>
                         {/* -------------------------------------------------- */}
-                        {/* Volume Object */}
-                        {/* Stent */}
-                        <volumeGroup ref={ref}>
-                            <VOLUMEDATA.Stent
-                                position={[-5, 1, -4]}
-                                rotation={
-                                    VOLUMEDATA.Stent_Configure.volume.rotation
-                                }
-                                scale={VOLUMEDATA.Stent_Configure.volume.scale}
-                            />
-                        </volumeGroup>
-
-                        {/* -------------------------------------------------- */}
-                        {/* Volume Controls */}
-                        <VolumeParameterControls object={ref} />
-                        <VolumeClippingControls
-                            object={ref}
-                            folderName="Stent"
-                            normals={[
-                                [0, 0, -1],
-                                // [-1, 0, 0],
-                            ]}
-                        />
-
-                        {/* -------------------------------------------------- */}
                         {/* Three.js Object */}
                         <ControlPanel position={[0, 2, -5]} />
+                        <BodyMatcapSelect position={[-5, 1, -5]} scale={0.5} />
+                        <JointMatcapSelect
+                            position={[-10, 1, -5]}
+                            scale={0.5}
+                        />
 
-                        {/* Helper */}
-                        <GizmoHelper
-                            alignment="bottom-right"
-                            margin={[80, 80]}
-                            renderPriority={-1}
-                        >
-                            <GizmoViewport
-                                axisColors={[
-                                    "hotpink",
-                                    "aquamarine",
-                                    "#3498DB",
-                                ]}
-                                labelColor="black"
-                            />
-                        </GizmoHelper>
+                        <OnlinePlayer />
 
                         {/* -------------------------------------------------- */}
                         {/* Enviroment */}
@@ -125,6 +88,7 @@ function StentGame() {
                                 <YBot />
                             </Player>
                         </Physics>
+                        <ControlPanel position={[0, 2, -5]} />
 
                         {/* -------------------------------------------------- */}
                         {/* Player Contorls */}
@@ -144,5 +108,3 @@ function StentGame() {
         </>
     );
 }
-
-export default StentGame;

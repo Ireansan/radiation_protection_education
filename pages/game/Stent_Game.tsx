@@ -1,46 +1,61 @@
-import React, { useRef } from "react";
+import React from "react";
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Sky, Stats } from "@react-three/drei";
+import {
+    GizmoHelper,
+    GizmoViewport,
+    OrbitControls,
+    Sky,
+    Stats,
+} from "@react-three/drei";
 import { Physics, Debug } from "@react-three/rapier";
 import { Leva } from "leva";
 
+// ==========
+// Game
 import {
     // ----------
     // controls
     Keyboard,
     // ----------
     // prefab
+    ControlPanel,
     Ground,
     Player,
     YBot,
     // ----------
     // ui
-    ControlPanel,
     Editor,
     Help,
     Menu,
     // ----------
     // hook
-    useStore,
     useToggle,
-} from "../game";
-import { VolumeGroup, VolumeAnimationObject } from "../../src";
+} from "../../components/game";
+
+// ==========
+// Volume
+// ----------
+// object
+import { VolumeGroup } from "../../src";
+// ----------
+// data
+import * as VOLUMEDATA from "../../components/models/VolumeData";
+// ----------
+// controls
 import {
-    VolumeAnimationControls,
     VolumeParameterControls,
     VolumeClippingControls,
-} from "../volumeRender";
-import * as VOLUMEDATA from "../models/VolumeData";
+} from "../../components/volumeRender";
+
+// ==========
+// Store
+import { useStore } from "../../components/store";
 
 import styles from "../../styles/css/game.module.css";
 
-function XRayRoomGame() {
-    const ref = useRef<VolumeGroup>(null!);
-    const refAnimation = useRef<VolumeAnimationObject>(null);
-
-    const xOffset: number = -5;
-    const zOffset: number = 0;
+function StentGame() {
+    const ref = React.useRef<VolumeGroup>(null!);
 
     const ToggledDebug = useToggle(Debug, "debug");
     const ToggledEditor = useToggle(Editor, "editor");
@@ -61,29 +76,20 @@ function XRayRoomGame() {
                     {/* Three.js Canvas */}
                     <Canvas shadows camera={{ fov: 45 }} id={"mainCanvas"}>
                         {/* -------------------------------------------------- */}
-                        {/* Volume Objects */}
-                        <volumeGroup ref={ref} position={[xOffset, 0, zOffset]}>
-                            {/* Dose */}
-                            <volumeAnimationObject
-                                ref={refAnimation}
-                                position={
-                                    VOLUMEDATA.Dose_Configure.volume.position
-                                }
+                        {/* Volume Object */}
+                        {/* Stent */}
+                        <volumeGroup ref={ref}>
+                            <VOLUMEDATA.Stent
+                                position={[-5, 1, -4]}
                                 rotation={
-                                    VOLUMEDATA.Dose_Configure.volume.rotation
+                                    VOLUMEDATA.Stent_Configure.volume.rotation
                                 }
-                                scale={VOLUMEDATA.Dose_Configure.volume.scale}
-                            >
-                                <VOLUMEDATA.Dose_all_Animation />
-                            </volumeAnimationObject>
+                                scale={VOLUMEDATA.Stent_Configure.volume.scale}
+                            />
                         </volumeGroup>
 
                         {/* -------------------------------------------------- */}
                         {/* Volume Controls */}
-                        <VolumeAnimationControls
-                            objects={[refAnimation]}
-                            duration={16}
-                        />
                         <VolumeParameterControls object={ref} />
                         <VolumeClippingControls
                             object={ref}
@@ -96,24 +102,23 @@ function XRayRoomGame() {
 
                         {/* -------------------------------------------------- */}
                         {/* Three.js Object */}
-                        <group position={[xOffset, 0, zOffset]}>
-                            <group
-                                position={
-                                    VOLUMEDATA.Dose_Configure.object3d.position
-                                }
-                                rotation={
-                                    VOLUMEDATA.Dose_Configure.object3d.rotation
-                                }
-                                scale={
-                                    VOLUMEDATA.Dose_Configure.volume.scale *
-                                    VOLUMEDATA.Dose_Configure.object3d.scale
-                                }
-                            >
-                                <VOLUMEDATA.Dose_material />
-                                <VOLUMEDATA.Dose_region />
-                            </group>
-                        </group>
                         <ControlPanel position={[0, 2, -5]} />
+
+                        {/* Helper */}
+                        <GizmoHelper
+                            alignment="bottom-right"
+                            margin={[80, 80]}
+                            renderPriority={-1}
+                        >
+                            <GizmoViewport
+                                axisColors={[
+                                    "hotpink",
+                                    "aquamarine",
+                                    "#3498DB",
+                                ]}
+                                labelColor="black"
+                            />
+                        </GizmoHelper>
 
                         {/* -------------------------------------------------- */}
                         {/* Enviroment */}
@@ -154,4 +159,4 @@ function XRayRoomGame() {
     );
 }
 
-export default XRayRoomGame;
+export default StentGame;

@@ -1,5 +1,3 @@
-import { NextPage } from "next";
-import dynamic from "next/dynamic";
 import React, { useState, useEffect, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
@@ -14,7 +12,7 @@ import {
 import * as THREE from "three";
 import { useControls, folder, button } from "leva";
 
-import * as Models from "../../components/models";
+import * as MODELS from "../../components/models";
 
 import styles from "../../styles/threejs.module.css";
 
@@ -121,6 +119,8 @@ function CArmSceneRough() {
     return (
         <div className={styles.container}>
             <div className={styles.canvas}>
+                {/* ================================================== */}
+                {/* Three.js Canvas */}
                 <Canvas camera={{ position: [-2, 4, 2] }}>
                     {/* <Sphere /> */}
 
@@ -137,7 +137,7 @@ function CArmSceneRough() {
                             }}
                         >
                             <group ref={CArmRef}>
-                                <Models.CArmRough />
+                                <MODELS.CArmRough />
                             </group>
                         </PivotControls>
                     </group>
@@ -152,7 +152,7 @@ function CArmSceneRough() {
                         }}
                     >
                         <group ref={BedRef}>
-                            <Models.BedRough />
+                            <MODELS.BedRough />
                         </group>
                     </PivotControls>
 
@@ -177,7 +177,7 @@ function CArmSceneRough() {
                         getVertexPosition={undefined}
                     />
 
-                    {/* -------------------------------------------------- */}
+                    {/* ================================================== */}
                     {/* UI */}
                     <Stats />
 

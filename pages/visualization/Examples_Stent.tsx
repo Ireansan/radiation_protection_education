@@ -2,26 +2,31 @@
  * https://github.com/mrdoob/three.js/blob/master/examples/webgl2_materials_texture3d.html
  */
 
-import { NextPage } from "next";
-import dynamic from "next/dynamic";
-import React, { useState, useEffect, useRef } from "react";
-
-import { Canvas, useFrame } from "@react-three/fiber";
+import React from "react";
+import { Canvas } from "@react-three/fiber";
 import {
     OrbitControls,
     Stats,
     GizmoHelper,
     GizmoViewport,
+    Grid,
     PivotControls,
 } from "@react-three/drei";
-import * as THREE from "three";
 
-import { VolumeObject, VolumeGroup } from "../../src";
+// ==========
+// Volume
+// ----------
+// object
+import { VolumeGroup } from "../../src";
+// ----------
+// data
+import * as VOLUMEDATA from "../../components/models/VolumeData";
+// ----------
+// controls
 import {
     VolumeParameterControls,
     VolumeClippingControls,
 } from "../../components/volumeRender";
-import * as Models from "../../components/models/VolumeData";
 
 import styles from "../../styles/threejs.module.css";
 
@@ -61,19 +66,28 @@ function ExampleStent() {
     return (
         <div className={styles.container}>
             <div className={styles.canvas}>
+                {/* ================================================== */}
+                {/* Three.js Canvas */}
                 <Canvas camera={{ position: [64, 128, 64] }}>
+                    {/* -------------------------------------------------- */}
+                    {/* Volume Object */}
                     <volumeGroup ref={ref}>
-                        <Models.Stent
+                        {/* Stent */}
+                        <VOLUMEDATA.Stent
                             position={[-75, 0, 0]}
                             rotation={[-Math.PI / 2, 0, 0]}
                         />
-                        <Models.Stent
+
+                        {/* Stent */}
+                        <VOLUMEDATA.Stent
                             position={[75, 0, 0]}
                             rotation={[-Math.PI / 2, 0, 0]}
                             coefficient={0.5}
                         />
                     </volumeGroup>
 
+                    {/* -------------------------------------------------- */}
+                    {/* Volume Controls */}
                     <VolumeParameterControls object={ref} />
                     <VolumeClippingControls
                         object={ref}
@@ -86,12 +100,32 @@ function ExampleStent() {
                         subPlaneSize={50}
                     />
 
+                    {/* -------------------------------------------------- */}
+                    {/* Three.js Controls */}
                     <OrbitControls makeDefault />
 
                     {/* <Box scale={[10, 10, 10]} position={[-10, 4.6, -3]} /> */}
                     {/* <Box scale={[10, 10, 10]} position={[0, 0, 0]} /> */}
 
+                    {/* -------------------------------------------------- */}
+                    {/* Enviroment */}
+                    <Grid
+                        position={[0, -0.01, 0]}
+                        args={[10.5, 10.5]}
+                        cellColor={"#121d7d"}
+                        sectionColor={"#262640"}
+                        fadeDistance={20}
+                        followCamera
+                        infiniteGrid
+                        matrixWorldAutoUpdate={undefined}
+                        getObjectsByProperty={undefined}
+                        getVertexPosition={undefined}
+                    />
+
+                    {/* ================================================== */}
+                    {/* UI */}
                     <Stats />
+
                     <GizmoHelper
                         alignment="bottom-right"
                         margin={[80, 80]}

@@ -1,5 +1,3 @@
-import { NextPage } from "next";
-import dynamic from "next/dynamic";
 import React, { useState, useEffect, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
@@ -12,21 +10,30 @@ import {
     Grid,
 } from "@react-three/drei";
 import * as THREE from "three";
-import { useControls, folder, button } from "leva";
 
+// ==========
+// Three.js
+import * as MODELS from "../../components/models";
+
+// ==========
+// Volume
+// ----------
+// object
 import { VolumeGroup, VolumeAnimationObject } from "../../src";
+// ----------
+// data
+import * as VOLUMEDATA from "../../components/models/VolumeData";
+// ----------
+// controls
 import {
     VolumeAnimationControls,
     VolumeClippingControls,
     VolumeParameterControls,
 } from "../../components/volumeRender";
-import * as Models from "../../components/models";
-import * as VOLUMEDATA from "../../components/models/VolumeData";
 
 import styles from "../../styles/threejs.module.css";
 
 function XRayPositionScale() {
-    // FIXME:
     const ref = useRef<VolumeGroup>(null!);
     const refAnimation = useRef<VolumeAnimationObject>(null);
 
@@ -102,7 +109,7 @@ function XRayPositionScale() {
                             matrix={new THREE.Matrix4().setPosition(4, 0, 0)}
                             activeAxes={[true, false, true]}
                         >
-                            <Models.YBot />
+                            <MODELS.YBot />
                         </PivotControls>
 
                         {/* -------------------------------------------------- */}
@@ -126,7 +133,7 @@ function XRayPositionScale() {
                             getVertexPosition={undefined}
                         />
 
-                        {/* -------------------------------------------------- */}
+                        {/* ================================================== */}
                         {/* UI */}
                         <Stats />
 

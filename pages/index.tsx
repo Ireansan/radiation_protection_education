@@ -32,126 +32,92 @@ const Home: NextPage = () => {
                 {/* <p>process.env.NODE_ENV {process.env.NODE_ENV}</p> */}
 
                 <h2>Content</h2>
+                <h3>Visualization</h3>
                 <div className={styles.grid}>
                     <div className={styles.card}>
-                        <Link href={"/volume_visualization/example_stent"}>
+                        <Link href={"/visualization/Examples_Stent"}>
                             <h2>Example Stent.nrrd &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
                     </div>
 
                     <div className={styles.card}>
-                        <Link href={"/volume_visualization/dose_visualization"}>
+                        <Link href={"/visualization/XRay_room"}>
                             <h2>Dose Visualization &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
                     </div>
 
                     <div className={styles.card}>
-                        <Link
-                            href={
-                                "/volume_visualization/dose_visualization_multi-object"
-                            }
-                        >
-                            <h2>Dose Visualization Multi-Object&rarr;</h2>
+                        <Link href={"/visualization/XRay_room_Multi"}>
+                            <h2>Dose Visualization Multi-Object &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
                     </div>
 
                     <div className={styles.card}>
-                        <Link
-                            href={
-                                "/volume_visualization/dose_visualization_curtain"
-                            }
-                        >
-                            <h2>
-                                Dose Visualization Curtain (&alpha;
-                                Version)&rarr;
-                            </h2>
+                        <Link href={"/visualization/XRay_room_Curtain"}>
+                            <h2>Dose Visualization Curtain &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
                     </div>
 
                     <div className={styles.card}>
-                        <Link
-                            href={
-                                "/volume_visualization/dose_visualization_board"
-                            }
-                        >
-                            <h2>
-                                Dose Visualization Board (&alpha; Version)&rarr;
-                            </h2>
+                        <Link href={"/visualization/XRay_room_Board"}>
+                            <h2>Dose Visualization Board &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
                     </div>
 
                     <div className={styles.card}>
-                        <Link href={"/volume_visualization/stent_and_dose"}>
-                            <h2>Stent and Dose</h2>
+                        <Link href={"/visualization/Stent_and_Dose"}>
+                            <h2>Stent and Dose &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
                     </div>
+                </div>
 
-                    {/* <div className={styles.card}>
-                        <Link
-                            href={"/volume_visualization/dose_visualization_VR"}
-                        >
-                            <h2>
-                                Dose Visualization (Ver. VR, &alpha;
-                                Version)&rarr;
-                            </h2>
-                            <p>
-                                Next.js + react-three/fiber + react-three/xr,
-                                Texture 3D
-                            </p>
-                        </Link>
-                    </div> */}
-
+                <h3>Game</h3>
+                <div className={styles.grid}>
                     <div className={styles.card}>
-                        <Link href={"/multiplay/game_sample"}>
-                            <h2>Game Sample &rarr;</h2>
+                        <Link href={"/game/SampleScene"}>
+                            <h2>Sample Scene &rarr;</h2>
                             <p>Next.js + react-three/fiber</p>
                         </Link>
                     </div>
 
-                    {/* <div className={styles.card}>
-                        <Link href={"/multiplay/the_picture_gallery"}>
-                            <h2>The Picture Gallery (Not Support)</h2>
-                            <p>Next.js + react-three/fiber</p>
-                        </Link>
-                    </div> */}
-
                     <div className={styles.card}>
-                        <Link href={"/multiplay/stent_game"}>
+                        <Link href={"/game/Stent_Game"}>
                             <h2>Stent + Game &rarr;</h2>
                             <p>Next.js + react-three/fiber</p>
                         </Link>
                     </div>
 
                     <div className={styles.card}>
-                        <Link href={"/multiplay/xray_game"}>
+                        <Link href={"/game/XRay_room_Game"}>
                             <h2>XRay + Game &rarr;</h2>
                             <p>Next.js + react-three/fiber</p>
                         </Link>
                     </div>
+                </div>
 
+                <h3>Prototype</h3>
+                <div className={styles.grid}>
                     <div className={styles.card}>
-                        <Link href={"/rough_scenes/c-arm_scene_rough"}>
+                        <Link href={"/prototype/c-arm_scene_rough"}>
                             <h2>C-Arm Scene &rarr;</h2>
                             <p>Next.js + react-three/fiber</p>
                         </Link>
                     </div>
                     <div className={styles.card}>
-                        <Link href={"/rough_scenes/XRay_position_scale_rough"}>
-                            <h2>XRay Position & Scale Scene &rarr;</h2>
+                        <Link href={"/prototype/XRay_position_scale_rough"}>
+                            <h2>XRay Position & Scale &rarr;</h2>
                             <p>Next.js + react-three/fiber</p>
                         </Link>
                     </div>
                     <div className={styles.card}>
-                        <Link
-                            href={"/rough_scenes/XRay_room_Dosimeter_Prototype"}
-                        >
-                            <h2>XRay Dosimeter Scene &rarr;</h2>
+                        <Link href={"/prototype/XRay_room_Dosimeter_Prototype"}>
+                            <h2>XRay Dosimeter &rarr;</h2>
                             <p>Next.js + react-three/fiber</p>
                         </Link>
                     </div>

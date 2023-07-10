@@ -1,19 +1,23 @@
 import React, { useRef } from "react";
-
-import { Canvas, extend } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import { VRButton, XR, Interactive, Controllers } from "@react-three/xr";
 import { Stats } from "@react-three/drei";
-import * as THREE from "three";
 
+// ==========
+// Volume
+// ----------
+// object
 import { VolumeGroup, VolumeAnimationObject } from "../../src";
+// ----------
+// data
+import * as VOLUMEDATA from "../../components/models/VolumeData";
+// ----------
+// controls
 import {
     VolumeAnimationControls,
     VolumeClippingControls,
     VolumeParameterControls,
-} from "../volumeRender";
-
-import * as VOLUMEDATA from "../models/VolumeData";
-import * as SCENES from "./index";
+} from "../../components/volumeRender";
 
 function XRayRoomVR() {
     const ref = useRef<VolumeGroup>(null!);
@@ -77,7 +81,7 @@ function XRayRoomVR() {
                 {/* Enviroment */}
                 <ambientLight intensity={0.5} />
 
-                {/* -------------------------------------------------- */}
+                {/* ================================================== */}
                 {/* UI */}
                 <Stats />
             </Canvas>

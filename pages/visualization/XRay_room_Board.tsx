@@ -1,39 +1,37 @@
 import React, { useEffect, useRef } from "react";
-
 import { Canvas } from "@react-three/fiber";
 import {
     OrbitControls,
     Stats,
     GizmoHelper,
     GizmoViewport,
-    PivotControls,
     Grid,
 } from "@react-three/drei";
 import * as THREE from "three";
 
-import { Dosimeter, VolumeGroup, VolumeAnimationObject } from "../../src";
+// ==========
+// Volume
+// ----------
+// object
+import { VolumeGroup, VolumeAnimationObject } from "../../src";
+// ----------
+// data
+import * as VOLUMEDATA from "../../components/models/VolumeData";
+// ----------
+// controls
 import {
-    DoseBoardControls,
-    DosimeterControls,
     VolumeAnimationControls,
+    DoseBoardControls,
     VolumeClippingControls,
     VolumeParameterControls,
-    DosimeterDisplayUI,
 } from "../../components/volumeRender";
-
-import * as VOLUMEDATA from "../../components/models/VolumeData";
-import { YBot } from "../../components/models";
 
 import styles from "../../styles/threejs.module.css";
 
-function XRayRoomDosimeterPrototype() {
-    // FIXME:
+function XRayRoomBoard() {
     const ref = useRef<VolumeGroup>(null!);
     const refAnimation1 = useRef<VolumeAnimationObject>(null);
     const refAnimation2 = useRef<VolumeAnimationObject>(null);
-
-    const dosimeterRef = useRef<Dosimeter>(null);
-    const yBotRef = useRef<THREE.Group>(null);
 
     useEffect(() => {
         console.log(ref.current);
@@ -80,6 +78,10 @@ function XRayRoomDosimeterPrototype() {
                             >
                                 <VOLUMEDATA.Dose_all_Animation_centi />
                             </volumeAnimationObject>
+
+                            {/* <mesh position={[0, 0, 0]} scale={25}>
+                        <sphereBufferGeometry />
+                    </mesh> */}
                         </volumeGroup>
 
                         {/* -------------------------------------------------- */}
@@ -89,7 +91,7 @@ function XRayRoomDosimeterPrototype() {
                             duration={16}
                         />
                         <VolumeParameterControls object={ref} />
-                        {/* <VolumeClippingControls
+                        <VolumeClippingControls
                             object={ref}
                             folderName="Dose 2"
                             normals={[
@@ -101,7 +103,7 @@ function XRayRoomDosimeterPrototype() {
                             ]}
                             planeSize={2}
                             subPlaneSize={1}
-                        /> */}
+                        />
                         <DoseBoardControls
                             object1={refAnimation1}
                             object2={refAnimation2}
@@ -111,26 +113,10 @@ function XRayRoomDosimeterPrototype() {
                             planeSize={2}
                             subPlaneSize={1}
                         >
-                            <mesh position={[0, 0, 0]}>
+                            <mesh>
                                 <boxBufferGeometry args={[1, 2, 0.05]} />
                             </mesh>
                         </DoseBoardControls>
-                        <DosimeterControls
-                            ref={dosimeterRef}
-                            object={yBotRef}
-                            names={[
-                                { name: "mixamorigNeck", displayName: "Neck" },
-                                {
-                                    name: "mixamorigLeftHand",
-                                    displayName: "Left Hand",
-                                },
-                                {
-                                    name: "mixamorigRightHand",
-                                    displayName: "Right Hand",
-                                },
-                            ]}
-                            targets={[refAnimation1, refAnimation2]}
-                        />
 
                         {/* -------------------------------------------------- */}
                         {/* Three.js Object */}
@@ -153,27 +139,6 @@ function XRayRoomDosimeterPrototype() {
                             <sphereBufferGeometry args={[0.25]} />
                         </mesh>
 
-                        <PivotControls
-                            // offset={[0, 0, -0.5]}
-                            // rotation={[0, Math.PI, 0]}
-                            activeAxes={[true, false, true]}
-                            onDragEnd={() => {
-                                if (dosimeterRef.current) {
-                                    dosimeterRef.current.updateResults();
-                                    console.log(
-                                        // dosimeterRef.current,
-                                        // yBotRef.current?.position,
-                                        dosimeterRef.current.results
-                                        // dosimeterRef.current?.object
-                                    );
-                                }
-                            }}
-                        >
-                            <group ref={yBotRef}>
-                                <YBot />
-                            </group>
-                        </PivotControls>
-
                         {/* -------------------------------------------------- */}
                         {/* Three.js Controls */}
                         <OrbitControls makeDefault />
@@ -195,7 +160,7 @@ function XRayRoomDosimeterPrototype() {
                             getVertexPosition={undefined}
                         />
 
-                        {/* -------------------------------------------------- */}
+                        {/* ================================================== */}
                         {/* UI */}
                         <Stats />
 
@@ -214,11 +179,10 @@ function XRayRoomDosimeterPrototype() {
                             />
                         </GizmoHelper>
                     </Canvas>
-                    <DosimeterDisplayUI />
                 </div>
             </div>
         </>
     );
 }
 
-export default XRayRoomDosimeterPrototype;
+export default XRayRoomBoard;
