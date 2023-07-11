@@ -5,6 +5,10 @@
 
 FROM node:17-alpine
 
+# Install make, gcc, g++ and python for command line tool "node-gyp"
+RUN apk update && \
+    apk upgrade && \
+    apk add --no-cache make gcc g++ python3
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
