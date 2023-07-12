@@ -21,13 +21,9 @@ function DosimeterResult({ result, ...props }: DosimeterResultProps) {
 
     const ref = useRef<SVGPathElement>(null);
 
-    const getColor = () =>
-        value < criticalLevel
-            ? "#00FF00" // Green
-            : value < warningLevel
-            ? "#FFE600" // Yellow
-            : "#FF0000"; // Red
-    const getLength = () => `${(100 * (1 - value / maxValue)).toFixed()}%`;
+    const getColor = () => "#00FF00"; // Green
+
+    const getLength = () => `${(100 * (value / maxValue)).toFixed()}%`;
 
     let stroke = getColor();
     let strokeDashoffset = getLength();
@@ -57,6 +53,7 @@ function DosimeterResult({ result, ...props }: DosimeterResultProps) {
                     viewBox="0 0 289 55"
                     xmlns="http://www.w3.org/2000/svg"
                 >
+                    {/* back ground */}
                     <path
                         className="bg-path"
                         d="M13,12 L200,12"
@@ -66,18 +63,29 @@ function DosimeterResult({ result, ...props }: DosimeterResultProps) {
                             "stroke-dasharray": "295px",
                         }}
                     />
+                    {/* red */}
+                    <path
+                        className="path-base"
+                        d="M15,12 L198,12"
+                        style={{
+                            stroke: "#FF0000",
+                            "stroke-width": "9px",
+                            "stroke-dasharray": "100%",
+                        }}
+                    />
+                    {/* green */}
                     <path
                         className="path"
                         d="M15,12 L198,12"
                         ref={ref}
                         style={{
+                            stroke: "00FF00",
                             "stroke-width": "9px",
                             "stroke-dasharray": "100%",
-                            stroke,
                             strokeDashoffset,
                         }}
                     />
-                    <text className="boost-text" x="0">
+                    <text className="boost-text" x="0" y="17px">
                         <tspan>テスト</tspan>
                     </text>
                 </svg>
