@@ -59,3 +59,6 @@ docs/**/*.mp4
 docs/reference
 docs/NOTE.md
 docs/Notes/*
+
+# Blender
+/public/models/blend/*
