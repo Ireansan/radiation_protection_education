@@ -40,13 +40,13 @@ export function CustomYBotIK(props: JSX.IntrinsicElements["group"]) {
                 links: [
                     {
                         index: 11, // "mixamorigLeftForeArm"
-                        rotationMin: new THREE.Vector3(1.2, -1.8, -0.4),
-                        rotationMax: new THREE.Vector3(1.7, -1.1, 0.3),
+                        rotationMin: new THREE.Vector3(0.0, 0.0, 0.0),
+                        rotationMax: new THREE.Vector3(0.1, 0.1, 1.7),
                     },
                     {
                         index: 10, // "mixamorigLeftArm"
-                        rotationMin: new THREE.Vector3(0.1, -0.7, -1.8),
-                        rotationMax: new THREE.Vector3(1.1, 0, -1.4),
+                        rotationMin: new THREE.Vector3(1.4, 0.0, 0.0),
+                        rotationMax: new THREE.Vector3(1.5, 0.1, 1.7),
                     },
                 ],
             },
@@ -56,13 +56,13 @@ export function CustomYBotIK(props: JSX.IntrinsicElements["group"]) {
                 links: [
                     {
                         index: 36, // "mixamorigRightForeArm"
-                        rotationMin: new THREE.Vector3(1.2, -1.8, -0.4),
-                        rotationMax: new THREE.Vector3(1.7, -1.1, 0.3),
+                        rotationMin: new THREE.Vector3(0.0, 0.0, -1.7),
+                        rotationMax: new THREE.Vector3(0.1, 0.1, 0.0),
                     },
                     {
                         index: 35, // "mixamorigRightArm"
-                        rotationMin: new THREE.Vector3(0.1, -0.7, -1.8),
-                        rotationMax: new THREE.Vector3(1.1, 0, -1.4),
+                        rotationMin: new THREE.Vector3(1.4, -0.1, -1.7),
+                        rotationMax: new THREE.Vector3(1.5, 0.0, 0.0),
                     },
                 ],
             },
@@ -71,7 +71,7 @@ export function CustomYBotIK(props: JSX.IntrinsicElements["group"]) {
         return [
             new CCDIKSolver(nodes.Alpha_Surface, iks),
             // @ts-ignore
-            new CCDIKHelper(nodes.Alpha_Surface, iks, 0.05),
+            new CCDIKHelper(nodes.Alpha_Surface, iks, 0.025),
         ];
     }, []);
 
