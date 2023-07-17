@@ -45,7 +45,7 @@ export function CustomYBotIK(props: JSX.IntrinsicElements["group"]) {
                     },
                     {
                         index: 10, // "mixamorigLeftArm"
-                        rotationMin: new THREE.Vector3(1.4, 0.0, 0.0),
+                        rotationMin: new THREE.Vector3(0, 0.0, 0.0),
                         rotationMax: new THREE.Vector3(1.5, 0.1, 1.7),
                     },
                 ],
@@ -61,7 +61,7 @@ export function CustomYBotIK(props: JSX.IntrinsicElements["group"]) {
                     },
                     {
                         index: 35, // "mixamorigRightArm"
-                        rotationMin: new THREE.Vector3(1.4, -0.1, -1.7),
+                        rotationMin: new THREE.Vector3(0, -0.1, -1.7),
                         rotationMax: new THREE.Vector3(1.5, 0.0, 0.0),
                     },
                 ],
