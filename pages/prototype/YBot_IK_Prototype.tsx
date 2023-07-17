@@ -31,23 +31,35 @@ function CustomYBotIKPrototype() {
     });
 
     function setIKPosition(
-        ikName: string,
-        ikParentName: string,
-        ikPosition: THREE.Vector3
+        name: string,
+        parentName: string,
+        worldPosition: THREE.Vector3
     ) {
         if (group.current) {
-            let tmpIk = group.current.getObjectByName(ikName);
-            let tmpIkParent = group.current.getObjectByName(ikParentName);
+            let tmpIk = group.current.getObjectByName(name);
+            let tmpIkParent = group.current.getObjectByName(parentName);
 
             if (tmpIk && tmpIkParent) {
-                // get world position of group
-                let parentWorldPosition = new THREE.Vector3();
-                group.current.getWorldPosition(parentWorldPosition);
-
-                // add IK position to world position
-                let tmpIkPosition = parentWorldPosition.clone().add(ikPosition);
-                tmpIk.position.copy(tmpIkParent.worldToLocal(tmpIkPosition));
+                // set IK position
+                tmpIk.position.copy(tmpIkParent.worldToLocal(worldPosition));
             }
+        }
+    }
+
+    function setIKPositionByLeva(
+        name: string,
+        parentName: string,
+        localPosition: THREE.Vector3
+    ) {
+        if (group.current) {
+            // get world position of group
+            let parentWorldPosition = new THREE.Vector3();
+            group.current.getWorldPosition(parentWorldPosition);
+
+            // add IK position to world position
+            let tmpIkPosition = parentWorldPosition.clone().add(localPosition);
+
+            setIKPosition(name, parentName, tmpIkPosition);
         }
     }
 
@@ -69,7 +81,7 @@ function CustomYBotIKPrototype() {
                         position.setZ(0.6 * e + LeftIKPosition.init.z);
 
                         LeftIKPosition.data.copy(position);
-                        setIKPosition(
+                        setIKPositionByLeva(
                             "mixamorigLeftHandIK",
                             "mixamorigLeftShoulder",
                             position
@@ -86,7 +98,7 @@ function CustomYBotIKPrototype() {
                         position.setY(0.7 * e + LeftIKPosition.init.y);
 
                         LeftIKPosition.data.copy(position);
-                        setIKPosition(
+                        setIKPositionByLeva(
                             "mixamorigLeftHandIK",
                             "mixamorigLeftShoulder",
                             position
@@ -105,7 +117,7 @@ function CustomYBotIKPrototype() {
                         position.setZ(0.6 * e + RightIKPosition.init.z);
 
                         RightIKPosition.data.copy(position);
-                        setIKPosition(
+                        setIKPositionByLeva(
                             "mixamorigRightHandIK",
                             "mixamorigRightShoulder",
                             position
@@ -122,7 +134,7 @@ function CustomYBotIKPrototype() {
                         position.setY(0.7 * e + RightIKPosition.init.y);
 
                         RightIKPosition.data.copy(position);
-                        setIKPosition(
+                        setIKPositionByLeva(
                             "mixamorigRightHandIK",
                             "mixamorigRightShoulder",
                             position
@@ -149,6 +161,43 @@ function CustomYBotIKPrototype() {
                         {/* -------------------------------------------------- */}
                         {/* Three.js Controls */}
                         <OrbitControls makeDefault />
+
+                        {/* Left Hand IK */}
+                        <PivotControls
+                            scale={0.25}
+                            matrix={new THREE.Matrix4().setPosition(
+                                0.3,
+                                0.5,
+                                0
+                            )}
+                            disableRotations
+                            onDragStart={() => console.log("Left Hand IK")}
+                            onDrag={(l, deltaL, w, deltaW) => {
+                                setIKPosition(
+                                    "mixamorigLeftHandIK",
+                                    "mixamorigLeftShoulder",
+                                    new THREE.Vector3().setFromMatrixPosition(w)
+                                );
+                            }}
+                        />
+                        {/* Right Hand IK */}
+                        <PivotControls
+                            scale={0.25}
+                            matrix={new THREE.Matrix4().setPosition(
+                                -0.3,
+                                0.5,
+                                0
+                            )}
+                            disableRotations
+                            onDragStart={() => console.log("Right Hand IK")}
+                            onDrag={(l, deltaL, w, deltaW) => {
+                                setIKPosition(
+                                    "mixamorigRightHandIK",
+                                    "mixamorigRightShoulder",
+                                    new THREE.Vector3().setFromMatrixPosition(w)
+                                );
+                            }}
+                        />
 
                         {/* -------------------------------------------------- */}
                         {/* Enviroment */}
