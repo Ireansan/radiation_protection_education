@@ -14,6 +14,11 @@ import { useControls, folder } from "leva";
 import styles from "../../styles/threejs.module.css";
 import { CustomYBotIK } from "../../components/models/Custom_Ybot_IK";
 
+import {
+    HandIKLevaControls,
+    HandIKPivotControls,
+} from "../../components/models/controls";
+
 type IKPositionData = {
     init: THREE.Vector3;
     data: THREE.Vector3;
@@ -21,101 +26,6 @@ type IKPositionData = {
 
 function CustomYBotIKPrototype() {
     const group = useRef<THREE.Group>(null!);
-    const [LeftIKPosition, setLeftIKPosition] = useState({
-        init: new THREE.Vector3(0.3, 0.8, 0),
-        data: new THREE.Vector3(0.3, 0.8, 0),
-    });
-    const [RightIKPosition, setRightIKPosition] = useState({
-        init: new THREE.Vector3(-0.3, 0.8, 0),
-        data: new THREE.Vector3(-0.3, 0.8, 0),
-    });
-
-    function setIKPosition(name: string, worldPosition: THREE.Vector3) {
-        if (group.current) {
-            let tmpIk = group.current.getObjectByName(name);
-            let tmpIkParent = tmpIk?.parent;
-
-            if (tmpIk && tmpIkParent) {
-                // set IK position
-                tmpIk.position.copy(tmpIkParent.worldToLocal(worldPosition));
-            }
-        }
-    }
-
-    function setIKPositionByLeva(name: string, localPosition: THREE.Vector3) {
-        if (group.current) {
-            // get world position
-            let worldPosition = group.current.localToWorld(localPosition);
-
-            setIKPosition(name, worldPosition);
-        }
-    }
-
-    /**
-     * leva controls
-     */
-    // h(y): 0.8 - 1.5 (world)
-    // d(z): 0 - 0.6 (world)
-    const [ikConfig, setIK] = useControls(() => ({
-        "Hand Position": folder({
-            Left: folder({
-                LeftDepth: {
-                    value: 0,
-                    min: 0,
-                    max: 1,
-                    label: "Depth",
-                    onChange: (e) => {
-                        let position = LeftIKPosition.data.clone();
-                        position.setZ(0.6 * e + LeftIKPosition.init.z);
-
-                        LeftIKPosition.data.copy(position);
-                        setIKPositionByLeva("mixamorigLeftHandIK", position);
-                    },
-                },
-                LeftHeight: {
-                    value: 0,
-                    min: 0,
-                    max: 1,
-                    label: "Height",
-                    onChange: (e) => {
-                        let position = LeftIKPosition.data.clone();
-                        position.setY(0.7 * e + LeftIKPosition.init.y);
-
-                        LeftIKPosition.data.copy(position);
-                        setIKPositionByLeva("mixamorigLeftHandIK", position);
-                    },
-                },
-            }),
-            Right: folder({
-                RightDepth: {
-                    value: 0,
-                    min: 0,
-                    max: 1,
-                    label: "Depth",
-                    onChange: (e) => {
-                        let position = RightIKPosition.data.clone();
-                        position.setZ(0.6 * e + RightIKPosition.init.z);
-
-                        RightIKPosition.data.copy(position);
-                        setIKPositionByLeva("mixamorigRightHandIK", position);
-                    },
-                },
-                RightHeight: {
-                    value: 0,
-                    min: 0,
-                    max: 1,
-                    label: "Height",
-                    onChange: (e) => {
-                        let position = RightIKPosition.data.clone();
-                        position.setY(0.7 * e + RightIKPosition.init.y);
-
-                        RightIKPosition.data.copy(position);
-                        setIKPositionByLeva("mixamorigRightHandIK", position);
-                    },
-                },
-            }),
-        }),
-    }));
 
     return (
         <>
@@ -136,40 +46,8 @@ function CustomYBotIKPrototype() {
                         {/* Three.js Controls */}
                         <OrbitControls makeDefault />
 
-                        {/* Left Hand IK */}
-                        <PivotControls
-                            scale={0.25}
-                            matrix={new THREE.Matrix4().setPosition(
-                                0.3,
-                                0.5,
-                                0
-                            )}
-                            disableRotations
-                            onDragStart={() => console.log("Left Hand IK")}
-                            onDrag={(l, deltaL, w, deltaW) => {
-                                setIKPosition(
-                                    "mixamorigLeftHandIK",
-                                    new THREE.Vector3().setFromMatrixPosition(w)
-                                );
-                            }}
-                        />
-                        {/* Right Hand IK */}
-                        <PivotControls
-                            scale={0.25}
-                            matrix={new THREE.Matrix4().setPosition(
-                                -0.3,
-                                0.5,
-                                0
-                            )}
-                            disableRotations
-                            onDragStart={() => console.log("Right Hand IK")}
-                            onDrag={(l, deltaL, w, deltaW) => {
-                                setIKPosition(
-                                    "mixamorigRightHandIK",
-                                    new THREE.Vector3().setFromMatrixPosition(w)
-                                );
-                            }}
-                        />
+                        <HandIKLevaControls object={group} />
+                        <HandIKPivotControls object={group} />
 
                         {/* -------------------------------------------------- */}
                         {/* Enviroment */}
