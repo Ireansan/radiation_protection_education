@@ -52,14 +52,10 @@ function CustomYBotIKPrototype() {
         localPosition: THREE.Vector3
     ) {
         if (group.current) {
-            // get world position of group
-            let parentWorldPosition = new THREE.Vector3();
-            group.current.getWorldPosition(parentWorldPosition);
+            // get world position
+            let worldPosition = group.current.localToWorld(localPosition);
 
-            // add IK position to world position
-            let tmpIkPosition = parentWorldPosition.clone().add(localPosition);
-
-            setIKPosition(name, parentName, tmpIkPosition);
+            setIKPosition(name, parentName, worldPosition);
         }
     }
 
@@ -154,9 +150,11 @@ function CustomYBotIKPrototype() {
                     <Canvas camera={{ position: [0, 3, 2] }}>
                         {/* -------------------------------------------------- */}
                         {/* Three.js Object */}
-                        <group ref={group}>
-                            <CustomYBotIK />
-                        </group>
+                        <PivotControls activeAxes={[true, false, true]}>
+                            <group ref={group}>
+                                <CustomYBotIK />
+                            </group>
+                        </PivotControls>
 
                         {/* -------------------------------------------------- */}
                         {/* Three.js Controls */}
