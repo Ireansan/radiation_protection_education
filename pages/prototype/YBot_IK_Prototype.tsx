@@ -30,14 +30,10 @@ function CustomYBotIKPrototype() {
         data: new THREE.Vector3(-0.3, 0.8, 0),
     });
 
-    function setIKPosition(
-        name: string,
-        parentName: string,
-        worldPosition: THREE.Vector3
-    ) {
+    function setIKPosition(name: string, worldPosition: THREE.Vector3) {
         if (group.current) {
             let tmpIk = group.current.getObjectByName(name);
-            let tmpIkParent = group.current.getObjectByName(parentName);
+            let tmpIkParent = tmpIk?.parent;
 
             if (tmpIk && tmpIkParent) {
                 // set IK position
@@ -46,16 +42,12 @@ function CustomYBotIKPrototype() {
         }
     }
 
-    function setIKPositionByLeva(
-        name: string,
-        parentName: string,
-        localPosition: THREE.Vector3
-    ) {
+    function setIKPositionByLeva(name: string, localPosition: THREE.Vector3) {
         if (group.current) {
             // get world position
             let worldPosition = group.current.localToWorld(localPosition);
 
-            setIKPosition(name, parentName, worldPosition);
+            setIKPosition(name, worldPosition);
         }
     }
 
@@ -77,11 +69,7 @@ function CustomYBotIKPrototype() {
                         position.setZ(0.6 * e + LeftIKPosition.init.z);
 
                         LeftIKPosition.data.copy(position);
-                        setIKPositionByLeva(
-                            "mixamorigLeftHandIK",
-                            "mixamorigLeftShoulder",
-                            position
-                        );
+                        setIKPositionByLeva("mixamorigLeftHandIK", position);
                     },
                 },
                 LeftHeight: {
@@ -94,11 +82,7 @@ function CustomYBotIKPrototype() {
                         position.setY(0.7 * e + LeftIKPosition.init.y);
 
                         LeftIKPosition.data.copy(position);
-                        setIKPositionByLeva(
-                            "mixamorigLeftHandIK",
-                            "mixamorigLeftShoulder",
-                            position
-                        );
+                        setIKPositionByLeva("mixamorigLeftHandIK", position);
                     },
                 },
             }),
@@ -113,11 +97,7 @@ function CustomYBotIKPrototype() {
                         position.setZ(0.6 * e + RightIKPosition.init.z);
 
                         RightIKPosition.data.copy(position);
-                        setIKPositionByLeva(
-                            "mixamorigRightHandIK",
-                            "mixamorigRightShoulder",
-                            position
-                        );
+                        setIKPositionByLeva("mixamorigRightHandIK", position);
                     },
                 },
                 RightHeight: {
@@ -130,11 +110,7 @@ function CustomYBotIKPrototype() {
                         position.setY(0.7 * e + RightIKPosition.init.y);
 
                         RightIKPosition.data.copy(position);
-                        setIKPositionByLeva(
-                            "mixamorigRightHandIK",
-                            "mixamorigRightShoulder",
-                            position
-                        );
+                        setIKPositionByLeva("mixamorigRightHandIK", position);
                     },
                 },
             }),
@@ -173,7 +149,6 @@ function CustomYBotIKPrototype() {
                             onDrag={(l, deltaL, w, deltaW) => {
                                 setIKPosition(
                                     "mixamorigLeftHandIK",
-                                    "mixamorigLeftShoulder",
                                     new THREE.Vector3().setFromMatrixPosition(w)
                                 );
                             }}
@@ -191,7 +166,6 @@ function CustomYBotIKPrototype() {
                             onDrag={(l, deltaL, w, deltaW) => {
                                 setIKPosition(
                                     "mixamorigRightHandIK",
-                                    "mixamorigRightShoulder",
                                     new THREE.Vector3().setFromMatrixPosition(w)
                                 );
                             }}
