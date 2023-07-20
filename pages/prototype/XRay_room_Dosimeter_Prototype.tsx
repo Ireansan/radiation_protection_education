@@ -33,6 +33,9 @@ import {
     VolumeParameterControls,
 } from "../../components/volumeRender";
 
+import { CustomYBotIK } from "../../components/models/Custom_Ybot_IK";
+import { HandIKLevaControls } from "../../components/models/controls";
+
 import styles from "../../styles/threejs.module.css";
 
 function XRayRoomDosimeterPrototype() {
@@ -179,13 +182,15 @@ function XRayRoomDosimeterPrototype() {
                             }}
                         >
                             <group ref={yBotRef}>
-                                <YBot />
+                                <CustomYBotIK />
                             </group>
                         </PivotControls>
 
                         {/* -------------------------------------------------- */}
                         {/* Three.js Controls */}
                         <OrbitControls makeDefault />
+
+                        <HandIKLevaControls object={yBotRef} />
 
                         {/* -------------------------------------------------- */}
                         {/* Enviroment */}
