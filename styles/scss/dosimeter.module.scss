@@ -1,0 +1,46 @@
+.dose {
+    width: 200px;
+    height: 60px;
+    background-color: #181c20;
+    border: 1px solid #292d39;
+    border-radius: 2px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    color: #8c93a3;
+
+    .name {
+        height: 30%;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .bar {
+        width: 100%;
+        height: 30%;
+
+        .bg {
+            stroke: #132237;
+            stroke-width: 6px;
+            stroke-dasharray: 103%;
+        }
+
+        .red {
+            stroke: #ff0000;
+            stroke-width: 4px;
+            stroke-dasharray: 100%;
+        }
+
+        .green {
+            stroke: #00ff00;
+            stroke-width: 4px;
+            stroke-dasharray: 100%;
+        }
+    }
+
+    .value {
+        height: 40%;
+        font-size: 12px;
+    }
+}

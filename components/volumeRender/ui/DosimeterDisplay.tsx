@@ -4,6 +4,8 @@ import { addEffect } from "@react-three/fiber";
 import { useStore } from "../../store";
 import type { ResultsByName } from "../../../src";
 
+import style from "../../../styles/css/dosimeter.module.css";
+
 /**
  * @link https://codesandbox.io/s/lo6kp?file=/src/ui/Speed/Boost.tsx
  * @link https://codesandbox.io/s/lo6kp?file=/src/styles.css
@@ -46,49 +48,34 @@ function DosimeterResult({ result, ...props }: DosimeterResultProps) {
 
     return (
         <>
-            <div className="bar" style={{ position: "relative", top: "15px" }}>
-                <svg
-                    width={289}
-                    height={55}
-                    viewBox="0 0 289 55"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    {/* back ground */}
-                    <path
-                        className="bg-path"
-                        d="M13,12 L200,12"
-                        style={{
-                            stroke: "#132237",
-                            "stroke-width": "13px",
-                            "stroke-dasharray": "295px",
-                        }}
-                    />
-                    {/* red */}
-                    <path
-                        className="path-base"
-                        d="M15,12 L198,12"
-                        style={{
-                            stroke: "#FF0000",
-                            "stroke-width": "9px",
-                            "stroke-dasharray": "100%",
-                        }}
-                    />
-                    {/* green */}
-                    <path
-                        className="path"
-                        d="M15,12 L198,12"
-                        ref={ref}
-                        style={{
-                            stroke: "00FF00",
-                            "stroke-width": "9px",
-                            "stroke-dasharray": "100%",
-                            strokeDashoffset,
-                        }}
-                    />
-                    <text className="boost-text" x="0" y="17px">
-                        <tspan>テスト</tspan>
-                    </text>
-                </svg>
+            <div class={`${style.dose}`}>
+                {/* Name */}
+                <div class={`${style.name}`}>
+                    {result.displayName ? result.displayName : result.data}
+                </div>
+                {/* Bar */}
+                <div className={`${style.bar}`}>
+                    <svg
+                        viewBox={"0 0 200 15"}
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        {/* back ground */}
+                        <path className={`${style.bg}`} d="M0,4 L200,4" />
+                        {/* red */}
+                        <path className={`${style.red}`} d="M2,4 L198,4" />
+                        {/* green */}
+                        <path
+                            className={`${style.green}`}
+                            d="M2,4 L198,4"
+                            ref={ref}
+                            style={{
+                                strokeDashoffset,
+                            }}
+                        />
+                    </svg>
+                </div>
+                {/* Value */}
+                <div class={`${style.value}`}>{value}</div>
             </div>
         </>
     );
@@ -105,7 +92,7 @@ export function DosimeterDisplayUI({ ...props }) {
                 style={{
                     position: "absolute",
                     bottom: "5px",
-                    left: "50px",
+                    left: "5px",
                     // width: "200px",
                 }}
             >
