@@ -133,6 +133,14 @@ function XRayRoomDosimeterPrototype() {
                             names={[
                                 { name: "mixamorigNeck", displayName: "Neck" },
                                 {
+                                    name: "mixamorigLeftEye",
+                                    displayName: "Left Eye",
+                                },
+                                {
+                                    name: "mixamorigRightEye",
+                                    displayName: "Right Eye",
+                                },
+                                {
                                     name: "mixamorigLeftHand",
                                     displayName: "Left Hand",
                                 },
