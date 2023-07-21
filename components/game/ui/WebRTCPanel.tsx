@@ -47,14 +47,6 @@ export function WebRTCPanel({ ...props }): JSX.Element {
         }));
     }, []);
 
-    useEffect(() => {
-        if (onlinePlayers.player1) {
-            localVideoRef.current.srcObject = onlinePlayers.player1.localStream;
-            remoteVideoRef.current.srcObject =
-                onlinePlayers.player1.remoteStream;
-        }
-    }, [onlinePlayers]);
-
     function sendData() {
         if (onlinePlayers.player1?.dataChannel.readyState === "open") {
             let data = {
@@ -189,23 +181,6 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                         <p> - You are the {currentStateRef.current}!</p>
                     </>
                 ) : null}
-                {/* --------------- Local Video --------------- */}
-                <video
-                    id="localVideo"
-                    ref={localVideoRef}
-                    muted
-                    autoPlay
-                    playsInline
-                    style={{ width: "100%" }}
-                ></video>
-                {/* --------------- Remote Video --------------- */}
-                <video
-                    id="remoteVideo"
-                    ref={remoteVideoRef}
-                    autoPlay
-                    playsInline
-                    style={{ width: "100%" }}
-                ></video>
             </div>
         </>
     );
