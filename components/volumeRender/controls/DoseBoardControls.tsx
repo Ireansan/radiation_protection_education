@@ -206,6 +206,7 @@ export const DoseBoardControls = React.forwardRef<
                 object2.current instanceof VolumeGroup
             ) {
                 controls2.attach(object2.current);
+                controls2.object ? (controls2.object.visible = false) : null;
             }
         }
 
@@ -233,6 +234,7 @@ export const DoseBoardControls = React.forwardRef<
     }, [controls1, clipping]);
     React.useEffect(() => {
         controls2.clipping = clipping;
+        controls2.object ? (controls2.object.visible = clipping) : null;
     }, [controls2, clipping]);
 
     return controls1 && controls2 ? (
