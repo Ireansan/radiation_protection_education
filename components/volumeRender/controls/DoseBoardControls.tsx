@@ -19,6 +19,8 @@ export type DoseBoardControlsProps = {
     origin: THREE.Vector3 | THREE.Object3D;
     width?: number;
     height?: number;
+    position?: THREE.Vector3;
+    rotation?: THREE.Euler;
     folderName?: string;
     planeSize?: number;
     planeColor?: THREE.Color;
@@ -29,7 +31,7 @@ export type DoseBoardControlsProps = {
  * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
  */
 export const DoseBoardControls = React.forwardRef<
-    DoseBoardControlsProps,
+    VolumeControlsImpl,
     DoseBoardControlsProps
 >(function DoseBoardControls(
     {
@@ -39,6 +41,8 @@ export const DoseBoardControls = React.forwardRef<
         origin,
         width = 1,
         height = 1,
+        position = new THREE.Vector3(),
+        rotation = new THREE.Euler(),
         folderName = "board",
         planeSize = 2,
         planeColor = new THREE.Color(0xffff00),
@@ -51,7 +55,11 @@ export const DoseBoardControls = React.forwardRef<
     const controls2 = React.useMemo(() => new VolumeControlsImpl(), []);
 
     const [matrix, setMatrix] = React.useState<THREE.Matrix4>(
-        new THREE.Matrix4()
+        new THREE.Matrix4().compose(
+            position,
+            new THREE.Quaternion().setFromEuler(rotation),
+            new THREE.Vector3(1, 1, 1)
+        )
     );
 
     const pivotRef = React.useRef<THREE.Group>(null!);
@@ -121,8 +129,6 @@ export const DoseBoardControls = React.forwardRef<
         const A = new THREE.Vector3();
         const B = new THREE.Vector3();
         let Positions = new Array<THREE.Vector3>();
-
-        // matrix.copy(w);
 
         if (boardRef.current) {
             var rotationMatrix = new THREE.Matrix4().extractRotation(w);
@@ -242,7 +248,12 @@ export const DoseBoardControls = React.forwardRef<
             <primitive ref={ref} object={controls1} />
             <primitive object={controls2} />
 
-            <group ref={boardRef} visible={clipping}>
+            <group
+                ref={boardRef}
+                position={position}
+                rotation={rotation}
+                visible={clipping}
+            >
                 {/* 3D Object */}
                 {children}
                 <group ref={helperRef} visible={clipping ? visible : false}>

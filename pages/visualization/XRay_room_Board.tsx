@@ -110,6 +110,8 @@ function XRayRoomBoard() {
                             origin={new THREE.Vector3(0, 1, 0)}
                             width={1}
                             height={2}
+                            position={new THREE.Vector3(1, 1.25, -0.5)}
+                            rotation={new THREE.Euler(0, Math.PI / 2, 0)}
                             planeSize={2}
                             subPlaneSize={1}
                         >
