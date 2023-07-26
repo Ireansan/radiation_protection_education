@@ -94,8 +94,8 @@ class Dosimeter extends VolumeBase {
                     ? target instanceof VolumeObject ||
                       target instanceof VolumeAnimationObject
                         ? target.getVolumeValue(position)
-                        : NaN
-                    : NaN;
+                        : -1 // NaN
+                    : -1; // NaN
             });
         }
 

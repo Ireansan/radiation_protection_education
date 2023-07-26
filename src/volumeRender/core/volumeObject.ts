@@ -261,7 +261,7 @@ class VolumeObject extends VolumeBase {
             localPosition.z < 0 ||
             this.volume.zLength <= localPosition.z
         ) {
-            return NaN;
+            return -1; // NaN
         }
 
         // https://github.com/mrdoob/three.js/blob/cba85c5c6318e7ca53dd99f9f3c25eb3b79d9693/examples/jsm/misc/Volume.js#L211

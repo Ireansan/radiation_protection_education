@@ -67,7 +67,7 @@ class DoseObject extends VolumeObject {
         }
 
         if (clipped) {
-            return NaN;
+            return -1; // NaN
         }
 
         return super.getVolumeValue(position);
