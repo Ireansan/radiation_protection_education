@@ -40,14 +40,13 @@ function CustomYBotIKPrototype() {
                             <group ref={group}>
                                 <CustomYBotIK />
                             </group>
+                            <HandIKPivotControls object={group} />
                         </PivotControls>
 
                         {/* -------------------------------------------------- */}
                         {/* Three.js Controls */}
                         <OrbitControls makeDefault />
-
                         <HandIKLevaControls object={group} />
-                        <HandIKPivotControls object={group} />
 
                         {/* -------------------------------------------------- */}
                         {/* Enviroment */}
