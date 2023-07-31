@@ -10,7 +10,7 @@ import { Volume, NRRDLoader } from "three-stdlib";
 import { VolumeObject } from "../../../../../src"; // FIXME: filepath
 extend({ VolumeObject });
 
-import { applyBasePath } from "../../../../utils";
+import { applyBasePath } from "../../../../../utils";
 const modelURL = applyBasePath(
     `/models/nrrd/dose_curtain_animation/dose_curtain_10.nrrd`
 );

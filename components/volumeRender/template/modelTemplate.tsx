@@ -8,7 +8,7 @@ extend({ VolumeObject });
 
 import { Volume } from "three-stdlib";
 
-import { applyBasePath } from "../../utils"; // FIXME: filepath
+import { applyBasePath } from "../../../utils"; // FIXME: filepath
 const modelURL = applyBasePath(`/models/nrrd/model.nrrd`);
 
 export function Model({ ...props }: JSX.IntrinsicElements["volumeObject"]) {

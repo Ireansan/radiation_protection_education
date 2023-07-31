@@ -22,7 +22,7 @@ type GLTFResult = GLTF & {
 type ActionName = "T-Pose";
 type GLTFActions = Record<ActionName, THREE.AnimationAction>;
 
-import { applyBasePath } from "../utils";
+import { applyBasePath } from "../../utils";
 const modelURL = applyBasePath(`/models/glb/Custom_Y-Bot.glb`);
 
 export function CustomYBot(props: JSX.IntrinsicElements["group"]) {

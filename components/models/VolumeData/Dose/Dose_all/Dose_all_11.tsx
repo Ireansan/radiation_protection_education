@@ -7,7 +7,7 @@ import {
 } from "@react-three/fiber";
 import { Volume, NRRDLoader } from "three-stdlib";
 
-import { applyBasePath } from "../../../../utils";
+import { applyBasePath } from "../../../../../utils";
 const modelURL = applyBasePath(`/models/nrrd/dose_animation/dose_11.nrrd`);
 
 export function Dose_all_11({ ...props }: JSX.IntrinsicElements["doseObject"]) {

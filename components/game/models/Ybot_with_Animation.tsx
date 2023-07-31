@@ -129,7 +129,7 @@ function useAnimationKeys(actions: Actions, keyConfig: KeyConfig[]) {
     }, [keyConfig]);
 }
 
-import { applyBasePath } from "../../utils";
+import { applyBasePath } from "../../../utils";
 const modelURL = applyBasePath(`/models/glb/ybot.glb`);
 /**
  *

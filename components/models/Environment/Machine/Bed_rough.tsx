@@ -17,7 +17,7 @@ type GLTFResult = GLTF & {
     materials: {};
 };
 
-import { applyBasePath } from "../../../utils";
+import { applyBasePath } from "../../../../utils";
 const modelURL = applyBasePath(
     `/models/glb/environments/machine/Bed_rough.glb`
 );
