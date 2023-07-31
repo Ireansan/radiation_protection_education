@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import styles from "../styles/Home.module.css";
 
-import { applyBasePath } from "../components/utils";
+import { applyBasePath } from "../utils";
 const logoURL = applyBasePath("/vercel.svg");
 
 const Home: NextPage = () => {
