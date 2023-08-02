@@ -14,7 +14,7 @@ type GLTFResult = GLTF & {
     materials: {};
 };
 
-import { applyBasePath } from "../../../../../utils";
+import { applyBasePath } from "../../../../utils";
 const modelURL = applyBasePath(`/models/gltf/dose_region_1002-1019.gltf`);
 
 export function Dose_region(props: JSX.IntrinsicElements["group"]) {

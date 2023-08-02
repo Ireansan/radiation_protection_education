@@ -14,7 +14,7 @@ extend({ VolumeObject });
 
 import { Volume } from "three-stdlib";
 
-import { applyBasePath } from "../../../../../utils";
+import { applyBasePath } from "../../../utils";
 const modelURL = applyBasePath(`/models/nrrd/stent.nrrd`);
 
 export function Stent({ ...props }: JSX.IntrinsicElements["volumeObject"]) {
