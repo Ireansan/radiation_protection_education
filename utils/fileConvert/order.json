@@ -1,0 +1,8 @@
+{
+    "input_dir": "../../public/models/vtk/c-arm/animation",
+    "public_path": "models/nrrd/c-arm_animation",
+    "nrrd_name": "c-arm",
+    "out_dir": "../../components/models/VolumeData/C-Arm/C-Arm_all",
+    "component_name": "CArm_all",
+    "out_dir_depth": 5
+}
