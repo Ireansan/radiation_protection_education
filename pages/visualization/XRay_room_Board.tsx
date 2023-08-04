@@ -30,8 +30,7 @@ import styles from "../../styles/threejs.module.css";
 
 function XRayRoomBoard() {
     const ref = useRef<VolumeGroup>(null!);
-    const refAnimation1 = useRef<VolumeAnimationObject>(null);
-    const refAnimation2 = useRef<VolumeAnimationObject>(null);
+    const refAnimation = useRef<VolumeAnimationObject>(null);
 
     useEffect(() => {
         console.log(ref.current);
@@ -51,23 +50,9 @@ function XRayRoomBoard() {
                         {/* -------------------------------------------------- */}
                         {/* Volume Object */}
                         <volumeGroup ref={ref}>
-                            {/* Original Data */}
+                            {/* X-Ray Dose, coefficent: 0.01 (1/100) */}
                             <volumeAnimationObject
-                                ref={refAnimation1}
-                                position={
-                                    VOLUMEDATA.Dose_Configure.volume.position
-                                }
-                                rotation={
-                                    VOLUMEDATA.Dose_Configure.volume.rotation
-                                }
-                                scale={VOLUMEDATA.Dose_Configure.volume.scale}
-                            >
-                                <VOLUMEDATA.Dose_all_Animation />
-                            </volumeAnimationObject>
-
-                            {/* Data * 0.01 */}
-                            <volumeAnimationObject
-                                ref={refAnimation2}
+                                ref={refAnimation}
                                 position={
                                     VOLUMEDATA.Dose_Configure.volume.position
                                 }
@@ -87,7 +72,7 @@ function XRayRoomBoard() {
                         {/* -------------------------------------------------- */}
                         {/* Volume Controls */}
                         <VolumeAnimationControls
-                            objects={[refAnimation1, refAnimation2]}
+                            objects={[refAnimation]}
                             duration={16}
                         />
                         <VolumeParameterControls object={ref} />
@@ -105,8 +90,7 @@ function XRayRoomBoard() {
                             subPlaneSize={1}
                         />
                         <DoseBoardControls
-                            object1={refAnimation1}
-                            object2={refAnimation2}
+                            object={refAnimation}
                             origin={new THREE.Vector3(0, 1, 0)}
                             width={1}
                             height={2}
