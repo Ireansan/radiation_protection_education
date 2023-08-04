@@ -204,10 +204,8 @@ ClippedResult within_boundaries(vec3 position){
         regionResult=regionResults[i];
         
         isBoard=u_clippingPlanesIsBoard[i];
-        if(isBoard){
-            guarded=guarded||regionResult;
-            regionResult=false;
-        }
+        guarded=isBoard?(guarded||regionResul)t:guarded;
+        regionResult=isBoard?false:regionResult;
         
         invert=u_clippedInvert[i];
         regionResult=regionResult^^invert;
