@@ -14,8 +14,7 @@ extend({ VolumeObject, VolumeGroup });
 
 export type DoseBoardControlsProps = {
     children?: React.ReactElement<THREE.Object3D>;
-    object1: React.RefObject<VolumeObject> | React.RefObject<VolumeGroup>;
-    object2: React.RefObject<VolumeObject> | React.RefObject<VolumeGroup>;
+    object: React.RefObject<VolumeObject> | React.RefObject<VolumeGroup>;
     origin: THREE.Vector3 | THREE.Object3D;
     width?: number;
     height?: number;
@@ -36,8 +35,7 @@ export const DoseBoardControls = React.forwardRef<
 >(function DoseBoardControls(
     {
         children,
-        object1,
-        object2,
+        object,
         origin,
         width = 1,
         height = 1,
@@ -51,8 +49,7 @@ export const DoseBoardControls = React.forwardRef<
     },
     ref
 ) {
-    const controls1 = React.useMemo(() => new VolumeControlsImpl(), []);
-    const controls2 = React.useMemo(() => new VolumeControlsImpl(), []);
+    const controls = React.useMemo(() => new VolumeControlsImpl(), []);
 
     const [matrix, setMatrix] = React.useState<THREE.Matrix4>(
         new THREE.Matrix4().compose(
@@ -192,61 +189,34 @@ export const DoseBoardControls = React.forwardRef<
     // Attach volume to controls
     // Object 1
     React.useLayoutEffect(() => {
-        if (object1.current) {
+        if (object.current) {
             if (
-                object1.current instanceof VolumeObject ||
-                object1.current instanceof VolumeGroup
+                object.current instanceof VolumeObject ||
+                object.current instanceof VolumeGroup
             ) {
-                controls1.attach(object1.current);
+                controls.attach(object.current);
             }
         }
 
-        return () => void controls1.detach();
-    }, [object1, controls1]);
-
-    // Object 2
-    React.useLayoutEffect(() => {
-        if (object2.current) {
-            if (
-                object2.current instanceof VolumeObject ||
-                object2.current instanceof VolumeGroup
-            ) {
-                controls2.attach(object2.current);
-                controls2.object ? (controls2.object.visible = false) : null;
-            }
-        }
-
-        return () => void controls2.detach();
-    }, [object2, controls2]);
+        return () => void controls.detach();
+    }, [object, controls]);
 
     // Push Planes
     React.useEffect(() => {
-        controls1.clippingPlanes = Planes;
-        controls1.clipIntersection = true;
+        controls.clippingPlanes = Planes;
+        controls.clipIntersection = true;
 
-        controls1.isType = "board";
-    }, [controls1, Planes]);
-    React.useEffect(() => {
-        controls2.clippingPlanes = Planes;
-        controls2.clipIntersection = true;
-
-        controls2.invert = true;
-        controls2.isType = "board";
-    }, [controls2, Planes]);
+        controls.isType = "board";
+    }, [controls, Planes]);
 
     // Clipping
     React.useEffect(() => {
-        controls1.clipping = clipping;
-    }, [controls1, clipping]);
-    React.useEffect(() => {
-        controls2.clipping = clipping;
-        controls2.object ? (controls2.object.visible = clipping) : null;
-    }, [controls2, clipping]);
+        controls.clipping = clipping;
+    }, [controls, clipping]);
 
-    return controls1 && controls2 ? (
+    return controls ? (
         <>
-            <primitive ref={ref} object={controls1} />
-            <primitive object={controls2} />
+            <primitive ref={ref} object={controls} />
 
             <group
                 ref={boardRef}

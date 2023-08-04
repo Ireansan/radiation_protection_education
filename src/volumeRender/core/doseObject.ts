@@ -69,7 +69,6 @@ class DoseObject extends VolumeObject {
 
         uniforms.u_clippedInitValue.value = this._clippedInitValue;
         uniforms.u_clippingPlanesRegion.value = this._clippingPlanesRegion;
-        uniforms.u_clippingPlanesEnabled.value = this._clippingPlanesEnabled;
         uniforms.u_clippingPlanesIsBoard.value = this._clippingPlanesIsBoard;
         uniforms.u_clippedInvert.value = this._clippedInvert;
 
@@ -94,27 +93,25 @@ class DoseObject extends VolumeObject {
         super.updateVolumeClipping(updateParents, updateChildren);
 
         // ----------
-        // reset this values
+        // reset this isBoard values
         // ----------
         this._clippingPlanesIsBoard = [];
 
         // ----------
-        // update this
+        // update this isBoard
         // ----------
+        let isBoardArray = new Array(this.planesLength).fill(false);
+        this._clippingPlanesIsBoard =
+            this._clippingPlanesIsBoard.concat(isBoardArray);
+
         for (let i = 0; i < this.totalClippingPlanesObjects.length; i++) {
             let element = this.totalClippingPlanesObjects[i];
 
-            // Enabled
-            let isBoardArray = new Array(element.planes.length).fill(
-                element.isType === "board"
-            );
-            this._clippingPlanesIsBoard =
-                this._clippingPlanesIsBoard.concat(isBoardArray);
+            this._clippingPlanesIsBoard[i] = element.isType === "board";
         }
-        console.log(this._clippingPlanesIsBoard, this._coefficient);
 
         // ----------
-        // update material
+        // update material to apply isBoard
         // ----------
         this.material.uniforms.u_clippingPlanesIsBoard.value = this.material
             .clipping
