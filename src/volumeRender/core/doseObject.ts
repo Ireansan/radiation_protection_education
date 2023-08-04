@@ -131,31 +131,30 @@ class DoseObject extends VolumeObject {
         // if clipped, retrun NaN
         let planes: THREE.Plane[];
         let board;
-        let clipped = false;
+        let guarded = false;
         for (let i = 0; i < boards.length; i++) {
             board = boards[i];
             planes = board.planes;
 
             let plane: THREE.Plane;
-            let tmpClipped = true;
+            let tmpGuarded = true;
             for (let j = 0; j < planes.length; j++) {
                 plane = planes[j];
 
                 let normal = plane.normal.clone().multiplyScalar(-1);
 
-                tmpClipped =
-                    tmpClipped && position.dot(normal) > plane.constant;
+                tmpGuarded =
+                    tmpGuarded && position.dot(normal) > plane.constant;
             }
-            tmpClipped = XOR(tmpClipped, board.invert);
+            tmpGuarded = XOR(tmpGuarded, board.invert);
 
-            clipped = clipped || tmpClipped;
+            guarded = guarded || tmpGuarded;
         }
 
-        if (clipped) {
-            return -1; // NaN
-        }
+        let coefficient = guarded ? this._coefficient : 1.0;
+        let offset = guarded ? this._offset : 0.0;
 
-        return super.getVolumeValue(position);
+        return coefficient * super.getVolumeValue(position) + offset;
     }
 }
 
