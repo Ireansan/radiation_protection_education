@@ -97,7 +97,6 @@ class VolumeObject extends VolumeBase {
 
         uniforms.u_clippedInitValue.value = this._clippedInitValue;
         uniforms.u_clippingPlanesRegion.value = this._clippingPlanesRegion;
-        uniforms.u_clippingPlanesEnabled.value = this._clippingPlanesEnabled;
         uniforms.u_clippedInvert.value = this._clippedInvert;
 
         this.material = new THREE.ShaderMaterial({
@@ -235,10 +234,6 @@ class VolumeObject extends VolumeBase {
         this.material.uniforms.u_clippingPlanesRegion.value = this.material
             .clipping
             ? this._clippingPlanesRegion
-            : null;
-        this.material.uniforms.u_clippingPlanesEnabled.value = this.material
-            .clipping
-            ? this._clippingPlanesEnabled
             : null;
         this.material.uniforms.u_clippedInvert.value = this.material.clipping
             ? this._clippedInvert
