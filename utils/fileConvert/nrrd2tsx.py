@@ -4,15 +4,15 @@ import string
 
 
 def nrrd2tsx(
-    model_path, out_dir="", component_name=None, out_dir_depth=0, template_type=0
+    model_path, out_dir="", name_component=None, out_dir_depth=0, template_type=0
 ):
     # Component Name
     name = ""
-    if component_name == None:
+    if name_component == None:
         filename = re.findall(".*\/(.*)\.nrrd", model_path)
         name = filename.group().capitalize()
     else:
-        name = component_name
+        name = name_component
 
     # Select template txt
     template_path = ""

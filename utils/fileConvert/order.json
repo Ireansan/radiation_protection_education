@@ -1,8 +1,27 @@
 {
-    "input_dir": "../../public/models/vtk/c-arm/animation",
-    "public_path": "models/nrrd/c-arm_animation",
-    "nrrd_name": "c-arm",
-    "out_dir": "../../components/models/VolumeData/C-Arm/C-Arm_all",
-    "component_name": "CArm_all",
-    "out_dir_depth": 5
+    "volume": {
+        "input_dir": "../../public/models/vtk/c-arm/animation",
+        "out_dir_public": "models/nrrd/c-arm_animation",
+        "name_nrrd": "c-arm",
+        "out_dir": "../../components/models/VolumeData/C-Arm/C-Arm_all",
+        "name_component": "CArm_all",
+        "cell_id": 1,
+        "out_dir_depth": 5
+    },
+    "body": {
+        "input_path": "../../public/models/vtk/c-arm/animation/mH(10)txz_._0.vtk",
+        "out_path": "../../public/models/gltf/c-arm_material_1-53.gltf",
+        "threshold_min": 1,
+        "threshold_max": 53,
+        "cell_id": 3,
+        "out_path_components": "../../components/models/VolumeData/C-Arm/C-Arm_material.tsx"
+    },
+    "machine": {
+        "input_path": "../../public/models/vtk/c-arm/animation/mH(10)txz_._0.vtk",
+        "out_path": "../../public/models/gltf/c-arm_region_1002-1024.gltf",
+        "threshold_min": 1002,
+        "threshold_max": 1024,
+        "cell_id": 2,
+        "out_path_components": "../../components/models/VolumeData/C-Arm/C-Arm_region.tsx"
+    }
 }
