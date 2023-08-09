@@ -14,7 +14,7 @@ extend({ VolumeObject, VolumeGroup });
 
 export type DoseBoardControlsProps = {
     children?: React.ReactElement<THREE.Object3D>;
-    object: React.RefObject<VolumeObject> | React.RefObject<VolumeGroup>;
+    object: React.RefObject<VolumeBase>;
     origin: THREE.Vector3 | THREE.Object3D;
     width?: number;
     height?: number;
@@ -190,10 +190,7 @@ export const DoseBoardControls = React.forwardRef<
     // Object 1
     React.useLayoutEffect(() => {
         if (object.current) {
-            if (
-                object.current instanceof VolumeObject ||
-                object.current instanceof VolumeGroup
-            ) {
+            if (object.current instanceof VolumeBase) {
                 controls.attach(object.current);
             }
         }

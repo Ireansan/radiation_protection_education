@@ -57,9 +57,11 @@ class VolumeBase extends THREE.Object3D {
     clippingPlanesObjects: ClippingPlanesObject[];
     totalClippingPlanesObjects: ClippingPlanesObject[];
 
+    staticParamAutoUpdate: boolean;
     volumeParamAutoUpdate: boolean;
     volumeClippingAutoUpdate: boolean;
 
+    staticParamWorldAutoUpdate: boolean;
     volumeParamWorldAutoUpdate: boolean;
     volumeClippingWorldAutoUpdate: boolean;
 
@@ -89,9 +91,11 @@ class VolumeBase extends THREE.Object3D {
         this.clippingPlanesObjects = [];
         this.totalClippingPlanesObjects = [];
 
+        this.staticParamAutoUpdate = true;
         this.volumeParamAutoUpdate = true;
         this.volumeClippingAutoUpdate = true;
 
+        this.staticParamWorldAutoUpdate = true;
         this.volumeParamWorldAutoUpdate = true;
         this.volumeClippingWorldAutoUpdate = true;
     }
@@ -101,12 +105,14 @@ class VolumeBase extends THREE.Object3D {
     }
     set coefficient(coefficient: number) {
         this._coefficient = coefficient;
+        this.updateStaticParam(false, true);
     }
     get offset() {
         return this._offset;
     }
     set offset(offset: number) {
         this._offset = offset;
+        this.updateStaticParam(false, true);
     }
 
     get opacity() {
@@ -177,28 +183,6 @@ class VolumeBase extends THREE.Object3D {
         this.updateVolumeClipping(false, true);
     }
 
-    get clippedInitValue() {
-        return this._clippedInitValue;
-    }
-    set clippedInitValue(initValues: boolean[]) {
-        this._clippedInitValue = initValues;
-        this.updateVolumeClipping(false, true);
-    }
-    get clippingPlanesRegion() {
-        return this._clippingPlanesRegion;
-    }
-    set clippingPlanesRegion(planesRegion: number[]) {
-        this._clippingPlanesRegion = planesRegion;
-        this.updateVolumeClipping(false, true);
-    }
-    get clippedInvert() {
-        return this._clippedInvert;
-    }
-    set clippedInvert(invert: boolean[]) {
-        this._clippedInvert = invert;
-        this.updateVolumeClipping(false, true);
-    }
-
     pushClippingPlanesObjects(
         planes: THREE.Plane[],
         clipping: boolean = false,
@@ -245,9 +229,55 @@ class VolumeBase extends THREE.Object3D {
         this.updateVolumeClipping(false, true);
     }
 
+    updateStaticParam(updateParents: boolean, updateChildren: boolean) {
+        // ----------
+        // update parent
+        // ----------
+        const parent = this.parent;
+        if (
+            updateParents === true &&
+            parent !== null &&
+            this.staticParamWorldAutoUpdate
+        ) {
+            if (parent instanceof VolumeBase) {
+                parent.updateStaticParam(true, false);
+            }
+        }
+
+        // ----------
+        // update this by parent
+        // ----------
+        if (parent !== null && this.staticParamAutoUpdate) {
+            if (parent instanceof VolumeBase) {
+                this._coefficient = parent._coefficient;
+                this._offset = parent._offset;
+            }
+        }
+
+        // ----------
+        // update children
+        // ----------
+        if (updateChildren === true) {
+            const children = this.children;
+
+            for (let i = 0, l = children.length; i < l; i++) {
+                const child = children[i];
+
+                if (
+                    child instanceof VolumeBase &&
+                    child.staticParamWorldAutoUpdate === true
+                ) {
+                    child.updateStaticParam(false, true);
+                }
+            }
+        }
+    }
+
     // https://github.com/mrdoob/three.js/blob/master/src/core/Object3D.js#L601
     updateVolumeParam(updateParents: boolean, updateChildren: boolean) {
+        // ----------
         // update parent
+        // ----------
         const parent = this.parent;
         if (
             updateParents === true &&
@@ -259,7 +289,9 @@ class VolumeBase extends THREE.Object3D {
             }
         }
 
+        // ----------
         // update this by parent
+        // ----------
         if (parent !== null && this.volumeParamAutoUpdate) {
             if (parent instanceof VolumeBase) {
                 this._opacity = parent._opacity;
@@ -271,7 +303,9 @@ class VolumeBase extends THREE.Object3D {
             }
         }
 
+        // ----------
         // update children
+        // ----------
         if (updateChildren === true) {
             const children = this.children;
 
@@ -348,7 +382,7 @@ class VolumeBase extends THREE.Object3D {
                 : [];
 
             this.parentRegionOffset = parent._clipping
-                ? parent.clippingPlanesRegion.reduce(
+                ? parent._clippingPlanesRegion.reduce(
                       (a, b) => Math.max(a, b),
                       -1
                   ) + 1

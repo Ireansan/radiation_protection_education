@@ -1,14 +1,14 @@
 import * as THREE from "three";
 
-import { VolumeBase } from "./volumeBase";
-import { VolumeObject } from "./volumeObject";
+import { DoseBase } from "./doseBase";
+import { DoseObject } from "./doseObject";
 
 /**
  * @link https://github.com/mrdoob/three.js/blob/master/examples/webgl2_materials_texture3d.html
  *
  * @abstract Volume Group
  */
-class VolumeGroup extends VolumeBase {
+class DoseGroup extends DoseBase {
     isGroup: boolean;
     type: string;
 
@@ -53,11 +53,11 @@ class VolumeGroup extends VolumeBase {
     getVolumeValues(position: THREE.Vector3): number[] {
         return this.children.map(
             (child, i) =>
-                child instanceof VolumeObject
+                child instanceof DoseObject
                     ? child.getVolumeValue(position.clone())
                     : -1 // NaN
         );
     }
 }
 
-export { VolumeGroup };
+export { DoseGroup };

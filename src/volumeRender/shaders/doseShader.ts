@@ -54,6 +54,8 @@ uniform int u_renderstyle;
 uniform float u_renderthreshold;
 uniform float u_coefficient;
 uniform float u_offset;
+uniform float u_boardCoefficient;
+uniform float u_boardOffset;
 uniform float u_opacity;
 uniform vec2 u_clim;
 
@@ -222,8 +224,8 @@ ClippedResult within_boundaries(vec3 position){
 }
 
 float sample1(vec3 texcoords,bool guarded){
-    float coefficient=guarded?u_coefficient:1.;
-    float offset=guarded?u_offset:0.;
+    float coefficient=guarded?(u_coefficient*u_boardCoefficient):u_coefficient;
+    float offset=guarded?(u_offset+u_boardOffset):u_offset;
     
     /* Sample float value from a 3D texture. Assumes intensity data. */
     return(coefficient*texture(u_data,texcoords.xyz).r)+offset;
@@ -405,6 +407,8 @@ const doseShader = {
         u_renderthreshold: { value: 0.5 },
         u_coefficient: { value: 1.0 },
         u_offset: { value: 0.0 },
+        u_boardCoefficient: { value: 1.0 },
+        u_boardOffset: { value: 0.0 },
         u_opacity: { value: 1.0 },
         u_clim: { value: new THREE.Vector2(1, 1) },
         u_clippedInitValue: { value: [] },

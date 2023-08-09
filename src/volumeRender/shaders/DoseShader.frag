@@ -6,6 +6,8 @@ uniform int u_renderstyle;
 uniform float u_renderthreshold;
 uniform float u_coefficient;
 uniform float u_offset;
+uniform float u_boardCoefficient;
+uniform float u_boardOffset;
 uniform float u_opacity;
 uniform vec2 u_clim;
 
@@ -174,8 +176,8 @@ ClippedResult within_boundaries(vec3 position){
 }
 
 float sample1(vec3 texcoords,bool guarded){
-    float coefficient=guarded?u_coefficient:1.;
-    float offset=guarded?u_offset:0.;
+    float coefficient=guarded?(u_coefficient*u_boardCoefficient):u_coefficient;
+    float offset=guarded?(u_offset+u_boardOffset):u_offset;
     
     /* Sample float value from a 3D texture. Assumes intensity data. */
     return(coefficient*texture(u_data,texcoords.xyz).r)+offset;

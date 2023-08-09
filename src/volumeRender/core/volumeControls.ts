@@ -25,47 +25,6 @@ class VolumeControls extends VolumeBase {
         this.isVolumeControls = true;
     }
 
-    set opacity(opacity: number) {
-        this._opacity = opacity;
-        this.updateVolumeParam();
-    }
-    set clim1(clim1: number) {
-        this._clim1 = clim1;
-        this.updateVolumeParam();
-    }
-    set clim2(clim2: number) {
-        this._clim2 = clim2;
-        this.updateVolumeParam();
-    }
-
-    set colormap(colormap: string) {
-        this._colormap = colormap;
-        this.updateVolumeParam();
-    }
-
-    set renderstyle(renderstyle: string) {
-        this._renderstyle = renderstyle;
-        this.updateVolumeParam();
-    }
-
-    set isothreshold(isothreshold: number) {
-        this._isothreshold = isothreshold;
-        this.updateVolumeParam();
-    }
-
-    set clipping(clipping: boolean) {
-        this._clipping = clipping;
-        this.updateVolumeClipping();
-    }
-    set clippingPlanes(planes: THREE.Plane[]) {
-        this._clippingPlanes = planes;
-        this.updateVolumeClipping();
-    }
-    set clipIntersection(clipIntersection: boolean) {
-        this._clipIntersection = clipIntersection;
-        this.updateVolumeClipping();
-    }
-
     get invert() {
         return this._invert;
     }

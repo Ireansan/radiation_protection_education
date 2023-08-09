@@ -1,25 +1,11 @@
 import * as THREE from "three";
 import { Volume } from "three-stdlib";
 
-import volumeShader from "../shaders/volumeShader";
+import doseShader from "../shaders/doseShader";
 import { cmtextures } from "../textures";
-import { VolumeBase } from "./volumeBase";
+import { DoseBase } from "./doseBase";
 
-/**
- * @link https://github.com/mrdoob/three.js/blob/master/examples/webgl2_materials_texture3d.html
- * @link https://github.com/mrdoob/three.js/blob/master/src/objects/Mesh.js
- *
- * @abstract Volume Object
- * @param volume any
- * @param clim1 number, Default 0
- * @param clim2 number, Default 1
- * @param colormap string, Default viridis
- * @param renderstyle string, Default mip
- * @param isothreshold number, Default 0.1
- * @param clipping boolean, Default false
- * @param planes THREE.Plane
- */
-class VolumeObject extends VolumeBase {
+class DoseObject extends DoseBase {
     volume: Volume;
     width: number;
     height: number;
@@ -33,6 +19,8 @@ class VolumeObject extends VolumeBase {
         volume = new Volume(),
         coefficient = 1.0,
         offset = 0.0,
+        boardCoefficient = 1.0,
+        boardOffset = 0.0,
         opacity = 1.0,
         clim1 = 0,
         clim2 = 1,
@@ -53,6 +41,8 @@ class VolumeObject extends VolumeBase {
 
         this._coefficient = coefficient;
         this._offset = offset;
+        this._boardCoefficient = boardCoefficient;
+        this._boardOffset = boardOffset;
 
         this._opacity = opacity;
         this._clim1 = clim1;
@@ -63,6 +53,7 @@ class VolumeObject extends VolumeBase {
 
         this._clipping = clipping;
         this._clippingPlanes = clippingPlanes;
+        this._clippingPlanesIsBoard = [];
         this._clipIntersection = clipIntersection;
 
         this.isMesh = true;
@@ -82,12 +73,14 @@ class VolumeObject extends VolumeBase {
         texture.needsUpdate = true;
 
         // Material
-        const uniforms = THREE.UniformsUtils.clone(volumeShader.uniforms);
+        const uniforms = THREE.UniformsUtils.clone(doseShader.uniforms);
         uniforms.u_data.value = texture;
         uniforms.u_size.value.set(this.width, this.height, this.depth);
 
         uniforms.u_coefficient.value = this._coefficient;
         uniforms.u_offset.value = this._offset;
+        uniforms.u_boardCoefficient.value = this._boardCoefficient;
+        uniforms.u_boardOffset.value = this._boardOffset;
 
         uniforms.u_opacity.value = opacity;
         uniforms.u_clim.value.set(this.clim1, this.clim2);
@@ -99,12 +92,13 @@ class VolumeObject extends VolumeBase {
 
         uniforms.u_clippedInitValue.value = this._clippedInitValue;
         uniforms.u_clippingPlanesRegion.value = this._clippingPlanesRegion;
+        uniforms.u_clippingPlanesIsBoard.value = this._clippingPlanesIsBoard;
         uniforms.u_clippedInvert.value = this._clippedInvert;
 
         this.material = new THREE.ShaderMaterial({
             uniforms: uniforms,
-            vertexShader: volumeShader.vertexShader,
-            fragmentShader: volumeShader.fragmentShader,
+            vertexShader: doseShader.vertexShader,
+            fragmentShader: doseShader.fragmentShader,
             side: THREE.BackSide, // The volume shader uses the backface as its "reference point"
             transparent: true,
             depthTest: false,
@@ -129,7 +123,7 @@ class VolumeObject extends VolumeBase {
 
     updateStaticParam(updateParents: boolean, updateChildren: boolean) {
         // ----------
-        // update parent, children
+        // update parent, this, and children
         // ----------
         super.updateStaticParam(updateParents, updateChildren);
 
@@ -138,18 +132,29 @@ class VolumeObject extends VolumeBase {
         // ----------
         this.material.uniforms.u_coefficient.value = this._coefficient;
         this.material.uniforms.u_offset.value = this._offset;
+        this.material.uniforms.u_boardCoefficient.value =
+            this._boardCoefficient;
+        this.material.uniforms.u_boardOffset.value = this._boardOffset;
 
         // ----------
         // update this by parent
         // ----------
-        const parent = this.parent;
         if (parent !== null && this.staticParamAutoUpdate) {
-            if (parent instanceof VolumeBase) {
+            if (parent instanceof DoseBase) {
                 this.material.uniforms.u_coefficient.value =
                     parent._coefficient;
                 this.material.uniforms.u_offset.value = parent._offset;
+                this.material.uniforms.u_boardCoefficient.value =
+                    parent._boardCoefficient;
+                this.material.uniforms.u_boardOffset.value =
+                    parent._boardOffset;
             }
         }
+        console.log(
+            this._coefficient,
+            this._boardCoefficient,
+            this.material.uniforms.u_boardCoefficient.value
+        ); // FIXME:
     }
 
     // https://github.com/mrdoob/three.js/blob/master/src/core/Object3D.js#L601
@@ -174,7 +179,7 @@ class VolumeObject extends VolumeBase {
         // ----------
         const parent = this.parent;
         if (parent !== null && this.volumeParamAutoUpdate) {
-            if (parent instanceof VolumeBase) {
+            if (parent instanceof DoseBase) {
                 this.material.uniforms.u_opacity.value = parent._opacity;
                 this.material.uniforms.u_clim.value.set(
                     parent._clim1,
@@ -212,16 +217,15 @@ class VolumeObject extends VolumeBase {
             .clipping
             ? this._clippingPlanesRegion
             : null;
+        this.material.uniforms.u_clippingPlanesIsBoard.value = this.material
+            .clipping
+            ? this._clippingPlanesIsBoard
+            : null;
         this.material.uniforms.u_clippedInvert.value = this.material.clipping
             ? this._clippedInvert
             : null;
     }
 
-    /**
-     *
-     * @param position world position
-     * @returns value in the data array
-     */
     getVolumeValue(position: THREE.Vector3): number {
         const localPosition = this.worldToLocal(position);
 
@@ -242,8 +246,46 @@ class VolumeObject extends VolumeBase {
             Math.trunc(localPosition.y),
             Math.trunc(localPosition.z)
         );
-        return this._coefficient * volumeData + this._offset;
+
+        // ----------
+        // within boundaries
+        // ----------
+        let boards = this.totalClippingPlanesObjects.filter(
+            (element) => element.isType === "board"
+        );
+
+        const XOR = (a: boolean, b: boolean) => {
+            return (a || b) && !(a && b);
+        };
+
+        // if clipped, retrun NaN
+        let planes: THREE.Plane[];
+        let board;
+        let guarded = false;
+        for (let i = 0; i < boards.length; i++) {
+            board = boards[i];
+            planes = board.planes;
+
+            let plane: THREE.Plane;
+            let tmpGuarded = true;
+            for (let j = 0; j < planes.length; j++) {
+                plane = planes[j];
+
+                let normal = plane.normal.clone().multiplyScalar(-1);
+
+                tmpGuarded =
+                    tmpGuarded && position.dot(normal) > plane.constant;
+            }
+            tmpGuarded = XOR(tmpGuarded, board.invert);
+
+            guarded = guarded || tmpGuarded;
+        }
+
+        let coefficient = guarded ? this._boardCoefficient : 1.0;
+        let offset = guarded ? this._boardOffset : 0.0;
+
+        return coefficient * volumeData + offset;
     }
 }
 
-export { VolumeObject };
+export { DoseObject };
