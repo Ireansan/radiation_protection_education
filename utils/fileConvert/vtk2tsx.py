@@ -1,8 +1,8 @@
 import os
+import natsort
 
 from nrrd2tsx import nrrd2tsx
 from vtk2nrrd import vtk2nrrd
-from vtk2gltf import vtk2gltf
 
 
 def vtk2tsx(
@@ -21,7 +21,7 @@ def vtk2tsx(
     files = os.listdir(input_dir)
 
     # Sort the files based on their names
-    sorted_files = sorted(files)
+    sorted_files = natsort.natsorted(files)
 
     # Iterate through the sorted files and create the file paths
     for index, file_name in enumerate(sorted_files, start=1):
