@@ -52,6 +52,7 @@ public/models/rar
 # not share data
 public/models/vtk
 /components/game_template/assets/blend
+utils/fileConvert/json/**
 
 # log data
 *.log
