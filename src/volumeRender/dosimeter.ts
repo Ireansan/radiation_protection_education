@@ -1,10 +1,6 @@
 import * as THREE from "three";
-import {
-    VolumeAnimationObject,
-    VolumeBase,
-    VolumeGroup,
-    VolumeObject,
-} from "./core";
+import { VolumeBase } from "./core";
+import { DoseObject, DoseAnimationObject } from "./dose";
 
 export type Names = {
     name: string;
@@ -91,8 +87,8 @@ class Dosimeter extends VolumeBase {
 
             tmpResults = this.targets.map((target) => {
                 return target
-                    ? target instanceof VolumeObject ||
-                      target instanceof VolumeAnimationObject
+                    ? target instanceof DoseObject ||
+                      target instanceof DoseAnimationObject
                         ? target.getVolumeValue(position)
                         : -1 // NaN
                     : -1; // NaN
