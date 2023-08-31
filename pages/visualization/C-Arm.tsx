@@ -60,7 +60,6 @@ function CArm() {
                                     VOLUMEDATA.CArm_Configure.volume.rotation
                                 }
                                 scale={VOLUMEDATA.CArm_Configure.volume.scale}
-                                coefficient={1.0e5}
                                 boardCoefficient={0.01}
                             >
                                 <VOLUMEDATA.CArm_all_Animation />
@@ -77,7 +76,7 @@ function CArm() {
                             objects={[refAnimation]}
                             duration={16}
                         />
-                        <VolumeParameterControls object={ref} />
+                        <VolumeParameterControls object={ref} clim2={1e-5} />
                         <VolumeClippingControls
                             object={ref}
                             folderName="Dose 2"

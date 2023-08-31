@@ -65,7 +65,6 @@ function CArmRoll180Pitch360() {
                                     VOLUMEDATA.CArm_roll180_pitch360_Configure
                                         .volume.scale
                                 }
-                                coefficient={1.0}
                                 boardCoefficient={0.01}
                             >
                                 <VOLUMEDATA.CArm_roll180_pitch360_all_Animation />
@@ -82,7 +81,7 @@ function CArmRoll180Pitch360() {
                             objects={[refAnimation]}
                             duration={16}
                         />
-                        <VolumeParameterControls object={ref} />
+                        <VolumeParameterControls object={ref} clim2={1e-5} />
                         <VolumeClippingControls
                             object={ref}
                             folderName="Dose 2"

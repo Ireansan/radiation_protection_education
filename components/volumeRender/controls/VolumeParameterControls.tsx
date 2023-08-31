@@ -14,15 +14,32 @@ import type { VolumeControlsTypes } from "./types";
 
 export type VolumeParameterControlsProps = {
     folderName?: string;
+    opacity?: number;
+    clim1?: number;
+    clim2?: number;
+    colormap?: string;
+    renderstyle?: string;
+    isothreshold?: number;
 } & VolumeControlsTypes;
 /**
  * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
  */
 export const VolumeParameterControls = React.forwardRef<
-    VolumeParameterControlsProps,
+    VolumeControlsImpl,
     VolumeParameterControlsProps
 >(function VolumeParameterControls(
-    { children, object, folderName = "volume", ...props },
+    {
+        children,
+        object,
+        folderName = "volume",
+        opacity = 0.75,
+        clim1 = 0,
+        clim2 = 1,
+        colormap = "viridis",
+        renderstyle = "mip",
+        isothreshold = 0.15,
+        ...props
+    },
     ref
 ) {
     const controls = React.useMemo(() => new VolumeControlsImpl(), []);
@@ -35,7 +52,7 @@ export const VolumeParameterControls = React.forwardRef<
     const [volumeConfig, setVolume] = useControls(() => ({
         [folderName as string]: folder({
             opacity: {
-                value: 0.75,
+                value: opacity,
                 min: 0.05,
                 max: 1,
                 onChange: (e) => {
@@ -43,7 +60,7 @@ export const VolumeParameterControls = React.forwardRef<
                 },
             },
             clim1: {
-                value: 0,
+                value: clim1,
                 min: 0,
                 max: 1,
                 onChange: (e) => {
@@ -65,7 +82,7 @@ export const VolumeParameterControls = React.forwardRef<
                 },
             },
             colormap: {
-                value: "viridis",
+                value: colormap,
                 options: [
                     "parula",
                     "heat",
@@ -86,6 +103,7 @@ export const VolumeParameterControls = React.forwardRef<
                 },
             },
             renderstyle: {
+                value: renderstyle,
                 options: ["mip", "iso"],
                 onChange: (e) => {
                     controls.renderstyle = e;
@@ -93,7 +111,7 @@ export const VolumeParameterControls = React.forwardRef<
                 },
             },
             isothreshold: {
-                value: 0.15,
+                value: isothreshold,
                 min: 0,
                 max: 1,
                 onChange: (e) => {
@@ -102,6 +120,15 @@ export const VolumeParameterControls = React.forwardRef<
             },
         }),
     }));
+
+    React.useEffect(() => {
+        controls.opacity = opacity;
+        controls.clim1 = clim1;
+        controls.clim2 = clim2;
+        controls.colormap = colormap;
+        controls.renderstyle = renderstyle;
+        controls.isothreshold = isothreshold;
+    }, [controls, opacity, clim1, clim2, colormap, renderstyle, isothreshold]);
 
     // Attach volume to controls
     React.useLayoutEffect(() => {
