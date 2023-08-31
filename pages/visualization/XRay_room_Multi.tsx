@@ -12,7 +12,7 @@ import {
 // Volume
 // ----------
 // object
-import { VolumeAnimationObject, VolumeGroup } from "../../src";
+import { DoseAnimationObject, VolumeGroup } from "../../src";
 // ----------
 // data
 import * as VOLUMEDATA from "../../components/models/VolumeData";
@@ -29,9 +29,9 @@ import styles from "../../styles/threejs.module.css";
 function XRayMulti() {
     const ref = useRef<VolumeGroup>(null!);
     const refCurtain = useRef<VolumeGroup>(null);
-    const refCurtainAnimation = useRef<VolumeAnimationObject>(null);
+    const refCurtainAnimation = useRef<DoseAnimationObject>(null);
     const refNocurtain = useRef<VolumeGroup>(null);
-    const refNocurtainAnimation = useRef<VolumeAnimationObject>(null);
+    const refNocurtainAnimation = useRef<DoseAnimationObject>(null);
 
     useEffect(() => {
         console.log(ref.current);
@@ -55,23 +55,24 @@ function XRayMulti() {
                                 ref={refCurtain}
                                 position={[2.5, 0, 0]}
                             >
-                                <volumeAnimationObject
+                                <doseAnimationObject
                                     ref={refCurtainAnimation}
                                     position={
-                                        VOLUMEDATA.Dose_curtain_Configure.volume
+                                        VOLUMEDATA.XRay_curtain_Configure.volume
                                             .position
                                     }
                                     rotation={
-                                        VOLUMEDATA.Dose_curtain_Configure.volume
+                                        VOLUMEDATA.XRay_curtain_Configure.volume
                                             .rotation
                                     }
                                     scale={
-                                        VOLUMEDATA.Dose_curtain_Configure.volume
+                                        VOLUMEDATA.XRay_curtain_Configure.volume
                                             .scale
                                     }
+                                    boardCoefficient={0.01}
                                 >
-                                    <VOLUMEDATA.Dose_curtain_all_Animation />
-                                </volumeAnimationObject>
+                                    <VOLUMEDATA.XRay_curtain_all_Animation />
+                                </doseAnimationObject>
                             </volumeGroup>
 
                             {/* Nocurtain */}
@@ -79,23 +80,24 @@ function XRayMulti() {
                                 ref={refNocurtain}
                                 position={[-2.5, 0, 0]}
                             >
-                                <volumeAnimationObject
+                                <doseAnimationObject
                                     ref={refNocurtainAnimation}
                                     position={
-                                        VOLUMEDATA.Dose_nocurtain_Configure
+                                        VOLUMEDATA.XRay_nocurtain_Configure
                                             .volume.position
                                     }
                                     rotation={
-                                        VOLUMEDATA.Dose_nocurtain_Configure
+                                        VOLUMEDATA.XRay_nocurtain_Configure
                                             .volume.rotation
                                     }
                                     scale={
-                                        VOLUMEDATA.Dose_nocurtain_Configure
+                                        VOLUMEDATA.XRay_nocurtain_Configure
                                             .volume.scale
                                     }
+                                    boardCoefficient={0.01}
                                 >
-                                    <VOLUMEDATA.Dose_nocurtain_all_Animation />
-                                </volumeAnimationObject>
+                                    <VOLUMEDATA.XRay_nocurtain_all_Animation />
+                                </doseAnimationObject>
                             </volumeGroup>
                         </volumeGroup>
 
@@ -125,43 +127,43 @@ function XRayMulti() {
                         <group position={[2.5, 0, 0]}>
                             <group
                                 position={
-                                    VOLUMEDATA.Dose_curtain_Configure.object3d
+                                    VOLUMEDATA.XRay_curtain_Configure.object3d
                                         .position
                                 }
                                 rotation={
-                                    VOLUMEDATA.Dose_curtain_Configure.object3d
+                                    VOLUMEDATA.XRay_curtain_Configure.object3d
                                         .rotation
                                 }
                                 scale={
-                                    VOLUMEDATA.Dose_curtain_Configure.volume
+                                    VOLUMEDATA.XRay_curtain_Configure.volume
                                         .scale *
-                                    VOLUMEDATA.Dose_curtain_Configure.object3d
+                                    VOLUMEDATA.XRay_curtain_Configure.object3d
                                         .scale
                                 }
                             >
-                                <VOLUMEDATA.Dose_material />
-                                <VOLUMEDATA.Dose_region />
+                                <VOLUMEDATA.XRay_curtain_material />
+                                <VOLUMEDATA.XRay_curtain_region />
                             </group>
                         </group>
                         <group position={[-2.5, 0, 0]}>
                             <group
                                 position={
-                                    VOLUMEDATA.Dose_nocurtain_Configure.object3d
+                                    VOLUMEDATA.XRay_nocurtain_Configure.object3d
                                         .position
                                 }
                                 rotation={
-                                    VOLUMEDATA.Dose_nocurtain_Configure.object3d
+                                    VOLUMEDATA.XRay_nocurtain_Configure.object3d
                                         .rotation
                                 }
                                 scale={
-                                    VOLUMEDATA.Dose_nocurtain_Configure.volume
+                                    VOLUMEDATA.XRay_nocurtain_Configure.volume
                                         .scale *
-                                    VOLUMEDATA.Dose_nocurtain_Configure.object3d
+                                    VOLUMEDATA.XRay_nocurtain_Configure.object3d
                                         .scale
                                 }
                             >
-                                <VOLUMEDATA.Dose_material />
-                                <VOLUMEDATA.Dose_region />
+                                <VOLUMEDATA.XRay_nocurtain_material />
+                                <VOLUMEDATA.XRay_nocurtain_region />
                             </group>
                         </group>
 

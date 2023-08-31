@@ -7,7 +7,7 @@ import { Stats } from "@react-three/drei";
 // Volume
 // ----------
 // object
-import { VolumeGroup, VolumeAnimationObject } from "../../src";
+import { VolumeGroup, DoseAnimationObject } from "../../src";
 // ----------
 // data
 import * as VOLUMEDATA from "../../components/models/VolumeData";
@@ -21,7 +21,7 @@ import {
 
 function XRayRoomVR() {
     const ref = useRef<VolumeGroup>(null!);
-    const refAnimation = useRef<VolumeAnimationObject>(null);
+    const refAnimation = useRef<DoseAnimationObject>(null);
 
     return (
         <>
@@ -34,14 +34,14 @@ function XRayRoomVR() {
                     {/* -------------------------------------------------- */}
                     {/* Volume Object */}
                     <volumeGroup ref={ref}>
-                        <volumeAnimationObject
+                        <doseAnimationObject
                             ref={refAnimation}
                             position={VOLUMEDATA.Dose_Configure.volume.position}
                             rotation={VOLUMEDATA.Dose_Configure.volume.rotation}
                             scale={VOLUMEDATA.Dose_Configure.volume.scale}
                         >
                             <VOLUMEDATA.Dose_all_Animation />
-                        </volumeAnimationObject>
+                        </doseAnimationObject>
                     </volumeGroup>
 
                     {/* -------------------------------------------------- */}

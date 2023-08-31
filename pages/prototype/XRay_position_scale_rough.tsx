@@ -73,7 +73,7 @@ function XRayPositionScale() {
                                 // position={[45, 0, 48]}
                                 rotation={[0, Math.PI, -Math.PI / 2]}
                             >
-                                <VOLUMEDATA.Dose_all_Animation />
+                                <VOLUMEDATA.XRay_nocurtain_all_Animation />
                             </volumeAnimationObject>
                         </volumeGroup>
 
@@ -102,8 +102,8 @@ function XRayPositionScale() {
                             rotation={[0, 0, Math.PI]}
                             scale={doseScale * materialsScale} // 1 / 20
                         >
-                            <VOLUMEDATA.Dose_material />
-                            <VOLUMEDATA.Dose_region />
+                            <VOLUMEDATA.XRay_nocurtain_material />
+                            <VOLUMEDATA.XRay_nocurtain_region />
                         </group>
                         <PivotControls
                             matrix={new THREE.Matrix4().setPosition(4, 0, 0)}

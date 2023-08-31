@@ -31,7 +31,7 @@ import {
 // Volume
 // ----------
 // object
-import { Dosimeter, VolumeGroup, VolumeAnimationObject } from "../../src";
+import { Dosimeter, VolumeGroup, DoseAnimationObject } from "../../src";
 // ----------
 // data
 import * as VOLUMEDATA from "../../components/models/VolumeData";
@@ -53,7 +53,7 @@ import styles from "../../styles/css/game.module.css";
 
 function XRayRoomGame() {
     const ref = useRef<VolumeGroup>(null!);
-    const refAnimation = useRef<VolumeAnimationObject>(null);
+    const refAnimation = useRef<DoseAnimationObject>(null);
 
     const dosimeterRef = useRef<Dosimeter>(null);
     const yBotRef = useRef<THREE.Group>(null);
@@ -83,18 +83,24 @@ function XRayRoomGame() {
                         {/* Volume Objects */}
                         <volumeGroup ref={ref} position={[xOffset, 0, zOffset]}>
                             {/* Dose */}
-                            <volumeAnimationObject
+                            <doseAnimationObject
                                 ref={refAnimation}
                                 position={
-                                    VOLUMEDATA.Dose_Configure.volume.position
+                                    VOLUMEDATA.XRay_nocurtain_Configure.volume
+                                        .position
                                 }
                                 rotation={
-                                    VOLUMEDATA.Dose_Configure.volume.rotation
+                                    VOLUMEDATA.XRay_nocurtain_Configure.volume
+                                        .rotation
                                 }
-                                scale={VOLUMEDATA.Dose_Configure.volume.scale}
+                                scale={
+                                    VOLUMEDATA.XRay_nocurtain_Configure.volume
+                                        .scale
+                                }
+                                boardCoefficient={0.01}
                             >
-                                <VOLUMEDATA.Dose_all_Animation />
-                            </volumeAnimationObject>
+                                <VOLUMEDATA.XRay_nocurtain_all_Animation />
+                            </doseAnimationObject>
                         </volumeGroup>
 
                         {/* -------------------------------------------------- */}
@@ -135,18 +141,22 @@ function XRayRoomGame() {
                         <group position={[xOffset, 0, zOffset]}>
                             <group
                                 position={
-                                    VOLUMEDATA.Dose_Configure.object3d.position
+                                    VOLUMEDATA.XRay_nocurtain_Configure.object3d
+                                        .position
                                 }
                                 rotation={
-                                    VOLUMEDATA.Dose_Configure.object3d.rotation
+                                    VOLUMEDATA.XRay_nocurtain_Configure.object3d
+                                        .rotation
                                 }
                                 scale={
-                                    VOLUMEDATA.Dose_Configure.volume.scale *
-                                    VOLUMEDATA.Dose_Configure.object3d.scale
+                                    VOLUMEDATA.XRay_nocurtain_Configure.volume
+                                        .scale *
+                                    VOLUMEDATA.XRay_nocurtain_Configure.object3d
+                                        .scale
                                 }
                             >
-                                <VOLUMEDATA.Dose_material />
-                                <VOLUMEDATA.Dose_region />
+                                <VOLUMEDATA.XRay_nocurtain_material />
+                                <VOLUMEDATA.XRay_nocurtain_region />
                             </group>
                         </group>
                         <ControlPanel position={[0, 2, -5]} />

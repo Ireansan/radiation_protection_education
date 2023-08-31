@@ -18,7 +18,7 @@ import { YBot } from "../../components/models";
 // Volume
 // ----------
 // object
-import { Dosimeter, VolumeGroup, VolumeAnimationObject } from "../../src";
+import { Dosimeter, VolumeGroup, DoseAnimationObject } from "../../src";
 // ----------
 // data
 import * as VOLUMEDATA from "../../components/models/VolumeData";
@@ -40,7 +40,7 @@ import styles from "../../styles/threejs.module.css";
 
 function XRayRoomDosimeterPrototype() {
     const ref = useRef<VolumeGroup>(null!);
-    const refAnimation = useRef<VolumeAnimationObject>(null);
+    const refAnimation = useRef<DoseAnimationObject>(null);
 
     const dosimeterRef = useRef<Dosimeter>(null);
     const yBotRef = useRef<THREE.Group>(null);
@@ -64,18 +64,24 @@ function XRayRoomDosimeterPrototype() {
                         {/* Volume Object */}
                         <volumeGroup ref={ref}>
                             {/* X-Ray Dose, coefficent: 0.01 (1/100) */}
-                            <volumeAnimationObject
+                            <doseAnimationObject
                                 ref={refAnimation}
                                 position={
-                                    VOLUMEDATA.Dose_Configure.volume.position
+                                    VOLUMEDATA.XRay_nocurtain_Configure.volume
+                                        .position
                                 }
                                 rotation={
-                                    VOLUMEDATA.Dose_Configure.volume.rotation
+                                    VOLUMEDATA.XRay_nocurtain_Configure.volume
+                                        .rotation
                                 }
-                                scale={VOLUMEDATA.Dose_Configure.volume.scale}
+                                scale={
+                                    VOLUMEDATA.XRay_nocurtain_Configure.volume
+                                        .scale
+                                }
+                                boardCoefficient={0.01}
                             >
-                                <VOLUMEDATA.Dose_all_Animation_centi />
-                            </volumeAnimationObject>
+                                <VOLUMEDATA.XRay_nocurtain_all_Animation />
+                            </doseAnimationObject>
                         </volumeGroup>
 
                         {/* -------------------------------------------------- */}
@@ -142,18 +148,22 @@ function XRayRoomDosimeterPrototype() {
                         {/* Three.js Object */}
                         <group
                             position={
-                                VOLUMEDATA.Dose_Configure.object3d.position
+                                VOLUMEDATA.XRay_nocurtain_Configure.object3d
+                                    .position
                             }
                             rotation={
-                                VOLUMEDATA.Dose_Configure.object3d.rotation
+                                VOLUMEDATA.XRay_nocurtain_Configure.object3d
+                                    .rotation
                             }
                             scale={
-                                VOLUMEDATA.Dose_Configure.volume.scale *
-                                VOLUMEDATA.Dose_Configure.object3d.scale
+                                VOLUMEDATA.XRay_nocurtain_Configure.volume
+                                    .scale *
+                                VOLUMEDATA.XRay_nocurtain_Configure.object3d
+                                    .scale
                             }
                         >
-                            <VOLUMEDATA.Dose_material />
-                            <VOLUMEDATA.Dose_region />
+                            <VOLUMEDATA.XRay_nocurtain_material />
+                            <VOLUMEDATA.XRay_nocurtain_region />
                         </group>
                         <mesh position={[0, 1, 0]}>
                             <sphereBufferGeometry args={[0.25]} />
