@@ -38,6 +38,7 @@ import * as VOLUMEDATA from "../../components/models/VolumeData";
 // ----------
 // controls
 import {
+    DoseBoardControls,
     DosimeterControls,
     DosimeterDisplayUI,
     VolumeAnimationControls,
@@ -118,6 +119,21 @@ function XRayRoomGame() {
                                 // [-1, 0, 0],
                             ]}
                         />
+
+                        <DoseBoardControls
+                            object={refAnimation}
+                            origin={new THREE.Vector3(xOffset, 1, zOffset)}
+                            width={1}
+                            height={2}
+                            position={new THREE.Vector3(1, 1.25, -0.5)}
+                            rotation={new THREE.Euler(0, Math.PI / 2, 0)}
+                            planeSize={2}
+                            subPlaneSize={1}
+                        >
+                            <mesh>
+                                <boxBufferGeometry args={[1, 2, 0.05]} />
+                            </mesh>
+                        </DoseBoardControls>
 
                         <DosimeterControls
                             ref={dosimeterRef}
