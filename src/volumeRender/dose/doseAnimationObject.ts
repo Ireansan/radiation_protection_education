@@ -1,6 +1,7 @@
 import * as THREE from "three";
 
 import { DoseGroup } from "./doseGroup";
+import { DoseValue } from "./doseBase";
 
 /**
  * @link https://github.com/mrdoob/three.js/blob/master/examples/webgl2_materials_texture3d.html
@@ -66,7 +67,7 @@ class DoseAnimationObject extends DoseGroup {
         ];
     }
 
-    getVolumeValue(position: THREE.Vector3): number {
+    getVolumeValueByIndex(position: THREE.Vector3): DoseValue {
         let values = this.getVolumeValues(position.clone());
 
         return values[this.index];

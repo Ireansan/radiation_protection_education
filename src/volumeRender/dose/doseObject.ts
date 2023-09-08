@@ -4,6 +4,7 @@ import { Volume } from "three-stdlib";
 import doseShader from "../shaders/doseShader";
 import { cmtextures } from "../textures";
 import { DoseBase } from "./doseBase";
+import type { DoseValue } from "./doseBase";
 
 class DoseObject extends DoseBase {
     volume: Volume;
@@ -226,7 +227,7 @@ class DoseObject extends DoseBase {
             : null;
     }
 
-    getVolumeValue(position: THREE.Vector3): number {
+    getVolumeValue(position: THREE.Vector3): DoseValue {
         const localPosition = this.worldToLocal(position);
 
         if (
@@ -237,7 +238,7 @@ class DoseObject extends DoseBase {
             localPosition.z < 0 ||
             this.volume.zLength <= localPosition.z
         ) {
-            return -1; // NaN
+            return { data: -1, state: undefined }; // NaN
         }
 
         // https://github.com/mrdoob/three.js/blob/cba85c5c6318e7ca53dd99f9f3c25eb3b79d9693/examples/jsm/misc/Volume.js#L211
@@ -254,29 +255,28 @@ class DoseObject extends DoseBase {
             (element) => element.isType === "board"
         );
 
-        const XOR = (a: boolean, b: boolean) => {
-            return (a || b) && !(a && b);
-        };
-
-        // if clipped, retrun NaN
         let planes: THREE.Plane[];
-        let board;
         let guarded = false;
         for (let i = 0; i < boards.length; i++) {
-            board = boards[i];
+            let board = boards[i];
             planes = board.planes;
+
+            let log = [false, false, false, false, false];
 
             let plane: THREE.Plane;
             let tmpGuarded = true;
             for (let j = 0; j < planes.length; j++) {
                 plane = planes[j];
 
-                let normal = plane.normal.clone().multiplyScalar(-1);
-
+                // FIXME:
                 tmpGuarded =
-                    tmpGuarded && position.dot(normal) > plane.constant;
+                    tmpGuarded && position.dot(plane.normal) > plane.constant;
+
+                // let tmpPosition = localPosition.clone().multiplyScalar(-1);
+                let tmpPosition = position.clone().multiplyScalar(-1);
+                log[j] = tmpPosition.dot(plane.normal) > plane.constant;
             }
-            tmpGuarded = XOR(tmpGuarded, board.invert);
+            console.log(tmpGuarded, log);
 
             guarded = guarded || tmpGuarded;
         }
@@ -284,7 +284,10 @@ class DoseObject extends DoseBase {
         let coefficient = guarded ? this._boardCoefficient : 1.0;
         let offset = guarded ? this._boardOffset : 0.0;
 
-        return coefficient * volumeData + offset;
+        return {
+            data: coefficient * volumeData + offset,
+            state: guarded ? ["Gaurded"] : [],
+        };
     }
 }
 
