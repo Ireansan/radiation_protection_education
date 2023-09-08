@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { addEffect } from "@react-three/fiber";
+import { useControls, folder, button } from "leva";
 
 import { useStore } from "../../store";
 import type { ResultsByName } from "../../../src";
@@ -13,19 +14,33 @@ import style from "../../../styles/css/dosimeter.module.css";
 
 const criticalLevel = 5;
 const warningLevel = 10;
-const maxValue = 15;
+// const maxValue = 15;
 
 type DosimeterResultProps = {
     result: ResultsByName;
+    coefficient: number;
+    maxValue: number;
 };
-function DosimeterResult({ result, ...props }: DosimeterResultProps) {
-    let value = Math.max(...result.data);
+function DosimeterResult({
+    result,
+    coefficient,
+    maxValue,
+    ...props
+}: DosimeterResultProps) {
+    let doseValue = result.dose.reduce((acculator, currentValue) =>
+        acculator.data > currentValue.data ? acculator : currentValue
+    );
+    let value = doseValue.data;
 
     const ref = useRef<SVGPathElement>(null);
 
     const getColor = () => "#00FF00"; // Green
 
-    const getLength = () => `${(100 * (value / maxValue)).toFixed()}%`;
+    const getLength = () => {
+        let offset = (120 * coefficient * value) / maxValue;
+
+        return `${offset > 1 ? 200 : 200 * offset}`;
+    };
 
     let stroke = getColor();
     let strokeDashoffset = getLength();
@@ -51,7 +66,7 @@ function DosimeterResult({ result, ...props }: DosimeterResultProps) {
             <div class={`${style.dose}`}>
                 {/* Name */}
                 <div class={`${style.name}`}>
-                    {result.displayName ? result.displayName : result.data}
+                    {result.displayName ? result.displayName : result.name}
                 </div>
                 {/* Bar */}
                 <div className={`${style.bar}`}>
@@ -75,7 +90,9 @@ function DosimeterResult({ result, ...props }: DosimeterResultProps) {
                     </svg>
                 </div>
                 {/* Value */}
-                <div class={`${style.value}`}>{value}</div>
+                <div class={`${style.value}`}>
+                    {maxValue - 120 * coefficient * value}
+                </div>
             </div>
         </>
     );
@@ -84,6 +101,25 @@ function DosimeterResult({ result, ...props }: DosimeterResultProps) {
 export function DosimeterDisplayUI({ ...props }) {
     const [sceneProperties] = useStore((state) => [state.sceneProperties]);
     const { dosimeterResults } = sceneProperties;
+
+    /**
+     * leva panels
+     */
+    // Volume
+    const [dosimeterConfig, setVolume] = useControls(() => ({
+        "Dosimeter Config": folder({
+            mode: {
+                value: "year",
+                options: ["year", "day"],
+            },
+            year: {
+                value: 50,
+            },
+            day: {
+                value: 500,
+            },
+        }),
+    }));
 
     return (
         <>
@@ -97,7 +133,20 @@ export function DosimeterDisplayUI({ ...props }) {
                 }}
             >
                 {dosimeterResults.map((result, index) => (
-                    <DosimeterResult key={index} result={result} />
+                    <DosimeterResult
+                        key={index}
+                        result={result}
+                        coefficient={
+                            dosimeterConfig.mode === "year"
+                                ? dosimeterConfig.year
+                                : 1
+                        }
+                        maxValue={
+                            dosimeterConfig.mode === "year"
+                                ? 20000
+                                : dosimeterConfig.day
+                        }
+                    />
                 ))}
             </div>
         </>
