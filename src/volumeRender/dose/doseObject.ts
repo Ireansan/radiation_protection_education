@@ -227,7 +227,7 @@ class DoseObject extends DoseBase {
             : null;
     }
 
-    getVolumeValue(position: THREE.Vector3): DoseValue {
+    getVolumeValue(position: THREE.Vector3): number {
         const localPosition = this.worldToLocal(position);
 
         if (
@@ -238,7 +238,7 @@ class DoseObject extends DoseBase {
             localPosition.z < 0 ||
             this.volume.zLength <= localPosition.z
         ) {
-            return { data: -1, state: undefined }; // NaN
+            return NaN; // NaN
         }
 
         // https://github.com/mrdoob/three.js/blob/cba85c5c6318e7ca53dd99f9f3c25eb3b79d9693/examples/jsm/misc/Volume.js#L211
@@ -248,46 +248,7 @@ class DoseObject extends DoseBase {
             Math.trunc(localPosition.z)
         );
 
-        // ----------
-        // within boundaries
-        // ----------
-        let boards = this.totalClippingPlanesObjects.filter(
-            (element) => element.isType === "board"
-        );
-
-        let planes: THREE.Plane[];
-        let guarded = false;
-        for (let i = 0; i < boards.length; i++) {
-            let board = boards[i];
-            planes = board.planes;
-
-            let log = [false, false, false, false, false];
-
-            let plane: THREE.Plane;
-            let tmpGuarded = true;
-            for (let j = 0; j < planes.length; j++) {
-                plane = planes[j];
-
-                // FIXME:
-                tmpGuarded =
-                    tmpGuarded && position.dot(plane.normal) > plane.constant;
-
-                // let tmpPosition = localPosition.clone().multiplyScalar(-1);
-                let tmpPosition = position.clone().multiplyScalar(-1);
-                log[j] = tmpPosition.dot(plane.normal) > plane.constant;
-            }
-            console.log(tmpGuarded, log);
-
-            guarded = guarded || tmpGuarded;
-        }
-
-        let coefficient = guarded ? this._boardCoefficient : 1.0;
-        let offset = guarded ? this._boardOffset : 0.0;
-
-        return {
-            data: coefficient * volumeData + offset,
-            state: guarded ? ["Gaurded"] : [],
-        };
+        return volumeData;
     }
 }
 

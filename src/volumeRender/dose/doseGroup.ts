@@ -51,27 +51,20 @@ class DoseGroup extends DoseBase {
      * @param position world position
      * @returns value in the data array
      */
-    getVolumeValue(position: THREE.Vector3): DoseValue {
+    getVolumeValue(position: THREE.Vector3): number {
         let results = this.children.map((child, i) =>
             child instanceof DoseObject
                 ? child.getVolumeValue(position.clone())
-                : { data: 0, state: undefined }
+                : -6
         );
 
-        let tmpData = results
-            .map((result) => result.data)
-            .reduce((acculator, currentValue) => acculator + currentValue, 0);
-
-        let tmpState: string[] = [];
-        results.map((result) =>
-            result.state ? tmpState.concat(result.state) : null
+        let tmpData = results.reduce(
+            (acculator, currentValue) => acculator + currentValue,
+            0
         );
 
-        return {
-            // https://stackoverflow.com/questions/44436041/how-to-sum-value-of-two-json-object-key
-            data: tmpData,
-            state: Array.from(new Set(tmpState)),
-        };
+        // https://stackoverflow.com/questions/44436041/how-to-sum-value-of-two-json-object-key
+        return tmpData;
     }
 
     /**
@@ -79,11 +72,9 @@ class DoseGroup extends DoseBase {
      * @param position world position
      * @returns value in the data array
      */
-    getVolumeValues(position: THREE.Vector3): DoseValue[] {
+    getVolumeValues(position: THREE.Vector3): number[] {
         return this.children.map((child, i) =>
-            child instanceof DoseObject
-                ? child.getVolumeValue(position.clone())
-                : { data: -1, state: undefined }
+            child instanceof DoseObject ? child.getVolumeValue(position) : NaN
         );
     }
 }

@@ -1,18 +1,20 @@
 import * as THREE from "three";
 import { VolumeBase } from "./core";
-import { DoseObject, DoseAnimationObject } from "./dose";
+import { DoseBase } from "./dose";
+import type { DoseValue } from "./dose";
 
 export type Names = {
     name: string;
     displayName?: string;
 };
+
 export type ResultsByName = Names & {
-    data: number[];
+    dose: DoseValue[];
 };
 /**
  *
  */
-class Dosimeter extends VolumeBase {
+class Dosimeter extends DoseBase {
     object: THREE.Object3D | undefined;
     _namesData: Names[] | undefined;
     targets: (VolumeBase | undefined)[] | undefined;
@@ -79,24 +81,78 @@ class Dosimeter extends VolumeBase {
         }
     }
 
-    getValueByName(objectByName: THREE.Object3D | undefined): number[] {
-        let tmpResults: number[] = new Array();
+    getValueByName(objectByName: THREE.Object3D | undefined): DoseValue[] {
+        let tmpResults: DoseValue[] = new Array();
+
         if (this.targets && objectByName) {
+            // ----------
+            // world position by name
+            // ----------
             let position = new THREE.Vector3();
             objectByName.getWorldPosition(position);
 
+            // ----------
+            // within boundaries
+            // ----------
+            const within_boundaries = (target: DoseBase) => {
+                let boards = target.totalClippingPlanesObjects.filter(
+                    (element) => element.isType === "board"
+                );
+
+                let planes: THREE.Plane[];
+                let guarded = false;
+                for (let i = 0; i < boards.length; i++) {
+                    let board = boards[i];
+                    planes = board.planes;
+
+                    let plane: THREE.Plane;
+                    let tmpGuarded = true;
+                    for (let j = 0; j < planes.length; j++) {
+                        plane = planes[j];
+
+                        let tmpPosition = position.clone().multiplyScalar(-1);
+                        tmpGuarded =
+                            tmpGuarded &&
+                            tmpPosition.dot(plane.normal) > plane.constant;
+                    }
+
+                    guarded = guarded || tmpGuarded;
+                }
+                // FIXME:
+                guarded = guarded && target.boardEffect;
+
+                return guarded;
+            };
+
+            const getResult = (target: DoseBase): DoseValue => {
+                let coefficient = target.boardCoefficient;
+                let offset = target.boardOffset;
+                let volumeValue = target.getVolumeValue(position);
+                let guarded = within_boundaries(target);
+
+                return {
+                    data: guarded
+                        ? coefficient * volumeValue + offset
+                        : volumeValue,
+                    state: guarded ? ["guarded"] : [],
+                };
+            };
+
+            // ----------
+            // each result
+            // ----------
             tmpResults = this.targets.map((target) => {
                 return target
-                    ? target instanceof DoseObject ||
-                      target instanceof DoseAnimationObject
-                        ? target.getVolumeValue(position)
-                        : -1 // NaN
-                    : -1; // NaN
+                    ? target instanceof DoseBase
+                        ? getResult(target)
+                        : { data: NaN, state: undefined } // NaN
+                    : { data: NaN, state: undefined }; // NaN
             });
         }
 
         return tmpResults;
     }
+
     updateResults() {
         this.results = [];
 
@@ -105,7 +161,7 @@ class Dosimeter extends VolumeBase {
                 return {
                     name: data.name,
                     displayName: data.displayName,
-                    data: this.getValueByName(this.objectsByName[index]),
+                    dose: this.getValueByName(this.objectsByName[index]),
                 };
             });
         }

@@ -67,8 +67,8 @@ class DoseAnimationObject extends DoseGroup {
         ];
     }
 
-    getVolumeValueByIndex(position: THREE.Vector3): DoseValue {
-        let values = this.getVolumeValues(position.clone());
+    getVolumeValueByIndex(position: THREE.Vector3): number {
+        let values = this.getVolumeValues(position);
 
         return values[this.index];
     }
