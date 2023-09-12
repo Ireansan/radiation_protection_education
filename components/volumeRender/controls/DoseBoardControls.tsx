@@ -2,14 +2,21 @@ import React from "react";
 import * as THREE from "three";
 import { extend } from "@react-three/fiber";
 import { useCursor, PivotControls } from "@react-three/drei";
-import { useControls, folder, Leva } from "leva";
+import {
+    RigidBody,
+    RigidBodyApi,
+    CuboidCollider,
+    CuboidArgs,
+} from "@react-three/rapier";
 
 import { DoseBase, DoseControls as DoseControlsImpl } from "../../../src";
+import { useStore } from "../../store";
 
 export type DoseBoardControlsProps = {
     children?: React.ReactElement<THREE.Object3D>;
     object: React.RefObject<DoseBase>;
     origin: THREE.Vector3 | THREE.Object3D;
+    areaSize: CuboidArgs;
     width?: number;
     height?: number;
     position?: THREE.Vector3;
@@ -31,6 +38,7 @@ export const DoseBoardControls = React.forwardRef<
         children,
         object,
         origin,
+        areaSize = [1, 1, 1],
         width = 1,
         height = 1,
         position = new THREE.Vector3(),
@@ -43,6 +51,7 @@ export const DoseBoardControls = React.forwardRef<
     },
     ref
 ) {
+    const [debug] = useStore((state) => [state.debug]);
     const controls = React.useMemo(() => new DoseControlsImpl(), []);
 
     const [matrix, setMatrix] = React.useState<THREE.Matrix4>(
@@ -56,8 +65,6 @@ export const DoseBoardControls = React.forwardRef<
     const pivotRef = React.useRef<THREE.Group>(null!);
     const boardRef = React.useRef<THREE.Group>(null!);
     const helperRef = React.useRef<THREE.Group>(null!);
-
-    const [visible, setVisible] = React.useState<boolean>(true);
 
     // -----
     // Plane
@@ -85,26 +92,13 @@ export const DoseBoardControls = React.forwardRef<
         })
     );
 
-    /**
-     * leva panels
-     */
-    // Volume
-    const [volumeConfig, setVolume] = useControls(() => ({
-        [folderName as string]: folder({
-            clipping: {
-                value: false,
-                onChange: (e) => {
-                    setClipping(e);
-                },
-            },
-            visible: {
-                value: true,
-                onChange: (e) => {
-                    setVisible(e);
-                },
-            },
-        }),
-    }));
+    // -----
+    // RigidBody
+    // -----
+    const rigidBodyRef = React.useRef<RigidBodyApi>(null);
+    const [center, setCenter] = React.useState<THREE.Vector3>(
+        new THREE.Vector3()
+    );
 
     /**
      *
@@ -175,6 +169,13 @@ export const DoseBoardControls = React.forwardRef<
                 tmpObject?.lookAt(tmpTargetPosition);
             }
         }
+
+        if (rigidBodyRef.current) {
+            let worldPosition = new THREE.Vector3().setFromMatrixPosition(w);
+            let worldRotation = new THREE.Quaternion().setFromRotationMatrix(w);
+            rigidBodyRef.current.setRotation(worldRotation);
+            rigidBodyRef.current.setTranslation(worldPosition);
+        }
     }
 
     /**
@@ -186,7 +187,11 @@ export const DoseBoardControls = React.forwardRef<
         if (object.current) {
             if (object.current instanceof DoseBase) {
                 controls.attach(object.current);
-                console.log("attached");
+                let bbox = new THREE.Box3().setFromObject(object.current);
+
+                let center = new THREE.Vector3();
+                bbox.getCenter(center);
+                setCenter(center);
             }
         }
 
@@ -211,15 +216,11 @@ export const DoseBoardControls = React.forwardRef<
         <>
             <primitive ref={ref} object={controls} />
 
-            <group
-                ref={boardRef}
-                position={position}
-                rotation={rotation}
-                visible={clipping}
-            >
+            {/* -------------------------------------------------- */}
+            {/* Helper Objects */}
+            <group ref={boardRef} position={position} rotation={rotation}>
                 {/* 3D Object */}
-                {children}
-                <group ref={helperRef} visible={clipping ? visible : false}>
+                <group ref={helperRef} visible={clipping ? debug : false}>
                     {/* Main and Helper */}
                     <mesh name="board" position={[0, 0, 0]}>
                         <boxBufferGeometry args={[width, height, 0.05]} />
@@ -258,16 +259,45 @@ export const DoseBoardControls = React.forwardRef<
                     </mesh>
                 </group>
             </group>
+
+            {/* -------------------------------------------------- */}
+            {/* Planes */}
             {Planes.map((plane, index) => (
                 <>
                     <planeHelper
                         plane={plane}
                         size={planeSize}
-                        visible={clipping ? visible : false}
+                        visible={clipping ? debug : false}
                     />
                 </>
             ))}
 
+            {/* -------------------------------------------------- */}
+            {/* RigidBody */}
+            <RigidBody
+                ref={rigidBodyRef}
+                colliders={"cuboid"}
+                gravityScale={0}
+                position={position}
+                rotation={rotation}
+            >
+                {children}
+            </RigidBody>
+            <RigidBody colliders={false} gravityScale={0}>
+                <CuboidCollider
+                    args={areaSize}
+                    position={center}
+                    sensor
+                    onIntersectionEnter={() => {
+                        setClipping(true);
+                    }}
+                    onIntersectionExit={() => {
+                        setClipping(false);
+                    }}
+                />
+            </RigidBody>
+
+            {/* -------------------------------------------------- */}
             {/* PivotControls */}
             <PivotControls
                 ref={pivotRef}
