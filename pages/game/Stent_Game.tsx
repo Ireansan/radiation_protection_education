@@ -121,16 +121,6 @@ function StentGame() {
                         </GizmoHelper>
 
                         {/* -------------------------------------------------- */}
-                        {/* Enviroment */}
-                        <Sky sunPosition={[100, 20, 100]} />
-                        <ambientLight intensity={0.3} />
-                        <pointLight
-                            castShadow
-                            intensity={0.8}
-                            position={[100, 100, 100]}
-                        />
-
-                        {/* -------------------------------------------------- */}
                         {/* Physics */}
                         <Physics gravity={[0, -30, 0]}>
                             <ToggledDebug />
@@ -139,6 +129,16 @@ function StentGame() {
                                 <YBot />
                             </Player>
                         </Physics>
+
+                        {/* -------------------------------------------------- */}
+                        {/* Enviroment */}
+                        <Sky sunPosition={[100, 20, 100]} />
+                        <ambientLight intensity={0.3} />
+                        <pointLight
+                            castShadow
+                            intensity={0.8}
+                            position={[100, 100, 100]}
+                        />
 
                         {/* -------------------------------------------------- */}
                         {/* Player Contorls */}

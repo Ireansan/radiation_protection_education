@@ -9,10 +9,22 @@ import {
     Grid,
 } from "@react-three/drei";
 import * as THREE from "three";
+import { Physics, Debug } from "@react-three/rapier";
 
 // ==========
 // Three.js
 import { YBot } from "../../components/models";
+
+// ==========
+// Game
+import {
+    // ----------
+    // ui
+    DebugPanel,
+    // ----------
+    // hook
+    useToggle,
+} from "../../components/game";
 
 // ==========
 // Volume
@@ -29,7 +41,6 @@ import {
     DosimeterControls,
     DosimeterDisplayUI,
     VolumeAnimationControls,
-    VolumeClippingControls,
     VolumeParameterControls,
 } from "../../components/volumeRender";
 
@@ -44,6 +55,8 @@ function XRayRoomDosimeterPrototype() {
 
     const dosimeterRef = useRef<Dosimeter>(null);
     const yBotRef = useRef<THREE.Group>(null);
+
+    const ToggledDebug = useToggle(Debug, "debug");
 
     useEffect(() => {
         console.log(ref.current);
@@ -105,20 +118,6 @@ function XRayRoomDosimeterPrototype() {
                             subPlaneSize={1}
                         /> */}
 
-                        <DoseBoardControls
-                            object={refAnimation}
-                            origin={new THREE.Vector3(0, 1, 0)}
-                            width={1}
-                            height={2}
-                            position={new THREE.Vector3(1, 1.25, -0.5)}
-                            rotation={new THREE.Euler(0, Math.PI / 2, 0)}
-                            planeSize={2}
-                            subPlaneSize={1}
-                        >
-                            <mesh position={[0, 0, 0]}>
-                                <boxBufferGeometry args={[1, 2, 0.05]} />
-                            </mesh>
-                        </DoseBoardControls>
                         <DosimeterControls
                             ref={dosimeterRef}
                             object={yBotRef}
@@ -197,6 +196,28 @@ function XRayRoomDosimeterPrototype() {
                         <HandIKLevaControls object={yBotRef} />
 
                         {/* -------------------------------------------------- */}
+                        {/* Physics */}
+                        <Physics gravity={[0, -30, 0]}>
+                            <ToggledDebug />
+                            {/* Dose Board */}
+                            <DoseBoardControls
+                                object={refAnimation}
+                                origin={new THREE.Vector3(0, 1, 0)}
+                                areaSize={[2.2, 1.2, 3.1]}
+                                width={1}
+                                height={2}
+                                position={new THREE.Vector3(2.5, 1.25, -0.5)}
+                                rotation={new THREE.Euler(0, Math.PI / 2, 0)}
+                                planeSize={2}
+                                subPlaneSize={1}
+                            >
+                                <mesh position={[0, 0, 0]}>
+                                    <boxBufferGeometry args={[1, 2, 0.05]} />
+                                </mesh>
+                            </DoseBoardControls>
+                        </Physics>
+
+                        {/* -------------------------------------------------- */}
                         {/* Enviroment */}
                         <ambientLight intensity={0.5} />
 
@@ -233,6 +254,7 @@ function XRayRoomDosimeterPrototype() {
                         </GizmoHelper>
                     </Canvas>
                     <DosimeterDisplayUI />
+                    <DebugPanel />
                 </div>
             </div>
         </>

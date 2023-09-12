@@ -120,21 +120,6 @@ function XRayRoomGame() {
                             ]}
                         />
 
-                        <DoseBoardControls
-                            object={refAnimation}
-                            origin={new THREE.Vector3(xOffset, 1, zOffset)}
-                            width={1}
-                            height={2}
-                            position={new THREE.Vector3(1, 1.25, -0.5)}
-                            rotation={new THREE.Euler(0, Math.PI / 2, 0)}
-                            planeSize={2}
-                            subPlaneSize={1}
-                        >
-                            <mesh>
-                                <boxBufferGeometry args={[1, 2, 0.05]} />
-                            </mesh>
-                        </DoseBoardControls>
-
                         <DosimeterControls
                             ref={dosimeterRef}
                             object={yBotRef}
@@ -178,6 +163,36 @@ function XRayRoomGame() {
                         <ControlPanel position={[0, 2, -5]} />
 
                         {/* -------------------------------------------------- */}
+                        {/* Physics */}
+                        <Physics gravity={[0, -30, 0]}>
+                            <ToggledDebug />
+                            <Ground />
+                            {/* Player */}
+                            <Player>
+                                <group ref={yBotRef}>
+                                    <YBot />
+                                </group>
+                            </Player>
+
+                            {/* Dose Board */}
+                            <DoseBoardControls
+                                object={refAnimation}
+                                origin={new THREE.Vector3(xOffset, 1, zOffset)}
+                                areaSize={[2.2, 1.2, 3.1]}
+                                width={1}
+                                height={2}
+                                position={new THREE.Vector3(1, 1.25, -0.5)}
+                                rotation={new THREE.Euler(0, Math.PI / 2, 0)}
+                                planeSize={2}
+                                subPlaneSize={1}
+                            >
+                                <mesh>
+                                    <boxBufferGeometry args={[1, 2, 0.05]} />
+                                </mesh>
+                            </DoseBoardControls>
+                        </Physics>
+
+                        {/* -------------------------------------------------- */}
                         {/* Enviroment */}
                         <Sky sunPosition={[100, 20, 100]} />
                         <ambientLight intensity={0.3} />
@@ -186,18 +201,6 @@ function XRayRoomGame() {
                             intensity={0.8}
                             position={[100, 100, 100]}
                         />
-
-                        {/* -------------------------------------------------- */}
-                        {/* Physics */}
-                        <Physics gravity={[0, -30, 0]}>
-                            <ToggledDebug />
-                            <Ground />
-                            <Player>
-                                <group ref={yBotRef}>
-                                    <YBot />
-                                </group>
-                            </Player>
-                        </Physics>
 
                         {/* -------------------------------------------------- */}
                         {/* Player Contorls */}

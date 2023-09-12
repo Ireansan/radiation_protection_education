@@ -66,6 +66,7 @@ export function SampleScene() {
                             position={[-10, 1, -5]}
                             scale={0.5}
                         />
+                        <ControlPanel position={[0, 2, -5]} />
 
                         <OnlinePlayer />
 
@@ -88,7 +89,6 @@ export function SampleScene() {
                                 <YBot />
                             </Player>
                         </Physics>
-                        <ControlPanel position={[0, 2, -5]} />
 
                         {/* -------------------------------------------------- */}
                         {/* Player Contorls */}
