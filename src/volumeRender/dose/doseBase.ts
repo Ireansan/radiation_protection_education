@@ -14,6 +14,7 @@ export type DoseValue = {
  * @abstract Volume Base
  */
 class DoseBase extends VolumeBase {
+    _boardEffect: boolean;
     _boardCoefficient: number;
     _boardOffset: number;
 
@@ -22,12 +23,20 @@ class DoseBase extends VolumeBase {
     constructor() {
         super();
 
+        this._boardEffect = false;
         this._boardCoefficient = 1.0;
         this._boardOffset = 0.0;
 
         this._clippingPlanesIsBoard = [];
     }
 
+    get boardEffect() {
+        return this._boardEffect;
+    }
+    set boardEffect(boardEffect: boolean) {
+        this._boardEffect = boardEffect;
+        this.updateVolumeClipping(false, true);
+    }
     get boardCoefficient() {
         return this._boardCoefficient;
     }
@@ -68,6 +77,16 @@ class DoseBase extends VolumeBase {
         super.updateVolumeClipping(updateParents, updateChildren);
 
         // ----------
+        // update this by parent
+        // ----------
+        const parent = this.parent;
+        if (parent !== null && this.volumeClippingAutoUpdate) {
+            if (parent instanceof DoseBase) {
+                this._boardEffect = parent._boardEffect;
+            }
+        }
+
+        // ----------
         // reset this isBoard values
         // ----------
         this._clippingPlanesIsBoard = [];
@@ -86,8 +105,8 @@ class DoseBase extends VolumeBase {
         }
     }
 
-    getVolumeValue(position: THREE.Vector3): DoseValue {
-        return { data: NaN, state: undefined };
+    getVolumeValue(position: THREE.Vector3): number {
+        return NaN;
     }
 }
 

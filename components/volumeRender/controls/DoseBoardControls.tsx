@@ -4,17 +4,11 @@ import { extend } from "@react-three/fiber";
 import { useCursor, PivotControls } from "@react-three/drei";
 import { useControls, folder, Leva } from "leva";
 
-import {
-    VolumeBase,
-    VolumeObject,
-    VolumeGroup,
-    VolumeControls as VolumeControlsImpl,
-} from "../../../src";
-extend({ VolumeObject, VolumeGroup });
+import { DoseBase, DoseControls as DoseControlsImpl } from "../../../src";
 
 export type DoseBoardControlsProps = {
     children?: React.ReactElement<THREE.Object3D>;
-    object: React.RefObject<VolumeBase>;
+    object: React.RefObject<DoseBase>;
     origin: THREE.Vector3 | THREE.Object3D;
     width?: number;
     height?: number;
@@ -30,7 +24,7 @@ export type DoseBoardControlsProps = {
  * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
  */
 export const DoseBoardControls = React.forwardRef<
-    VolumeControlsImpl,
+    DoseControlsImpl,
     DoseBoardControlsProps
 >(function DoseBoardControls(
     {
@@ -49,7 +43,7 @@ export const DoseBoardControls = React.forwardRef<
     },
     ref
 ) {
-    const controls = React.useMemo(() => new VolumeControlsImpl(), []);
+    const controls = React.useMemo(() => new DoseControlsImpl(), []);
 
     const [matrix, setMatrix] = React.useState<THREE.Matrix4>(
         new THREE.Matrix4().compose(
@@ -190,8 +184,9 @@ export const DoseBoardControls = React.forwardRef<
     // Object 1
     React.useLayoutEffect(() => {
         if (object.current) {
-            if (object.current instanceof VolumeBase) {
+            if (object.current instanceof DoseBase) {
                 controls.attach(object.current);
+                console.log("attached");
             }
         }
 
@@ -209,6 +204,7 @@ export const DoseBoardControls = React.forwardRef<
     // Clipping
     React.useEffect(() => {
         controls.clipping = clipping;
+        controls.boardEffect = clipping;
     }, [controls, clipping]);
 
     return controls ? (
