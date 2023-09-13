@@ -19,7 +19,7 @@ import * as MODELS from "../../components/models";
 // Volume
 // ----------
 // object
-import { VolumeGroup, VolumeAnimationObject } from "../../src";
+import { VolumeGroup, DoseAnimationObject } from "../../src";
 // ----------
 // data
 import * as VOLUMEDATA from "../../components/models/VolumeData";
@@ -35,7 +35,7 @@ import styles from "../../styles/threejs.module.css";
 
 function XRayPositionScale() {
     const ref = useRef<VolumeGroup>(null!);
-    const refAnimation = useRef<VolumeAnimationObject>(null);
+    const refAnimation = useRef<DoseAnimationObject>(null);
 
     // NOTE: This params is use
     const cameraInitPosition = new THREE.Vector3(4, 8, 4);
@@ -68,13 +68,13 @@ function XRayPositionScale() {
                             scale={doseScale}
                         >
                             {/* Dose */}
-                            <volumeAnimationObject
+                            <doseAnimationObject
                                 ref={refAnimation}
                                 // position={[45, 0, 48]}
                                 rotation={[0, Math.PI, -Math.PI / 2]}
                             >
                                 <VOLUMEDATA.XRay_nocurtain_all_Animation />
-                            </volumeAnimationObject>
+                            </doseAnimationObject>
                         </volumeGroup>
 
                         {/* -------------------------------------------------- */}

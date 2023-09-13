@@ -12,7 +12,7 @@ import {
 // Volume
 // ----------
 // object
-import { VolumeAnimationObject, VolumeGroup } from "../../src";
+import { DoseAnimationObject, VolumeGroup } from "../../src";
 // ----------
 // data
 import * as VOLUMEDATA from "../../components/models/VolumeData";
@@ -30,7 +30,7 @@ function StentAndDose() {
     const ref = useRef<VolumeGroup>(null!);
     const refStent = useRef<VolumeGroup>(null);
     const refDose = useRef<VolumeGroup>(null);
-    const refDoseAnimation = useRef<VolumeAnimationObject>(null);
+    const refDoseAnimation = useRef<DoseAnimationObject>(null);
 
     useEffect(() => {
         console.log(ref.current);
@@ -73,7 +73,7 @@ function StentAndDose() {
                                 position={[-2.5, 0, 0]}
                                 volumeParamAutoUpdate={false}
                             >
-                                <volumeAnimationObject
+                                <doseAnimationObject
                                     ref={refDoseAnimation}
                                     position={
                                         VOLUMEDATA.Dose_Configure.volume
@@ -87,8 +87,8 @@ function StentAndDose() {
                                         VOLUMEDATA.Dose_Configure.volume.scale
                                     }
                                 >
-                                    <VOLUMEDATA.Dose_nocurtain_all_Animation />
-                                </volumeAnimationObject>
+                                    <VOLUMEDATA.XRay_nocurtain_all_Animation />
+                                </doseAnimationObject>
                             </volumeGroup>
                         </volumeGroup>
 
