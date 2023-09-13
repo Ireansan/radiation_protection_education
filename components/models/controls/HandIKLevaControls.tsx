@@ -25,76 +25,79 @@ export const HandIKLevaControls = React.forwardRef<
     });
 
     const [ikConfig, setIK] = useControls(() => ({
-        "Hand Position": folder({
-            Left: folder({
-                LeftDepth: {
-                    value: 0,
-                    min: 0,
-                    max: 1,
-                    label: "Depth",
-                    onChange: (e) => {
-                        let position = LeftIKPosition.data.clone();
-                        position.setZ(0.6 * e + LeftIKPosition.init.z);
+        "Hand Position": folder(
+            {
+                Left: folder({
+                    LeftDepth: {
+                        value: 0,
+                        min: 0,
+                        max: 1,
+                        label: "Depth",
+                        onChange: (e) => {
+                            let position = LeftIKPosition.data.clone();
+                            position.setZ(0.6 * e + LeftIKPosition.init.z);
 
-                        LeftIKPosition.data.copy(position);
-                        controls.setLocalPosition(
-                            "mixamorigLeftHandIK",
-                            position
-                        );
+                            LeftIKPosition.data.copy(position);
+                            controls.setLocalPosition(
+                                "mixamorigLeftHandIK",
+                                position
+                            );
+                        },
                     },
-                },
-                LeftHeight: {
-                    value: 0,
-                    min: 0,
-                    max: 1,
-                    label: "Height",
-                    onChange: (e) => {
-                        let position = LeftIKPosition.data.clone();
-                        position.setY(0.7 * e + LeftIKPosition.init.y);
+                    LeftHeight: {
+                        value: 0,
+                        min: 0,
+                        max: 1,
+                        label: "Height",
+                        onChange: (e) => {
+                            let position = LeftIKPosition.data.clone();
+                            position.setY(0.7 * e + LeftIKPosition.init.y);
 
-                        LeftIKPosition.data.copy(position);
-                        controls.setLocalPosition(
-                            "mixamorigLeftHandIK",
-                            position
-                        );
+                            LeftIKPosition.data.copy(position);
+                            controls.setLocalPosition(
+                                "mixamorigLeftHandIK",
+                                position
+                            );
+                        },
                     },
-                },
-            }),
-            Right: folder({
-                RightDepth: {
-                    value: 0,
-                    min: 0,
-                    max: 1,
-                    label: "Depth",
-                    onChange: (e) => {
-                        let position = RightIKPosition.data.clone();
-                        position.setZ(0.6 * e + RightIKPosition.init.z);
+                }),
+                Right: folder({
+                    RightDepth: {
+                        value: 0,
+                        min: 0,
+                        max: 1,
+                        label: "Depth",
+                        onChange: (e) => {
+                            let position = RightIKPosition.data.clone();
+                            position.setZ(0.6 * e + RightIKPosition.init.z);
 
-                        RightIKPosition.data.copy(position);
-                        controls.setLocalPosition(
-                            "mixamorigRightHandIK",
-                            position
-                        );
+                            RightIKPosition.data.copy(position);
+                            controls.setLocalPosition(
+                                "mixamorigRightHandIK",
+                                position
+                            );
+                        },
                     },
-                },
-                RightHeight: {
-                    value: 0,
-                    min: 0,
-                    max: 1,
-                    label: "Height",
-                    onChange: (e) => {
-                        let position = RightIKPosition.data.clone();
-                        position.setY(0.7 * e + RightIKPosition.init.y);
+                    RightHeight: {
+                        value: 0,
+                        min: 0,
+                        max: 1,
+                        label: "Height",
+                        onChange: (e) => {
+                            let position = RightIKPosition.data.clone();
+                            position.setY(0.7 * e + RightIKPosition.init.y);
 
-                        RightIKPosition.data.copy(position);
-                        controls.setLocalPosition(
-                            "mixamorigRightHandIK",
-                            position
-                        );
+                            RightIKPosition.data.copy(position);
+                            controls.setLocalPosition(
+                                "mixamorigRightHandIK",
+                                position
+                            );
+                        },
                     },
-                },
-            }),
-        }),
+                }),
+            },
+            { collapsed: true }
+        ),
     }));
 
     // Init
