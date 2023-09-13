@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, memo } from "react";
 import { addEffect } from "@react-three/fiber";
 import { useControls, folder, button } from "leva";
 
@@ -11,35 +11,41 @@ import style from "../../../styles/css/dosimeter.module.css";
  * @link https://codesandbox.io/s/lo6kp?file=/src/ui/Speed/Boost.tsx
  * @link https://codesandbox.io/s/lo6kp?file=/src/styles.css
  */
+const strokeDasharray = 200;
 
-const criticalLevel = 5;
-const warningLevel = 10;
-// const maxValue = 15;
-
-type DosimeterResultProps = {
-    result: ResultsByName;
+type ResultDataProps = {
+    category: string;
+    value: number;
     coefficient: number;
-    maxValue: number;
+    maxHp: number;
+    hpColor?: string;
+    damageColor?: string;
+    cautionColor?: string;
+    bgColor?: string;
 };
-function DosimeterResult({
-    result,
+function ResultData({
+    category,
+    value,
     coefficient,
-    maxValue,
+    maxHp,
+    hpColor = "#00ff00", // Green
+    damageColor = "#ffa500", // Orange
+    cautionColor = "#ff0000", // Red
+    bgColor = "#132237",
     ...props
-}: DosimeterResultProps) {
-    let doseValue = result.dose.reduce((acculator, currentValue) =>
-        acculator.data > currentValue.data ? acculator : currentValue
-    );
-    let value = doseValue.data;
+}: ResultDataProps) {
+    const damageRef = useRef<SVGPathElement>(null);
+    const hpRef = useRef<SVGPathElement>(null);
 
-    const ref = useRef<SVGPathElement>(null);
+    const getColor = () => {
+        let hp = maxHp - 120 * coefficient * value;
 
-    const getColor = () => "#00FF00"; // Green
-
+        return hp < 0 ? cautionColor : damageColor;
+    };
     const getLength = () => {
-        let offset = (120 * coefficient * value) / maxValue;
+        let offset = (120 * coefficient * value) / maxHp;
 
-        return `${offset > 1 ? 200 : 200 * offset}`;
+        return `${offset > 1.0 ? strokeDasharray : strokeDasharray * offset}`;
     };
 
     let stroke = getColor();
@@ -47,42 +53,54 @@ function DosimeterResult({
 
     useEffect(() =>
         addEffect(() => {
-            if (!ref.current) return;
+            if (!damageRef.current) return;
 
             stroke = getColor();
-            if (ref.current.style.stroke !== stroke) {
-                ref.current.style.stroke = stroke;
+            if (damageRef.current.style.stroke !== stroke) {
+                damageRef.current.style.stroke = stroke;
             }
 
+            if (!hpRef.current) return;
+
             strokeDashoffset = getLength();
-            if (ref.current.style.strokeDashoffset !== strokeDashoffset) {
-                ref.current.style.strokeDashoffset = strokeDashoffset;
+            if (hpRef.current.style.strokeDashoffset !== strokeDashoffset) {
+                hpRef.current.style.strokeDashoffset = strokeDashoffset;
             }
         })
     );
 
     return (
         <>
-            <div class={`${style.dose}`}>
-                {/* Name */}
-                <div class={`${style.name}`}>
-                    {result.displayName ? result.displayName : result.name}
-                </div>
+            <div className={`${style.data}`}>
                 {/* Bar */}
                 <div className={`${style.bar}`}>
                     <svg
-                        viewBox={"0 0 200 15"}
+                        className={`${style.svg}`}
+                        viewBox={`0 0 200 15`}
                         xmlns="http://www.w3.org/2000/svg"
                     >
                         {/* back ground */}
-                        <path className={`${style.bg}`} d="M0,4 L200,4" />
-                        {/* red */}
-                        <path className={`${style.red}`} d="M2,4 L198,4" />
-                        {/* green */}
                         <path
-                            className={`${style.green}`}
+                            className={`${style.bg}`}
+                            d="M0,4 L200,4"
+                            stroke={bgColor}
+                            strokeDasharray={206}
+                        />
+                        {/* Damage Bar */}
+                        <path
+                            className={`${style.damage}`}
                             d="M2,4 L198,4"
-                            ref={ref}
+                            ref={damageRef}
+                            strokeDasharray={200}
+                            style={{ stroke }}
+                        />
+                        {/* HP Bar */}
+                        <path
+                            className={`${style.hp}`}
+                            d="M2,4 L198,4"
+                            ref={hpRef}
+                            stroke={hpColor}
+                            strokeDasharray={200}
                             style={{
                                 strokeDashoffset,
                             }}
@@ -90,13 +108,66 @@ function DosimeterResult({
                     </svg>
                 </div>
                 {/* Value */}
-                <div class={`${style.value}`}>
-                    {maxValue - 120 * coefficient * value}
+                <div className={`${style.numerical}`}>
+                    <div className={`${style.category}`}>{category}</div>
+                    <div className={`${style.value}`}>
+                        {Math.round(maxHp - 120 * coefficient * value)}
+                        <span className={`${style.maxHp}`}>/{maxHp}</span>
+                    </div>
                 </div>
             </div>
         </>
     );
 }
+const MemoResultData = memo(ResultData);
+
+type DosimeterResultProps = {
+    result: ResultsByName;
+    coefficient: number;
+    onceMaxHp: number;
+};
+function DosimeterResult({
+    result,
+    coefficient,
+    onceMaxHp,
+    ...props
+}: DosimeterResultProps) {
+    let doseValue = result.dose.reduce((acculator, currentValue) =>
+        acculator.data > currentValue.data ? acculator : currentValue
+    );
+    let value = !Number.isNaN(doseValue.data) ? doseValue.data : 0;
+
+    return (
+        <>
+            <div className={`${style.dose}`}>
+                {/* Name */}
+                <div className={`${style.name}`}>
+                    {result.displayName ? result.displayName : result.name}
+                </div>
+                {/* Datas */}
+                <div className={`${style.result}`}>
+                    <div className={`${style.year}`}>
+                        <MemoResultData
+                            category={"Year"}
+                            value={value}
+                            coefficient={coefficient}
+                            maxHp={20000}
+                        />
+                    </div>
+                    <div className={`${style.once}`}>
+                        <MemoResultData
+                            category={"Once"}
+                            value={value}
+                            coefficient={1}
+                            maxHp={onceMaxHp}
+                        />
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+}
+const MemoDosimeterResult = memo(DosimeterResult);
 
 export function DosimeterDisplayUI({ ...props }) {
     const [sceneProperties] = useStore((state) => [state.sceneProperties]);
@@ -108,15 +179,12 @@ export function DosimeterDisplayUI({ ...props }) {
     // Volume
     const [dosimeterConfig, setVolume] = useControls(() => ({
         "Dosimeter Config": folder({
-            mode: {
-                value: "year",
-                options: ["year", "day"],
-            },
             year: {
-                value: 50,
-            },
-            day: {
                 value: 500,
+            },
+            once: {
+                value: 100,
+                min: 1,
             },
         }),
     }));
@@ -133,19 +201,11 @@ export function DosimeterDisplayUI({ ...props }) {
                 }}
             >
                 {dosimeterResults.map((result, index) => (
-                    <DosimeterResult
+                    <MemoDosimeterResult
                         key={index}
                         result={result}
-                        coefficient={
-                            dosimeterConfig.mode === "year"
-                                ? dosimeterConfig.year
-                                : 1
-                        }
-                        maxValue={
-                            dosimeterConfig.mode === "year"
-                                ? 20000
-                                : dosimeterConfig.day
-                        }
+                        coefficient={dosimeterConfig.year}
+                        onceMaxHp={dosimeterConfig.once}
                     />
                 ))}
             </div>

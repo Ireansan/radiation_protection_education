@@ -1,5 +1,5 @@
 .dose {
-  width: 200px;
+  width: 280px;
   height: 60px;
   background-color: #181c20;
   border: 1px solid #292d39;
@@ -15,26 +15,51 @@
   font-size: 12px;
   font-weight: bold;
 }
-.dose .bar {
+.dose .result {
+  height: 35px;
+  display: flex;
+}
+.dose .result .year {
+  width: 60%;
+}
+.dose .result .once {
+  width: 40%;
+}
+.dose .data {
+  padding: 2px;
+}
+.dose .data .bar {
+  height: 15px;
+}
+.dose .data .bar .svg {
   width: 100%;
-  height: 30%;
+  height: 100%;
 }
-.dose .bar .bg {
-  stroke: #132237;
-  stroke-width: 6px;
-  stroke-dasharray: 206;
+.dose .data .bar .svg .bg {
+  stroke-width: 7px;
 }
-.dose .bar .red {
-  stroke: #ff0000;
-  stroke-width: 4px;
-  stroke-dasharray: 200;
+.dose .data .bar .svg .damage {
+  stroke-width: 5px;
 }
-.dose .bar .green {
-  stroke: #00ff00;
-  stroke-width: 4px;
-  stroke-dasharray: 200;
+.dose .data .bar .svg .hp {
+  stroke-width: 5px;
 }
-.dose .value {
-  height: 40%;
-  font-size: 12px;
+.dose .data .numerical {
+  height: 15px;
+  font-size: 14px;
+}
+.dose .data .numerical .category {
+  height: 100%;
+  padding-left: 5px;
+  float: left;
+}
+.dose .data .numerical .value {
+  height: 100%;
+  float: right;
+  text-align: right;
+  color: #bcc2d2;
+}
+.dose .data .numerical .value .maxHp {
+  font-size: 10px;
+  color: #8c93a3;
 }/*# sourceMappingURL=dosimeter.module.css.map */

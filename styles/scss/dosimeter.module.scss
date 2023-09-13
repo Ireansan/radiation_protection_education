@@ -1,5 +1,5 @@
 .dose {
-    width: 200px;
+    width: 280px;
     height: 60px;
     background-color: #181c20;
     border: 1px solid #292d39;
@@ -16,31 +16,63 @@
         font-weight: bold;
     }
 
-    .bar {
-        width: 100%;
-        height: 30%;
+    .result {
+        height: 35px;
+        display: flex;
 
-        .bg {
-            stroke: #132237;
-            stroke-width: 6px;
-            stroke-dasharray: 206;
+        .year {
+            width: 60%;
         }
 
-        .red {
-            stroke: #ff0000;
-            stroke-width: 4px;
-            stroke-dasharray: 200;
-        }
-
-        .green {
-            stroke: #00ff00;
-            stroke-width: 4px;
-            stroke-dasharray: 200;
+        .once {
+            width: 40%;
         }
     }
 
-    .value {
-        height: 40%;
-        font-size: 12px;
+    .data {
+        padding: 2px;
+
+        .bar {
+            height: 15px;
+
+            .svg {
+                width: 100%;
+                height: 100%;
+
+                .bg {
+                    stroke-width: 7px;
+                }
+
+                .damage {
+                    stroke-width: 5px;
+                }
+
+                .hp {
+                    stroke-width: 5px;
+                }
+            }
+        }
+
+        .numerical {
+            height: 15px;
+            font-size: 14px;
+
+            .category {
+                height: 100%;
+                padding-left: 5px;
+                float: left;
+            }
+            .value {
+                height: 100%;
+                float: right;
+                text-align: right;
+                color: #bcc2d2;
+
+                .maxHp {
+                    font-size: 10px;
+                    color: #8c93a3;
+                }
+            }
+        }
     }
 }
