@@ -141,13 +141,15 @@ class Dosimeter extends DoseBase {
             // ----------
             // each result
             // ----------
-            tmpResults = this.targets.map((target) => {
-                return target
-                    ? target instanceof DoseBase
-                        ? getResult(target)
-                        : { data: NaN, state: undefined } // NaN
-                    : { data: NaN, state: undefined }; // NaN
-            });
+            tmpResults = this.targets
+                .filter((value) => value?.visible === true)
+                .map((target) => {
+                    return target
+                        ? target instanceof DoseBase
+                            ? getResult(target)
+                            : { data: NaN, state: undefined } // NaN
+                        : { data: NaN, state: undefined }; // NaN
+                });
         }
 
         return tmpResults;
