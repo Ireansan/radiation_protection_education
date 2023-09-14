@@ -141,6 +141,12 @@ const Home: NextPage = () => {
                             <p>Next.js + react-three/fiber</p>
                         </Link>
                     </div>
+                    <div className={styles.card}>
+                        <Link href={"/prototype/XRay_room_switch_data"}>
+                            <h2>XRay (no)curtain &rarr;</h2>
+                            <p>Next.js + react-three/fiber</p>
+                        </Link>
+                    </div>
                 </div>
 
                 <h2>References</h2>
