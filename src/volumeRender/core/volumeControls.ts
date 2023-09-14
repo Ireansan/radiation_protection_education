@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { VolumeBase } from "./volumeBase";
+import { ClippingPlanesObject, VolumeBase } from "./volumeBase";
 
 /**
  * @link https://github.com/mrdoob/three.js/blob/master/examples/jsm/controls/TransformControls.js
@@ -30,6 +30,9 @@ class VolumeControls extends VolumeBase {
     }
     set invert(invert: boolean) {
         this._invert = invert;
+        this._clippingPlanesObject
+            ? (this._clippingPlanesObject.invert = invert)
+            : null;
         this.updateVolumeClipping();
     }
     get isType() {
@@ -37,6 +40,9 @@ class VolumeControls extends VolumeBase {
     }
     set isType(type: string | undefined) {
         this._isType = type;
+        this._clippingPlanesObject
+            ? (this._clippingPlanesObject.isType = type)
+            : null;
         this.updateVolumeClipping();
     }
 
@@ -57,21 +63,18 @@ class VolumeControls extends VolumeBase {
         if (this.object && this.object instanceof VolumeBase) {
             if (this.regionId === undefined) {
                 this.regionId = this.object.clippingPlanesObjects.length;
-                this.object.pushClippingPlanesObjects(
+
+                this._clippingPlanesObject = new ClippingPlanesObject(
+                    NaN,
                     this._clippingPlanes,
                     this._clipping,
                     this._clipIntersection,
                     this._invert,
                     this._isType
                 );
-            } else {
-                this.object.setClippingPlanesObjects(
-                    this.regionId,
-                    this._clipping,
-                    this._clippingPlanes,
-                    this._clipIntersection,
-                    this._invert,
-                    this._isType
+
+                this.object.pushClippingPlanesObjects(
+                    this._clippingPlanesObject
                 );
             }
         }

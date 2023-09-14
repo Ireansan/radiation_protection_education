@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-class ClippingPlanesObject {
+export class ClippingPlanesObject {
     id: number;
     planes: THREE.Plane[];
     enabled: boolean;
@@ -49,6 +49,7 @@ class VolumeBase extends THREE.Object3D {
     _clippedInitValue: boolean[];
     _clippingPlanesRegion: number[];
     _clippedInvert: boolean[];
+    _clippingPlanesObject: ClippingPlanesObject | undefined;
     // -> [...parent.ClippingPlanesObject[], ...this.ClippingPlanesObject[]]
 
     parentId: string | undefined;
@@ -166,6 +167,9 @@ class VolumeBase extends THREE.Object3D {
     }
     set clipping(clipping: boolean) {
         this._clipping = clipping;
+        this._clippingPlanesObject
+            ? (this._clippingPlanesObject.enabled = clipping)
+            : null;
         this.updateVolumeClipping(false, true);
     }
     get clippingPlanes() {
@@ -173,6 +177,9 @@ class VolumeBase extends THREE.Object3D {
     }
     set clippingPlanes(planes: THREE.Plane[]) {
         this._clippingPlanes = planes;
+        this._clippingPlanesObject
+            ? (this._clippingPlanesObject.planes = planes)
+            : null;
         this.updateVolumeClipping(false, true);
     }
     get clipIntersection() {
@@ -180,52 +187,17 @@ class VolumeBase extends THREE.Object3D {
     }
     set clipIntersection(clipIntersection: boolean) {
         this._clipIntersection = clipIntersection;
+        this._clippingPlanesObject
+            ? (this._clippingPlanesObject.intersection = clipIntersection)
+            : null;
         this.updateVolumeClipping(false, true);
     }
 
-    pushClippingPlanesObjects(
-        planes: THREE.Plane[],
-        clipping: boolean = false,
-        intersection: boolean = false,
-        invert: boolean = false,
-        isType?: string
-    ) {
+    pushClippingPlanesObjects(clippingPlanesObject: ClippingPlanesObject) {
         let index = this.clippingPlanesObjects.length;
-        this.clippingPlanesObjects.push(
-            new ClippingPlanesObject(
-                index,
-                planes,
-                clipping,
-                intersection,
-                invert,
-                isType
-            )
-        );
-        this.updateVolumeClipping(false, true);
-    }
-    setClippingPlanesObjects(
-        id: number,
-        clipping?: boolean,
-        planes?: THREE.Plane[],
-        intersection?: boolean,
-        invert?: boolean,
-        isType?: string
-    ) {
-        clipping !== undefined
-            ? (this.clippingPlanesObjects[id].enabled = clipping)
-            : null;
-        planes !== undefined
-            ? (this.clippingPlanesObjects[id].planes = planes)
-            : null;
-        intersection !== undefined
-            ? (this.clippingPlanesObjects[id].intersection = intersection)
-            : null;
-        invert !== undefined
-            ? (this.clippingPlanesObjects[id].invert = invert)
-            : null;
-        isType !== undefined
-            ? (this.clippingPlanesObjects[id].isType = isType)
-            : null;
+        clippingPlanesObject.id = index;
+
+        this.clippingPlanesObjects.push(clippingPlanesObject);
         this.updateVolumeClipping(false, true);
     }
 
