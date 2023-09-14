@@ -8,6 +8,7 @@ import {
     VolumeObject,
     VolumeGroup,
     VolumeControls as VolumeControlsImpl,
+    VolumeBase,
 } from "../../../src";
 extend({ VolumeObject, VolumeGroup });
 import type { VolumeControlsTypes } from "./types";
@@ -29,7 +30,7 @@ export const VolumeParameterControls = React.forwardRef<
     VolumeParameterControlsProps
 >(function VolumeParameterControls(
     {
-        children,
+        children, // FIXME: Only supported by VolumeGroup
         object,
         folderName = "volume",
         opacity = 0.75,
@@ -133,15 +134,9 @@ export const VolumeParameterControls = React.forwardRef<
     // Attach volume to controls
     React.useLayoutEffect(() => {
         if (object) {
-            if (
-                object instanceof VolumeObject ||
-                object instanceof VolumeGroup
-            ) {
+            if (object instanceof VolumeBase) {
                 controls.attach(object);
-            } else if (
-                object.current instanceof VolumeObject ||
-                object.current instanceof VolumeGroup
-            ) {
+            } else if (object.current instanceof VolumeBase) {
                 controls.attach(object.current);
             }
         } else if (group.current instanceof VolumeGroup) {
@@ -154,6 +149,7 @@ export const VolumeParameterControls = React.forwardRef<
     return controls ? (
         <>
             <primitive ref={ref} object={controls} />
+            {/* FIXME: Only supported by VolumeGroup */}
             <volumeGroup ref={group}>{children}</volumeGroup>
         </>
     ) : null;
