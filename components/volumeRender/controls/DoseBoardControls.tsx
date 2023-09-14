@@ -187,8 +187,8 @@ export const DoseBoardControls = React.forwardRef<
         if (object.current) {
             if (object.current instanceof DoseBase) {
                 controls.attach(object.current);
-                let bbox = new THREE.Box3().setFromObject(object.current);
 
+                let bbox = new THREE.Box3().setFromObject(object.current);
                 let center = new THREE.Vector3();
                 bbox.getCenter(center);
                 setCenter(center);
