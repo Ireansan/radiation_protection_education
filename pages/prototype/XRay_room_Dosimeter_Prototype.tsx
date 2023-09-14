@@ -171,6 +171,13 @@ function XRayRoomDosimeterPrototype() {
                         <PivotControls
                             // offset={[0, 0, -0.5]}
                             // rotation={[0, Math.PI, 0]}
+                            matrix={new THREE.Matrix4().compose(
+                                new THREE.Vector3(2, 0, 0),
+                                new THREE.Quaternion().setFromEuler(
+                                    new THREE.Euler(0, -Math.PI / 2, 0)
+                                ),
+                                new THREE.Vector3(1, 1, 1)
+                            )}
                             activeAxes={[true, false, true]}
                             onDragEnd={() => {
                                 if (dosimeterRef.current) {
