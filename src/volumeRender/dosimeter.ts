@@ -118,7 +118,7 @@ class Dosimeter extends DoseBase {
 
                     guarded = guarded || tmpGuarded;
                 }
-                // FIXME:
+
                 guarded = guarded && target.boardEffect;
 
                 return guarded;
