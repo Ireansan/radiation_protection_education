@@ -134,7 +134,7 @@ class Dosimeter extends DoseBase {
                     data: guarded
                         ? coefficient * volumeValue + offset
                         : volumeValue,
-                    state: guarded ? ["guarded"] : [],
+                    state: guarded ? ["shield"] : [],
                 };
             };
 

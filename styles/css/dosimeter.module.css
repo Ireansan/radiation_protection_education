@@ -11,12 +11,23 @@
   color: #8c93a3;
 }
 .dose .name {
-  height: 30%;
-  font-size: 12px;
+  height: 15px;
   font-weight: bold;
 }
+.dose .name .identifier {
+  width: 50%;
+  height: 100%;
+  font-size: 14px;
+  float: left;
+}
+.dose .name .icon {
+  width: 50%;
+  height: 100%;
+  float: right;
+  text-align: right;
+}
 .dose .result {
-  height: 35px;
+  height: 30px;
   display: flex;
 }
 .dose .result .year {

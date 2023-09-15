@@ -11,13 +11,26 @@
     color: #8c93a3;
 
     .name {
-        height: 30%;
-        font-size: 12px;
+        height: 15px;
         font-weight: bold;
+
+        .identifier {
+            width: 50%;
+            height: 100%;
+            font-size: 14px;
+            float: left;
+        }
+
+        .icon {
+            width: 50%;
+            height: 100%;
+            float: right;
+            text-align: right;
+        }
     }
 
     .result {
-        height: 35px;
+        height: 30px;
         display: flex;
 
         .year {

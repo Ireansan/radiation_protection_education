@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, memo } from "react";
 import { addEffect } from "@react-three/fiber";
 import { useControls, folder, button } from "leva";
+import { Shield, HealthAndSafety } from "@mui/icons-material";
 
 import { useStore } from "../../store";
 import type { ResultsByName } from "../../../src";
@@ -12,6 +13,20 @@ import style from "../../../styles/css/dosimeter.module.css";
  * @link https://codesandbox.io/s/lo6kp?file=/src/styles.css
  */
 const strokeDasharray = 200;
+
+type ResultIconProps = {
+    state: string[];
+};
+function ResultIcon({ state, ...props }: ResultIconProps) {
+    return (
+        <>
+            {state.includes("shield") ? (
+                <HealthAndSafety sx={{ fontSize: "14px" }} />
+            ) : null}
+        </>
+    );
+}
+const MemoResultIcon = memo(ResultIcon);
 
 type ResultDataProps = {
     category: string;
@@ -136,13 +151,19 @@ function DosimeterResult({
         acculator.data > currentValue.data ? acculator : currentValue
     );
     let value = !Number.isNaN(doseValue.data) ? doseValue.data : 0;
+    let state = doseValue.state ? doseValue.state : [];
 
     return (
         <>
             <div className={`${style.dose}`}>
                 {/* Name */}
                 <div className={`${style.name}`}>
-                    {result.displayName ? result.displayName : result.name}
+                    <div className={`${style.identifier}`}>
+                        {result.displayName ? result.displayName : result.name}
+                    </div>
+                    <div className={`${style.icon}`}>
+                        <MemoResultIcon state={state} />
+                    </div>
                 </div>
                 {/* Datas */}
                 <div className={`${style.result}`}>
