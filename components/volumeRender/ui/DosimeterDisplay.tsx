@@ -16,12 +16,17 @@ const strokeDasharray = 200;
 
 type ResultIconProps = {
     state: string[];
+    color?: string;
 };
-function ResultIcon({ state, ...props }: ResultIconProps) {
+function ResultIcon({
+    state,
+    color = "#D4875D", // Orange
+    ...props
+}: ResultIconProps) {
     return (
         <>
             {state.includes("shield") ? (
-                <HealthAndSafety sx={{ fontSize: "14px" }} />
+                <HealthAndSafety sx={{ color: color, fontSize: "14px" }} />
             ) : null}
         </>
     );
@@ -43,9 +48,9 @@ function ResultData({
     value,
     coefficient,
     maxHp,
-    hpColor = "#00ff00", // Green
-    damageColor = "#ffa500", // Orange
-    cautionColor = "#ff0000", // Red
+    hpColor = "#56B35D", // Green
+    damageColor = "#DEAD29", // Orange
+    cautionColor = "#B83100", // Red
     bgColor = "#132237",
     ...props
 }: ResultDataProps) {
