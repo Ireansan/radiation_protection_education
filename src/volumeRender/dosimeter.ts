@@ -3,12 +3,14 @@ import { VolumeBase } from "./core";
 import { DoseBase } from "./dose";
 import type { DoseValue } from "./dose";
 
-export type Names = {
+export type SpecifiedSite = {
     name: string;
     displayName?: string;
+    category?: string;
+    coefficient?: number;
 };
 
-export type ResultsByName = Names & {
+export type ResultsByName = SpecifiedSite & {
     dose: DoseValue[];
 };
 /**
@@ -16,7 +18,7 @@ export type ResultsByName = Names & {
  */
 class Dosimeter extends DoseBase {
     object: THREE.Object3D | undefined;
-    _namesData: Names[] | undefined;
+    _namesData: SpecifiedSite[] | undefined;
     targets: (VolumeBase | undefined)[] | undefined;
 
     objectsByName: (THREE.Object3D | undefined)[];
@@ -42,7 +44,7 @@ class Dosimeter extends DoseBase {
     get namesData() {
         return this._namesData;
     }
-    set namesData(nameList: Names[] | undefined) {
+    set namesData(nameList: SpecifiedSite[] | undefined) {
         this._namesData = nameList;
         this.updateObjectsByName();
     }
@@ -163,6 +165,8 @@ class Dosimeter extends DoseBase {
                 return {
                     name: data.name,
                     displayName: data.displayName,
+                    category: data.category,
+                    coefficient: data.coefficient,
                     dose: this.getValueByName(this.objectsByName[index]),
                 };
             });

@@ -12,7 +12,7 @@ import {
 extend({ VolumeObject, VolumeGroup });
 import { useStore } from "../../store";
 
-import type { Names } from "../../../src";
+import type { SpecifiedSite } from "../../../src";
 
 /**
  *
@@ -20,7 +20,7 @@ import type { Names } from "../../../src";
 type DosimeterControlsProps = {
     children?: React.ReactElement<VolumeObject | VolumeGroup>;
     object: React.RefObject<THREE.Object3D>;
-    names: Names[];
+    names: SpecifiedSite[];
     targets: React.RefObject<VolumeBase>[];
 };
 export const DosimeterControls = React.forwardRef<
