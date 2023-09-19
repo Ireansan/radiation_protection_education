@@ -280,6 +280,7 @@ export const DoseBoardControls = React.forwardRef<
                 gravityScale={0}
                 position={position}
                 rotation={rotation}
+                sensor
             >
                 {children}
             </RigidBody>
