@@ -81,6 +81,10 @@ class DoseControls extends DoseBase {
 
             this.object.boardEffect = this._boardEffect;
         }
+
+        this.object instanceof DoseBase
+            ? this.object.updateVolumeClipping(false, true)
+            : null;
     }
 
     // Set current object

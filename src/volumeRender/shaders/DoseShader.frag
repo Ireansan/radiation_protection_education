@@ -155,13 +155,14 @@ ClippedResult within_boundaries(vec3 position){
     // Calclate result and Apply invert
     #pragma unroll_loop_start
     for(int i=0;i<NUM_CLIPPING_PLANES;i++){
-        regionResult=regionResults[i];
+        regionIndex=u_clippingPlanesRegion[i];
+        regionResult=regionResults[regionIndex];
         
-        isBoard=u_clippingPlanesIsBoard[i];
+        isBoard=u_clippingPlanesIsBoard[regionIndex];
         guarded=isBoard?(guarded||regionResult):guarded;
         regionResult=isBoard?false:regionResult;
         
-        invert=u_clippedInvert[i];
+        invert=u_clippedInvert[regionIndex];
         regionResult=regionResult^^invert;
         
         clipped=regionResult||clipped;

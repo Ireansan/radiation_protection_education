@@ -410,7 +410,7 @@ class VolumeBase extends THREE.Object3D {
             let element = this.clippingPlanesObjects[i];
 
             this._clippedInitValue[i + this.parentRegionOffset] =
-                this._clipIntersection;
+                this._clipIntersection && element.enabled;
             this._clippedInvert[i + this.parentRegionOffset] = element.invert;
         }
 

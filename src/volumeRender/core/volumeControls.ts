@@ -78,6 +78,10 @@ class VolumeControls extends VolumeBase {
                 );
             }
         }
+
+        this.object instanceof VolumeBase
+            ? this.object.updateVolumeClipping(false, true)
+            : null;
     }
 
     // Set current object
