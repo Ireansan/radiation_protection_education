@@ -12,7 +12,7 @@ import { RTCPlayer } from "./game/utils";
 import type { ResultsByName } from "../src";
 
 export const angularVelocity = [0, 0.5, 0] as const;
-export const cameras = ["FIRST_PERSON", "THIRD_PERSON"] as const;
+export const cameras = ["THIRD_PERSON", "FIRST_PERSON"] as const;
 
 const controls = {
     backward: false,
@@ -54,7 +54,7 @@ export const playerConfig = {
     halfHeight: 0.6,
     moveSpeed: 5,
     boost: 2,
-    cameraDistance: 5.0,
+    cameraDistance: 10.0,
     cameraRotateSpeed: 1.0,
     followCameraDirection: 0,
     bodyMatcap: matcapList[1],
