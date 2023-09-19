@@ -37,7 +37,7 @@ import { useStore } from "../../components/store";
 
 import styles from "../../styles/css/game.module.css";
 
-export function SampleScene() {
+function SampleScene() {
     const ToggledDebug = useToggle(Debug, "debug");
     const ToggledEditor = useToggle(Editor, "editor");
     // const ToggledMap = useToggle(Minimap, "map");
@@ -108,3 +108,5 @@ export function SampleScene() {
         </>
     );
 }
+
+export default SampleScene;

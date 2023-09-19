@@ -22,10 +22,12 @@ export type DoseObjectProps = ReactThreeFiber.Object3DNode<
 /**
  * @link https://github.com/pmndrs/react-three-fiber/blob/4121b109a71dd266ea6bdef8b4e0a2970b1a40de/packages/fiber/src/three-types.ts
  */
-declare module "@react-three/fiber" {
-    interface ThreeElements {
-        doseAnimationObject: DoseAnimationObjectProps;
-        doseGroup: DoseGroupProps;
-        doseObject: DoseObjectProps;
+declare global {
+    namespace JSX {
+        interface IntrinsicElements {
+            doseAnimationObject: DoseAnimationObjectProps;
+            doseGroup: DoseGroupProps;
+            doseObject: DoseObjectProps;
+        }
     }
 }
