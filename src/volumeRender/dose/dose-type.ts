@@ -21,6 +21,7 @@ export type DoseObjectProps = ReactThreeFiber.Object3DNode<
 
 /**
  * @link https://github.com/pmndrs/react-three-fiber/blob/4121b109a71dd266ea6bdef8b4e0a2970b1a40de/packages/fiber/src/three-types.ts
+ * @link https://github.com/pmndrs/react-three-fiber/issues/130
  */
 declare global {
     namespace JSX {
