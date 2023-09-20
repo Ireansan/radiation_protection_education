@@ -30,7 +30,7 @@ const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
 
 // FIXME: add case
-connectFirestoreEmulator(firestore, "0.0.0.0", 8080);
+// connectFirestoreEmulator(firestore, "0.0.0.0", 8080);
 
 /********************
  * WebRTC configs
