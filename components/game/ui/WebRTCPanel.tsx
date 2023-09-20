@@ -87,6 +87,11 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                         variant="contained"
                         disabled={disabledCreateBtn}
                         onClick={(event) => {
+                            console.log(
+                                "onlinePlayers.player1",
+                                onlinePlayers.player1
+                            );
+
                             onlinePlayers.player1?.createRoom();
 
                             console.log(
