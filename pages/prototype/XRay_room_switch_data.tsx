@@ -42,6 +42,7 @@ import {
     DosimeterControls,
     DosimeterDisplayUI,
     VolumeAnimationControls,
+    VolumeClippingControls,
     VolumeParameterControls,
 } from "../../components/volumeRender";
 
@@ -148,7 +149,7 @@ function XRayRoomDosimeterPrototype() {
                             duration={16}
                         />
                         <VolumeParameterControls object={ref} />
-                        {/* <VolumeClippingControls
+                        <VolumeClippingControls
                             object={ref}
                             folderName="Dose 2"
                             normals={[
@@ -160,7 +161,7 @@ function XRayRoomDosimeterPrototype() {
                             ]}
                             planeSize={2}
                             subPlaneSize={1}
-                        /> */}
+                        />
 
                         <DosimeterControls
                             ref={dosimeterRef}
