@@ -75,13 +75,13 @@ jobs:
             - name: Build with Next.js And Static HTML export with Next.js
               run: |
                   touch .env.local
-                  echo NEXT_PUBLIC_FIREBASE_API_KEY: ${{secrets.FIREBASE_API_KEY}} >> .env.local
-                  echo NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{secrets.FIREBASE_AUTH_DOMAIN}} >> .env.local
-                  echo NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{secrets.FIREBASE_PROJECT_ID}} >> .env.local
-                  echo NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{secrets.FIREBASE_STORAGE_BUCKET}} >> .env.local
-                  echo NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{secrets.FIREBASE_MESSAGING_SENDER_ID}} >> .env.local
-                  echo NEXT_PUBLIC_FIREBASE_APP_ID: ${{secrets.FIREBASE_APP_ID}} >> .env.local
-                  echo NEXT_PUBLIC_FIREBASE_MESSAGING_VAPID_KEY: ${{secrets.FIREBASE_MESSAGING_VAPID_KEY}} >> .env.local
+                  echo NEXT_PUBLIC_FIREBASE_API_KEY=${{secrets.FIREBASE_API_KEY}} >> .env.local
+                  echo NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${{secrets.FIREBASE_AUTH_DOMAIN}} >> .env.local
+                  echo NEXT_PUBLIC_FIREBASE_PROJECT_ID=${{secrets.FIREBASE_PROJECT_ID}} >> .env.local
+                  echo NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=${{secrets.FIREBASE_STORAGE_BUCKET}} >> .env.local
+                  echo NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${{secrets.FIREBASE_MESSAGING_SENDER_ID}} >> .env.local
+                  echo NEXT_PUBLIC_FIREBASE_APP_ID=${{secrets.FIREBASE_APP_ID}} >> .env.local
+                  echo NEXT_PUBLIC_FIREBASE_MESSAGING_VAPID_KEY=${{secrets.FIREBASE_MESSAGING_VAPID_KEY}} >> .env.local
                   ${{ steps.detect-package-manager.outputs.runner }} next build
                   ${{ steps.detect-package-manager.outputs.runner }} next export
             - name: Upload artifact
