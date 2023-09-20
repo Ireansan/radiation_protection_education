@@ -11,8 +11,61 @@ import {
     VolumeControls as VolumeControlsImpl,
 } from "../../../src";
 extend({ VolumeObject, VolumeGroup });
-import { PlaneHelperTargetMesh } from "./PlaneHelper";
 import type { Target, VolumeControlsTypes } from "./types";
+
+/**
+ * Plane Helper Mesh
+ */
+type planeHelperMeshProps = {
+    id: number;
+    normal: THREE.Vector3;
+    subPlaneSize: number;
+    subPlaneColor: THREE.Color;
+    visible?: boolean;
+    onClick: (e: THREE.Event, id: number) => void;
+    setMatrix: (matrix: THREE.Matrix4) => void;
+};
+function PlaneHelperMesh({
+    id,
+    normal,
+    subPlaneSize,
+    subPlaneColor,
+    visible = false,
+    onClick,
+    setMatrix,
+}: planeHelperMeshProps) {
+    const planeID = id;
+    const meshRef = React.useRef<THREE.Mesh>(new THREE.Mesh());
+    const [hovered, setHovered] = React.useState(false);
+    useCursor(hovered);
+
+    React.useEffect(() => {
+        const normal_clone = new THREE.Vector3()
+            .copy(normal)
+            .multiplyScalar(-1);
+        meshRef.current.lookAt(normal_clone);
+    }, []);
+
+    return (
+        <>
+            <mesh
+                ref={meshRef}
+                name={`plane${id}`}
+                scale={subPlaneSize}
+                onClick={(e) => {
+                    onClick(e, planeID);
+                    setMatrix(meshRef.current.matrixWorld);
+                }}
+                onPointerOver={() => setHovered(true)}
+                onPointerOut={() => setHovered(false)}
+                visible={visible}
+            >
+                <planeGeometry />
+                <meshBasicMaterial color={subPlaneColor} wireframe={true} />
+            </mesh>
+        </>
+    );
+}
 
 /**
  * Controls
@@ -78,7 +131,7 @@ export type VolumeClippingControlsProps = VolumeControlsTypes & {
  * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
  */
 export const VolumeClippingControls = React.forwardRef<
-    VolumeClippingControlsProps,
+    VolumeControlsImpl,
     VolumeClippingControlsProps
 >(function VolumeClippingControls(
     {
@@ -169,7 +222,7 @@ export const VolumeClippingControls = React.forwardRef<
             } else if (object.current instanceof VolumeBase) {
                 controls.attach(object.current);
             }
-        } else if (group.current instanceof VolumeGroup) {
+        } else if (group.current) {
             controls.attach(group.current);
         }
 
@@ -184,9 +237,13 @@ export const VolumeClippingControls = React.forwardRef<
     // Clipping, Intersection
     React.useEffect(() => {
         controls.clipping = clipping;
+    }, [controls, clipping]);
+    React.useEffect(() => {
         controls.clipIntersection = clipIntersection;
+    }, [controls, clipIntersection]);
+    React.useEffect(() => {
         controls.invert = invert;
-    }, [controls, clipping, clipIntersection, invert]);
+    }, [controls, invert]);
 
     return controls ? (
         <>
@@ -206,7 +263,7 @@ export const VolumeClippingControls = React.forwardRef<
                         size={planeSize}
                         visible={clipping ? visible : false}
                     />
-                    <PlaneHelperTargetMesh
+                    <PlaneHelperMesh
                         id={index}
                         normal={plane.normal}
                         subPlaneSize={subPlaneSize}

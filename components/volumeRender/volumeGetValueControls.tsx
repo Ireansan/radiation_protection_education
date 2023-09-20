@@ -49,7 +49,7 @@ export function VolumeGetValueControls(
                     : -1
                 : -1;
         } else {
-            return NaN;
+            return -1; // NaN
         }
     });
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { VolumeObject, VolumeGroup } from "../../../src";
+import { VolumeBase } from "../../../src";
 
 export type Target = {
     object: THREE.Object3D | undefined;
@@ -7,10 +7,6 @@ export type Target = {
 };
 
 export type VolumeControlsTypes = JSX.IntrinsicElements["volumeGroup"] & {
-    children?: React.ReactElement<VolumeObject | VolumeGroup>;
-    object?:
-        | VolumeObject
-        | VolumeGroup
-        | React.RefObject<VolumeObject>
-        | React.RefObject<VolumeGroup>;
+    children?: React.ReactElement<VolumeBase>;
+    object?: VolumeBase | React.RefObject<VolumeBase>;
 };

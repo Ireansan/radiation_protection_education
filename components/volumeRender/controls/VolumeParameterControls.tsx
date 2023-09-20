@@ -8,21 +8,39 @@ import {
     VolumeObject,
     VolumeGroup,
     VolumeControls as VolumeControlsImpl,
+    VolumeBase,
 } from "../../../src";
 extend({ VolumeObject, VolumeGroup });
 import type { VolumeControlsTypes } from "./types";
 
 export type VolumeParameterControlsProps = {
     folderName?: string;
+    opacity?: number;
+    clim1?: number;
+    clim2?: number;
+    colormap?: string;
+    renderstyle?: string;
+    isothreshold?: number;
 } & VolumeControlsTypes;
 /**
  * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
  */
 export const VolumeParameterControls = React.forwardRef<
-    VolumeParameterControlsProps,
+    VolumeControlsImpl,
     VolumeParameterControlsProps
 >(function VolumeParameterControls(
-    { children, object, folderName = "volume", ...props },
+    {
+        children, // FIXME: Only supported by VolumeGroup
+        object,
+        folderName = "volume",
+        opacity = 0.6,
+        clim1 = 0,
+        clim2 = 1,
+        colormap = "viridis",
+        renderstyle = "mip",
+        isothreshold = 0.15,
+        ...props
+    },
     ref
 ) {
     const controls = React.useMemo(() => new VolumeControlsImpl(), []);
@@ -35,15 +53,15 @@ export const VolumeParameterControls = React.forwardRef<
     const [volumeConfig, setVolume] = useControls(() => ({
         [folderName as string]: folder({
             opacity: {
-                value: 1,
-                min: 0,
+                value: opacity,
+                min: 0.05,
                 max: 1,
                 onChange: (e) => {
                     controls.opacity = e;
                 },
             },
             clim1: {
-                value: 0,
+                value: clim1,
                 min: 0,
                 max: 1,
                 onChange: (e) => {
@@ -65,7 +83,7 @@ export const VolumeParameterControls = React.forwardRef<
                 },
             },
             colormap: {
-                value: "viridis",
+                value: colormap,
                 options: [
                     "parula",
                     "heat",
@@ -86,6 +104,7 @@ export const VolumeParameterControls = React.forwardRef<
                 },
             },
             renderstyle: {
+                value: renderstyle,
                 options: ["mip", "iso"],
                 onChange: (e) => {
                     controls.renderstyle = e;
@@ -93,7 +112,7 @@ export const VolumeParameterControls = React.forwardRef<
                 },
             },
             isothreshold: {
-                value: 0.15,
+                value: isothreshold,
                 min: 0,
                 max: 1,
                 onChange: (e) => {
@@ -103,18 +122,21 @@ export const VolumeParameterControls = React.forwardRef<
         }),
     }));
 
+    React.useEffect(() => {
+        controls.opacity = opacity;
+        controls.clim1 = clim1;
+        controls.clim2 = clim2;
+        controls.colormap = colormap;
+        controls.renderstyle = renderstyle;
+        controls.isothreshold = isothreshold;
+    }, [controls, opacity, clim1, clim2, colormap, renderstyle, isothreshold]);
+
     // Attach volume to controls
     React.useLayoutEffect(() => {
         if (object) {
-            if (
-                object instanceof VolumeObject ||
-                object instanceof VolumeGroup
-            ) {
+            if (object instanceof VolumeBase) {
                 controls.attach(object);
-            } else if (
-                object.current instanceof VolumeObject ||
-                object.current instanceof VolumeGroup
-            ) {
+            } else if (object.current instanceof VolumeBase) {
                 controls.attach(object.current);
             }
         } else if (group.current instanceof VolumeGroup) {
@@ -127,6 +149,7 @@ export const VolumeParameterControls = React.forwardRef<
     return controls ? (
         <>
             <primitive ref={ref} object={controls} />
+            {/* FIXME: Only supported by VolumeGroup */}
             <volumeGroup ref={group}>{children}</volumeGroup>
         </>
     ) : null;
