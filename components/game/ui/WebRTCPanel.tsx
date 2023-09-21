@@ -86,15 +86,8 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                     <CustomButton
                         variant="contained"
                         disabled={disabledCreateBtn}
-                        onClick={async (event) => {
-                            /*
-                            console.log(
-                                "onlinePlayers.player1",
-                                onlinePlayers.player1
-                            );
-                            */
-
-                            await onlinePlayers.player1?.createRoom();
+                        onClick={(event) => {
+                            onlinePlayers.player1?.createRoom();
 
                             console.log(
                                 "Create Room - roomId",
