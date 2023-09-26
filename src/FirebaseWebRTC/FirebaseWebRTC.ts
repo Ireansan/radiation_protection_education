@@ -11,24 +11,6 @@ import {
 } from "firebase/firestore"; // runs firebase side effects
 import type { Firestore } from "firebase/firestore";
 
-/**
- * WebRTC configs
- */
-const configuration = {
-    iceServers: [
-        {
-            // STUN
-            urls: [
-                "stun:stun1.l.google.com:19302",
-                "stun:stun2.l.google.com:19302",
-            ],
-            // TURN
-        },
-    ],
-    iceCandidatePoolSize: 10,
-};
-const dataChannelParams = { ordered: false };
-
 export class FirebaseWebRTC {
     db: Firestore;
     configuration: RTCConfiguration;
@@ -212,7 +194,7 @@ export class FirebaseWebRTC {
      *************************/
     async joinRoomById(roomId: string) {
         console.log(`roomid: ${roomId}`);
-        const roomRef = doc(collection(this.db, "rooms"), `${roomId}`);
+        const roomRef = await doc(collection(this.db, "rooms"), `${roomId}`);
         const roomSnapshot = await getDoc(roomRef);
         console.log("Got room:", roomSnapshot.exists());
 
