@@ -5,7 +5,7 @@ import {
     firestore,
     webRtcConfiguration,
     dataChannelParams,
-} from "./FirebaseRTC";
+} from "../../../lib/FirebaseRTC";
 import { Message } from "@mui/icons-material";
 
 type Message = {
