@@ -97,7 +97,7 @@ export class FirebaseWebRTC {
      * createRoom
      *************************/
     async createRoom() {
-        const roomRef = await doc(collection(this.db, "rooms"));
+        const roomRef = await doc(this.db, "rooms");
 
         // Peer Connection
         console.log(
@@ -117,7 +117,7 @@ export class FirebaseWebRTC {
         });
 
         // Collecting ICE candidates
-        const callerCandidatesCollection = collection(
+        const callerCandidatesCollection = await collection(
             roomRef,
             "callerCandidates"
         );
@@ -194,7 +194,7 @@ export class FirebaseWebRTC {
      *************************/
     async joinRoomById(roomId: string) {
         console.log(`roomid: ${roomId}`);
-        const roomRef = await doc(collection(this.db, "rooms"), `${roomId}`);
+        const roomRef = await doc(this.db, "rooms", `${roomId}`);
         const roomSnapshot = await getDoc(roomRef);
         console.log("Got room:", roomSnapshot.exists());
 
@@ -220,7 +220,7 @@ export class FirebaseWebRTC {
             });
 
             // Collecting ICE candidates
-            const calleeCandidatesCollection = collection(
+            const calleeCandidatesCollection = await collection(
                 roomRef,
                 "calleeCandidates"
             );
