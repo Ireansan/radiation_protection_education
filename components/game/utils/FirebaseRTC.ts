@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * @link https://webrtc.org/getting-started/firebase-rtc-codelab?hl=ja
  * @link https://github.com/webrtc/FirebaseRTC/tree/solution

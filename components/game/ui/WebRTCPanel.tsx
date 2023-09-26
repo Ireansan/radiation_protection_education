@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useRef, useEffect, useMemo } from "react";
 /**
  * @link https://webrtc.org/getting-started/firebase-rtc-codelab?hl=ja
