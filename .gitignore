@@ -60,6 +60,7 @@ utils/fileConvert/json/**
 
 # Firebase
 firebase/functions/lib
+*firebase-adminsdk*.json
 
 # Skecths
 /shell
