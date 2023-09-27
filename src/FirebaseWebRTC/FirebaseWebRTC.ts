@@ -117,7 +117,7 @@ export class FirebaseWebRTC {
         });
 
         // Collecting ICE candidates
-        const callerCandidatesCollection = await collection(
+        const callerCandidatesCollection = collection(
             roomRef,
             "callerCandidates"
         );
@@ -220,7 +220,7 @@ export class FirebaseWebRTC {
             });
 
             // Collecting ICE candidates
-            const calleeCandidatesCollection = await collection(
+            const calleeCandidatesCollection = collection(
                 roomRef,
                 "calleeCandidates"
             );
