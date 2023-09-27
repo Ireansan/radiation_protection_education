@@ -12,6 +12,9 @@ import { getAnalytics } from "firebase/analytics";
 
 import * as Admin from "firebase-admin";
 import type { ServiceAccount } from "firebase-admin";
+// FIXME:
+// Then 'fs' use outside of the `getStaticProps`, `getStaticPaths`,
+// "Module not found: Can't resolve 'fs' in " error occurs.
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
