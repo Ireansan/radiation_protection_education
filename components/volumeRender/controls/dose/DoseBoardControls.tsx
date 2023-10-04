@@ -9,8 +9,8 @@ import {
     CuboidArgs,
 } from "@react-three/rapier";
 
-import { DoseBase, DoseControls as DoseControlsImpl } from "../../../src";
-import { useStore } from "../../store";
+import { DoseBase, DoseControls as DoseControlsImpl } from "../../../../src";
+import { useStore } from "../../../store";
 
 export type DoseBoardControlsProps = {
     children?: React.ReactElement<THREE.Object3D>;

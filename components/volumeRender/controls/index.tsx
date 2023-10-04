@@ -1,5 +1,4 @@
-export * from "./DoseBoardControls";
-export * from "./DosimeterControls";
+export * from "./dose";
 export * from "./PlaneHelper";
 export * from "./types";
 export * from "./VolumeAnimationControls";

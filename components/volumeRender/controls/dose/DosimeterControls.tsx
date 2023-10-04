@@ -8,11 +8,11 @@ import {
     VolumeGroup,
     Dosimeter as DosimeterImpl,
     VolumeBase,
-} from "../../../src";
+} from "../../../../src";
 extend({ VolumeObject, VolumeGroup });
-import { useStore } from "../../store";
+import { useStore } from "../../../store";
 
-import type { SpecifiedSite } from "../../../src";
+import type { SpecifiedSite } from "../../../../src";
 
 /**
  *
