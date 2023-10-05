@@ -37,6 +37,7 @@ export function WebRTCPanel({ ...props }): JSX.Element {
         state.onlinePlayers,
     ]);
 
+    /*
     useEffect(() => {
         // https://stackoverflow.com/questions/68838976/why-do-i-get-referenceerror-rtcpeerconnection-is-not-defined-in-next-js
         set((state) => ({
@@ -46,6 +47,7 @@ export function WebRTCPanel({ ...props }): JSX.Element {
             },
         }));
     }, []);
+    */
 
     function sendData() {
         if (onlinePlayers.player1?.dataChannel.readyState === "open") {
