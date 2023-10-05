@@ -152,9 +152,12 @@ function DosimeterResult({
     onceMaxHp,
     ...props
 }: DosimeterResultProps) {
-    let doseValue = result.dose.reduce((acculator, currentValue) =>
-        acculator.data > currentValue.data ? acculator : currentValue
-    );
+    let doseValue =
+        result.dose.length > 0
+            ? result.dose.reduce((acculator, currentValue) =>
+                  acculator.data > currentValue.data ? acculator : currentValue
+              )
+            : { data: NaN, state: undefined };
     let value = !Number.isNaN(doseValue.data) ? doseValue.data : 0;
     let state = doseValue.state ? doseValue.state : [];
 
