@@ -7,9 +7,6 @@ import {
 } from "@react-three/fiber";
 import { Volume, NRRDLoader } from "three-stdlib";
 
-import { VolumeObject } from "../../../../../src"; // FIXME: filepath
-extend({ VolumeObject });
-
 import { applyBasePath } from "../../../../../utils";
 const modelURL = applyBasePath(
     `/models/nrrd/x-ray/nocurtain_animation/x-ray_nocurtain_14.nrrd`

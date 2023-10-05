@@ -9,10 +9,10 @@ import { Volume, NRRDLoader } from "three-stdlib";
 
 import { applyBasePath } from "../../../../../utils";
 const modelURL = applyBasePath(
-    `/models/nrrd/x-ray/curtain_animation/x-ray_curtain_3.nrrd`
+    `/models/nrrd/x-ray/curtain_animation/x-ray_curtain_accumulate.nrrd`
 );
 
-export function XRay_curtain_all_3({
+export function XRay_curtain_all_accumulate({
     ...props
 }: JSX.IntrinsicElements["doseObject"]) {
     const { gl } = useThree();
