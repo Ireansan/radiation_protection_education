@@ -20,7 +20,7 @@ class DoseObject extends DoseBase {
         volume = new Volume(),
         coefficient = 1.0,
         offset = 0.0,
-        boardCoefficient = 1.0,
+        boardCoefficient = 0.01,
         boardOffset = 0.0,
         opacity = 1.0,
         clim1 = 0,

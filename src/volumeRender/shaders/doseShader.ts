@@ -408,7 +408,7 @@ const doseShader = {
         u_renderthreshold: { value: 0.5 },
         u_coefficient: { value: 1.0 },
         u_offset: { value: 0.0 },
-        u_boardCoefficient: { value: 1.0 },
+        u_boardCoefficient: { value: 0.01 },
         u_boardOffset: { value: 0.0 },
         u_opacity: { value: 1.0 },
         u_clim: { value: new THREE.Vector2(1, 1) },

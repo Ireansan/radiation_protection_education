@@ -56,6 +56,8 @@ class DoseControls extends DoseBase {
             this.object.colormap = this._colormap;
             this.object.renderstyle = this._renderstyle;
             this.object.isothreshold = this._isothreshold;
+
+            this.object.updateVolumeParam(false, true);
         }
     }
 
@@ -80,11 +82,9 @@ class DoseControls extends DoseBase {
             }
 
             this.object.boardEffect = this._boardEffect;
-        }
 
-        this.object instanceof DoseBase
-            ? this.object.updateVolumeClipping(false, true)
-            : null;
+            this.object.updateVolumeClipping(false, true);
+        }
     }
 
     // Set current object

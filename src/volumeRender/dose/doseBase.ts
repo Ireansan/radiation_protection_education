@@ -24,7 +24,7 @@ class DoseBase extends VolumeBase {
         super();
 
         this._boardEffect = false;
-        this._boardCoefficient = 1.0;
+        this._boardCoefficient = 0.01;
         this._boardOffset = 0.0;
 
         this._clippingPlanesIsBoard = [];
@@ -54,11 +54,6 @@ class DoseBase extends VolumeBase {
 
     updateStaticParam(updateParents: boolean, updateChildren: boolean) {
         // ----------
-        // update parent, this, and children
-        // ----------
-        super.updateStaticParam(updateParents, updateChildren);
-
-        // ----------
         // update this by parent
         // ----------
         const parent = this.parent;
@@ -68,6 +63,11 @@ class DoseBase extends VolumeBase {
                 this._boardOffset = parent._boardOffset;
             }
         }
+
+        // ----------
+        // update parent, this, and children
+        // ----------
+        super.updateStaticParam(updateParents, updateChildren);
     }
 
     updateVolumeClipping(updateParents: boolean, updateChildren: boolean) {
