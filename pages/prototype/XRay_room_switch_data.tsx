@@ -28,16 +28,29 @@ import {
 } from "../../components/game";
 
 // ==========
+// Model
+import { Board_Configure } from "../../components/models";
+import { CustomYBotIK } from "../../components/models/Custom_Ybot_IK";
+import { HandIKLevaControls } from "../../components/models/controls";
+
+// ==========
 // Volume
 // ----------
 // object
-import { Dosimeter, DoseGroup, DoseAnimationObject } from "../../src";
+import {
+    Dosimeter,
+    DoseGroup,
+    DoseAnimationObject,
+    DoseBase,
+    DoseObject,
+} from "../../src";
 // ----------
 // data
 import * as VOLUMEDATA from "../../components/models/VolumeData";
 // ----------
 // controls
 import {
+    DoseAnimationControls,
     DoseBoardControls,
     DosimeterControls,
     DosimeterDisplayUI,
@@ -46,15 +59,18 @@ import {
     VolumeParameterControls,
 } from "../../components/volumeRender";
 
-import { CustomYBotIK } from "../../components/models/Custom_Ybot_IK";
-import { HandIKLevaControls } from "../../components/models/controls";
-
 import styles from "../../styles/threejs.module.css";
 
 function XRayRoomDosimeterPrototype() {
-    const ref = useRef<DoseGroup>(null!);
+    const ref = useRef<DoseGroup>(null);
+
+    const timelapseRef = useRef<DoseGroup>(null);
     const nocurtainRef = useRef<DoseAnimationObject>(null);
     const curtainRef = useRef<DoseAnimationObject>(null);
+
+    const accumulateRef = useRef<DoseGroup>(null);
+    const nocurtainAccumuRef = useRef<DoseGroup>(null);
+    const curtainAccumuRef = useRef<DoseGroup>(null);
 
     const dosimeterRef = useRef<Dosimeter>(null);
     const yBotRef = useRef<THREE.Group>(null);
@@ -71,6 +87,13 @@ function XRayRoomDosimeterPrototype() {
                         : null;
                     curtainRef.current
                         ? (curtainRef.current.visible = !e)
+                        : null;
+
+                    nocurtainAccumuRef.current
+                        ? (nocurtainAccumuRef.current.visible = e)
+                        : null;
+                    curtainAccumuRef.current
+                        ? (curtainAccumuRef.current.visible = !e)
                         : null;
                 },
             },
@@ -99,54 +122,101 @@ function XRayRoomDosimeterPrototype() {
                         {/* -------------------------------------------------- */}
                         {/* Volume Object */}
                         <doseGroup ref={ref}>
-                            {/* X-Ray Dose, curtain */}
-                            <doseAnimationObject
-                                ref={curtainRef}
-                                name={"x-ray_animation_curtain"}
-                                position={
-                                    VOLUMEDATA.XRay_curtain_Configure.volume
-                                        .position
-                                }
-                                rotation={
-                                    VOLUMEDATA.XRay_curtain_Configure.volume
-                                        .rotation
-                                }
-                                scale={
-                                    VOLUMEDATA.XRay_curtain_Configure.volume
-                                        .scale
-                                }
-                                boardCoefficient={0.01}
-                            >
-                                <VOLUMEDATA.XRay_curtain_all_Animation />
-                            </doseAnimationObject>
-                            {/* X-Ray Dose, no curtain */}
-                            <doseAnimationObject
-                                ref={nocurtainRef}
-                                name={"x-ray_animation_nocurtain"}
-                                visible={false}
-                                position={
-                                    VOLUMEDATA.XRay_nocurtain_Configure.volume
-                                        .position
-                                }
-                                rotation={
-                                    VOLUMEDATA.XRay_nocurtain_Configure.volume
-                                        .rotation
-                                }
-                                scale={
-                                    VOLUMEDATA.XRay_nocurtain_Configure.volume
-                                        .scale
-                                }
-                                boardCoefficient={0.01}
-                            >
-                                <VOLUMEDATA.XRay_nocurtain_all_Animation />
-                            </doseAnimationObject>
+                            {/* Time Lapse */}
+                            <doseGroup ref={timelapseRef}>
+                                {/* X-Ray Dose, no curtain */}
+                                <doseAnimationObject
+                                    ref={nocurtainRef}
+                                    name={"x-ray_animation_nocurtain"}
+                                    visible={false}
+                                    position={
+                                        VOLUMEDATA.XRay_nocurtain_Configure
+                                            .volume.position
+                                    }
+                                    rotation={
+                                        VOLUMEDATA.XRay_nocurtain_Configure
+                                            .volume.rotation
+                                    }
+                                    scale={
+                                        VOLUMEDATA.XRay_nocurtain_Configure
+                                            .volume.scale
+                                    }
+                                >
+                                    <VOLUMEDATA.XRay_nocurtain_all_Animation />
+                                </doseAnimationObject>
+                                {/* X-Ray Dose, curtain */}
+                                <doseAnimationObject
+                                    ref={curtainRef}
+                                    name={"x-ray_animation_curtain"}
+                                    position={
+                                        VOLUMEDATA.XRay_curtain_Configure.volume
+                                            .position
+                                    }
+                                    rotation={
+                                        VOLUMEDATA.XRay_curtain_Configure.volume
+                                            .rotation
+                                    }
+                                    scale={
+                                        VOLUMEDATA.XRay_curtain_Configure.volume
+                                            .scale
+                                    }
+                                >
+                                    <VOLUMEDATA.XRay_curtain_all_Animation />
+                                </doseAnimationObject>
+                            </doseGroup>
+
+                            {/* Accumulate */}
+                            <doseGroup ref={accumulateRef} visible={false}>
+                                {/* X-Ray Dose, no curtain, Accumulate */}
+                                <doseGroup
+                                    ref={nocurtainAccumuRef}
+                                    name={"x-ray_accumulate_nocurtain"}
+                                    visible={false}
+                                    position={
+                                        VOLUMEDATA.XRay_nocurtain_Configure
+                                            .volume.position
+                                    }
+                                    rotation={
+                                        VOLUMEDATA.XRay_nocurtain_Configure
+                                            .volume.rotation
+                                    }
+                                    scale={
+                                        VOLUMEDATA.XRay_nocurtain_Configure
+                                            .volume.scale
+                                    }
+                                >
+                                    <VOLUMEDATA.XRay_nocurtain_all_accumulate />
+                                </doseGroup>
+                                {/* X-Ray Dose, curtain, Accumulate */}
+                                <doseGroup
+                                    ref={curtainAccumuRef}
+                                    name={"x-ray_accumulate_curtain"}
+                                    position={
+                                        VOLUMEDATA.XRay_curtain_Configure.volume
+                                            .position
+                                    }
+                                    rotation={
+                                        VOLUMEDATA.XRay_curtain_Configure.volume
+                                            .rotation
+                                    }
+                                    scale={
+                                        VOLUMEDATA.XRay_curtain_Configure.volume
+                                            .scale
+                                    }
+                                >
+                                    <VOLUMEDATA.XRay_curtain_all_accumulate />
+                                </doseGroup>
+                            </doseGroup>
                         </doseGroup>
 
                         {/* -------------------------------------------------- */}
                         {/* Volume Controls */}
-                        <VolumeAnimationControls
+                        <DoseAnimationControls
                             objects={[nocurtainRef, curtainRef]}
+                            mainGroup={timelapseRef}
+                            subGroup={accumulateRef}
                             duration={16}
+                            customSpeed={[8.0, 16.0]}
                         />
                         <VolumeParameterControls object={ref} />
                         <VolumeClippingControls
@@ -185,7 +255,11 @@ function XRayRoomDosimeterPrototype() {
                                     displayName: "Right Hand",
                                 },
                             ]}
-                            targets={[nocurtainRef, curtainRef]}
+                            targets={[
+                                // nocurtainRef, curtainRef
+                                nocurtainAccumuRef,
+                                curtainAccumuRef,
+                            ]}
                         />
 
                         {/* -------------------------------------------------- */}
@@ -254,15 +328,19 @@ function XRayRoomDosimeterPrototype() {
                                 object={ref}
                                 origin={new THREE.Vector3(0, 1, 0)}
                                 areaSize={[2.2, 1.2, 3.1]}
-                                width={1}
-                                height={2}
+                                width={Board_Configure.size.x}
+                                height={Board_Configure.size.y}
                                 position={new THREE.Vector3(2.5, 1.25, -0.5)}
                                 rotation={new THREE.Euler(0, Math.PI / 2, 0)}
-                                planeSize={2}
-                                subPlaneSize={1}
+                                planeSize={Board_Configure.size.y}
+                                subPlaneSize={Board_Configure.size.x}
                             >
                                 <mesh position={[0, 0, 0]}>
-                                    <boxBufferGeometry args={[1, 2, 0.05]} />
+                                    <boxBufferGeometry
+                                        args={[
+                                            ...Board_Configure.size.toArray(),
+                                        ]}
+                                    />
                                 </mesh>
                             </DoseBoardControls>
                         </Physics>
