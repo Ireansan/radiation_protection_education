@@ -57,6 +57,7 @@ import {
     VolumeAnimationControls,
     VolumeClippingControls,
     VolumeParameterControls,
+    VolumeXYZClippingControls,
 } from "../../components/volumeRender";
 
 import styles from "../../styles/threejs.module.css";
@@ -219,7 +220,7 @@ function XRayRoomDosimeterPrototype() {
                             customSpeed={[8.0, 16.0]}
                         />
                         <VolumeParameterControls object={ref} />
-                        <VolumeClippingControls
+                        {/* <VolumeClippingControls
                             object={ref}
                             folderName="Dose 2"
                             normals={[
@@ -229,6 +230,12 @@ function XRayRoomDosimeterPrototype() {
                                 // [0, 1, 0],
                                 [0, -1, 0],
                             ]}
+                            planeSize={2}
+                            subPlaneSize={1}
+                        /> */}
+                        <VolumeXYZClippingControls
+                            object={ref}
+                            folderName="Dose 3"
                             planeSize={2}
                             subPlaneSize={1}
                         />
