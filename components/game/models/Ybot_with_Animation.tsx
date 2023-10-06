@@ -8,7 +8,7 @@ import { useGLTF, useMatcapTexture, useAnimations } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { useThree, useFrame } from "@react-three/fiber";
 
-import { getState, useStore } from "../store";
+import { getState, useStore } from "../../store";
 import { getWorldPosition, getWorldDirection, lookAtSlerp } from "./utils";
 
 type GLTFResult = GLTF & {
@@ -129,7 +129,7 @@ function useAnimationKeys(actions: Actions, keyConfig: KeyConfig[]) {
     }, [keyConfig]);
 }
 
-import { applyBasePath } from "../../utils";
+import { applyBasePath } from "../../../utils";
 const modelURL = applyBasePath(`/models/glb/ybot.glb`);
 /**
  *

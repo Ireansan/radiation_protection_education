@@ -1,11 +1,7 @@
 import * as THREE from "three";
+import type { Firestore } from "firebase-admin/firestore";
 
 import { FirebaseWebRTC } from "../../../src";
-import {
-    firestore,
-    webRtcConfiguration,
-    dataChannelParams,
-} from "./FirebaseRTC";
 import { Message } from "@mui/icons-material";
 
 type Message = {
@@ -22,8 +18,12 @@ class RTCPlayer extends FirebaseWebRTC {
     position: THREE.Vector3;
     quaternion: THREE.Quaternion;
 
-    constructor() {
-        super(firestore, webRtcConfiguration, dataChannelParams);
+    constructor(
+        db: Firestore,
+        configuration: RTCConfiguration,
+        dataChannelParams: RTCDataChannelInit
+    ) {
+        super(db, configuration, dataChannelParams);
 
         this.position = new THREE.Vector3();
         this.quaternion = new THREE.Quaternion();

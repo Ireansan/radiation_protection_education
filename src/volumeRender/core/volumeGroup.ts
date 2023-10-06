@@ -19,47 +19,6 @@ class VolumeGroup extends VolumeBase {
         this.type = "Group";
     }
 
-    set opacity(opacity: number) {
-        this._opacity = opacity;
-        this.updateVolumeParam(false, true);
-    }
-    set clim1(clim1: number) {
-        this._clim1 = clim1;
-        this.updateVolumeParam(false, true);
-    }
-    set clim2(clim2: number) {
-        this._clim2 = clim2;
-        this.updateVolumeParam(false, true);
-    }
-
-    set colormap(colormap: string) {
-        this._colormap = colormap;
-        this.updateVolumeParam(false, true);
-    }
-
-    set renderstyle(renderstyle: string) {
-        this._renderstyle = renderstyle;
-        this.updateVolumeParam(false, true);
-    }
-
-    set isothreshold(isothreshold: number) {
-        this._isothreshold = isothreshold;
-        this.updateVolumeParam(false, true);
-    }
-
-    set clipping(clipping: boolean) {
-        this._clipping = clipping;
-        this.updateVolumeClipping(false, true);
-    }
-    set clippingPlanes(planes: THREE.Plane[]) {
-        this._clippingPlanes = planes;
-        this.updateVolumeClipping(false, true);
-    }
-    set clipIntersection(clipIntersection: boolean) {
-        this._clipIntersection = clipIntersection;
-        this.updateVolumeClipping(false, true);
-    }
-
     updateVolumeClipping(updateParents: boolean, updateChildren: boolean) {
         // ----------
         // update parent, children
@@ -92,12 +51,11 @@ class VolumeGroup extends VolumeBase {
      * @returns value in the data array
      */
     getVolumeValues(position: THREE.Vector3): number[] {
-        const localPosition = this.worldToLocal(position);
-
-        return this.children.map((child, i) =>
-            child instanceof VolumeObject
-                ? child.getVolumeValue(localPosition)
-                : NaN
+        return this.children.map(
+            (child, i) =>
+                child instanceof VolumeObject
+                    ? child.getVolumeValue(position.clone())
+                    : -1 // NaN
         );
     }
 }

@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 
 import * as MODELS from "../models";
-import { useStore } from "../store";
+import { useStore } from "../../store";
 
 // FIXME: Prototype (2023/06/27)
 export function OnlinePlayer({ ...props }: JSX.IntrinsicElements["group"]) {

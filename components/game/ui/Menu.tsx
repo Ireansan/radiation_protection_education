@@ -10,12 +10,12 @@ import { Button, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import type { TextFieldProps } from "@mui/material";
 
-import { useStore } from "../store";
+import { useStore } from "../../store";
 import { Keys } from "./Help";
 import { WebRTCPanel } from "./WebRTCPanel";
 import { Setting } from "./Setting";
 
-import styles from "../../../styles/css/game_template.module.css";
+import styles from "../../../styles/css/game.module.css";
 
 interface MenuProps {}
 

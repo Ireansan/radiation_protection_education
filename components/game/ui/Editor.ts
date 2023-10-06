@@ -11,7 +11,7 @@ import {
     stats,
     useStore,
     playerConfig,
-} from "../store";
+} from "../../store";
 
 const initialValues = {
     shadows,
@@ -104,7 +104,7 @@ export function Editor() {
                 cameraDistance: {
                     value: cameraDistance,
                     min: 1,
-                    max: 5,
+                    max: 20,
                     step: 0.01,
                     onChange: (value) =>
                         set({

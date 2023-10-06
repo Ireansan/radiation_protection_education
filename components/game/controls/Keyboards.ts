@@ -5,7 +5,7 @@
 import { useEffect } from "react";
 import { useThree } from "@react-three/fiber";
 
-import { cameras, useStore } from "../store";
+import { cameras, useStore } from "../../store";
 
 interface KeyConfig extends KeyMap {
     keys?: string[];

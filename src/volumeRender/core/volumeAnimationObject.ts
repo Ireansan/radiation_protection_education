@@ -66,7 +66,7 @@ class VolumeAnimationObject extends VolumeGroup {
     }
 
     getVolumeValue(position: THREE.Vector3): number {
-        let values = this.getVolumeValues(position);
+        let values = this.getVolumeValues(position.clone());
 
         return values[this.index];
     }

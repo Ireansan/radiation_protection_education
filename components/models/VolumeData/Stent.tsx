@@ -14,7 +14,7 @@ extend({ VolumeObject });
 
 import { Volume } from "three-stdlib";
 
-import { applyBasePath } from "../../utils";
+import { applyBasePath } from "../../../utils";
 const modelURL = applyBasePath(`/models/nrrd/stent.nrrd`);
 
 export function Stent({ ...props }: JSX.IntrinsicElements["volumeObject"]) {
@@ -35,3 +35,10 @@ export function Stent({ ...props }: JSX.IntrinsicElements["volumeObject"]) {
         </>
     );
 }
+
+export const Stent_Configure = {
+    volume: {
+        rotation: [-Math.PI / 2, 0, 0] as THREE.Vector3Tuple,
+        scale: 1 / 128,
+    },
+};

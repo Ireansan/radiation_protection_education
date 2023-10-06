@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { VolumeBase } from "./volumeBase";
+import { ClippingPlanesObject, VolumeBase } from "./volumeBase";
 
 /**
  * @link https://github.com/mrdoob/three.js/blob/master/examples/jsm/controls/TransformControls.js
@@ -25,52 +25,14 @@ class VolumeControls extends VolumeBase {
         this.isVolumeControls = true;
     }
 
-    set opacity(opacity: number) {
-        this._opacity = opacity;
-        this.updateVolumeParam();
-    }
-    set clim1(clim1: number) {
-        this._clim1 = clim1;
-        this.updateVolumeParam();
-    }
-    set clim2(clim2: number) {
-        this._clim2 = clim2;
-        this.updateVolumeParam();
-    }
-
-    set colormap(colormap: string) {
-        this._colormap = colormap;
-        this.updateVolumeParam();
-    }
-
-    set renderstyle(renderstyle: string) {
-        this._renderstyle = renderstyle;
-        this.updateVolumeParam();
-    }
-
-    set isothreshold(isothreshold: number) {
-        this._isothreshold = isothreshold;
-        this.updateVolumeParam();
-    }
-
-    set clipping(clipping: boolean) {
-        this._clipping = clipping;
-        this.updateVolumeClipping();
-    }
-    set clippingPlanes(planes: THREE.Plane[]) {
-        this._clippingPlanes = planes;
-        this.updateVolumeClipping();
-    }
-    set clipIntersection(clipIntersection: boolean) {
-        this._clipIntersection = clipIntersection;
-        this.updateVolumeClipping();
-    }
-
     get invert() {
         return this._invert;
     }
     set invert(invert: boolean) {
         this._invert = invert;
+        this._clippingPlanesObject
+            ? (this._clippingPlanesObject.invert = invert)
+            : null;
         this.updateVolumeClipping();
     }
     get isType() {
@@ -78,6 +40,9 @@ class VolumeControls extends VolumeBase {
     }
     set isType(type: string | undefined) {
         this._isType = type;
+        this._clippingPlanesObject
+            ? (this._clippingPlanesObject.isType = type)
+            : null;
         this.updateVolumeClipping();
     }
 
@@ -98,24 +63,25 @@ class VolumeControls extends VolumeBase {
         if (this.object && this.object instanceof VolumeBase) {
             if (this.regionId === undefined) {
                 this.regionId = this.object.clippingPlanesObjects.length;
-                this.object.pushClippingPlanesObjects(
+
+                this._clippingPlanesObject = new ClippingPlanesObject(
+                    NaN,
                     this._clippingPlanes,
                     this._clipping,
                     this._clipIntersection,
                     this._invert,
                     this._isType
                 );
-            } else {
-                this.object.setClippingPlanesObjects(
-                    this.regionId,
-                    this._clipping,
-                    this._clippingPlanes,
-                    this._clipIntersection,
-                    this._invert,
-                    this._isType
+
+                this.object.pushClippingPlanesObjects(
+                    this._clippingPlanesObject
                 );
             }
         }
+
+        this.object instanceof VolumeBase
+            ? this.object.updateVolumeClipping(false, true)
+            : null;
     }
 
     // Set current object

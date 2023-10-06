@@ -9,25 +9,14 @@ import {
     setDoc,
     onSnapshot,
 } from "firebase/firestore"; // runs firebase side effects
-import type { Firestore } from "firebase/firestore";
+import type { Firestore } from "firebase-admin/firestore";
 
-/**
- * WebRTC configs
- */
-const configuration = {
-    iceServers: [
-        {
-            // STUN
-            urls: [
-                "stun:stun1.l.google.com:19302",
-                "stun:stun2.l.google.com:19302",
-            ],
-            // TURN
-        },
-    ],
-    iceCandidatePoolSize: 10,
+type RTCSessionDescriptionProps = {
+    offer: {
+        type: RTCSdpType;
+        sdp: string | undefined;
+    };
 };
-const dataChannelParams = { ordered: false };
 
 export class FirebaseWebRTC {
     db: Firestore;
@@ -115,7 +104,7 @@ export class FirebaseWebRTC {
      * createRoom
      *************************/
     async createRoom() {
-        const roomRef = await doc(collection(this.db, "rooms"));
+        const roomRef = await this.db.collection("rooms").doc();
 
         // Peer Connection
         console.log(
@@ -135,10 +124,8 @@ export class FirebaseWebRTC {
         });
 
         // Collecting ICE candidates
-        const callerCandidatesCollection = collection(
-            roomRef,
-            "callerCandidates"
-        );
+        const callerCandidatesCollection =
+            roomRef.collection("callerCandidates");
 
         this.peerConnection.addEventListener("icecandidate", (event) => {
             if (!event.candidate) {
@@ -146,7 +133,7 @@ export class FirebaseWebRTC {
                 return;
             }
             console.log("Got candidate: ", event.candidate);
-            addDoc(callerCandidatesCollection, event.candidate.toJSON());
+            callerCandidatesCollection.add(event.candidate.toJSON());
         });
 
         // Creating a room
@@ -160,7 +147,7 @@ export class FirebaseWebRTC {
                 sdp: offer.sdp,
             },
         };
-        await setDoc(roomRef, roomWithOffer);
+        await roomRef.set(roomWithOffer);
         console.log("Set Document:", roomWithOffer);
         this.roomId = roomRef.id;
         console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
@@ -174,7 +161,7 @@ export class FirebaseWebRTC {
         });
 
         // Listening for remote session description
-        onSnapshot(roomRef, async (snapshot) => {
+        roomRef.onSnapshot(async (snapshot) => {
             const data = snapshot.data();
             if (
                 !this.peerConnection.currentRemoteDescription &&
@@ -192,7 +179,7 @@ export class FirebaseWebRTC {
         });
 
         // Listen for remote ICE candidates
-        onSnapshot(collection(roomRef, "calleeCandidates"), (snapshot) => {
+        roomRef.collection("calleeCandidates").onSnapshot((snapshot) => {
             snapshot.docChanges().forEach(async (change) => {
                 if (change.type === "added") {
                     let data = change.doc.data();
@@ -212,11 +199,11 @@ export class FirebaseWebRTC {
      *************************/
     async joinRoomById(roomId: string) {
         console.log(`roomid: ${roomId}`);
-        const roomRef = doc(collection(this.db, "rooms"), `${roomId}`);
-        const roomSnapshot = await getDoc(roomRef);
-        console.log("Got room:", roomSnapshot.exists());
+        const roomRef = await this.db.collection("rooms").doc(`${roomId}`);
+        const roomSnapshot = await roomRef.get();
+        console.log("Got room:", roomSnapshot !== undefined);
 
-        if (roomSnapshot.exists()) {
+        if (roomSnapshot) {
             // Peer Connection
             console.log(
                 "Create PeerConnection with configuration: ",
@@ -238,17 +225,15 @@ export class FirebaseWebRTC {
             });
 
             // Collecting ICE candidates
-            const calleeCandidatesCollection = collection(
-                roomRef,
-                "calleeCandidates"
-            );
+            const calleeCandidatesCollection =
+                roomRef.collection("calleeCandidates");
             this.peerConnection.addEventListener("icecandidate", (event) => {
                 if (!event.candidate) {
                     console.log("Got final candidate!");
                     return;
                 }
                 console.log("Got candidate: ", event.candidate);
-                addDoc(calleeCandidatesCollection, event.candidate.toJSON());
+                calleeCandidatesCollection.add(event.candidate.toJSON());
             });
             this.peerConnection.addEventListener("track", (event) => {
                 console.log("Got remote track:", event.streams[0]);
@@ -259,11 +244,14 @@ export class FirebaseWebRTC {
             });
 
             // Creating SDP answer
-            const offer = roomSnapshot.data().offer;
-            console.log("Got offer:", offer);
-            await this.peerConnection.setRemoteDescription(
-                new RTCSessionDescription(offer)
-            );
+            if (roomSnapshot.data()) {
+                const data = roomSnapshot.data() as RTCSessionDescriptionProps;
+                const offer = data.offer;
+                console.log("Got offer:", offer);
+                await this.peerConnection.setRemoteDescription(
+                    new RTCSessionDescription(offer)
+                );
+            }
             const answer = await this.peerConnection.createAnswer();
             console.log("Created answer:", answer);
             await this.peerConnection.setLocalDescription(answer);
@@ -274,10 +262,10 @@ export class FirebaseWebRTC {
                     sdp: answer.sdp,
                 },
             };
-            await updateDoc(roomRef, roomWithAnswer);
+            await roomRef.update(roomWithAnswer);
 
             // Listening for remote ICE candidates
-            onSnapshot(collection(roomRef, "callerCandidates"), (snapshot) => {
+            roomRef.collection("callerCandidates").onSnapshot((snapshot) => {
                 snapshot.docChanges().forEach(async (change) => {
                     if (change.type === "added") {
                         let data = change.doc.data();
@@ -329,20 +317,20 @@ export class FirebaseWebRTC {
 
         // Delete room on hangup
         if (this.roomId) {
-            const roomRef = doc(collection(this.db, "rooms"), this.roomId);
-            const calleeCandidates = await getDocs(
-                collection(roomRef, "calleeCandidates")
-            );
+            const roomRef = this.db.collection("rooms").doc(this.roomId);
+            const calleeCandidates = await roomRef
+                .collection("calleeCandidates")
+                .get();
             calleeCandidates.forEach(async (candidate) => {
-                await deleteDoc(candidate.ref);
+                await candidate.ref.delete();
             });
-            const callerCandidates = await getDocs(
-                collection(roomRef, "callerCandidates")
-            );
+            const callerCandidates = await roomRef
+                .collection("callerCandidates")
+                .get();
             callerCandidates.forEach(async (candidate) => {
-                await deleteDoc(candidate.ref);
+                await candidate.ref.delete();
             });
-            await deleteDoc(roomRef);
+            await roomRef.delete();
         }
         // document.location.reload();
     }

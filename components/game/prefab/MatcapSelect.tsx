@@ -3,7 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import { useMatcapTexture } from "@react-three/drei";
 import * as THREE from "three";
 
-import { matcapList, useStore } from "../store";
+import { matcapList, useStore } from "../../store";
 
 type matcapBoxProps = {
     matcapID: number;

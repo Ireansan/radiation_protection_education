@@ -27,7 +27,7 @@ import {
     stats,
     useStore,
     playerConfig,
-} from "../store";
+} from "../../store";
 
 function Grid3Row(
     typography: String,

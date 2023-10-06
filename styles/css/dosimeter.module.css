@@ -1,0 +1,76 @@
+.dose {
+  width: 280px;
+  height: 60px;
+  background-color: #181c20;
+  border: 1px solid #292d39;
+  border-radius: 2px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  color: #8c93a3;
+}
+.dose .name {
+  height: 15px;
+  font-weight: bold;
+}
+.dose .name .identifier {
+  width: 50%;
+  height: 100%;
+  font-size: 14px;
+  float: left;
+}
+.dose .name .icon {
+  width: 50%;
+  height: 100%;
+  float: right;
+  text-align: right;
+}
+.dose .result {
+  height: 30px;
+  display: flex;
+}
+.dose .result .year {
+  width: 60%;
+}
+.dose .result .once {
+  width: 40%;
+}
+.dose .data {
+  padding: 2px;
+}
+.dose .data .bar {
+  height: 15px;
+}
+.dose .data .bar .svg {
+  width: 100%;
+  height: 100%;
+}
+.dose .data .bar .svg .bg {
+  stroke-width: 7px;
+}
+.dose .data .bar .svg .damage {
+  stroke-width: 5px;
+}
+.dose .data .bar .svg .hp {
+  stroke-width: 5px;
+}
+.dose .data .numerical {
+  height: 15px;
+  font-size: 14px;
+}
+.dose .data .numerical .category {
+  height: 100%;
+  padding-left: 5px;
+  float: left;
+}
+.dose .data .numerical .value {
+  height: 100%;
+  float: right;
+  text-align: right;
+  color: #bcc2d2;
+}
+.dose .data .numerical .value .maxHp {
+  font-size: 10px;
+  color: #8c93a3;
+}/*# sourceMappingURL=dosimeter.module.css.map */

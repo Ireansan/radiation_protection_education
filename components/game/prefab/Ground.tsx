@@ -6,7 +6,7 @@ import * as THREE from "three";
 import { useTexture } from "@react-three/drei";
 import { CuboidCollider, RigidBody, RigidBodyProps } from "@react-three/rapier";
 
-import { applyBasePath } from "../../utils";
+import { applyBasePath } from "../../../utils";
 const textureURL = applyBasePath(`/textures/grass.jpg`);
 
 export function Ground({ ...props }: RigidBodyProps) {

@@ -5,5 +5,4 @@ export * from "./models";
 export * from "./prefab";
 export * from "./scenes";
 export * from "./ui";
-export * from "./store";
 export * from "./useToggle";

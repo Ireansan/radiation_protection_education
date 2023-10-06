@@ -131,7 +131,7 @@ export type VolumeClippingControlsProps = VolumeControlsTypes & {
  * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
  */
 export const VolumeClippingControls = React.forwardRef<
-    VolumeClippingControlsProps,
+    VolumeControlsImpl,
     VolumeClippingControlsProps
 >(function VolumeClippingControls(
     {
@@ -222,7 +222,7 @@ export const VolumeClippingControls = React.forwardRef<
             } else if (object.current instanceof VolumeBase) {
                 controls.attach(object.current);
             }
-        } else if (group.current instanceof VolumeGroup) {
+        } else if (group.current) {
             controls.attach(group.current);
         }
 
@@ -237,9 +237,13 @@ export const VolumeClippingControls = React.forwardRef<
     // Clipping, Intersection
     React.useEffect(() => {
         controls.clipping = clipping;
+    }, [controls, clipping]);
+    React.useEffect(() => {
         controls.clipIntersection = clipIntersection;
+    }, [controls, clipIntersection]);
+    React.useEffect(() => {
         controls.invert = invert;
-    }, [controls, clipping, clipIntersection, invert]);
+    }, [controls, invert]);
 
     return controls ? (
         <>

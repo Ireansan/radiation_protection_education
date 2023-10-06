@@ -10,8 +10,8 @@ import { ContentCopy } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 
 import { CustomButton, CustomTextField, RTCPlayer } from "../utils";
-import { useStore } from "../store";
-import styles from "../../../styles/css/game_template.module.css";
+import { useStore } from "../../store";
+import styles from "../../../styles/css/game.module.css";
 
 /**
  * WebRTCPanel
@@ -37,6 +37,7 @@ export function WebRTCPanel({ ...props }): JSX.Element {
         state.onlinePlayers,
     ]);
 
+    /*
     useEffect(() => {
         // https://stackoverflow.com/questions/68838976/why-do-i-get-referenceerror-rtcpeerconnection-is-not-defined-in-next-js
         set((state) => ({
@@ -46,14 +47,7 @@ export function WebRTCPanel({ ...props }): JSX.Element {
             },
         }));
     }, []);
-
-    useEffect(() => {
-        if (onlinePlayers.player1) {
-            localVideoRef.current.srcObject = onlinePlayers.player1.localStream;
-            remoteVideoRef.current.srcObject =
-                onlinePlayers.player1.remoteStream;
-        }
-    }, [onlinePlayers]);
+    */
 
     function sendData() {
         if (onlinePlayers.player1?.dataChannel.readyState === "open") {
@@ -189,23 +183,6 @@ export function WebRTCPanel({ ...props }): JSX.Element {
                         <p> - You are the {currentStateRef.current}!</p>
                     </>
                 ) : null}
-                {/* --------------- Local Video --------------- */}
-                <video
-                    id="localVideo"
-                    ref={localVideoRef}
-                    muted
-                    autoPlay
-                    playsInline
-                    style={{ width: "100%" }}
-                ></video>
-                {/* --------------- Remote Video --------------- */}
-                <video
-                    id="remoteVideo"
-                    ref={remoteVideoRef}
-                    autoPlay
-                    playsInline
-                    style={{ width: "100%" }}
-                ></video>
             </div>
         </>
     );

@@ -1,4 +1,3 @@
-export * from "./doseObject";
 export * from "./volume-type";
 export * from "./volumeAnimationObject";
 export * from "./volumeBase";

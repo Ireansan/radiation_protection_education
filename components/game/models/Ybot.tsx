@@ -7,7 +7,7 @@ import React, { useRef } from "react";
 import { useGLTF, useMatcapTexture, useAnimations } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 
-import { useStore } from "../store";
+import { useStore } from "../../store";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -24,7 +24,7 @@ type GLTFResult = GLTF & {
 type ActionName = "T-Pose";
 type GLTFActions = Record<ActionName, THREE.AnimationAction>;
 
-import { applyBasePath } from "../../utils";
+import { applyBasePath } from "../../../utils";
 const modelURL = applyBasePath(`/models/glb/Y-Bot.glb`);
 
 export function YBot(props: JSX.IntrinsicElements["group"]) {
