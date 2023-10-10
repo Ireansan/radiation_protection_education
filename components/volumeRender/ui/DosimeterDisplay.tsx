@@ -143,13 +143,15 @@ const MemoResultData = memo(ResultData);
 
 type DosimeterResultProps = {
     result: ResultsByName;
-    coefficient: number;
+    yearCoefficient: number;
     onceMaxHp: number;
+    onceCoefficient: number;
 };
 function DosimeterResult({
     result,
-    coefficient,
+    yearCoefficient,
     onceMaxHp,
+    onceCoefficient,
     ...props
 }: DosimeterResultProps) {
     let doseValue =
@@ -179,7 +181,7 @@ function DosimeterResult({
                         <MemoResultData
                             category={"Year"}
                             value={value}
-                            coefficient={coefficient}
+                            coefficient={yearCoefficient}
                             maxHp={20000}
                         />
                     </div>
@@ -187,7 +189,7 @@ function DosimeterResult({
                         <MemoResultData
                             category={"Once"}
                             value={value}
-                            coefficient={1}
+                            coefficient={onceCoefficient}
                             maxHp={onceMaxHp}
                         />
                     </div>
@@ -207,15 +209,32 @@ export function DosimeterDisplayUI({ ...props }) {
      */
     // Volume
     const [dosimeterConfig, setVolume] = useControls(() => ({
-        "Dosimeter Config": folder({
-            year: {
-                value: 500,
+        "Dosimeter Config": folder(
+            {
+                Year: folder({
+                    N_year: {
+                        value: 500,
+                        min: 1,
+                        step: 1,
+                        label: "N",
+                    },
+                }),
+                Once: folder({
+                    Limit_once: {
+                        value: 100,
+                        min: 1,
+                        label: "Limit",
+                    },
+                    N_once: {
+                        value: 1,
+                        min: 1,
+                        step: 1,
+                        label: "N",
+                    },
+                }),
             },
-            once: {
-                value: 100,
-                min: 1,
-            },
-        }),
+            { collapsed: true }
+        ),
     }));
 
     return (
@@ -233,8 +252,9 @@ export function DosimeterDisplayUI({ ...props }) {
                     <MemoDosimeterResult
                         key={index}
                         result={result}
-                        coefficient={dosimeterConfig.year}
-                        onceMaxHp={dosimeterConfig.once}
+                        yearCoefficient={dosimeterConfig.N_year}
+                        onceMaxHp={dosimeterConfig.Limit_once}
+                        onceCoefficient={dosimeterConfig.N_once}
                     />
                 ))}
             </div>

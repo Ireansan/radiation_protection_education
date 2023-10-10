@@ -181,37 +181,42 @@ export function DoseAnimationControls({
     }));
 
     useFrame((state, delta) => {
-        if (edit) {
-            actions.forEach((actions, i) => {
-                actions["volumeAnimation"]
-                    ? (actions["volumeAnimation"].time = animationConfig.time)
+        if (mainGroup.current?.visible) {
+            if (edit) {
+                actions.forEach((actions, i) => {
+                    actions["volumeAnimation"]
+                        ? (actions["volumeAnimation"].time =
+                              animationConfig.time)
+                        : null;
+                });
+                mixer.forEach((mixer, i) => {
+                    mixer.update(0);
+                });
+            } else {
+                mixer.forEach((mixer) => {
+                    mixer.update(delta * animationConfig.speed);
+                });
+            }
+
+            let actionsMaxLength = actions[childMaxLength.current.index];
+            if (actionsMaxLength["volumeAnimation"]) {
+                actionsMaxLength["volumeAnimation"].time !==
+                    animationConfig.time &&
+                actionsMaxLength["volumeAnimation"].time <= duration
+                    ? setAnimationConfig({
+                          time: actionsMaxLength["volumeAnimation"].time,
+                      })
                     : null;
-            });
-            mixer.forEach((mixer, i) => {
-                mixer.update(0);
-            });
+            }
+
+            if (objects) {
+                objects.forEach((object) => {
+                    if (object.current) {
+                        object.current.index = Math.floor(animationConfig.time);
+                    }
+                });
+            }
         } else {
-            mixer.forEach((mixer) => {
-                mixer.update(delta * animationConfig.speed);
-            });
-        }
-
-        let actionsMaxLength = actions[childMaxLength.current.index];
-        if (actionsMaxLength["volumeAnimation"]) {
-            actionsMaxLength["volumeAnimation"].time !== animationConfig.time &&
-            actionsMaxLength["volumeAnimation"].time <= duration
-                ? setAnimationConfig({
-                      time: actionsMaxLength["volumeAnimation"].time,
-                  })
-                : null;
-        }
-
-        if (objects) {
-            objects.forEach((object) => {
-                if (object.current) {
-                    object.current.index = Math.floor(animationConfig.time);
-                }
-            });
         }
     });
 
