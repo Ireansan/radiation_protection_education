@@ -21,11 +21,12 @@ export type DoseBoardControlsProps = {
     height?: number;
     position?: THREE.Vector3;
     rotation?: THREE.Euler;
+    offset?: [number, number, number];
+    opacity?: number;
     folderName?: string;
     planeSize?: number;
     planeColor?: THREE.Color;
-    subPlaneSize?: number;
-    subPlaneColor?: THREE.Color;
+    pivotScale?: number;
 };
 /**
  * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
@@ -43,10 +44,12 @@ export const DoseBoardControls = React.forwardRef<
         height = 1,
         position = new THREE.Vector3(),
         rotation = new THREE.Euler(),
+        offset = [0, 0, 0],
+        opacity = 1.0,
         folderName = "board",
         planeSize = 2,
         planeColor = new THREE.Color(0xffff00),
-        subPlaneSize = 1,
+        pivotScale = 1,
         ...props
     },
     ref
@@ -303,8 +306,10 @@ export const DoseBoardControls = React.forwardRef<
             <PivotControls
                 ref={pivotRef}
                 matrix={matrix}
+                offset={offset}
+                opacity={opacity}
                 autoTransform={true}
-                scale={subPlaneSize}
+                scale={pivotScale}
                 onDrag={(l, deltaL, w, deltaW) => {
                     onDrag(l, deltaL, w, deltaW);
                 }}
