@@ -339,14 +339,19 @@ function XRayRoomDosimeterPrototype() {
                                 height={Board_Configure.size.y}
                                 position={new THREE.Vector3(2.5, 1.25, -0.5)}
                                 rotation={new THREE.Euler(0, Math.PI / 2, 0)}
+                                offset={[0, 0, 0.1]}
+                                opacity={0.75}
                                 planeSize={Board_Configure.size.y}
-                                subPlaneSize={Board_Configure.size.x}
+                                pivotScale={Board_Configure.size.x}
                             >
                                 <mesh position={[0, 0, 0]}>
                                     <boxBufferGeometry
                                         args={[
                                             ...Board_Configure.size.toArray(),
                                         ]}
+                                    />
+                                    <meshBasicMaterial
+                                        color={new THREE.Color(0xb39a7b)}
                                     />
                                 </mesh>
                             </DoseBoardControls>

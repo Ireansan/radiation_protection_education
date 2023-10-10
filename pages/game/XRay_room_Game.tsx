@@ -184,7 +184,7 @@ function XRayRoomGame() {
                                 position={new THREE.Vector3(1, 1.25, -0.5)}
                                 rotation={new THREE.Euler(0, Math.PI / 2, 0)}
                                 planeSize={2}
-                                subPlaneSize={1}
+                                pivotScale={1}
                             >
                                 <mesh>
                                     <boxBufferGeometry args={[1, 2, 0.05]} />
