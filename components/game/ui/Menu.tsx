@@ -46,7 +46,6 @@ export function Menu({ ...props }: MenuProps): JSX.Element {
                             </Button>
                         </div>
                     </div>
-                    <WebRTCPanel />
                 </div>
                 <footer>
                     <a href="https://github.com/pmndrs/react-three-fiber">
