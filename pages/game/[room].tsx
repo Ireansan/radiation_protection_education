@@ -106,8 +106,8 @@ function Room({ staticProps }: PageProps) {
             .then((response) => response.json())
             .then((users) => {
                 console.log("TEST: jsonplaceholder, user ");
-                for (var user in users) {
-                    console.log(user);
+                for (var user of users) {
+                    console.log(user.name);
                 }
             });
     }, []);
