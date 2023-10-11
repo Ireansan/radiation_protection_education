@@ -8,9 +8,13 @@ import {
 import { Volume, NRRDLoader } from "three-stdlib";
 
 import { applyBasePath } from "../../../../../utils";
-const modelURL = applyBasePath(`/models/nrrd/c-arm/animation/c-arm_9.nrrd`);
+const modelURL = applyBasePath(
+    `/models/nrrd/c-arm/animation/c-arm_9.nrrd`
+);
 
-export function CArm_all_9({ ...props }: JSX.IntrinsicElements["doseObject"]) {
+export function CArm_all_9({
+    ...props
+}: JSX.IntrinsicElements["doseObject"]) {
     const { gl } = useThree();
     gl.localClippingEnabled = true;
 

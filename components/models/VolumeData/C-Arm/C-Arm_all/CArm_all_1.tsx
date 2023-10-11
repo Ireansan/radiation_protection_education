@@ -8,7 +8,9 @@ import {
 import { Volume, NRRDLoader } from "three-stdlib";
 
 import { applyBasePath } from "../../../../../utils";
-const modelURL = applyBasePath(`/models/nrrd/c-arm/animation/c-arm_1.nrrd`);
+const modelURL = applyBasePath(
+    `/models/nrrd/c-arm/animation/c-arm_1.nrrd`
+);
 
 export function CArm_all_1({
     ...props

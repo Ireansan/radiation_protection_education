@@ -9,10 +9,10 @@ import { Volume, NRRDLoader } from "three-stdlib";
 
 import { applyBasePath } from "../../../../../utils";
 const modelURL = applyBasePath(
-    `/models/nrrd/c-arm/roll180_pitch360_animation/c-arm_roll180_pitch360_6.nrrd`
+    `/models/nrrd/c-arm/animation/c-arm_accumulate.nrrd`
 );
 
-export function CArm_roll180_pitch360_all_6({
+export function CArm_all_accumulate({
     ...props
 }: JSX.IntrinsicElements["doseObject"]) {
     const { gl } = useThree();
