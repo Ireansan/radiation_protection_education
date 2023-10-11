@@ -217,6 +217,9 @@ export const VolumeXYZClippingControls = React.forwardRef<
                         label: "invert",
                         onChange: (e) => {
                             coefficientsRef.current[3] = e ? 1 : -1;
+
+                            tmpPlanes[3].normal.multiplyScalar(-1);
+                            tmpPlanes[3].constant *= -1;
                         },
                     },
                 },
