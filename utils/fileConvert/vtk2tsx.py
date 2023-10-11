@@ -20,7 +20,7 @@ def vtk2tsx(
 
     # Get a list of all files in the directory
     files = os.listdir(input_dir)
-    if ".DS_Stroe" in files:
+    if ".DS_Store" in files:
         files.remove(".DS_Store")
 
     # Sort the files based on their names
