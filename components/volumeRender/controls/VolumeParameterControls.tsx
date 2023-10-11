@@ -32,7 +32,7 @@ export const VolumeParameterControls = React.forwardRef<
     {
         children, // FIXME: Only supported by VolumeGroup
         object,
-        folderName = "volume",
+        folderName = "Volume",
         opacity = 0.6,
         clim1 = 0,
         clim2 = 1,

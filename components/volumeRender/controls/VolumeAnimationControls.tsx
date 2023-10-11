@@ -14,7 +14,7 @@ export type VolumeAnimationControlsProps = {
 export function VolumeAnimationControls({
     objects,
     duration,
-    folderName = "animation",
+    folderName = "Animation",
     ...props
 }: VolumeAnimationControlsProps) {
     const childMaxLength = React.useRef<{

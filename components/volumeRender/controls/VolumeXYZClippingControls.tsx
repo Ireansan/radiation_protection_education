@@ -65,7 +65,7 @@ export const VolumeXYZClippingControls = React.forwardRef<
 >(function VolumeXYZClippingControls(
     {
         object,
-        folderName = "clipping XYZ",
+        folderName = "Clip",
         planeSize = 2,
         planeColor = new THREE.Color(0xffff00),
         subPlaneSize = 1,
