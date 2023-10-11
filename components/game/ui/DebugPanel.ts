@@ -10,9 +10,12 @@ export function DebugPanel() {
     const [set, debug] = useStore((state) => [state.set, state.debug]);
 
     const [, setDebug] = useControls(() => ({
-        Debug: folder({
-            debug: { value: debug, onChange: (debug) => set({ debug }) },
-        }),
+        Debug: folder(
+            {
+                debug: { value: debug, onChange: (debug) => set({ debug }) },
+            },
+            { collapsed: true }
+        ),
     }));
 
     return null;
