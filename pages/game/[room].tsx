@@ -101,15 +101,15 @@ function Room({ staticProps }: PageProps) {
     const [menu, set] = useStore((state) => [state.menu, state.set]);
     const editor = useStore((state) => state.editor);
 
-    const test = async () => {
-        const res = await fetch(
-            `https://jsonplaceholder.typicode.com/users/${0}`
-        );
-        const user = await res.json();
-        return user;
-    };
     useEffect(() => {
-        console.log(test());
+        fetch("https://jsonplaceholder.typicode.com/users/")
+            .then((response) => response.json())
+            .then((users) => {
+                console.log("TEST: jsonplaceholder, user ");
+                for (var user in users) {
+                    console.log(user);
+                }
+            });
     }, []);
 
     return (
