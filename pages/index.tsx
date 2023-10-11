@@ -94,6 +94,20 @@ const Home: NextPage = () => {
                 <h3>Game</h3>
                 <div className={styles.grid}>
                     <div className={styles.card}>
+                        <Link href={"/game/room1"}>
+                            <h2>Room 1 &rarr;</h2>
+                            <p>Next.js + react-three/fiber</p>
+                        </Link>
+                    </div>
+
+                    <div className={styles.card}>
+                        <Link href={"/game/room2"}>
+                            <h2>Room 2 &rarr;</h2>
+                            <p>Next.js + react-three/fiber</p>
+                        </Link>
+                    </div>
+
+                    <div className={styles.card}>
                         <Link href={"/game/SampleScene"}>
                             <h2>Sample Scene &rarr;</h2>
                             <p>Next.js + react-three/fiber</p>
