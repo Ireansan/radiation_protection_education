@@ -1,11 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
-    OrbitControls,
-    Stats,
     GizmoHelper,
     GizmoViewport,
     Grid,
+    OrbitControls,
+    PivotControls,
+    Stats,
 } from "@react-three/drei";
 import * as THREE from "three";
 import { Physics, Debug } from "@react-three/rapier";
@@ -22,10 +23,15 @@ import {
 } from "../../components/game";
 
 // ==========
+// Model
+import { Board_Configure } from "../../components/models";
+import { CustomYBotIK } from "../../components/models/Custom_Ybot_IK";
+
+// ==========
 // Volume
 // ----------
 // object
-import { DoseGroup, DoseAnimationObject } from "../../src";
+import { Dosimeter, DoseGroup, DoseAnimationObject } from "../../src";
 // ----------
 // data
 import * as VOLUMEDATA from "../../components/models/VolumeData";
@@ -33,6 +39,9 @@ import * as VOLUMEDATA from "../../components/models/VolumeData";
 // controls
 import {
     DoseAnimationControls,
+    DoseBoardControls,
+    DosimeterControls,
+    DosimeterDisplayUI,
     VolumeParameterControls,
     VolumeXYZClippingControls,
 } from "../../components/volumeRender";
@@ -45,7 +54,7 @@ import { useStore } from "../../components/store";
 // Styles
 import styles from "../../styles/threejs.module.css";
 
-function CArmRoll180Pitch360() {
+function CArmRoll180Pitch360Extra() {
     const [debug] = useStore((state) => [state.debug]);
 
     const ref = useRef<DoseGroup>(null);
@@ -55,6 +64,9 @@ function CArmRoll180Pitch360() {
 
     const accumulateRef = useRef<DoseGroup>(null);
     const cArmRollAccumuRef = useRef<DoseGroup>(null);
+
+    const dosimeterRef = useRef<Dosimeter>(null);
+    const yBotRef = useRef<THREE.Group>(null);
 
     const ToggledDebug = useToggle(Debug, "debug");
 
@@ -117,7 +129,7 @@ function CArmRoll180Pitch360() {
                             duration={16}
                             customSpeed={[8.0, 16.0]}
                         />
-                        <VolumeParameterControls object={ref} clim2={1e-5} />
+                        <VolumeParameterControls object={ref} />
                         <VolumeXYZClippingControls
                             object={ref}
                             folderName="Clip"
@@ -150,6 +162,30 @@ function CArmRoll180Pitch360() {
                             <sphereBufferGeometry args={[0.25]} />
                         </mesh>
 
+                        {/* Avatar */}
+                        <PivotControls
+                            // offset={[0, 0, -0.5]}
+                            // rotation={[0, Math.PI, 0]}
+                            matrix={new THREE.Matrix4().compose(
+                                new THREE.Vector3(2, 0, 0),
+                                new THREE.Quaternion().setFromEuler(
+                                    new THREE.Euler(0, -Math.PI / 2, 0)
+                                ),
+                                new THREE.Vector3(1, 1, 1)
+                            )}
+                            activeAxes={[true, false, true]}
+                            onDragEnd={() => {
+                                if (dosimeterRef.current) {
+                                    dosimeterRef.current.updateResults();
+                                    console.log(dosimeterRef.current.results);
+                                }
+                            }}
+                        >
+                            <group ref={yBotRef}>
+                                <CustomYBotIK />
+                            </group>
+                        </PivotControls>
+
                         {/* -------------------------------------------------- */}
                         {/* Three.js Controls */}
                         <OrbitControls makeDefault />
@@ -158,6 +194,31 @@ function CArmRoll180Pitch360() {
                         {/* Physics */}
                         <Physics gravity={[0, -30, 0]}>
                             <ToggledDebug />
+                            {/* Dose Board */}
+                            <DoseBoardControls
+                                object={ref}
+                                origin={new THREE.Vector3(0, 1, 0)}
+                                areaSize={[2.2, 1.2, 3.1]}
+                                width={Board_Configure.size.x}
+                                height={Board_Configure.size.y}
+                                position={new THREE.Vector3(2.5, 1.25, -0.5)}
+                                rotation={new THREE.Euler(0, Math.PI / 2, 0)}
+                                offset={[0, 0, 0.1]}
+                                opacity={0.75}
+                                planeSize={Board_Configure.size.y}
+                                pivotScale={Board_Configure.size.x}
+                            >
+                                <mesh position={[0, 0, 0]}>
+                                    <boxBufferGeometry
+                                        args={[
+                                            ...Board_Configure.size.toArray(),
+                                        ]}
+                                    />
+                                    <meshBasicMaterial
+                                        color={new THREE.Color(0xb39a7b)}
+                                    />
+                                </mesh>
+                            </DoseBoardControls>
                         </Physics>
 
                         {/* -------------------------------------------------- */}
@@ -197,10 +258,11 @@ function CArmRoll180Pitch360() {
                         </GizmoHelper>
                     </Canvas>
                     <DebugPanel />
+                    <DosimeterDisplayUI />
                 </div>
             </div>
         </>
     );
 }
 
-export default CArmRoll180Pitch360;
+export default CArmRoll180Pitch360Extra;

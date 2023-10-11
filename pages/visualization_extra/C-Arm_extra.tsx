@@ -1,11 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
-    OrbitControls,
-    Stats,
     GizmoHelper,
     GizmoViewport,
     Grid,
+    OrbitControls,
+    PivotControls,
+    Stats,
 } from "@react-three/drei";
 import * as THREE from "three";
 import { Physics, Debug } from "@react-three/rapier";
@@ -22,17 +23,26 @@ import {
 } from "../../components/game";
 
 // ==========
+// Model
+import { Board_Configure } from "../../components/models";
+import { CustomYBotIK } from "../../components/models/Custom_Ybot_IK";
+import { HandIKLevaControls } from "../../components/models/controls";
+
+// ==========
 // Volume
 // ----------
 // object
-import { DoseGroup, DoseAnimationObject } from "../../src";
+import { Dosimeter, DoseGroup, DoseAnimationObject } from "../../src";
 // ----------
 // data
+
 import * as VOLUMEDATA from "../../components/models/VolumeData";
 // ----------
 // controls
 import {
     DoseAnimationControls,
+    DoseBoardControls,
+    DosimeterDisplayUI,
     VolumeParameterControls,
     VolumeXYZClippingControls,
 } from "../../components/volumeRender";
@@ -45,22 +55,25 @@ import { useStore } from "../../components/store";
 // Styles
 import styles from "../../styles/threejs.module.css";
 
-function CArmRoll180Pitch360() {
+function CArmExtra() {
     const [debug] = useStore((state) => [state.debug]);
 
     const ref = useRef<DoseGroup>(null);
 
     const timelapseRef = useRef<DoseGroup>(null);
-    const cArmRollRef = useRef<DoseAnimationObject>(null);
+    const cArmRef = useRef<DoseAnimationObject>(null);
 
     const accumulateRef = useRef<DoseGroup>(null);
-    const cArmRollAccumuRef = useRef<DoseGroup>(null);
+    const cArmAccumuRef = useRef<DoseGroup>(null);
+
+    const dosimeterRef = useRef<Dosimeter>(null);
+    const yBotRef = useRef<THREE.Group>(null);
 
     const ToggledDebug = useToggle(Debug, "debug");
 
     useEffect(() => {
         console.log(ref.current);
-        // console.log(cArmRollRef);
+        // console.log(cArmRef);
     }, [ref]);
 
     return (
@@ -80,38 +93,34 @@ function CArmRoll180Pitch360() {
                             <doseGroup ref={timelapseRef}>
                                 {/* C-Arm Dose */}
                                 <doseAnimationObject
-                                    ref={cArmRollRef}
+                                    ref={cArmRef}
                                     position={
-                                        VOLUMEDATA
-                                            .CArm_roll180_pitch360_Configure
-                                            .volume.position
+                                        VOLUMEDATA.CArm_Configure.volume
+                                            .position
                                     }
                                     rotation={
-                                        VOLUMEDATA
-                                            .CArm_roll180_pitch360_Configure
-                                            .volume.rotation
+                                        VOLUMEDATA.CArm_Configure.volume
+                                            .rotation
                                     }
                                     scale={
-                                        VOLUMEDATA
-                                            .CArm_roll180_pitch360_Configure
-                                            .volume.scale
+                                        VOLUMEDATA.CArm_Configure.volume.scale
                                     }
                                 >
-                                    <VOLUMEDATA.CArm_roll180_pitch360_all_Animation />
+                                    <VOLUMEDATA.CArm_all_Animation />
                                 </doseAnimationObject>
                             </doseGroup>
 
                             {/* Accumulate */}
                             <doseGroup ref={accumulateRef} visible={false}>
                                 {/* X-Ray Dose, no curtain, Accumulate */}
-                                <doseGroup ref={cArmRollAccumuRef}></doseGroup>
+                                <doseGroup ref={cArmAccumuRef}></doseGroup>
                             </doseGroup>
                         </doseGroup>
 
                         {/* -------------------------------------------------- */}
                         {/* Volume Controls */}
                         <DoseAnimationControls
-                            objects={[cArmRollRef]}
+                            objects={[cArmRef]}
                             mainGroup={timelapseRef}
                             subGroup={accumulateRef}
                             duration={16}
@@ -129,26 +138,46 @@ function CArmRoll180Pitch360() {
                         {/* Three.js Object */}
                         <group
                             position={
-                                VOLUMEDATA.CArm_roll180_pitch360_Configure
-                                    .object3d.position
+                                VOLUMEDATA.CArm_Configure.object3d.position
                             }
                             rotation={
-                                VOLUMEDATA.CArm_roll180_pitch360_Configure
-                                    .object3d.rotation
+                                VOLUMEDATA.CArm_Configure.object3d.rotation
                             }
                             scale={
-                                VOLUMEDATA.CArm_roll180_pitch360_Configure
-                                    .volume.scale *
-                                VOLUMEDATA.CArm_roll180_pitch360_Configure
-                                    .object3d.scale
+                                VOLUMEDATA.CArm_Configure.volume.scale *
+                                VOLUMEDATA.CArm_Configure.object3d.scale
                             }
                         >
-                            <VOLUMEDATA.CArm_roll180_pitch360_material />
-                            <VOLUMEDATA.CArm_roll180_pitch360_region />
+                            <VOLUMEDATA.CArm_material />
+                            <VOLUMEDATA.CArm_region />
                         </group>
                         <mesh position={[0, 1, 0]} visible={debug}>
                             <sphereBufferGeometry args={[0.25]} />
                         </mesh>
+
+                        {/* Avatar */}
+                        <PivotControls
+                            // offset={[0, 0, -0.5]}
+                            // rotation={[0, Math.PI, 0]}
+                            matrix={new THREE.Matrix4().compose(
+                                new THREE.Vector3(2, 0, 0),
+                                new THREE.Quaternion().setFromEuler(
+                                    new THREE.Euler(0, -Math.PI / 2, 0)
+                                ),
+                                new THREE.Vector3(1, 1, 1)
+                            )}
+                            activeAxes={[true, false, true]}
+                            onDragEnd={() => {
+                                if (dosimeterRef.current) {
+                                    dosimeterRef.current.updateResults();
+                                    console.log(dosimeterRef.current.results);
+                                }
+                            }}
+                        >
+                            <group ref={yBotRef}>
+                                <CustomYBotIK />
+                            </group>
+                        </PivotControls>
 
                         {/* -------------------------------------------------- */}
                         {/* Three.js Controls */}
@@ -158,6 +187,32 @@ function CArmRoll180Pitch360() {
                         {/* Physics */}
                         <Physics gravity={[0, -30, 0]}>
                             <ToggledDebug />
+
+                            {/* Dose Board */}
+                            <DoseBoardControls
+                                object={ref}
+                                origin={new THREE.Vector3(0, 1, 0)}
+                                areaSize={[2.2, 1.2, 3.1]}
+                                width={Board_Configure.size.x}
+                                height={Board_Configure.size.y}
+                                position={new THREE.Vector3(2.5, 1.25, -0.5)}
+                                rotation={new THREE.Euler(0, Math.PI / 2, 0)}
+                                offset={[0, 0, 0.1]}
+                                opacity={0.75}
+                                planeSize={Board_Configure.size.y}
+                                pivotScale={Board_Configure.size.x}
+                            >
+                                <mesh position={[0, 0, 0]}>
+                                    <boxBufferGeometry
+                                        args={[
+                                            ...Board_Configure.size.toArray(),
+                                        ]}
+                                    />
+                                    <meshBasicMaterial
+                                        color={new THREE.Color(0xb39a7b)}
+                                    />
+                                </mesh>
+                            </DoseBoardControls>
                         </Physics>
 
                         {/* -------------------------------------------------- */}
@@ -197,10 +252,11 @@ function CArmRoll180Pitch360() {
                         </GizmoHelper>
                     </Canvas>
                     <DebugPanel />
+                    <DosimeterDisplayUI />
                 </div>
             </div>
         </>
     );
 }
 
-export default CArmRoll180Pitch360;
+export default CArmExtra;

@@ -25,30 +25,43 @@ import {
 // Volume
 // ----------
 // object
-import { VolumeGroup, DoseAnimationObject } from "../../src";
+import { DoseGroup, DoseAnimationObject } from "../../src";
 // ----------
 // data
+
 import * as VOLUMEDATA from "../../components/models/VolumeData";
 // ----------
 // controls
 import {
-    VolumeAnimationControls,
-    DoseBoardControls,
-    VolumeClippingControls,
+    DoseAnimationControls,
     VolumeParameterControls,
+    VolumeXYZClippingControls,
 } from "../../components/volumeRender";
 
+// ==========
+// Store
+import { useStore } from "../../components/store";
+
+// ==========
+// Styles
 import styles from "../../styles/threejs.module.css";
 
 function CArm() {
-    const ref = useRef<VolumeGroup>(null!);
-    const refAnimation = useRef<DoseAnimationObject>(null);
+    const [debug] = useStore((state) => [state.debug]);
+
+    const ref = useRef<DoseGroup>(null);
+
+    const timelapseRef = useRef<DoseGroup>(null);
+    const cArmRef = useRef<DoseAnimationObject>(null);
+
+    const accumulateRef = useRef<DoseGroup>(null);
+    const cArmAccumuRef = useRef<DoseGroup>(null);
 
     const ToggledDebug = useToggle(Debug, "debug");
 
     useEffect(() => {
         console.log(ref.current);
-        // console.log(refAnimation);
+        // console.log(cArmRef);
     }, [ref]);
 
     return (
@@ -63,44 +76,48 @@ function CArm() {
                     >
                         {/* -------------------------------------------------- */}
                         {/* Volume Object */}
-                        <volumeGroup ref={ref}>
-                            {/* X-Ray Dose, coefficent: 0.01 (1/100) */}
-                            <doseAnimationObject
-                                ref={refAnimation}
-                                position={
-                                    VOLUMEDATA.CArm_Configure.volume.position
-                                }
-                                rotation={
-                                    VOLUMEDATA.CArm_Configure.volume.rotation
-                                }
-                                scale={VOLUMEDATA.CArm_Configure.volume.scale}
-                                boardCoefficient={0.01}
-                            >
-                                <VOLUMEDATA.CArm_all_Animation />
-                            </doseAnimationObject>
+                        <doseGroup ref={ref}>
+                            {/* Time Lapse */}
+                            <doseGroup ref={timelapseRef}>
+                                {/* C-Arm Dose */}
+                                <doseAnimationObject
+                                    ref={cArmRef}
+                                    position={
+                                        VOLUMEDATA.CArm_Configure.volume
+                                            .position
+                                    }
+                                    rotation={
+                                        VOLUMEDATA.CArm_Configure.volume
+                                            .rotation
+                                    }
+                                    scale={
+                                        VOLUMEDATA.CArm_Configure.volume.scale
+                                    }
+                                >
+                                    <VOLUMEDATA.CArm_all_Animation />
+                                </doseAnimationObject>
+                            </doseGroup>
 
-                            {/* <mesh position={[0, 0, 0]} scale={25}>
-                        <sphereBufferGeometry />
-                    </mesh> */}
-                        </volumeGroup>
+                            {/* Accumulate */}
+                            <doseGroup ref={accumulateRef} visible={false}>
+                                {/* X-Ray Dose, no curtain, Accumulate */}
+                                <doseGroup ref={cArmAccumuRef}></doseGroup>
+                            </doseGroup>
+                        </doseGroup>
 
                         {/* -------------------------------------------------- */}
                         {/* Volume Controls */}
-                        <VolumeAnimationControls
-                            objects={[refAnimation]}
+                        <DoseAnimationControls
+                            objects={[cArmRef]}
+                            mainGroup={timelapseRef}
+                            subGroup={accumulateRef}
                             duration={16}
+                            customSpeed={[8.0, 16.0]}
                         />
                         <VolumeParameterControls object={ref} clim2={1e-5} />
-                        <VolumeClippingControls
+                        <VolumeXYZClippingControls
                             object={ref}
-                            folderName="Dose 2"
-                            normals={[
-                                // [0, 0, -1],
-                                // [1, 0, 0],
-                                // [-1, 0, 0],
-                                // [0, 1, 0],
-                                [0, -1, 0],
-                            ]}
+                            folderName="Clip"
                             planeSize={2}
                             subPlaneSize={1}
                         />
@@ -122,7 +139,7 @@ function CArm() {
                             <VOLUMEDATA.CArm_material />
                             <VOLUMEDATA.CArm_region />
                         </group>
-                        <mesh position={[0, 1, 0]}>
+                        <mesh position={[0, 1, 0]} visible={debug}>
                             <sphereBufferGeometry args={[0.25]} />
                         </mesh>
 
@@ -134,22 +151,6 @@ function CArm() {
                         {/* Physics */}
                         <Physics gravity={[0, -30, 0]}>
                             <ToggledDebug />
-                            {/* Dose Board */}
-                            <DoseBoardControls
-                                object={refAnimation}
-                                origin={new THREE.Vector3(0, 1, 0)}
-                                areaSize={[2.2, 1.2, 3.1]}
-                                width={1}
-                                height={2}
-                                position={new THREE.Vector3(2.5, 1.25, -0.5)}
-                                rotation={new THREE.Euler(0, Math.PI / 2, 0)}
-                                planeSize={2}
-                                pivotScale={1}
-                            >
-                                <mesh>
-                                    <boxBufferGeometry args={[1, 2, 0.05]} />
-                                </mesh>
-                            </DoseBoardControls>
                         </Physics>
 
                         {/* -------------------------------------------------- */}
