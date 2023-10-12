@@ -89,7 +89,14 @@ function CArmRoll180Pitch360Extra() {
                         {/* Volume Object */}
                         <doseGroup ref={ref}>
                             {/* Time Lapse */}
-                            <doseGroup ref={timelapseRef}>
+                            <doseGroup
+                                ref={timelapseRef}
+                                clim2={
+                                    VOLUMEDATA.CArm_roll180_pitch360_Configure
+                                        .volume.clim2.timelapse
+                                }
+                                clim2AutoUpdate={false}
+                            >
                                 {/* C-Arm Dose */}
                                 <doseAnimationObject
                                     ref={cArmRollRef}
@@ -114,9 +121,36 @@ function CArmRoll180Pitch360Extra() {
                             </doseGroup>
 
                             {/* Accumulate */}
-                            <doseGroup ref={accumulateRef} visible={false}>
-                                {/* X-Ray Dose, no curtain, Accumulate */}
-                                <doseGroup ref={cArmRollAccumuRef}></doseGroup>
+                            <doseGroup
+                                ref={accumulateRef}
+                                visible={false}
+                                clim2={
+                                    VOLUMEDATA.CArm_roll180_pitch360_Configure
+                                        .volume.clim2.accumulate
+                                }
+                                clim2AutoUpdate={false}
+                            >
+                                {/* C-Arm Dose, Accumulate */}
+                                <doseGroup
+                                    ref={cArmRollAccumuRef}
+                                    position={
+                                        VOLUMEDATA
+                                            .CArm_roll180_pitch360_Configure
+                                            .volume.position
+                                    }
+                                    rotation={
+                                        VOLUMEDATA
+                                            .CArm_roll180_pitch360_Configure
+                                            .volume.rotation
+                                    }
+                                    scale={
+                                        VOLUMEDATA
+                                            .CArm_roll180_pitch360_Configure
+                                            .volume.scale
+                                    }
+                                >
+                                    <VOLUMEDATA.CArm_roll180_pitch360_all_accumulate />
+                                </doseGroup>
                             </doseGroup>
                         </doseGroup>
 

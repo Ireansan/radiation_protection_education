@@ -90,7 +90,14 @@ function CArmExtra() {
                         {/* Volume Object */}
                         <doseGroup ref={ref}>
                             {/* Time Lapse */}
-                            <doseGroup ref={timelapseRef}>
+                            <doseGroup
+                                ref={timelapseRef}
+                                clim2={
+                                    VOLUMEDATA.CArm_Configure.volume.clim2
+                                        .timelapse
+                                }
+                                clim2AutoUpdate={false}
+                            >
                                 {/* C-Arm Dose */}
                                 <doseAnimationObject
                                     ref={cArmRef}
@@ -111,9 +118,32 @@ function CArmExtra() {
                             </doseGroup>
 
                             {/* Accumulate */}
-                            <doseGroup ref={accumulateRef} visible={false}>
-                                {/* X-Ray Dose, no curtain, Accumulate */}
-                                <doseGroup ref={cArmAccumuRef}></doseGroup>
+                            <doseGroup
+                                ref={accumulateRef}
+                                visible={false}
+                                clim2={
+                                    VOLUMEDATA.CArm_Configure.volume.clim2
+                                        .accumulate
+                                }
+                                clim2AutoUpdate={false}
+                            >
+                                {/* C-Arm Dose, Accumulate */}
+                                <doseGroup
+                                    ref={cArmAccumuRef}
+                                    position={
+                                        VOLUMEDATA.CArm_Configure.volume
+                                            .position
+                                    }
+                                    rotation={
+                                        VOLUMEDATA.CArm_Configure.volume
+                                            .rotation
+                                    }
+                                    scale={
+                                        VOLUMEDATA.CArm_Configure.volume.scale
+                                    }
+                                >
+                                    <VOLUMEDATA.CArm_all_accumulate />
+                                </doseGroup>
                             </doseGroup>
                         </doseGroup>
 
@@ -126,7 +156,7 @@ function CArmExtra() {
                             duration={16}
                             customSpeed={[8.0, 16.0]}
                         />
-                        <VolumeParameterControls object={ref} clim2={1e-5} />
+                        <VolumeParameterControls object={ref} />
                         <VolumeXYZClippingControls
                             object={ref}
                             folderName="Clip"
