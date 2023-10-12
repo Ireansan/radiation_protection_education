@@ -59,14 +59,14 @@ const Home: NextPage = () => {
                 <h3>Visualization Extra</h3>
                 <div className={styles.grid}>
                     <div className={styles.card}>
-                        <Link href={"/visualization_extra/X-Ray_extra"}>
+                        <Link href={"/visualization/extra/X-Ray"}>
                             <h2>X-Ray &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
                     </div>
 
                     <div className={styles.card}>
-                        <Link href={"/visualization_extra/C-Arm_extra"}>
+                        <Link href={"/visualization/extra/C-Arm"}>
                             <h2>C-Arm (Type 1) &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
@@ -74,9 +74,7 @@ const Home: NextPage = () => {
 
                     <div className={styles.card}>
                         <Link
-                            href={
-                                "/visualization_extra/C-Arm_roll180_pitch360_extra"
-                            }
+                            href={"/visualization/extra/C-Arm_roll180_pitch360"}
                         >
                             <h2>C-Arm (Type 2) &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>

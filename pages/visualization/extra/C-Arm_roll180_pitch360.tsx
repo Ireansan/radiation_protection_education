@@ -20,51 +20,50 @@ import {
     // ----------
     // hook
     useToggle,
-} from "../../components/game";
+} from "../../../components/game";
 
 // ==========
 // Model
-import { Board_Configure } from "../../components/models";
-import { CustomYBotIK } from "../../components/models/Custom_Ybot_IK";
-import { HandIKLevaControls } from "../../components/models/controls";
+import { Board_Configure } from "../../../components/models";
+import { CustomYBotIK } from "../../../components/models/Custom_Ybot_IK";
 
 // ==========
 // Volume
 // ----------
 // object
-import { Dosimeter, DoseGroup, DoseAnimationObject } from "../../src";
+import { Dosimeter, DoseGroup, DoseAnimationObject } from "../../../src";
 // ----------
 // data
-
-import * as VOLUMEDATA from "../../components/models/VolumeData";
+import * as VOLUMEDATA from "../../../components/models/VolumeData";
 // ----------
 // controls
 import {
     DoseAnimationControls,
     DoseBoardControls,
+    DosimeterControls,
     DosimeterDisplayUI,
     VolumeParameterControls,
     VolumeXYZClippingControls,
-} from "../../components/volumeRender";
+} from "../../../components/volumeRender";
 
 // ==========
 // Store
-import { useStore } from "../../components/store";
+import { useStore } from "../../../components/store";
 
 // ==========
 // Styles
-import styles from "../../styles/threejs.module.css";
+import styles from "../../../styles/threejs.module.css";
 
-function CArmExtra() {
+function CArmRoll180Pitch360Extra() {
     const [debug] = useStore((state) => [state.debug]);
 
     const ref = useRef<DoseGroup>(null);
 
     const timelapseRef = useRef<DoseGroup>(null);
-    const cArmRef = useRef<DoseAnimationObject>(null);
+    const cArmRollRef = useRef<DoseAnimationObject>(null);
 
     const accumulateRef = useRef<DoseGroup>(null);
-    const cArmAccumuRef = useRef<DoseGroup>(null);
+    const cArmRollAccumuRef = useRef<DoseGroup>(null);
 
     const dosimeterRef = useRef<Dosimeter>(null);
     const yBotRef = useRef<THREE.Group>(null);
@@ -73,7 +72,7 @@ function CArmExtra() {
 
     useEffect(() => {
         console.log(ref.current);
-        // console.log(cArmRef);
+        // console.log(cArmRollRef);
     }, [ref]);
 
     return (
@@ -93,27 +92,31 @@ function CArmExtra() {
                             <doseGroup
                                 ref={timelapseRef}
                                 clim2={
-                                    VOLUMEDATA.CArm_Configure.volume.clim2
-                                        .timelapse
+                                    VOLUMEDATA.CArm_roll180_pitch360_Configure
+                                        .volume.clim2.timelapse
                                 }
                                 clim2AutoUpdate={false}
                             >
                                 {/* C-Arm Dose */}
                                 <doseAnimationObject
-                                    ref={cArmRef}
+                                    ref={cArmRollRef}
                                     position={
-                                        VOLUMEDATA.CArm_Configure.volume
-                                            .position
+                                        VOLUMEDATA
+                                            .CArm_roll180_pitch360_Configure
+                                            .volume.position
                                     }
                                     rotation={
-                                        VOLUMEDATA.CArm_Configure.volume
-                                            .rotation
+                                        VOLUMEDATA
+                                            .CArm_roll180_pitch360_Configure
+                                            .volume.rotation
                                     }
                                     scale={
-                                        VOLUMEDATA.CArm_Configure.volume.scale
+                                        VOLUMEDATA
+                                            .CArm_roll180_pitch360_Configure
+                                            .volume.scale
                                     }
                                 >
-                                    <VOLUMEDATA.CArm_all_Animation />
+                                    <VOLUMEDATA.CArm_roll180_pitch360_all_Animation />
                                 </doseAnimationObject>
                             </doseGroup>
 
@@ -122,27 +125,31 @@ function CArmExtra() {
                                 ref={accumulateRef}
                                 visible={false}
                                 clim2={
-                                    VOLUMEDATA.CArm_Configure.volume.clim2
-                                        .accumulate
+                                    VOLUMEDATA.CArm_roll180_pitch360_Configure
+                                        .volume.clim2.accumulate
                                 }
                                 clim2AutoUpdate={false}
                             >
                                 {/* C-Arm Dose, Accumulate */}
                                 <doseGroup
-                                    ref={cArmAccumuRef}
+                                    ref={cArmRollAccumuRef}
                                     position={
-                                        VOLUMEDATA.CArm_Configure.volume
-                                            .position
+                                        VOLUMEDATA
+                                            .CArm_roll180_pitch360_Configure
+                                            .volume.position
                                     }
                                     rotation={
-                                        VOLUMEDATA.CArm_Configure.volume
-                                            .rotation
+                                        VOLUMEDATA
+                                            .CArm_roll180_pitch360_Configure
+                                            .volume.rotation
                                     }
                                     scale={
-                                        VOLUMEDATA.CArm_Configure.volume.scale
+                                        VOLUMEDATA
+                                            .CArm_roll180_pitch360_Configure
+                                            .volume.scale
                                     }
                                 >
-                                    <VOLUMEDATA.CArm_all_accumulate />
+                                    <VOLUMEDATA.CArm_roll180_pitch360_all_accumulate />
                                 </doseGroup>
                             </doseGroup>
                         </doseGroup>
@@ -150,7 +157,7 @@ function CArmExtra() {
                         {/* -------------------------------------------------- */}
                         {/* Volume Controls */}
                         <DoseAnimationControls
-                            objects={[cArmRef]}
+                            objects={[cArmRollRef]}
                             mainGroup={timelapseRef}
                             subGroup={accumulateRef}
                             duration={16}
@@ -164,22 +171,52 @@ function CArmExtra() {
                             subPlaneSize={1}
                         />
 
+                        {/* Dosimeter */}
+                        <DosimeterControls
+                            ref={dosimeterRef}
+                            object={yBotRef}
+                            names={[
+                                { name: "mixamorigNeck", displayName: "Neck" },
+                                {
+                                    name: "mixamorigLeftEye",
+                                    displayName: "Left Eye",
+                                },
+                                {
+                                    name: "mixamorigRightEye",
+                                    displayName: "Right Eye",
+                                },
+                                {
+                                    name: "mixamorigLeftHand",
+                                    displayName: "Left Hand",
+                                },
+                                {
+                                    name: "mixamorigRightHand",
+                                    displayName: "Right Hand",
+                                },
+                            ]}
+                            targets={[cArmRollAccumuRef]}
+                        />
+
                         {/* -------------------------------------------------- */}
                         {/* Three.js Object */}
                         <group
                             position={
-                                VOLUMEDATA.CArm_Configure.object3d.position
+                                VOLUMEDATA.CArm_roll180_pitch360_Configure
+                                    .object3d.position
                             }
                             rotation={
-                                VOLUMEDATA.CArm_Configure.object3d.rotation
+                                VOLUMEDATA.CArm_roll180_pitch360_Configure
+                                    .object3d.rotation
                             }
                             scale={
-                                VOLUMEDATA.CArm_Configure.volume.scale *
-                                VOLUMEDATA.CArm_Configure.object3d.scale
+                                VOLUMEDATA.CArm_roll180_pitch360_Configure
+                                    .volume.scale *
+                                VOLUMEDATA.CArm_roll180_pitch360_Configure
+                                    .object3d.scale
                             }
                         >
-                            <VOLUMEDATA.CArm_material />
-                            <VOLUMEDATA.CArm_region />
+                            <VOLUMEDATA.CArm_roll180_pitch360_material />
+                            <VOLUMEDATA.CArm_roll180_pitch360_region />
                         </group>
                         <mesh position={[0, 1, 0]} visible={debug}>
                             <sphereBufferGeometry args={[0.25]} />
@@ -217,7 +254,6 @@ function CArmExtra() {
                         {/* Physics */}
                         <Physics gravity={[0, -30, 0]}>
                             <ToggledDebug />
-
                             {/* Dose Board */}
                             <DoseBoardControls
                                 object={ref}
@@ -289,4 +325,4 @@ function CArmExtra() {
     );
 }
 
-export default CArmExtra;
+export default CArmRoll180Pitch360Extra;
