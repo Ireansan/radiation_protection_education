@@ -122,37 +122,6 @@ class DoseObject extends DoseBase {
         );
     }
 
-    updateStaticParam(updateParents: boolean, updateChildren: boolean) {
-        // ----------
-        // update parent, this, and children
-        // ----------
-        super.updateStaticParam(updateParents, updateChildren);
-
-        // ----------
-        // update this
-        // ----------
-        this.material.uniforms.u_coefficient.value = this._coefficient;
-        this.material.uniforms.u_offset.value = this._offset;
-        this.material.uniforms.u_boardCoefficient.value =
-            this._boardCoefficient;
-        this.material.uniforms.u_boardOffset.value = this._boardOffset;
-
-        // ----------
-        // update this by parent
-        // ----------
-        if (parent !== null && this.staticParamAutoUpdate) {
-            if (parent instanceof DoseBase) {
-                this.material.uniforms.u_coefficient.value =
-                    parent._coefficient;
-                this.material.uniforms.u_offset.value = parent._offset;
-                this.material.uniforms.u_boardCoefficient.value =
-                    parent._boardCoefficient;
-                this.material.uniforms.u_boardOffset.value =
-                    parent._boardOffset;
-            }
-        }
-    }
-
     // https://github.com/mrdoob/three.js/blob/master/src/core/Object3D.js#L601
     updateVolumeParam(updateParents: boolean, updateChildren: boolean) {
         // ----------
@@ -163,6 +132,11 @@ class DoseObject extends DoseBase {
         // ----------
         // update this
         // ----------
+        this.material.uniforms.u_coefficient.value = this._coefficient;
+        this.material.uniforms.u_offset.value = this._offset;
+        this.material.uniforms.u_boardCoefficient.value =
+            this._boardCoefficient;
+        this.material.uniforms.u_boardOffset.value = this._boardOffset;
         this.material.uniforms.u_opacity.value = this._opacity;
         this.material.uniforms.u_clim.value.set(this._clim1, this._clim2);
         this.material.uniforms.u_cmdata.value = cmtextures[this._colormap];
@@ -176,6 +150,13 @@ class DoseObject extends DoseBase {
         const parent = this.parent;
         if (parent !== null && this.volumeParamAutoUpdate) {
             if (parent instanceof DoseBase) {
+                this.material.uniforms.u_coefficient.value =
+                    parent._coefficient;
+                this.material.uniforms.u_offset.value = parent._offset;
+                this.material.uniforms.u_boardCoefficient.value =
+                    parent._boardCoefficient;
+                this.material.uniforms.u_boardOffset.value =
+                    parent._boardOffset;
                 this.material.uniforms.u_opacity.value = parent._opacity;
                 this.material.uniforms.u_clim.value.set(
                     parent._clim1,

@@ -35,7 +35,6 @@ class DoseAnimationObject extends DoseGroup {
     add(...object: THREE.Object3D<Event>[]) {
         super.add(...object);
         this.updateAnimation();
-        this.updateStaticParam(false, true);
 
         return this;
     }

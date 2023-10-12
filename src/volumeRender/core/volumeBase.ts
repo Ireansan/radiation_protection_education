@@ -58,11 +58,18 @@ class VolumeBase extends THREE.Object3D {
     clippingPlanesObjects: ClippingPlanesObject[];
     totalClippingPlanesObjects: ClippingPlanesObject[];
 
-    staticParamAutoUpdate: boolean;
     volumeParamAutoUpdate: boolean;
     volumeClippingAutoUpdate: boolean;
 
-    staticParamWorldAutoUpdate: boolean;
+    coefficientAutoUpdate: boolean;
+    offsetAutoUpdate: boolean;
+    opacityAutoUpdate: boolean;
+    clim1AutoUpdate: boolean;
+    clim2AutoUpdate: boolean;
+    colormapAutoUpdate: boolean;
+    renderstyleAutoUpdate: boolean;
+    isothresholdAutoUpdate: boolean;
+
     volumeParamWorldAutoUpdate: boolean;
     volumeClippingWorldAutoUpdate: boolean;
 
@@ -92,11 +99,18 @@ class VolumeBase extends THREE.Object3D {
         this.clippingPlanesObjects = [];
         this.totalClippingPlanesObjects = [];
 
-        this.staticParamAutoUpdate = true;
         this.volumeParamAutoUpdate = true;
         this.volumeClippingAutoUpdate = true;
 
-        this.staticParamWorldAutoUpdate = true;
+        this.coefficientAutoUpdate = true;
+        this.offsetAutoUpdate = true;
+        this.opacityAutoUpdate = true;
+        this.clim1AutoUpdate = true;
+        this.clim2AutoUpdate = true;
+        this.colormapAutoUpdate = true;
+        this.renderstyleAutoUpdate = true;
+        this.isothresholdAutoUpdate = true;
+
         this.volumeParamWorldAutoUpdate = true;
         this.volumeClippingWorldAutoUpdate = true;
     }
@@ -106,14 +120,14 @@ class VolumeBase extends THREE.Object3D {
     }
     set coefficient(coefficient: number) {
         this._coefficient = coefficient;
-        this.updateStaticParam(false, true);
+        this.updateVolumeParam(false, true);
     }
     get offset() {
         return this._offset;
     }
     set offset(offset: number) {
         this._offset = offset;
-        this.updateStaticParam(false, true);
+        this.updateVolumeParam(false, true);
     }
 
     get opacity() {
@@ -201,50 +215,6 @@ class VolumeBase extends THREE.Object3D {
         this.updateVolumeClipping(false, true);
     }
 
-    updateStaticParam(updateParents: boolean, updateChildren: boolean) {
-        // ----------
-        // update parent
-        // ----------
-        const parent = this.parent;
-        if (
-            updateParents === true &&
-            parent !== null &&
-            this.staticParamWorldAutoUpdate
-        ) {
-            if (parent instanceof VolumeBase) {
-                parent.updateStaticParam(true, false);
-            }
-        }
-
-        // ----------
-        // update this by parent
-        // ----------
-        if (parent !== null && this.staticParamAutoUpdate) {
-            if (parent instanceof VolumeBase) {
-                this._coefficient = parent._coefficient;
-                this._offset = parent._offset;
-            }
-        }
-
-        // ----------
-        // update children
-        // ----------
-        if (updateChildren === true) {
-            const children = this.children;
-
-            for (let i = 0, l = children.length; i < l; i++) {
-                const child = children[i];
-
-                if (
-                    child instanceof VolumeBase &&
-                    child.staticParamWorldAutoUpdate === true
-                ) {
-                    child.updateStaticParam(false, true);
-                }
-            }
-        }
-    }
-
     // https://github.com/mrdoob/three.js/blob/master/src/core/Object3D.js#L601
     updateVolumeParam(updateParents: boolean, updateChildren: boolean) {
         // ----------
@@ -266,12 +236,24 @@ class VolumeBase extends THREE.Object3D {
         // ----------
         if (parent !== null && this.volumeParamAutoUpdate) {
             if (parent instanceof VolumeBase) {
-                this._opacity = parent._opacity;
-                this._clim1 = parent._clim1;
-                this._clim2 = parent._clim2;
-                this._colormap = parent._colormap;
-                this._renderstyle = parent._renderstyle;
-                this._isothreshold = parent._isothreshold;
+                this.coefficientAutoUpdate
+                    ? (this._coefficient = parent._coefficient)
+                    : null;
+                this.offsetAutoUpdate ? (this._offset = parent._offset) : null;
+                this.opacityAutoUpdate
+                    ? (this._opacity = parent._opacity)
+                    : null;
+                this.clim1AutoUpdate ? (this._clim1 = parent._clim1) : null;
+                this.clim2AutoUpdate ? (this._clim2 = parent._clim2) : null;
+                this.colormapAutoUpdate
+                    ? (this._colormap = parent._colormap)
+                    : null;
+                this.renderstyleAutoUpdate
+                    ? (this._renderstyle = parent._renderstyle)
+                    : null;
+                this.isothresholdAutoUpdate
+                    ? (this._isothreshold = parent._isothreshold)
+                    : null;
             }
         }
 

@@ -20,6 +20,9 @@ class DoseBase extends VolumeBase {
 
     _clippingPlanesIsBoard: boolean[];
 
+    boardCoefficientAutoUpdate: boolean;
+    boardOffsetAutoUpdate: boolean;
+
     constructor() {
         super();
 
@@ -28,6 +31,9 @@ class DoseBase extends VolumeBase {
         this._boardOffset = 0.0;
 
         this._clippingPlanesIsBoard = [];
+
+        this.boardCoefficientAutoUpdate = true;
+        this.boardOffsetAutoUpdate = true;
     }
 
     get boardEffect() {
@@ -42,32 +48,36 @@ class DoseBase extends VolumeBase {
     }
     set boardCoefficient(coefficient: number) {
         this._boardCoefficient = coefficient;
-        this.updateStaticParam(false, true);
+        this.updateVolumeParam(false, true);
     }
     get boardOffset() {
         return this._boardOffset;
     }
     set boardOffset(offset: number) {
         this._boardOffset = offset;
-        this.updateStaticParam(false, true);
+        this.updateVolumeParam(false, true);
     }
 
-    updateStaticParam(updateParents: boolean, updateChildren: boolean) {
+    updateVolumeParam(updateParents: boolean, updateChildren: boolean) {
         // ----------
         // update this by parent
         // ----------
         const parent = this.parent;
-        if (parent !== null && this.staticParamAutoUpdate) {
+        if (parent !== null && this.volumeParamAutoUpdate) {
             if (parent instanceof DoseBase) {
-                this._boardCoefficient = parent._boardCoefficient;
-                this._boardOffset = parent._boardOffset;
+                this.boardCoefficientAutoUpdate
+                    ? (this._boardCoefficient = parent._boardCoefficient)
+                    : null;
+                this.boardOffsetAutoUpdate
+                    ? (this._boardOffset = parent._boardOffset)
+                    : null;
             }
         }
 
         // ----------
         // update parent, this, and children
         // ----------
-        super.updateStaticParam(updateParents, updateChildren);
+        super.updateVolumeParam(updateParents, updateChildren);
     }
 
     updateVolumeClipping(updateParents: boolean, updateChildren: boolean) {

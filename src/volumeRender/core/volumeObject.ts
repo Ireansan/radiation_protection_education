@@ -127,31 +127,6 @@ class VolumeObject extends VolumeBase {
         );
     }
 
-    updateStaticParam(updateParents: boolean, updateChildren: boolean) {
-        // ----------
-        // update parent, children
-        // ----------
-        super.updateStaticParam(updateParents, updateChildren);
-
-        // ----------
-        // update this
-        // ----------
-        this.material.uniforms.u_coefficient.value = this._coefficient;
-        this.material.uniforms.u_offset.value = this._offset;
-
-        // ----------
-        // update this by parent
-        // ----------
-        const parent = this.parent;
-        if (parent !== null && this.staticParamAutoUpdate) {
-            if (parent instanceof VolumeBase) {
-                this.material.uniforms.u_coefficient.value =
-                    parent._coefficient;
-                this.material.uniforms.u_offset.value = parent._offset;
-            }
-        }
-    }
-
     // https://github.com/mrdoob/three.js/blob/master/src/core/Object3D.js#L601
     updateVolumeParam(updateParents: boolean, updateChildren: boolean) {
         // ----------
@@ -162,6 +137,8 @@ class VolumeObject extends VolumeBase {
         // ----------
         // update this
         // ----------
+        this.material.uniforms.u_coefficient.value = this._coefficient;
+        this.material.uniforms.u_offset.value = this._offset;
         this.material.uniforms.u_opacity.value = this._opacity;
         this.material.uniforms.u_clim.value.set(this._clim1, this._clim2);
         this.material.uniforms.u_cmdata.value = cmtextures[this._colormap];
@@ -175,6 +152,9 @@ class VolumeObject extends VolumeBase {
         const parent = this.parent;
         if (parent !== null && this.volumeParamAutoUpdate) {
             if (parent instanceof VolumeBase) {
+                this.material.uniforms.u_coefficient.value =
+                    parent._coefficient;
+                this.material.uniforms.u_offset.value = parent._offset;
                 this.material.uniforms.u_opacity.value = parent._opacity;
                 this.material.uniforms.u_clim.value.set(
                     parent._clim1,
