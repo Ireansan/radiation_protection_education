@@ -11,17 +11,20 @@ import {
     VolumeBase,
 } from "../../../src";
 extend({ VolumeObject, VolumeGroup });
-import type { VolumeControlsTypes } from "./types";
 
-export type VolumeParameterControlsProps = {
-    folderName?: string;
-    opacity?: number;
-    clim1?: number;
-    clim2?: number;
-    colormap?: string;
-    renderstyle?: string;
-    isothreshold?: number;
-} & VolumeControlsTypes;
+export type VolumeParameterControlsProps =
+    JSX.IntrinsicElements["volumeGroup"] & {
+        children?: React.ReactElement<VolumeBase>;
+        object?: VolumeBase | React.RefObject<VolumeBase>;
+        folderName?: string;
+        opacity?: number;
+        clim1?: number;
+        clim2?: number;
+        colormap?: string;
+        renderstyle?: string;
+        isothreshold?: number;
+        activeClim?: boolean;
+    };
 /**
  * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
  */
@@ -39,6 +42,7 @@ export const VolumeParameterControls = React.forwardRef<
         colormap = "viridis",
         renderstyle = "mip",
         isothreshold = 0.15,
+        activeClim = false,
         ...props
     },
     ref
@@ -68,7 +72,7 @@ export const VolumeParameterControls = React.forwardRef<
                     controls.clim1 = e;
                 },
                 render: () => {
-                    return false;
+                    return activeClim;
                 },
             },
             clim2: {
@@ -79,7 +83,7 @@ export const VolumeParameterControls = React.forwardRef<
                     controls.clim2 = e;
                 },
                 render: () => {
-                    return false;
+                    return activeClim;
                 },
             },
             colormap: {
@@ -124,12 +128,22 @@ export const VolumeParameterControls = React.forwardRef<
 
     React.useEffect(() => {
         controls.opacity = opacity;
+    }, [controls, opacity]);
+    React.useEffect(() => {
         controls.clim1 = clim1;
+    }, [controls, clim1]);
+    React.useEffect(() => {
         controls.clim2 = clim2;
+    }, [controls, clim2]);
+    React.useEffect(() => {
         controls.colormap = colormap;
+    }, [controls, colormap]);
+    React.useEffect(() => {
         controls.renderstyle = renderstyle;
+    }, [controls, renderstyle]);
+    React.useEffect(() => {
         controls.isothreshold = isothreshold;
-    }, [controls, opacity, clim1, clim2, colormap, renderstyle, isothreshold]);
+    }, [controls, isothreshold]);
 
     // Attach volume to controls
     React.useLayoutEffect(() => {
