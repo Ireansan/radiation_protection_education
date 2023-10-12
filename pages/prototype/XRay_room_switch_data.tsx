@@ -46,6 +46,7 @@ import {
 } from "../../src";
 // ----------
 // data
+import * as ENVIROMENT from "../../components/models/Environment";
 import * as VOLUMEDATA from "../../components/models/VolumeData";
 // ----------
 // controls
@@ -60,9 +61,17 @@ import {
     VolumeXYZClippingControls,
 } from "../../components/volumeRender";
 
+// ==========
+// Store
+import { useStore } from "../../components/store";
+
+// ==========
+// Styles
 import styles from "../../styles/threejs.module.css";
 
 function XRayRoomDosimeterPrototype() {
+    const [debug] = useStore((state) => [state.debug]);
+
     const ref = useRef<DoseGroup>(null);
 
     const timelapseRef = useRef<DoseGroup>(null);
@@ -72,6 +81,8 @@ function XRayRoomDosimeterPrototype() {
     const accumulateRef = useRef<DoseGroup>(null);
     const nocurtainAccumuRef = useRef<DoseGroup>(null);
     const curtainAccumuRef = useRef<DoseGroup>(null);
+
+    const curtainObjRef = useRef<THREE.Group>(null);
 
     const dosimeterRef = useRef<Dosimeter>(null);
     const yBotRef = useRef<THREE.Group>(null);
@@ -95,6 +106,10 @@ function XRayRoomDosimeterPrototype() {
                         : null;
                     curtainAccumuRef.current
                         ? (curtainAccumuRef.current.visible = !e)
+                        : null;
+
+                    curtainObjRef.current
+                        ? (curtainObjRef.current.visible = e)
                         : null;
                 },
             },
@@ -208,6 +223,21 @@ function XRayRoomDosimeterPrototype() {
                                     <VOLUMEDATA.XRay_curtain_all_accumulate />
                                 </doseGroup>
                             </doseGroup>
+
+                            {/* Curtain (Three.js Object) */}
+                            <group
+                                ref={curtainObjRef}
+                                visible={false}
+                                position={
+                                    ENVIROMENT.XRay_Configure.object3d.position
+                                }
+                                rotation={
+                                    ENVIROMENT.XRay_Configure.object3d.rotation
+                                }
+                                scale={ENVIROMENT.XRay_Configure.object3d.scale}
+                            >
+                                <ENVIROMENT.XRay_Curtain />
+                            </group>
                         </doseGroup>
 
                         {/* -------------------------------------------------- */}
@@ -220,19 +250,6 @@ function XRayRoomDosimeterPrototype() {
                             customSpeed={[8.0, 16.0]}
                         />
                         <VolumeParameterControls object={ref} />
-                        {/* <VolumeClippingControls
-                            object={ref}
-                            folderName="Dose 2"
-                            normals={[
-                                // [0, 0, -1],
-                                // [1, 0, 0],
-                                // [-1, 0, 0],
-                                // [0, 1, 0],
-                                [0, -1, 0],
-                            ]}
-                            planeSize={2}
-                            subPlaneSize={1}
-                        /> */}
                         <VolumeXYZClippingControls
                             object={ref}
                             folderName="Dose 3"
@@ -244,22 +261,35 @@ function XRayRoomDosimeterPrototype() {
                             ref={dosimeterRef}
                             object={yBotRef}
                             names={[
-                                { name: "mixamorigNeck", displayName: "Neck" },
+                                {
+                                    name: "mixamorigNeck",
+                                    displayName: "Neck",
+                                    category: "neck",
+                                    coefficient: 0.1,
+                                },
                                 {
                                     name: "mixamorigLeftEye",
                                     displayName: "Left Eye",
+                                    category: "goggle",
+                                    coefficient: 0.1,
                                 },
                                 {
                                     name: "mixamorigRightEye",
                                     displayName: "Right Eye",
+                                    category: "goggle",
+                                    coefficient: 0.1,
                                 },
                                 {
                                     name: "mixamorigLeftHand",
                                     displayName: "Left Hand",
+                                    category: "glove",
+                                    coefficient: 0.1,
                                 },
                                 {
                                     name: "mixamorigRightHand",
                                     displayName: "Right Hand",
+                                    category: "glove",
+                                    coefficient: 0.1,
                                 },
                             ]}
                             targets={[
@@ -273,27 +303,22 @@ function XRayRoomDosimeterPrototype() {
                         {/* Three.js Object */}
                         <group
                             position={
-                                VOLUMEDATA.XRay_nocurtain_Configure.object3d
-                                    .position
+                                ENVIROMENT.XRay_Configure.object3d.position
                             }
                             rotation={
-                                VOLUMEDATA.XRay_nocurtain_Configure.object3d
-                                    .rotation
+                                ENVIROMENT.XRay_Configure.object3d.rotation
                             }
-                            scale={
-                                VOLUMEDATA.XRay_nocurtain_Configure.volume
-                                    .scale *
-                                VOLUMEDATA.XRay_nocurtain_Configure.object3d
-                                    .scale
-                            }
+                            scale={ENVIROMENT.XRay_Configure.object3d.scale}
                         >
-                            <VOLUMEDATA.XRay_nocurtain_material />
-                            <VOLUMEDATA.XRay_nocurtain_region />
+                            <ENVIROMENT.XRay_Bed />
+                            <ENVIROMENT.XRay_Machine />
+                            <ENVIROMENT.XRay_Patient />
                         </group>
-                        <mesh position={[0, 1, 0]}>
+                        <mesh position={[0, 1, 0]} visible={debug}>
                             <sphereBufferGeometry args={[0.25]} />
                         </mesh>
 
+                        {/* Avatar */}
                         <PivotControls
                             // offset={[0, 0, -0.5]}
                             // rotation={[0, Math.PI, 0]}

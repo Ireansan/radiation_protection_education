@@ -170,22 +170,35 @@ function CArmExtra() {
                             ref={dosimeterRef}
                             object={yBotRef}
                             names={[
-                                { name: "mixamorigNeck", displayName: "Neck" },
+                                {
+                                    name: "mixamorigNeck",
+                                    displayName: "Neck",
+                                    category: "neck",
+                                    coefficient: 0.1,
+                                },
                                 {
                                     name: "mixamorigLeftEye",
                                     displayName: "Left Eye",
+                                    category: "goggle",
+                                    coefficient: 0.1,
                                 },
                                 {
                                     name: "mixamorigRightEye",
                                     displayName: "Right Eye",
+                                    category: "goggle",
+                                    coefficient: 0.1,
                                 },
                                 {
                                     name: "mixamorigLeftHand",
                                     displayName: "Left Hand",
+                                    category: "glove",
+                                    coefficient: 0.1,
                                 },
                                 {
                                     name: "mixamorigRightHand",
                                     displayName: "Right Hand",
+                                    category: "glove",
+                                    coefficient: 0.1,
                                 },
                             ]}
                             targets={[cArmAccumuRef]}
