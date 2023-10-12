@@ -1,7 +1,20 @@
-import React, { useEffect, useRef, memo } from "react";
+import React, { useEffect, useRef, memo, useMemo } from "react";
 import { addEffect } from "@react-three/fiber";
 import { useControls, folder, button } from "leva";
-import { Shield, HealthAndSafety } from "@mui/icons-material";
+import {
+    Shield,
+    HealthAndSafety,
+    SignLanguage,
+    HowToReg,
+    Person,
+    PersonAdd,
+    PersonAddAlt1,
+    Transcribe,
+    Visibility,
+    VisibilityOff,
+    Sick,
+    // BackHand
+} from "@mui/icons-material";
 
 import { useStore } from "../../store";
 import type { ResultsByName } from "../../../src";
@@ -13,6 +26,13 @@ import style from "../../../styles/css/dosimeter.module.css";
  * @link https://codesandbox.io/s/lo6kp?file=/src/styles.css
  */
 const strokeDasharray = 200;
+
+type EquipmentProps = {
+    goggle: boolean;
+    neck: boolean;
+    apron: boolean;
+    glove: boolean;
+};
 
 type ResultIconProps = {
     state: string[];
@@ -27,6 +47,18 @@ function ResultIcon({
         <>
             {state.includes("shield") ? (
                 <HealthAndSafety sx={{ color: color, fontSize: "14px" }} />
+            ) : null}
+            {state.includes("goggle") ? (
+                <Visibility sx={{ color: color, fontSize: "14px" }} />
+            ) : null}
+            {state.includes("neck") ? (
+                <PersonAddAlt1 sx={{ color: color, fontSize: "14px" }} />
+            ) : null}
+            {state.includes("apron") ? (
+                <Person sx={{ color: color, fontSize: "14px" }} />
+            ) : null}
+            {state.includes("glove") ? (
+                <SignLanguage sx={{ color: color, fontSize: "14px" }} />
             ) : null}
         </>
     );
@@ -146,22 +178,47 @@ type DosimeterResultProps = {
     yearCoefficient: number;
     onceMaxHp: number;
     onceCoefficient: number;
+    equipmentRef: React.RefObject<EquipmentProps>;
 };
 function DosimeterResult({
     result,
     yearCoefficient,
     onceMaxHp,
     onceCoefficient,
+    equipmentRef,
     ...props
 }: DosimeterResultProps) {
-    let doseValue =
-        result.dose.length > 0
-            ? result.dose.reduce((acculator, currentValue) =>
-                  acculator.data > currentValue.data ? acculator : currentValue
-              )
-            : { data: NaN, state: undefined };
-    let value = !Number.isNaN(doseValue.data) ? doseValue.data : 0;
-    let state = doseValue.state ? doseValue.state : [];
+    const [value, state] = useMemo(() => {
+        // calc vale, state
+        let doseValue =
+            result.dose.length > 0
+                ? result.dose.reduce((acculator, currentValue) =>
+                      acculator.data > currentValue.data
+                          ? acculator
+                          : currentValue
+                  )
+                : { data: NaN, state: undefined };
+        let value = !Number.isNaN(doseValue.data) ? doseValue.data : 0;
+        let state = doseValue.state ? doseValue.state : [];
+
+        // check equipment
+        if (result.category && equipmentRef.current) {
+            let categoryIndex: number = Object.keys(
+                equipmentRef.current
+            ).indexOf(result.category);
+            let isEquipped: boolean | undefined = Object.values(
+                equipmentRef.current
+            )[categoryIndex];
+            let coefficient = result.coefficient ? result.coefficient : 1;
+
+            if (isEquipped) {
+                value *= coefficient;
+                state.push(result.category);
+            }
+        }
+
+        return [value, state];
+    }, [result, equipmentRef]);
 
     return (
         <>
@@ -204,37 +261,73 @@ export function DosimeterDisplayUI({ ...props }) {
     const [sceneProperties] = useStore((state) => [state.sceneProperties]);
     const { dosimeterResults } = sceneProperties;
 
+    const equipmentRef = useRef<EquipmentProps>({
+        goggle: false,
+        neck: false,
+        apron: false,
+        glove: false,
+    });
+
     /**
      * leva panels
      */
     // Volume
     const [dosimeterConfig, setVolume] = useControls(() => ({
-        "Dosimeter Config": folder(
-            {
-                Year: folder({
-                    N_year: {
-                        value: 500,
-                        min: 1,
-                        step: 1,
-                        label: "N",
+        Dosimeter: folder({
+            Equipment: folder({
+                Goggle: {
+                    value: false,
+                    onChange: (e) => {
+                        equipmentRef.current.goggle = e;
                     },
-                }),
-                Once: folder({
-                    Limit_once: {
-                        value: 100,
-                        min: 1,
-                        label: "Limit",
+                },
+                NeckGuard: {
+                    value: false,
+                    label: "Neck Guard",
+                    onChange: (e) => {
+                        equipmentRef.current.neck = e;
                     },
-                    N_once: {
-                        value: 1,
-                        min: 1,
-                        step: 1,
-                        label: "N",
+                },
+                Apron: {
+                    value: false,
+                    onChange: (e) => {
+                        equipmentRef.current.apron = e;
                     },
-                }),
-            },
-            { collapsed: true }
-        ),
+                },
+                Glove: {
+                    value: false,
+                    onChange: (e) => {
+                        equipmentRef.current.glove = e;
+                    },
+                },
+            }),
+            Config: folder(
+                {
+                    Year: folder({
+                        N_year: {
+                            value: 500,
+                            min: 1,
+                            step: 1,
+                            label: "N",
+                        },
+                    }),
+                    Once: folder({
+                        Limit_once: {
+                            value: 100,
+                            min: 1,
+                            label: "Limit",
+                        },
+                        N_once: {
+                            value: 1,
+                            min: 1,
+                            step: 1,
+                            label: "N",
+                        },
+                    }),
+                },
+                { collapsed: true }
+            ),
+        }),
     }));
 
     return (
@@ -255,6 +348,7 @@ export function DosimeterDisplayUI({ ...props }) {
                         yearCoefficient={dosimeterConfig.N_year}
                         onceMaxHp={dosimeterConfig.Limit_once}
                         onceCoefficient={dosimeterConfig.N_once}
+                        equipmentRef={equipmentRef}
                     />
                 ))}
             </div>
