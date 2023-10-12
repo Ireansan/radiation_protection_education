@@ -84,10 +84,10 @@ class DoseObject extends DoseBase {
         uniforms.u_boardOffset.value = this._boardOffset;
 
         uniforms.u_opacity.value = opacity;
-        uniforms.u_clim.value.set(this.clim1, this.clim2);
-        uniforms.u_renderstyle.value = this.renderstyle == "mip" ? 0 : 1; // 0: MIP, 1: ISO
-        uniforms.u_renderthreshold.value = this.isothreshold; // For ISO renderstyle
-        uniforms.u_cmdata.value = cmtextures[this.colormap];
+        uniforms.u_clim.value.set(this._clim1, this._clim2);
+        uniforms.u_renderstyle.value = this._renderstyle == "mip" ? 0 : 1; // 0: MIP, 1: ISO
+        uniforms.u_renderthreshold.value = this._isothreshold; // For ISO renderstyle
+        uniforms.u_cmdata.value = cmtextures[this._colormap];
         this.updateMatrixWorld();
         uniforms.u_modelMatrix.value = this.matrixWorld;
 
@@ -151,11 +151,6 @@ class DoseObject extends DoseBase {
                     parent._boardOffset;
             }
         }
-        console.log(
-            this._coefficient,
-            this._boardCoefficient,
-            this.material.uniforms.u_boardCoefficient.value
-        ); // FIXME:
     }
 
     // https://github.com/mrdoob/three.js/blob/master/src/core/Object3D.js#L601
