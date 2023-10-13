@@ -74,7 +74,7 @@ export const VolumeXYZClippingControls = React.forwardRef<
     },
     ref
 ) {
-    const [debug] = useStore((state) => [state.debug]);
+    const [debug, viewing] = useStore((state) => [state.debug, state.viewing]);
     const controls = React.useMemo(() => new VolumeControlsImpl(), []);
 
     const xPivotRef = React.useRef<THREE.Group>(null!);
@@ -89,7 +89,12 @@ export const VolumeXYZClippingControls = React.forwardRef<
     // Clipping
     const [clipping, setClipping] = React.useState<boolean>(false);
 
-    const initClippingFlag = { x: false, y: false, z: false, free: false };
+    const initClippingFlag = {
+        x: false,
+        y: false,
+        z: false,
+        free: false,
+    };
     const clippingFlagRef = React.useRef<ClippingFlag>(initClippingFlag);
     const [clippingFlag, setClippingFlag] =
         React.useState<ClippingFlag>(initClippingFlag);
@@ -293,6 +298,7 @@ export const VolumeXYZClippingControls = React.forwardRef<
     // Push Planes
     React.useEffect(() => {
         controls.clippingPlanes = Planes;
+        controls.clipIntersection = true;
     }, [controls, Planes]);
 
     // Clipping
@@ -337,65 +343,79 @@ export const VolumeXYZClippingControls = React.forwardRef<
                     />
                 </>
             ))}
-            {/* X */}
-            <PivotControls
-                ref={xPivotRef}
-                activeAxes={[true, false, false]}
-                onDrag={(l, deltaL, w, deltaW) =>
-                    onDrag(l, deltaL, w, deltaW, 0)
-                }
-            >
-                <PlaneHelperMesh
-                    id={0}
-                    subPlaneSize={subPlaneSize}
-                    subPlaneColor={subPlaneColor}
-                    rotation={[0, Math.PI / 2, 0]}
-                />
-            </PivotControls>
-            {/* Y */}
-            <PivotControls
-                ref={yPivotRef}
-                activeAxes={[false, true, false]}
-                onDrag={(l, deltaL, w, deltaW) =>
-                    onDrag(l, deltaL, w, deltaW, 1)
-                }
-            >
-                <PlaneHelperMesh
-                    id={1}
-                    subPlaneSize={subPlaneSize}
-                    subPlaneColor={subPlaneColor}
-                    rotation={[Math.PI / 2, 0, 0]}
-                />
-            </PivotControls>
-            {/* Z */}
-            <PivotControls
-                ref={zPivotRef}
-                activeAxes={[false, false, true]}
-                onDrag={(l, deltaL, w, deltaW) =>
-                    onDrag(l, deltaL, w, deltaW, 2)
-                }
-            >
-                <PlaneHelperMesh
-                    id={2}
-                    subPlaneSize={subPlaneSize}
-                    subPlaneColor={subPlaneColor}
-                    rotation={[0, 0, Math.PI / 2]}
-                />
-            </PivotControls>
-            {/* Free */}
-            <PivotControls
-                ref={freePivotRef}
-                onDrag={(l, deltaL, w, deltaW) =>
-                    onDrag(l, deltaL, w, deltaW, 3)
-                }
-            >
-                <PlaneHelperMesh
-                    id={3}
-                    subPlaneSize={subPlaneSize}
-                    subPlaneColor={subPlaneColor}
-                    rotation={[0, 0, Math.PI / 2]}
-                />
-            </PivotControls>
+            <group visible={!viewing}>
+                {/* X */}
+                <PivotControls
+                    ref={xPivotRef}
+                    disableAxes={!clippingFlag.x}
+                    disableRotations={!clippingFlag.x}
+                    disableSliders={!clippingFlag.x}
+                    activeAxes={[true, false, false]}
+                    onDrag={(l, deltaL, w, deltaW) =>
+                        onDrag(l, deltaL, w, deltaW, 0)
+                    }
+                >
+                    <PlaneHelperMesh
+                        id={0}
+                        subPlaneSize={subPlaneSize}
+                        subPlaneColor={subPlaneColor}
+                        rotation={[0, Math.PI / 2, 0]}
+                    />
+                </PivotControls>
+                {/* Y */}
+                <PivotControls
+                    ref={yPivotRef}
+                    disableAxes={!clippingFlag.y}
+                    disableRotations={!clippingFlag.y}
+                    disableSliders={!clippingFlag.y}
+                    activeAxes={[false, true, false]}
+                    onDrag={(l, deltaL, w, deltaW) =>
+                        onDrag(l, deltaL, w, deltaW, 1)
+                    }
+                >
+                    <PlaneHelperMesh
+                        id={1}
+                        subPlaneSize={subPlaneSize}
+                        subPlaneColor={subPlaneColor}
+                        rotation={[Math.PI / 2, 0, 0]}
+                    />
+                </PivotControls>
+                {/* Z */}
+                <PivotControls
+                    ref={zPivotRef}
+                    disableAxes={!clippingFlag.z}
+                    disableRotations={!clippingFlag.z}
+                    disableSliders={!clippingFlag.z}
+                    activeAxes={[false, false, true]}
+                    onDrag={(l, deltaL, w, deltaW) =>
+                        onDrag(l, deltaL, w, deltaW, 2)
+                    }
+                >
+                    <PlaneHelperMesh
+                        id={2}
+                        subPlaneSize={subPlaneSize}
+                        subPlaneColor={subPlaneColor}
+                        rotation={[0, 0, Math.PI / 2]}
+                    />
+                </PivotControls>
+                {/* Free */}
+                <PivotControls
+                    ref={freePivotRef}
+                    disableAxes={!clippingFlag.free}
+                    disableRotations={!clippingFlag.free}
+                    disableSliders={!clippingFlag.free}
+                    onDrag={(l, deltaL, w, deltaW) =>
+                        onDrag(l, deltaL, w, deltaW, 3)
+                    }
+                >
+                    <PlaneHelperMesh
+                        id={3}
+                        subPlaneSize={subPlaneSize}
+                        subPlaneColor={subPlaneColor}
+                        rotation={[0, 0, Math.PI / 2]}
+                    />
+                </PivotControls>
+            </group>
         </>
     ) : null;
 });

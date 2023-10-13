@@ -21,12 +21,16 @@ export type DoseBoardControlsProps = {
     height?: number;
     position?: THREE.Vector3;
     rotation?: THREE.Euler;
-    offset?: [number, number, number];
-    opacity?: number;
     folderName?: string;
     planeSize?: number;
     planeColor?: THREE.Color;
-    pivotScale?: number;
+    scale?: number;
+    lineWidth?: number;
+    fixed?: boolean;
+    offset?: [number, number, number];
+    activeAxes?: [boolean, boolean, boolean];
+    axisColors?: [string | number, string | number, string | number];
+    opacity?: number;
 };
 /**
  * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
@@ -44,19 +48,25 @@ export const DoseBoardControls = React.forwardRef<
         height = 1,
         position = new THREE.Vector3(),
         rotation = new THREE.Euler(),
-        offset = [0, 0, 0],
-        opacity = 1.0,
         folderName = "board",
         planeSize = 2,
         planeColor = new THREE.Color(0xffff00),
-        pivotScale = 1,
+        scale = 1,
+        lineWidth = 4,
+        fixed = false,
+        offset = [0, 0, 0],
+        activeAxes = [true, true, true],
+        axisColors = ["#ff2060", "#20df80", "#2080ff"],
+        opacity = 0.5,
         ...props
     },
     ref
 ) {
-    const [debug] = useStore((state) => [state.debug]);
+    const [debug, viewing] = useStore((state) => [state.debug, state.viewing]);
     const controls = React.useMemo(() => new DoseControlsImpl(), []);
 
+    const [_position, setPosition] = React.useState<THREE.Vector3>(position);
+    const [_rotation, setRotation] = React.useState<THREE.Euler>(rotation);
     const [matrix, setMatrix] = React.useState<THREE.Matrix4>(
         new THREE.Matrix4().compose(
             position,
@@ -112,6 +122,12 @@ export const DoseBoardControls = React.forwardRef<
         w: THREE.Matrix4,
         deltaW: THREE.Matrix4
     ) {
+        // update init position, rotation, and matrix
+        _position.setFromMatrixPosition(w);
+        _rotation.setFromRotationMatrix(w);
+        matrix.copy(w);
+
+        // calc board
         const boardDirection = new THREE.Vector3();
 
         const A = new THREE.Vector3();
@@ -221,7 +237,7 @@ export const DoseBoardControls = React.forwardRef<
 
             {/* -------------------------------------------------- */}
             {/* Helper Objects */}
-            <group ref={boardRef} position={position} rotation={rotation}>
+            <group ref={boardRef} position={_position} rotation={_rotation}>
                 {/* 3D Object */}
                 <group ref={helperRef} visible={clipping ? debug : false}>
                     {/* Main and Helper */}
@@ -281,8 +297,8 @@ export const DoseBoardControls = React.forwardRef<
                 ref={rigidBodyRef}
                 colliders={"cuboid"}
                 gravityScale={0}
-                position={position}
-                rotation={rotation}
+                position={_position}
+                rotation={_rotation}
                 sensor
             >
                 {children}
@@ -306,10 +322,14 @@ export const DoseBoardControls = React.forwardRef<
             <PivotControls
                 ref={pivotRef}
                 matrix={matrix}
+                scale={scale}
+                lineWidth={lineWidth}
+                fixed={fixed}
                 offset={offset}
+                activeAxes={activeAxes}
+                axisColors={axisColors}
                 opacity={opacity}
-                autoTransform={true}
-                scale={pivotScale}
+                visible={!viewing}
                 onDrag={(l, deltaL, w, deltaW) => {
                     onDrag(l, deltaL, w, deltaW);
                 }}
