@@ -39,17 +39,14 @@ uniform bool u_clippingPlanesIsBoard[NUM_CLIPPING_PLANES];
 uniform bool u_clippedInvert[NUM_CLIPPING_PLANES];
 bool regionResults[NUM_CLIPPING_PLANES];
 #endif
-struct ClippedResult{
-    bool clipped;
-    bool guarded;
-};
 
 void cast_mip(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray);
 void cast_iso(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray);
 
 vec3 clip_position(vec3 position);
-ClippedResult within_boundaries(vec3 position);
-float sample1(vec3 texcoords,bool guarded);
+bool within_boundaries(vec3 position);
+bool within_guarded(vec3 position);
+float sample1(vec3 texcoords);
 vec4 apply_colormap(float val);
 vec4 add_lighting(float val,vec3 loc,vec3 step,vec3 view_ray,bool guarded);
 
@@ -108,9 +105,8 @@ vec3 clip_position(vec3 position){
 // https://discourse.threejs.org/t/multiple-angle-clipping-in-volume/9242
 // https://github.com/mrdoob/three.js/blob/dev/src/renderers/shaders/ShaderChunk/clipping_planes_fragment.glsl.js
 // https://qiita.com/edo_m18/items/b1bc950ac6965c321e29
-ClippedResult within_boundaries(vec3 position){
+bool within_boundaries(vec3 position){
     bool clipped;
-    bool guarded;
     
     #if NUM_CLIPPING_PLANES>0
     regionResults=u_clippedInitValue;
@@ -119,12 +115,10 @@ ClippedResult within_boundaries(vec3 position){
     vec4 plane;
     int regionIndex;
     bool isBoard;
-    bool initValue;
     
     // then clipIntersection == false
     #pragma unroll_loop_start
     for(int i=0;i<UNION_CLIPPING_PLANES;i++){
-        // clipping
         plane=clippingPlanes[i];
         regionIndex=u_clippingPlanesRegion[i];
         
@@ -137,7 +131,6 @@ ClippedResult within_boundaries(vec3 position){
     #if UNION_CLIPPING_PLANES<NUM_CLIPPING_PLANES
     #pragma unroll_loop_start
     for(int i=UNION_CLIPPING_PLANES;i<NUM_CLIPPING_PLANES;i++){
-        // clipping
         plane=clippingPlanes[i];
         regionIndex=u_clippingPlanesRegion[i];
         
@@ -150,7 +143,6 @@ ClippedResult within_boundaries(vec3 position){
     
     bool invert;
     clipped=false;
-    guarded=false;
     
     // Calclate result and Apply invert
     #pragma unroll_loop_start
@@ -159,7 +151,6 @@ ClippedResult within_boundaries(vec3 position){
         regionResult=regionResults[regionIndex];
         
         isBoard=u_clippingPlanesIsBoard[regionIndex];
-        guarded=isBoard?(guarded||regionResult):guarded;
         regionResult=isBoard?false:regionResult;
         
         invert=u_clippedInvert[regionIndex];
@@ -170,18 +161,69 @@ ClippedResult within_boundaries(vec3 position){
     #pragma unroll_loop_end
     #endif
     
-    ClippedResult result;
-    result.clipped=clipped;
-    result.guarded=guarded;
-    return result;
+    return clipped;
 }
 
-float sample1(vec3 texcoords,bool guarded){
-    float coefficient=guarded?(u_coefficient*u_boardCoefficient):u_coefficient;
-    float offset=guarded?(u_offset+u_boardOffset):u_offset;
+bool within_guarded(vec3 position){
+    bool clipped;
+    bool guarded;
     
+    #if NUM_CLIPPING_PLANES>0
+    regionResults=u_clippedInitValue;
+    bool regionResult;
+    
+    vec4 plane;
+    int regionIndex;
+    bool isBoard;
+    
+    // then clipIntersection == false
+    #pragma unroll_loop_start
+    for(int i=0;i<UNION_CLIPPING_PLANES;i++){
+        plane=clippingPlanes[i];
+        regionIndex=u_clippingPlanesRegion[i];
+        
+        clipped=clipped||(dot(position,plane.xyz)>plane.w);
+        regionResults[regionIndex]=clipped;
+    }
+    #pragma unroll_loop_end
+    
+    // then clipIntersection == true
+    #if UNION_CLIPPING_PLANES<NUM_CLIPPING_PLANES
+    #pragma unroll_loop_start
+    for(int i=UNION_CLIPPING_PLANES;i<NUM_CLIPPING_PLANES;i++){
+        plane=clippingPlanes[i];
+        regionIndex=u_clippingPlanesRegion[i];
+        
+        clipped=regionResults[regionIndex];
+        clipped=clipped&&(dot(position,plane.xyz)>plane.w);
+        regionResults[regionIndex]=clipped;
+    }
+    #pragma unroll_loop_end
+    #endif
+    
+    bool invert;
+    guarded=false;
+    
+    // Calclate result and Apply invert
+    #pragma unroll_loop_start
+    for(int i=0;i<NUM_CLIPPING_PLANES;i++){
+        regionIndex=u_clippingPlanesRegion[i];
+        regionResult=regionResults[regionIndex];
+        
+        isBoard=u_clippingPlanesIsBoard[regionIndex];
+        regionResult=isBoard?regionResult:false;
+        
+        guarded=regionResult||guarded;
+    }
+    #pragma unroll_loop_end
+    #endif
+    
+    return guarded;
+}
+
+float sample1(vec3 texcoords){
     /* Sample float value from a 3D texture. Assumes intensity data. */
-    return(coefficient*texture(u_data,texcoords.xyz).r)+offset;
+    return(u_coefficient*texture(u_data,texcoords.xyz).r)+u_offset;
 }
 
 vec4 apply_colormap(float val){
@@ -204,13 +246,17 @@ void cast_mip(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
         
         vec3 uv_position=u_size*loc;
         vec3 vClipPosition=clip_position(uv_position);
-        ClippedResult clipped=within_boundaries(vClipPosition);
+        bool clipped=within_boundaries(vClipPosition);
+        bool guarded=within_guarded(vClipPosition);
         
         // Sample from the 3D texture
-        float val=sample1(loc,clipped.guarded);
+        float val=sample1(loc);
+        if(guarded){
+            val=u_boardCoefficient*val+u_boardOffset;
+        }
         
         // Apply MIP operation
-        if(val>max_val&&!clipped.clipped){
+        if(val>max_val&&!clipped){
             max_val=val;
             max_i=iter;
             updated=true;
@@ -223,11 +269,7 @@ void cast_mip(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
     vec3 iloc=start_loc+step*(float(max_i)-.5);
     vec3 istep=step/float(REFINEMENT_STEPS);
     for(int i=0;i<REFINEMENT_STEPS;i++){
-        vec3 uv_position=u_size*iloc;
-        vec3 vClipPosition=clip_position(uv_position);
-        ClippedResult clipped=within_boundaries(vClipPosition);
-        
-        max_val=max(max_val,sample1(iloc,clipped.guarded));
+        max_val=max(max_val,sample1(iloc));
         iloc+=istep;
     }
     
@@ -258,24 +300,29 @@ void cast_iso(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
         
         vec3 uv_position=u_size*loc;
         vec3 vClipPosition=clip_position(uv_position);
-        ClippedResult clipped=within_boundaries(vClipPosition);
+        bool clipped=within_boundaries(uv_position);
+        bool guarded=within_guarded(uv_position);
         
         // Sample from the 3D texture
-        float val=sample1(loc,clipped.guarded);
+        float val=sample1(loc);
+        if(guarded){
+            val=u_boardCoefficient*val+u_boardOffset;
+        }
         
-        if(val>low_threshold&&!clipped.clipped){
+        if(val>low_threshold&&!clipped){
             // Take the last interval in smaller steps
             vec3 iloc=loc-.5*step;
             vec3 istep=step/float(REFINEMENT_STEPS);
             for(int i=0;i<REFINEMENT_STEPS;i++){
                 vec3 uv_position=u_size*iloc;
                 vec3 vClipPosition=clip_position(uv_position);
-                ClippedResult clipped=within_boundaries(vClipPosition);
+                bool clipped=within_boundaries(vClipPosition);
+                bool guarded=within_guarded(vClipPosition);
                 
-                val=sample1(iloc,clipped.guarded);
+                val=sample1(iloc);
                 
-                if(val>u_renderthreshold||clipped.clipped){
-                    gl_FragColor=add_lighting(val,iloc,dstep,view_ray,clipped.guarded);
+                if(val>u_renderthreshold||clipped){
+                    gl_FragColor=add_lighting(val,iloc,dstep,view_ray,guarded);
                     gl_FragColor.a=u_opacity;
                     return;
                 }
@@ -297,18 +344,20 @@ vec4 add_lighting(float val,vec3 loc,vec3 step,vec3 view_ray,bool guarded){
     // calculate normal vector from gradient
     vec3 N;
     float val1,val2;
-    val1=sample1(loc+vec3(-step[0],0.,0.),guarded);
-    val2=sample1(loc+vec3(+step[0],0.,0.),guarded);
+    val1=sample1(loc+vec3(-step[0],0.,0.));
+    val2=sample1(loc+vec3(+step[0],0.,0.));
     N[0]=val1-val2;
     val=max(max(val1,val2),val);
-    val1=sample1(loc+vec3(0.,-step[1],0.),guarded);
-    val2=sample1(loc+vec3(0.,+step[1],0.),guarded);
+    val1=sample1(loc+vec3(0.,-step[1],0.));
+    val2=sample1(loc+vec3(0.,+step[1],0.));
     N[1]=val1-val2;
     val=max(max(val1,val2),val);
-    val1=sample1(loc+vec3(0.,0.,-step[2]),guarded);
-    val2=sample1(loc+vec3(0.,0.,+step[2]),guarded);
+    val1=sample1(loc+vec3(0.,0.,-step[2]));
+    val2=sample1(loc+vec3(0.,0.,+step[2]));
     N[2]=val1-val2;
     val=max(max(val1,val2),val);
+    
+    val=u_boardCoefficient*val+u_boardOffset;
     
     float gm=length(N);// gradient magnitude
     N=normalize(N);
