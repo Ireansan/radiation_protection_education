@@ -286,11 +286,11 @@ void cast_iso(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
             vec3 iloc=loc-.5*step;
             vec3 istep=step/float(REFINEMENT_STEPS);
             for(int i=0;i<REFINEMENT_STEPS;i++){
-                vec3 uv_position=u_size*iloc;
-                vec3 vClipPosition=clip_position(uv_position);
-                ClippedResult clippedResult=within_boundaries(vClipPosition);
-                bool clipped=clippedResult.clipped;
-                bool guarded=clippedResult.guarded;
+                uv_position=u_size*iloc;
+                vClipPosition=clip_position(uv_position);
+                clippedResult=within_boundaries(vClipPosition);
+                clipped=clippedResult.clipped;
+                guarded=clippedResult.guarded;
                 
                 val=sample1(iloc);
                 
@@ -330,7 +330,9 @@ vec4 add_lighting(float val,vec3 loc,vec3 step,vec3 view_ray,bool guarded){
     N[2]=val1-val2;
     val=max(max(val1,val2),val);
     
-    val=u_boardCoefficient*val+u_boardOffset;
+    if(guarded){
+        val=u_boardCoefficient*val+u_boardOffset;
+    }
     
     float gm=length(N);// gradient magnitude
     N=normalize(N);
