@@ -85,15 +85,19 @@ uniform bool u_clippedInitValue[NUM_CLIPPING_PLANES];
 uniform int u_clippingPlanesRegion[NUM_CLIPPING_PLANES];
 uniform bool u_clippingPlanesIsBoard[NUM_CLIPPING_PLANES];
 uniform bool u_clippedInvert[NUM_CLIPPING_PLANES];
+bool planeResults[NUM_CLIPPING_PLANES];
 bool regionResults[NUM_CLIPPING_PLANES];
 #endif
+struct ClippedResult{
+    bool clipped;
+    bool guarded;
+};
 
 void cast_mip(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray);
 void cast_iso(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray);
 
 vec3 clip_position(vec3 position);
-bool within_boundaries(vec3 position);
-bool within_guarded(vec3 position);
+ClippedResult within_boundaries(vec3 position);
 float sample1(vec3 texcoords);
 vec4 apply_colormap(float val);
 vec4 add_lighting(float val,vec3 loc,vec3 step,vec3 view_ray,bool guarded);
@@ -153,44 +157,63 @@ vec3 clip_position(vec3 position){
 // https://discourse.threejs.org/t/multiple-angle-clipping-in-volume/9242
 // https://github.com/mrdoob/three.js/blob/dev/src/renderers/shaders/ShaderChunk/clipping_planes_fragment.glsl.js
 // https://qiita.com/edo_m18/items/b1bc950ac6965c321e29
-bool within_boundaries(vec3 position){
+ClippedResult within_boundaries(vec3 position){
     bool clipped;
+    bool guarded;
     
     #if NUM_CLIPPING_PLANES>0
+    planeResults=u_clippedInitValue;
     regionResults=u_clippedInitValue;
+    bool planeResult;
     bool regionResult;
     
     vec4 plane;
     int regionIndex;
     bool isBoard;
+    bool initValue;
+    
+    #pragma unroll_loop_start
+    // each plane
+    for(int i=0;i<NUM_CLIPPING_PLANES;i++){
+        plane=clippingPlanes[i];
+        
+        clipped=(dot(position,plane.xyz)>plane.w);
+        planeResults[i]=clipped;
+    }
+    #pragma unroll_loop_end
     
     // then clipIntersection == false
     #pragma unroll_loop_start
+    // each region
+    #pragma unroll_loop_start
     for(int i=0;i<UNION_CLIPPING_PLANES;i++){
-        plane=clippingPlanes[i];
         regionIndex=u_clippingPlanesRegion[i];
+        planeResult=planeResults[i];
+        regionResult=regionResults[regionIndex];
         
-        clipped=clipped||(dot(position,plane.xyz)>plane.w);
-        regionResults[regionIndex]=clipped;
+        regionResult=regionResult||planeResult;
+        regionResults[regionIndex]=regionResult;
     }
     #pragma unroll_loop_end
     
     // then clipIntersection == true
     #if UNION_CLIPPING_PLANES<NUM_CLIPPING_PLANES
+    // each region
     #pragma unroll_loop_start
     for(int i=UNION_CLIPPING_PLANES;i<NUM_CLIPPING_PLANES;i++){
-        plane=clippingPlanes[i];
         regionIndex=u_clippingPlanesRegion[i];
+        planeResult=planeResults[i];
         
-        clipped=regionResults[regionIndex];
-        clipped=clipped&&(dot(position,plane.xyz)>plane.w);
-        regionResults[regionIndex]=clipped;
+        regionResult=regionResults[regionIndex];
+        regionResult=regionResult&&planeResult;
+        regionResults[regionIndex]=regionResult;
     }
     #pragma unroll_loop_end
     #endif
     
     bool invert;
     clipped=false;
+    guarded=false;
     
     // Calclate result and Apply invert
     #pragma unroll_loop_start
@@ -199,6 +222,7 @@ bool within_boundaries(vec3 position){
         regionResult=regionResults[regionIndex];
         
         isBoard=u_clippingPlanesIsBoard[regionIndex];
+        guarded=isBoard?(guarded||regionResult):guarded;
         regionResult=isBoard?false:regionResult;
         
         invert=u_clippedInvert[regionIndex];
@@ -209,64 +233,10 @@ bool within_boundaries(vec3 position){
     #pragma unroll_loop_end
     #endif
     
-    return clipped;
-}
-
-bool within_guarded(vec3 position){
-    bool clipped;
-    bool guarded;
-    
-    #if NUM_CLIPPING_PLANES>0
-    regionResults=u_clippedInitValue;
-    bool regionResult;
-    
-    vec4 plane;
-    int regionIndex;
-    bool isBoard;
-    
-    // then clipIntersection == false
-    #pragma unroll_loop_start
-    for(int i=0;i<UNION_CLIPPING_PLANES;i++){
-        plane=clippingPlanes[i];
-        regionIndex=u_clippingPlanesRegion[i];
-        
-        clipped=clipped||(dot(position,plane.xyz)>plane.w);
-        regionResults[regionIndex]=clipped;
-    }
-    #pragma unroll_loop_end
-    
-    // then clipIntersection == true
-    #if UNION_CLIPPING_PLANES<NUM_CLIPPING_PLANES
-    #pragma unroll_loop_start
-    for(int i=UNION_CLIPPING_PLANES;i<NUM_CLIPPING_PLANES;i++){
-        plane=clippingPlanes[i];
-        regionIndex=u_clippingPlanesRegion[i];
-        
-        clipped=regionResults[regionIndex];
-        clipped=clipped&&(dot(position,plane.xyz)>plane.w);
-        regionResults[regionIndex]=clipped;
-    }
-    #pragma unroll_loop_end
-    #endif
-    
-    bool invert;
-    guarded=false;
-    
-    // Calclate result and Apply invert
-    #pragma unroll_loop_start
-    for(int i=0;i<NUM_CLIPPING_PLANES;i++){
-        regionIndex=u_clippingPlanesRegion[i];
-        regionResult=regionResults[regionIndex];
-        
-        isBoard=u_clippingPlanesIsBoard[regionIndex];
-        regionResult=isBoard?regionResult:false;
-        
-        guarded=regionResult||guarded;
-    }
-    #pragma unroll_loop_end
-    #endif
-    
-    return guarded;
+    ClippedResult result;
+    result.clipped=clipped;
+    result.guarded=guarded;
+    return result;
 }
 
 float sample1(vec3 texcoords){
@@ -294,8 +264,9 @@ void cast_mip(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
         
         vec3 uv_position=u_size*loc;
         vec3 vClipPosition=clip_position(uv_position);
-        bool clipped=within_boundaries(vClipPosition);
-        bool guarded=within_guarded(vClipPosition);
+        ClippedResult clippedResult=within_boundaries(vClipPosition);
+        bool clipped=clippedResult.clipped;
+        bool guarded=clippedResult.guarded;
         
         // Sample from the 3D texture
         float val=sample1(loc);
@@ -348,8 +319,9 @@ void cast_iso(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
         
         vec3 uv_position=u_size*loc;
         vec3 vClipPosition=clip_position(uv_position);
-        bool clipped=within_boundaries(uv_position);
-        bool guarded=within_guarded(uv_position);
+        ClippedResult clippedResult=within_boundaries(vClipPosition);
+        bool clipped=clippedResult.clipped;
+        bool guarded=clippedResult.guarded;
         
         // Sample from the 3D texture
         float val=sample1(loc);
@@ -364,8 +336,9 @@ void cast_iso(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
             for(int i=0;i<REFINEMENT_STEPS;i++){
                 vec3 uv_position=u_size*iloc;
                 vec3 vClipPosition=clip_position(uv_position);
-                bool clipped=within_boundaries(vClipPosition);
-                bool guarded=within_guarded(vClipPosition);
+                ClippedResult clippedResult=within_boundaries(vClipPosition);
+                bool clipped=clippedResult.clipped;
+                bool guarded=clippedResult.guarded;
                 
                 val=sample1(iloc);
                 
