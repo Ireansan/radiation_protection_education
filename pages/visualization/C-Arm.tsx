@@ -39,6 +39,10 @@ import {
 } from "../../components/volumeRender";
 
 // ==========
+// UI
+import { SceneConfigPanel } from "../../components/ui";
+
+// ==========
 // Store
 import { useStore } from "../../components/store";
 
@@ -219,7 +223,7 @@ function CArm() {
                             />
                         </GizmoHelper>
                     </Canvas>
-                    <DebugPanel />
+                    <SceneConfigPanel activateStats={false} />
                 </div>
             </div>
         </>

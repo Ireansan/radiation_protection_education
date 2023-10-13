@@ -15,9 +15,6 @@ import { Physics, Debug } from "@react-three/rapier";
 // Game
 import {
     // ----------
-    // ui
-    DebugPanel,
-    // ----------
     // hook
     useToggle,
 } from "../../../components/game";
@@ -26,6 +23,7 @@ import {
 // Model
 import { Board_Configure } from "../../../components/models";
 import { CustomYBotIK } from "../../../components/models/Custom_Ybot_IK";
+import { HandIKPivotControls } from "../../../components/models/controls";
 
 // ==========
 // Volume
@@ -47,6 +45,10 @@ import {
 } from "../../../components/volumeRender";
 
 // ==========
+// UI
+import { SceneConfigPanel } from "../../../components/ui";
+
+// ==========
 // Store
 import { useStore } from "../../../components/store";
 
@@ -55,7 +57,7 @@ import { useStore } from "../../../components/store";
 import styles from "../../../styles/threejs.module.css";
 
 function CArmRoll180Pitch360Extra() {
-    const [debug] = useStore((state) => [state.debug]);
+    const [debug, viewing] = useStore((state) => [state.debug, state.viewing]);
 
     const ref = useRef<DoseGroup>(null);
 
@@ -66,7 +68,7 @@ function CArmRoll180Pitch360Extra() {
     const cArmRollAccumuRef = useRef<DoseGroup>(null);
 
     const dosimeterRef = useRef<Dosimeter>(null);
-    const yBotRef = useRef<THREE.Group>(null);
+    const yBotRef = useRef<THREE.Group>(null!);
 
     const ToggledDebug = useToggle(Debug, "debug");
 
@@ -237,8 +239,6 @@ function CArmRoll180Pitch360Extra() {
 
                         {/* Avatar */}
                         <PivotControls
-                            // offset={[0, 0, -0.5]}
-                            // rotation={[0, Math.PI, 0]}
                             matrix={new THREE.Matrix4().compose(
                                 new THREE.Vector3(2, 0, 0),
                                 new THREE.Quaternion().setFromEuler(
@@ -246,18 +246,32 @@ function CArmRoll180Pitch360Extra() {
                                 ),
                                 new THREE.Vector3(1, 1, 1)
                             )}
+                            scale={70}
+                            fixed={true}
                             activeAxes={[true, false, true]}
+                            visible={!viewing}
+                            onDrag={(l, deltaL, w, deltaW) => {
+                                yBotRef.current.position.setFromMatrixPosition(
+                                    w
+                                );
+                                yBotRef.current.rotation.setFromRotationMatrix(
+                                    w
+                                );
+                            }}
                             onDragEnd={() => {
                                 if (dosimeterRef.current) {
                                     dosimeterRef.current.updateResults();
-                                    console.log(dosimeterRef.current.results);
                                 }
                             }}
+                        />
+                        <group
+                            ref={yBotRef}
+                            position={[2, 0, 0]}
+                            rotation={[0, -Math.PI / 2, 0]}
                         >
-                            <group ref={yBotRef}>
-                                <CustomYBotIK />
-                            </group>
-                        </PivotControls>
+                            <CustomYBotIK />
+                            <HandIKPivotControls object={yBotRef} />
+                        </group>
 
                         {/* -------------------------------------------------- */}
                         {/* Three.js Controls */}
@@ -267,6 +281,7 @@ function CArmRoll180Pitch360Extra() {
                         {/* Physics */}
                         <Physics gravity={[0, -30, 0]}>
                             <ToggledDebug />
+
                             {/* Dose Board */}
                             <DoseBoardControls
                                 object={ref}
@@ -276,10 +291,11 @@ function CArmRoll180Pitch360Extra() {
                                 height={Board_Configure.size.y}
                                 position={new THREE.Vector3(2.5, 1.25, -0.5)}
                                 rotation={new THREE.Euler(0, Math.PI / 2, 0)}
+                                planeSize={Board_Configure.size.y}
+                                scale={50}
+                                fixed={true}
                                 offset={[0, 0, 0.1]}
                                 opacity={0.75}
-                                planeSize={Board_Configure.size.y}
-                                pivotScale={Board_Configure.size.x}
                             >
                                 <mesh position={[0, 0, 0]}>
                                     <boxBufferGeometry
@@ -330,7 +346,7 @@ function CArmRoll180Pitch360Extra() {
                             />
                         </GizmoHelper>
                     </Canvas>
-                    <DebugPanel />
+                    <SceneConfigPanel activateStats={false} />
                     <DosimeterDisplayUI />
                 </div>
             </div>

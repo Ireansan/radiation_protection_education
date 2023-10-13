@@ -39,6 +39,10 @@ import {
 } from "../../components/volumeRender";
 
 // ==========
+// UI
+import { SceneConfigPanel } from "../../components/ui";
+
+// ==========
 // Store
 import { useStore } from "../../components/store";
 
@@ -47,7 +51,7 @@ import { useStore } from "../../components/store";
 import styles from "../../styles/threejs.module.css";
 
 function XRay() {
-    const [debug] = useStore((state) => [state.debug]);
+    const [debug, viewing] = useStore((state) => [state.debug, state.viewing]);
 
     const ref = useRef<DoseGroup>(null!);
 
@@ -292,7 +296,7 @@ function XRay() {
                             />
                         </GizmoHelper>
                     </Canvas>
-                    <DebugPanel />
+                    <SceneConfigPanel activateStats={false} />
                 </div>
             </div>
         </>

@@ -14,9 +14,6 @@ import { Physics, Debug } from "@react-three/rapier";
 // Game
 import {
     // ----------
-    // ui
-    DebugPanel,
-    // ----------
     // hook
     useToggle,
 } from "../../components/game";
@@ -36,6 +33,10 @@ import {
     VolumeParameterControls,
     VolumeXYZClippingControls,
 } from "../../components/volumeRender";
+
+// ==========
+// UI
+import { SceneConfigPanel } from "../../components/ui";
 
 // ==========
 // Store
@@ -230,7 +231,7 @@ function CArmRoll180Pitch360() {
                             />
                         </GizmoHelper>
                     </Canvas>
-                    <DebugPanel />
+                    <SceneConfigPanel activateStats={false} />
                 </div>
             </div>
         </>
