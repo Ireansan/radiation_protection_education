@@ -367,7 +367,7 @@ function XRayRoomDosimeterPrototype() {
                                 offset={[0, 0, 0.1]}
                                 opacity={0.75}
                                 planeSize={Board_Configure.size.y}
-                                pivotScale={Board_Configure.size.x}
+                                scale={Board_Configure.size.x}
                             >
                                 <mesh position={[0, 0, 0]}>
                                     <boxBufferGeometry

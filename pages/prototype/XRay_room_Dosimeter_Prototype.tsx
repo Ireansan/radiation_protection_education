@@ -229,7 +229,7 @@ function XRayRoomDosimeterPrototype() {
                                 position={new THREE.Vector3(2.5, 1.25, -0.5)}
                                 rotation={new THREE.Euler(0, Math.PI / 2, 0)}
                                 planeSize={2}
-                                pivotScale={1}
+                                scale={1}
                             >
                                 <mesh position={[0, 0, 0]}>
                                     <boxBufferGeometry args={[1, 2, 0.05]} />
