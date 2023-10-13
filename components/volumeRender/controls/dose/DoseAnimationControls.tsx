@@ -147,19 +147,6 @@ export function DoseAnimationControls({
                         });
                     },
                 },
-                loop: {
-                    value: true,
-                    onChange: (e) => {
-                        lazyActions.current.forEach((actions) => {
-                            actions["volumeAnimation"]
-                                ? actions["volumeAnimation"].setLoop(
-                                      THREE.LoopRepeat,
-                                      e ? Infinity : 0
-                                  )
-                                : null;
-                        });
-                    },
-                },
                 speed: {
                     options: speedList,
                     value: 1.0,
@@ -202,7 +189,7 @@ export function DoseAnimationControls({
             if (actionsMaxLength["volumeAnimation"]) {
                 actionsMaxLength["volumeAnimation"].time !==
                     animationConfig.time &&
-                actionsMaxLength["volumeAnimation"].time <= duration
+                actionsMaxLength["volumeAnimation"].time < duration
                     ? setAnimationConfig({
                           time: actionsMaxLength["volumeAnimation"].time,
                       })
