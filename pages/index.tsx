@@ -3,7 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 
-import styles from "../styles/Home.module.css";
+import styles from "../styles/css/home.module.css";
 
 import { applyBasePath } from "../utils";
 const logoURL = applyBasePath("/vercel.svg");
@@ -156,83 +156,40 @@ const Home: NextPage = () => {
 
                 <h2>References</h2>
                 <div className={styles.grid}>
-                    <a
-                        href="https://threejs.org/examples/?q=texture3d#webgl2_materials_texture3d"
-                        className={styles.card}
-                    >
-                        <h2>Textrue3D example &rarr;</h2>
-                        <p>Three.js examples</p>
-                    </a>
+                    <div className={styles.card}>
+                        <a href="https://threejs.org/examples/?q=texture3d#webgl2_materials_texture3d">
+                            <h2>Textrue3D example &rarr;</h2>
+                            <p>Three.js examples</p>
+                        </a>
+                    </div>
 
-                    <a
-                        href="https://threejs.org/examples/?q=nrrd#webgl_loader_nrrd"
-                        className={styles.card}
-                    >
-                        <h2>NRRDLoader example &rarr;</h2>
-                        <p>Three.js examples</p>
-                    </a>
+                    <div className={styles.card}>
+                        <a href="https://threejs.org/examples/?q=nrrd#webgl_loader_nrrd">
+                            <h2>NRRDLoader example &rarr;</h2>
+                            <p>Three.js examples</p>
+                        </a>
+                    </div>
 
-                    <a
-                        href="https://github.com/cornerstonejs/cornerstoneTools/issues/335#issuecomment-376008409"
-                        className={styles.card}
-                    >
-                        <h2>NRRD Production example &rarr;</h2>
-                        <p>Three.js + NRRD Production</p>
-                    </a>
+                    <div className={styles.card}>
+                        <a href="https://github.com/cornerstonejs/cornerstoneTools/issues/335#issuecomment-376008409">
+                            <h2>NRRD Production example &rarr;</h2>
+                            <p>Three.js + NRRD Production</p>
+                        </a>
+                    </div>
 
-                    <a
-                        href="https://contsrv.icer.kyushu-u.ac.jp/Medu/XraySim/"
-                        className={styles.card}
-                    >
-                        <h2>Radiation visualization 1 &rarr;</h2>
-                        <p>A-Frame</p>
-                    </a>
+                    <div className={styles.card}>
+                        <a href="https://contsrv.icer.kyushu-u.ac.jp/Medu/XraySim/">
+                            <h2>Radiation visualization 1 &rarr;</h2>
+                            <p>A-Frame</p>
+                        </a>
+                    </div>
 
-                    <a
-                        href="https://contsrv.icer.kyushu-u.ac.jp/Medu/XraySim2/"
-                        className={styles.card}
-                    >
-                        <h2>Radiation visualization 2 &rarr;</h2>
-                        <p>A-Frame</p>
-                    </a>
-
-                    <a href="https://nextjs.org/docs" className={styles.card}>
-                        <h2>Documentation &rarr;</h2>
-                        <p>
-                            Find in-depth information about Next.js features and
-                            API.
-                        </p>
-                    </a>
-
-                    <a href="https://nextjs.org/learn" className={styles.card}>
-                        <h2>Learn &rarr;</h2>
-                        <p>
-                            Learn about Next.js in an interactive course with
-                            quizzes!
-                        </p>
-                    </a>
-
-                    <a
-                        href="https://github.com/vercel/next.js/tree/canary/examples"
-                        className={styles.card}
-                    >
-                        <h2>Examples &rarr;</h2>
-                        <p>
-                            Discover and deploy boilerplate example Next.js
-                            projects.
-                        </p>
-                    </a>
-
-                    <a
-                        href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                        className={styles.card}
-                    >
-                        <h2>Deploy &rarr;</h2>
-                        <p>
-                            Instantly deploy your Next.js site to a public URL
-                            with Vercel.
-                        </p>
-                    </a>
+                    <div className={styles.card}>
+                        <a href="https://contsrv.icer.kyushu-u.ac.jp/Medu/XraySim2/">
+                            <h2>Radiation visualization 2 &rarr;</h2>
+                            <p>A-Frame</p>
+                        </a>
+                    </div>
                 </div>
             </main>
 
