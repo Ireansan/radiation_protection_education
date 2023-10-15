@@ -23,12 +23,7 @@ const Home: NextPage = () => {
             <main className={styles.main}>
                 <h1 className={styles.title}>Radiation Protection Education</h1>
 
-                <p className={styles.description}>
-                    <a href="https://nextjs.org">Next.js</a>,
-                    <a href="https://docs.pmnd.rs/react-three-fiber/getting-started/introduction">
-                        React Three Fiber
-                    </a>
-                </p>
+                <p className={styles.description}></p>
                 {/* <p>process.env.NODE_ENV {process.env.NODE_ENV}</p> */}
 
                 <h2>Content</h2>
@@ -188,6 +183,27 @@ const Home: NextPage = () => {
                         <a href="https://contsrv.icer.kyushu-u.ac.jp/Medu/XraySim2/">
                             <h2>Radiation visualization 2 &rarr;</h2>
                             <p>A-Frame</p>
+                        </a>
+                    </div>
+
+                    <div className={styles.card}>
+                        <a href="https://nextjs.org">
+                            <h2>Next.js &rarr;</h2>
+                            <p>React Framework</p>
+                        </a>
+                    </div>
+
+                    <div className={styles.card}>
+                        <a href="https://docs.pmnd.rs/react-three-fiber/getting-started/introduction">
+                            <h2>React Three Fiber &rarr;</h2>
+                            <p>React renderer for Three.js</p>
+                        </a>
+                    </div>
+
+                    <div className={styles.card}>
+                        <a href="https://threejs.org/">
+                            <h2>Three.js &rarr;</h2>
+                            <p>JavaScript library, WebGL</p>
                         </a>
                     </div>
                 </div>
