@@ -100,7 +100,7 @@ vec3 clip_position(vec3 position);
 ClippedResult within_boundaries(vec3 position);
 float sample1(vec3 texcoords);
 vec4 apply_colormap(float val);
-vec4 add_lighting(float val,vec3 loc,vec3 step,vec3 view_ray,bool guarded);
+vec4 add_lighting(float val,vec3 loc,vec3 step,vec3 view_ray,float coefficient,float offset);
 
 void main(){
     // Normalize clipping plane info
@@ -323,6 +323,9 @@ void cast_iso(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
         bool clipped=clippedResult.clipped;
         bool guarded=clippedResult.guarded;
         
+        float coefficient;
+        float offset;
+        
         // Sample from the 3D texture
         float val=sample1(loc);
         if(guarded){
@@ -343,7 +346,9 @@ void cast_iso(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
                 val=sample1(iloc);
                 
                 if(val>u_renderthreshold||clipped){
-                    gl_FragColor=add_lighting(val,iloc,dstep,view_ray,guarded);
+                    coefficient=guarded?u_boardCoefficient:1.;
+                    offset=guarded?u_boardOffset:0.;
+                    gl_FragColor=add_lighting(val,iloc,dstep,view_ray,coefficient,offset);
                     gl_FragColor.a=u_opacity;
                     return;
                 }
@@ -356,7 +361,7 @@ void cast_iso(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
     }
 }
 
-vec4 add_lighting(float val,vec3 loc,vec3 step,vec3 view_ray,bool guarded){
+vec4 add_lighting(float val,vec3 loc,vec3 step,vec3 view_ray,float coefficient,float offset){
     // Calculate color by incorporating lighting
     
     // View direction
@@ -378,9 +383,7 @@ vec4 add_lighting(float val,vec3 loc,vec3 step,vec3 view_ray,bool guarded){
     N[2]=val1-val2;
     val=max(max(val1,val2),val);
     
-    if(guarded){
-        val=u_boardCoefficient*val+u_boardOffset;
-    }
+    val=coefficient*val+offset;
     
     float gm=length(N);// gradient magnitude
     N=normalize(N);
