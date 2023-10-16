@@ -23,6 +23,37 @@
     transition: all 1s;
     z-index: 9999;
     flex-wrap: wrap;
+
+    .logout {
+        background: transparent;
+        border: none;
+        width: auto;
+        color: white;
+        display: block;
+        margin: 10px auto;
+    }
+
+    .continue-link {
+        text-decoration: none;
+        transition: all 1s;
+        width: 20%;
+        text-align: center;
+    }
+
+    .notready .continue-link {
+        cursor: auto;
+        color: #606060;
+    }
+
+    .ready .continue-link {
+        cursor: pointer;
+        color: white;
+    }
+
+    .clicked {
+        pointer-events: none;
+        opacity: 0;
+    }
 }
 
 .stacks {
@@ -40,37 +71,6 @@
 
 .bg {
     background: #101010;
-}
-
-.fullscreen .logout {
-    background: transparent;
-    border: none;
-    width: auto;
-    color: white;
-    display: block;
-    margin: 10px auto;
-}
-
-.fullscreen .continue-link {
-    text-decoration: none;
-    transition: all 1s;
-    width: 20%;
-    text-align: center;
-}
-
-.fullscreen.notready .continue-link {
-    cursor: auto;
-    color: #606060;
-}
-
-.fullscreen.ready .continue-link {
-    cursor: pointer;
-    color: white;
-}
-
-.fullscreen.clicked {
-    pointer-events: none;
-    opacity: 0;
 }
 
 /* --------------- HELP --------------- */
