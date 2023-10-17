@@ -1,26 +1,45 @@
 .experiment {
   position: absolute;
-  top: 75px;
+  top: 55px;
   left: 5px;
-  width: 150px;
-  background-color: #878892;
+  width: 175px;
+  background-color: #1e1e27;
   border-radius: 2px;
 }
 .experiment h2 {
-  margin: 8px 2px;
+  margin: 8px 4px;
   font-size: 12px;
 }
-.experiment .check {
+.experiment .item {
   font-size: 6px;
-  margin: 2px;
+  margin: 2px 4px;
+  display: flex;
+}
+.experiment .item .check {
+  display: flex;
+  align-items: center;
+}
+.experiment .item .content {
+  display: flex;
+  align-items: center;
+  margin: auto 5px;
 }
 .experiment .buttonArea {
   margin: 5px;
+  width: 150px;
   height: 30px;
+  margin: 10px auto;
 }
 .experiment .buttonArea .button {
   padding: 5px;
   text-align: center;
   background-color: #6f41a1;
+  border-radius: 2px;
+}
+.experiment .buttonArea .unableButton {
+  padding: 5px;
+  text-align: center;
+  color: #858b8e;
+  background-color: #797182;
   border-radius: 2px;
 }/*# sourceMappingURL=experimentCheckList.module.css.map */
