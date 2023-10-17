@@ -259,7 +259,8 @@ void cast_iso(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
     vec3 dstep=1.5/u_size;// step to sample derivative
     vec3 loc=start_loc;
     
-    float low_threshold=u_renderthreshold-.02*(u_clim[1]-u_clim[0]);
+    float renderthreshold=(u_clim[1]-u_clim[0])*u_renderthreshold+u_clim[0];
+    float low_threshold=renderthreshold-.02*(u_clim[1]-u_clim[0]);
     
     // Enter the raycasting loop. In WebGL 1 the loop index cannot be compared with
     // non-constant expression. So we use a hard-coded max, and an additional condition
@@ -297,7 +298,7 @@ void cast_iso(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
                 
                 val=sample1(iloc);
                 
-                if(val>u_renderthreshold||clipped){
+                if(val>renderthreshold||clipped){
                     coefficient=guarded?u_boardCoefficient:1.;
                     offset=guarded?u_boardOffset:0.;
                     gl_FragColor=add_lighting(val,iloc,dstep,view_ray,coefficient,offset);
