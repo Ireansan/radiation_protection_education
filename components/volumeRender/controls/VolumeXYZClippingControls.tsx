@@ -108,7 +108,7 @@ export const VolumeXYZClippingControls = React.forwardRef<
         [1, 0, 0], // X
         [0, 1, 0], // Y
         [0, 0, 1], // Z
-        [1, 0, 0], // Free Axis
+        [0, 0, 1], // Free Axis
     ];
     const Normals: THREE.Vector3[] = normals.map((normal) =>
         new THREE.Vector3().fromArray(normal)
@@ -370,12 +370,6 @@ export const VolumeXYZClippingControls = React.forwardRef<
                 },
                 { collapsed: true }
             ),
-            visible: {
-                value: true,
-                onChange: (e) => {
-                    // setVisible(e);
-                },
-            },
         }),
     }));
 
