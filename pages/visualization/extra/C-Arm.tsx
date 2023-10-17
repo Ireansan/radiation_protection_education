@@ -50,7 +50,7 @@ import {
 
 // ==========
 // UI
-import { SceneConfigPanel } from "../../../components/ui";
+import { ExperimentCheckList, SceneConfigPanel } from "../../../components/ui";
 
 // ==========
 // Store
@@ -61,7 +61,11 @@ import { useStore } from "../../../components/store";
 import styles from "../../../styles/threejs.module.css";
 
 function CArmExtra() {
-    const [debug, viewing] = useStore((state) => [state.debug, state.viewing]);
+    const [set, debug, viewing] = useStore((state) => [
+        state.set,
+        state.debug,
+        state.viewing,
+    ]);
 
     const ref = useRef<DoseGroup>(null);
 
@@ -93,7 +97,12 @@ function CArmExtra() {
                     >
                         {/* -------------------------------------------------- */}
                         {/* Volume Object */}
-                        <doseGroup ref={ref}>
+                        <doseGroup
+                            ref={ref}
+                            position={VOLUMEDATA.CArm_Configure.volume.position}
+                            rotation={VOLUMEDATA.CArm_Configure.volume.rotation}
+                            scale={VOLUMEDATA.CArm_Configure.volume.scale}
+                        >
                             {/* Time Lapse */}
                             <doseGroup
                                 ref={timelapseRef}
@@ -104,20 +113,7 @@ function CArmExtra() {
                                 clim2AutoUpdate={false}
                             >
                                 {/* C-Arm Dose */}
-                                <doseAnimationObject
-                                    ref={cArmRef}
-                                    position={
-                                        VOLUMEDATA.CArm_Configure.volume
-                                            .position
-                                    }
-                                    rotation={
-                                        VOLUMEDATA.CArm_Configure.volume
-                                            .rotation
-                                    }
-                                    scale={
-                                        VOLUMEDATA.CArm_Configure.volume.scale
-                                    }
-                                >
+                                <doseAnimationObject ref={cArmRef}>
                                     <VOLUMEDATA.CArm_all_Animation />
                                 </doseAnimationObject>
                             </doseGroup>
@@ -133,20 +129,7 @@ function CArmExtra() {
                                 clim2AutoUpdate={false}
                             >
                                 {/* C-Arm Dose, Accumulate */}
-                                <doseGroup
-                                    ref={cArmAccumuRef}
-                                    position={
-                                        VOLUMEDATA.CArm_Configure.volume
-                                            .position
-                                    }
-                                    rotation={
-                                        VOLUMEDATA.CArm_Configure.volume
-                                            .rotation
-                                    }
-                                    scale={
-                                        VOLUMEDATA.CArm_Configure.volume.scale
-                                    }
-                                >
+                                <doseGroup ref={cArmAccumuRef}>
                                     <VOLUMEDATA.CArm_all_accumulate />
                                 </doseGroup>
                             </doseGroup>
@@ -254,6 +237,20 @@ function CArmExtra() {
                                 if (dosimeterRef.current) {
                                     dosimeterRef.current.updateResults();
                                 }
+
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            avatar: {
+                                                ...state.sceneProperties
+                                                    .executeLog.avatar,
+                                                translate: true,
+                                            },
+                                        },
+                                    },
+                                }));
                             }}
                         />
                         <group
@@ -278,7 +275,9 @@ function CArmExtra() {
                             <DoseBoardControls
                                 object={ref}
                                 origin={new THREE.Vector3(0, 1, 0)}
-                                areaSize={[2.2, 1.2, 3.1]}
+                                areaSize={
+                                    VOLUMEDATA.CArm_Configure.volume.areaSize
+                                }
                                 width={Board_Configure.size.x}
                                 height={Board_Configure.size.y}
                                 position={new THREE.Vector3(2.5, 1.25, -0.5)}
@@ -340,6 +339,7 @@ function CArmExtra() {
                     </Canvas>
                     <SceneConfigPanel activateStats={false} />
                     <DosimeterDisplayUI />
+                    <ExperimentCheckList />
                 </div>
             </div>
         </>

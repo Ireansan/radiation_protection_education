@@ -48,7 +48,7 @@ import {
 
 // ==========
 // UI
-import { SceneConfigPanel } from "../../../components/ui";
+import { ExperimentCheckList, SceneConfigPanel } from "../../../components/ui";
 
 // ==========
 // Store
@@ -59,7 +59,11 @@ import { useStore } from "../../../components/store";
 import styles from "../../../styles/threejs.module.css";
 
 function XRayExtra() {
-    const [debug, viewing] = useStore((state) => [state.debug, state.viewing]);
+    const [set, debug, viewing] = useStore((state) => [
+        state.set,
+        state.debug,
+        state.viewing,
+    ]);
 
     const ref = useRef<DoseGroup>(null!);
 
@@ -122,7 +126,20 @@ function XRayExtra() {
                     >
                         {/* -------------------------------------------------- */}
                         {/* Volume Object */}
-                        <doseGroup ref={ref}>
+                        <doseGroup
+                            ref={ref}
+                            position={
+                                VOLUMEDATA.XRay_nocurtain_Configure.volume
+                                    .position
+                            }
+                            rotation={
+                                VOLUMEDATA.XRay_nocurtain_Configure.volume
+                                    .rotation
+                            }
+                            scale={
+                                VOLUMEDATA.XRay_nocurtain_Configure.volume.scale
+                            }
+                        >
                             {/* Time Lapse */}
                             <doseGroup ref={timelapseRef}>
                                 {/* X-Ray Dose, no curtain */}
@@ -130,18 +147,6 @@ function XRayExtra() {
                                     ref={nocurtainRef}
                                     name={"x-ray_animation_nocurtain"}
                                     visible={false}
-                                    position={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.position
-                                    }
-                                    rotation={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.rotation
-                                    }
-                                    scale={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.scale
-                                    }
                                 >
                                     <VOLUMEDATA.XRay_nocurtain_all_Animation />
                                 </doseAnimationObject>
@@ -149,18 +154,6 @@ function XRayExtra() {
                                 <doseAnimationObject
                                     ref={curtainRef}
                                     name={"x-ray_animation_curtain"}
-                                    position={
-                                        VOLUMEDATA.XRay_curtain_Configure.volume
-                                            .position
-                                    }
-                                    rotation={
-                                        VOLUMEDATA.XRay_curtain_Configure.volume
-                                            .rotation
-                                    }
-                                    scale={
-                                        VOLUMEDATA.XRay_curtain_Configure.volume
-                                            .scale
-                                    }
                                 >
                                     <VOLUMEDATA.XRay_curtain_all_Animation />
                                 </doseAnimationObject>
@@ -173,18 +166,6 @@ function XRayExtra() {
                                     ref={nocurtainAccumuRef}
                                     name={"x-ray_accumulate_nocurtain"}
                                     visible={false}
-                                    position={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.position
-                                    }
-                                    rotation={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.rotation
-                                    }
-                                    scale={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.scale
-                                    }
                                 >
                                     <VOLUMEDATA.XRay_nocurtain_all_accumulate />
                                 </doseGroup>
@@ -192,18 +173,6 @@ function XRayExtra() {
                                 <doseGroup
                                     ref={curtainAccumuRef}
                                     name={"x-ray_accumulate_curtain"}
-                                    position={
-                                        VOLUMEDATA.XRay_curtain_Configure.volume
-                                            .position
-                                    }
-                                    rotation={
-                                        VOLUMEDATA.XRay_curtain_Configure.volume
-                                            .rotation
-                                    }
-                                    scale={
-                                        VOLUMEDATA.XRay_curtain_Configure.volume
-                                            .scale
-                                    }
                                 >
                                     <VOLUMEDATA.XRay_curtain_all_accumulate />
                                 </doseGroup>
@@ -325,6 +294,20 @@ function XRayExtra() {
                                 if (dosimeterRef.current) {
                                     dosimeterRef.current.updateResults();
                                 }
+
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            avatar: {
+                                                ...state.sceneProperties
+                                                    .executeLog.avatar,
+                                                translate: true,
+                                            },
+                                        },
+                                    },
+                                }));
                             }}
                         />
                         <group
@@ -349,7 +332,10 @@ function XRayExtra() {
                             <DoseBoardControls
                                 object={ref}
                                 origin={new THREE.Vector3(0, 1, 0)}
-                                areaSize={[2.2, 1.2, 3.1]}
+                                areaSize={
+                                    VOLUMEDATA.XRay_curtain_Configure.volume
+                                        .areaSize
+                                }
                                 width={Board_Configure.size.x}
                                 height={Board_Configure.size.y}
                                 position={new THREE.Vector3(2.5, 1.25, -0.5)}
@@ -411,6 +397,7 @@ function XRayExtra() {
                     </Canvas>
                     <SceneConfigPanel activateStats={false} />
                     <DosimeterDisplayUI />
+                    <ExperimentCheckList />
                 </div>
             </div>
         </>

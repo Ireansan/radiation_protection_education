@@ -46,7 +46,7 @@ import {
 
 // ==========
 // UI
-import { SceneConfigPanel } from "../../../components/ui";
+import { ExperimentCheckList, SceneConfigPanel } from "../../../components/ui";
 
 // ==========
 // Store
@@ -57,7 +57,11 @@ import { useStore } from "../../../components/store";
 import styles from "../../../styles/threejs.module.css";
 
 function CArmRoll180Pitch360Extra() {
-    const [debug, viewing] = useStore((state) => [state.debug, state.viewing]);
+    const [set, debug, viewing] = useStore((state) => [
+        state.set,
+        state.debug,
+        state.viewing,
+    ]);
 
     const ref = useRef<DoseGroup>(null);
 
@@ -89,7 +93,21 @@ function CArmRoll180Pitch360Extra() {
                     >
                         {/* -------------------------------------------------- */}
                         {/* Volume Object */}
-                        <doseGroup ref={ref}>
+                        <doseGroup
+                            ref={ref}
+                            position={
+                                VOLUMEDATA.CArm_roll180_pitch360_Configure
+                                    .volume.position
+                            }
+                            rotation={
+                                VOLUMEDATA.CArm_roll180_pitch360_Configure
+                                    .volume.rotation
+                            }
+                            scale={
+                                VOLUMEDATA.CArm_roll180_pitch360_Configure
+                                    .volume.scale
+                            }
+                        >
                             {/* Time Lapse */}
                             <doseGroup
                                 ref={timelapseRef}
@@ -100,24 +118,7 @@ function CArmRoll180Pitch360Extra() {
                                 clim2AutoUpdate={false}
                             >
                                 {/* C-Arm Dose */}
-                                <doseAnimationObject
-                                    ref={cArmRollRef}
-                                    position={
-                                        VOLUMEDATA
-                                            .CArm_roll180_pitch360_Configure
-                                            .volume.position
-                                    }
-                                    rotation={
-                                        VOLUMEDATA
-                                            .CArm_roll180_pitch360_Configure
-                                            .volume.rotation
-                                    }
-                                    scale={
-                                        VOLUMEDATA
-                                            .CArm_roll180_pitch360_Configure
-                                            .volume.scale
-                                    }
-                                >
+                                <doseAnimationObject ref={cArmRollRef}>
                                     <VOLUMEDATA.CArm_roll180_pitch360_all_Animation />
                                 </doseAnimationObject>
                             </doseGroup>
@@ -133,24 +134,7 @@ function CArmRoll180Pitch360Extra() {
                                 clim2AutoUpdate={false}
                             >
                                 {/* C-Arm Dose, Accumulate */}
-                                <doseGroup
-                                    ref={cArmRollAccumuRef}
-                                    position={
-                                        VOLUMEDATA
-                                            .CArm_roll180_pitch360_Configure
-                                            .volume.position
-                                    }
-                                    rotation={
-                                        VOLUMEDATA
-                                            .CArm_roll180_pitch360_Configure
-                                            .volume.rotation
-                                    }
-                                    scale={
-                                        VOLUMEDATA
-                                            .CArm_roll180_pitch360_Configure
-                                            .volume.scale
-                                    }
-                                >
+                                <doseGroup ref={cArmRollAccumuRef}>
                                     <VOLUMEDATA.CArm_roll180_pitch360_all_accumulate />
                                 </doseGroup>
                             </doseGroup>
@@ -262,6 +246,20 @@ function CArmRoll180Pitch360Extra() {
                                 if (dosimeterRef.current) {
                                     dosimeterRef.current.updateResults();
                                 }
+
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            avatar: {
+                                                ...state.sceneProperties
+                                                    .executeLog.avatar,
+                                                translate: true,
+                                            },
+                                        },
+                                    },
+                                }));
                             }}
                         />
                         <group
@@ -286,7 +284,10 @@ function CArmRoll180Pitch360Extra() {
                             <DoseBoardControls
                                 object={ref}
                                 origin={new THREE.Vector3(0, 1, 0)}
-                                areaSize={[2.2, 1.2, 3.1]}
+                                areaSize={
+                                    VOLUMEDATA.CArm_roll180_pitch360_Configure
+                                        .volume.areaSize
+                                }
                                 width={Board_Configure.size.x}
                                 height={Board_Configure.size.y}
                                 position={new THREE.Vector3(2.5, 1.25, -0.5)}
@@ -348,6 +349,7 @@ function CArmRoll180Pitch360Extra() {
                     </Canvas>
                     <SceneConfigPanel activateStats={false} />
                     <DosimeterDisplayUI />
+                    <ExperimentCheckList />
                 </div>
             </div>
         </>
