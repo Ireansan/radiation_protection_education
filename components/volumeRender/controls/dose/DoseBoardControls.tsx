@@ -62,7 +62,11 @@ export const DoseBoardControls = React.forwardRef<
     },
     ref
 ) {
-    const [debug, viewing] = useStore((state) => [state.debug, state.viewing]);
+    const [set, debug, viewing] = useStore((state) => [
+        state.set,
+        state.debug,
+        state.viewing,
+    ]);
     const controls = React.useMemo(() => new DoseControlsImpl(), []);
 
     const [_position, setPosition] = React.useState<THREE.Vector3>(position);
@@ -231,6 +235,24 @@ export const DoseBoardControls = React.forwardRef<
         controls.boardEffect = clipping;
     }, [controls, clipping]);
 
+    React.useEffect(() => {
+        // set execute log for experiment
+        if (clipping) {
+            set((state) => ({
+                sceneProperties: {
+                    ...state.sceneProperties,
+                    executeLog: {
+                        ...state.sceneProperties.executeLog,
+                        shield: {
+                            ...state.sceneProperties.executeLog.shield,
+                            enabled: true,
+                        },
+                    },
+                },
+            }));
+        }
+    }, [clipping]);
+
     return controls ? (
         <>
             <primitive ref={ref} object={controls} />
@@ -334,7 +356,21 @@ export const DoseBoardControls = React.forwardRef<
                     onDrag(l, deltaL, w, deltaW);
                 }}
                 onDragStart={() => {}}
-                onDragEnd={() => {}}
+                onDragEnd={() => {
+                    // set execute log for experiment
+                    set((state) => ({
+                        sceneProperties: {
+                            ...state.sceneProperties,
+                            executeLog: {
+                                ...state.sceneProperties.executeLog,
+                                shield: {
+                                    ...state.sceneProperties.executeLog.shield,
+                                    translate: true,
+                                },
+                            },
+                        },
+                    }));
+                }}
             />
         </>
     ) : null;

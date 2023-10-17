@@ -258,7 +258,10 @@ function DosimeterResult({
 const MemoDosimeterResult = memo(DosimeterResult);
 
 export function DosimeterDisplayUI({ ...props }) {
-    const [sceneProperties] = useStore((state) => [state.sceneProperties]);
+    const [set, sceneProperties] = useStore((state) => [
+        state.set,
+        state.sceneProperties,
+    ]);
     const { dosimeterResults } = sceneProperties;
 
     const equipmentRef = useRef<EquipmentProps>({
@@ -279,6 +282,23 @@ export function DosimeterDisplayUI({ ...props }) {
                     value: false,
                     onChange: (e) => {
                         equipmentRef.current.goggle = e;
+
+                        // set execute log for experiment
+                        if (e) {
+                            set((state) => ({
+                                sceneProperties: {
+                                    ...state.sceneProperties,
+                                    executeLog: {
+                                        ...state.sceneProperties.executeLog,
+                                        dosimeter: {
+                                            ...state.sceneProperties.executeLog
+                                                .dosimeter,
+                                            goggle: true,
+                                        },
+                                    },
+                                },
+                            }));
+                        }
                     },
                 },
                 NeckGuard: {
@@ -286,18 +306,69 @@ export function DosimeterDisplayUI({ ...props }) {
                     label: "Neck Guard",
                     onChange: (e) => {
                         equipmentRef.current.neck = e;
+
+                        // set execute log for experiment
+                        if (e) {
+                            set((state) => ({
+                                sceneProperties: {
+                                    ...state.sceneProperties,
+                                    executeLog: {
+                                        ...state.sceneProperties.executeLog,
+                                        dosimeter: {
+                                            ...state.sceneProperties.executeLog
+                                                .dosimeter,
+                                            neckGuard: true,
+                                        },
+                                    },
+                                },
+                            }));
+                        }
                     },
                 },
                 Apron: {
                     value: false,
                     onChange: (e) => {
                         equipmentRef.current.apron = e;
+
+                        // set execute log for experiment
+                        if (e) {
+                            set((state) => ({
+                                sceneProperties: {
+                                    ...state.sceneProperties,
+                                    executeLog: {
+                                        ...state.sceneProperties.executeLog,
+                                        dosimeter: {
+                                            ...state.sceneProperties.executeLog
+                                                .dosimeter,
+                                            apron: true,
+                                        },
+                                    },
+                                },
+                            }));
+                        }
                     },
                 },
                 Glove: {
                     value: false,
                     onChange: (e) => {
                         equipmentRef.current.glove = e;
+
+                        // set execute log for experiment
+                        if (e) {
+                            set((state) => ({
+                                sceneProperties: {
+                                    ...state.sceneProperties,
+                                    executeLog: {
+                                        ...state.sceneProperties.executeLog,
+                                        dosimeter: {
+                                            ...state.sceneProperties.executeLog
+                                                .dosimeter,
+                                            glove: true,
+                                        },
+                                    },
+                                },
+                            }));
+                        }
                     },
                 },
             }),

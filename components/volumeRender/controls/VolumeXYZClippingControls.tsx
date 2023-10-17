@@ -74,7 +74,11 @@ export const VolumeXYZClippingControls = React.forwardRef<
     },
     ref
 ) {
-    const [debug, viewing] = useStore((state) => [state.debug, state.viewing]);
+    const [set, debug, viewing] = useStore((state) => [
+        state.set,
+        state.debug,
+        state.viewing,
+    ]);
     const controls = React.useMemo(() => new VolumeControlsImpl(), []);
 
     const xPivotRef = React.useRef<THREE.Group>(null!);
@@ -133,6 +137,23 @@ export const VolumeXYZClippingControls = React.forwardRef<
                             });
 
                             xPivotRef.current.visible = e;
+
+                            if (e) {
+                                // set execute log for experiment
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            clipping: {
+                                                ...state.sceneProperties
+                                                    .executeLog.clipping,
+                                                x: true,
+                                            },
+                                        },
+                                    },
+                                }));
+                            }
                         },
                     },
                     XInvert: {
@@ -143,6 +164,23 @@ export const VolumeXYZClippingControls = React.forwardRef<
 
                             tmpPlanes[0].normal.multiplyScalar(-1);
                             tmpPlanes[0].constant *= -1;
+
+                            if (e) {
+                                // set execute log for experiment
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            clipping: {
+                                                ...state.sceneProperties
+                                                    .executeLog.clipping,
+                                                invert: true,
+                                            },
+                                        },
+                                    },
+                                }));
+                            }
                         },
                     },
                 },
@@ -160,6 +198,23 @@ export const VolumeXYZClippingControls = React.forwardRef<
                             });
 
                             yPivotRef.current.visible = e;
+
+                            if (e) {
+                                // set execute log for experiment
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            clipping: {
+                                                ...state.sceneProperties
+                                                    .executeLog.clipping,
+                                                y: true,
+                                            },
+                                        },
+                                    },
+                                }));
+                            }
                         },
                     },
                     YInvert: {
@@ -170,6 +225,23 @@ export const VolumeXYZClippingControls = React.forwardRef<
 
                             tmpPlanes[1].normal.multiplyScalar(-1);
                             tmpPlanes[1].constant *= -1;
+
+                            if (e) {
+                                // set execute log for experiment
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            clipping: {
+                                                ...state.sceneProperties
+                                                    .executeLog.clipping,
+                                                invert: true,
+                                            },
+                                        },
+                                    },
+                                }));
+                            }
                         },
                     },
                 },
@@ -187,6 +259,23 @@ export const VolumeXYZClippingControls = React.forwardRef<
                             });
 
                             zPivotRef.current.visible = e;
+
+                            if (e) {
+                                // set execute log for experiment
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            clipping: {
+                                                ...state.sceneProperties
+                                                    .executeLog.clipping,
+                                                z: true,
+                                            },
+                                        },
+                                    },
+                                }));
+                            }
                         },
                     },
                     ZInvert: {
@@ -197,6 +286,23 @@ export const VolumeXYZClippingControls = React.forwardRef<
 
                             tmpPlanes[2].normal.multiplyScalar(-1);
                             tmpPlanes[2].constant *= -1;
+
+                            if (e) {
+                                // set execute log for experiment
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            clipping: {
+                                                ...state.sceneProperties
+                                                    .executeLog.clipping,
+                                                invert: true,
+                                            },
+                                        },
+                                    },
+                                }));
+                            }
                         },
                     },
                 },
@@ -215,6 +321,23 @@ export const VolumeXYZClippingControls = React.forwardRef<
                             clippingFlagRef.current.free = e;
 
                             freePivotRef.current.visible = e;
+
+                            if (e) {
+                                // set execute log for experiment
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            clipping: {
+                                                ...state.sceneProperties
+                                                    .executeLog.clipping,
+                                                free: true,
+                                            },
+                                        },
+                                    },
+                                }));
+                            }
                         },
                     },
                     FreeAxisInvert: {
@@ -225,6 +348,23 @@ export const VolumeXYZClippingControls = React.forwardRef<
 
                             tmpPlanes[3].normal.multiplyScalar(-1);
                             tmpPlanes[3].constant *= -1;
+
+                            if (e) {
+                                // set execute log for experiment
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            clipping: {
+                                                ...state.sceneProperties
+                                                    .executeLog.clipping,
+                                                invert: true,
+                                            },
+                                        },
+                                    },
+                                }));
+                            }
                         },
                     },
                 },
@@ -354,6 +494,22 @@ export const VolumeXYZClippingControls = React.forwardRef<
                     onDrag={(l, deltaL, w, deltaW) =>
                         onDrag(l, deltaL, w, deltaW, 0)
                     }
+                    onDragEnd={() => {
+                        // set execute log for experiment
+                        set((state) => ({
+                            sceneProperties: {
+                                ...state.sceneProperties,
+                                executeLog: {
+                                    ...state.sceneProperties.executeLog,
+                                    clipping: {
+                                        ...state.sceneProperties.executeLog
+                                            .clipping,
+                                        x: true,
+                                    },
+                                },
+                            },
+                        }));
+                    }}
                 >
                     <PlaneHelperMesh
                         id={0}
@@ -372,6 +528,22 @@ export const VolumeXYZClippingControls = React.forwardRef<
                     onDrag={(l, deltaL, w, deltaW) =>
                         onDrag(l, deltaL, w, deltaW, 1)
                     }
+                    onDragEnd={() => {
+                        // set execute log for experiment
+                        set((state) => ({
+                            sceneProperties: {
+                                ...state.sceneProperties,
+                                executeLog: {
+                                    ...state.sceneProperties.executeLog,
+                                    clipping: {
+                                        ...state.sceneProperties.executeLog
+                                            .clipping,
+                                    },
+                                    y: true,
+                                },
+                            },
+                        }));
+                    }}
                 >
                     <PlaneHelperMesh
                         id={1}
@@ -390,6 +562,22 @@ export const VolumeXYZClippingControls = React.forwardRef<
                     onDrag={(l, deltaL, w, deltaW) =>
                         onDrag(l, deltaL, w, deltaW, 2)
                     }
+                    onDragEnd={() => {
+                        // set execute log for experiment
+                        set((state) => ({
+                            sceneProperties: {
+                                ...state.sceneProperties,
+                                executeLog: {
+                                    ...state.sceneProperties.executeLog,
+                                    clipping: {
+                                        ...state.sceneProperties.executeLog
+                                            .clipping,
+                                    },
+                                    z: true,
+                                },
+                            },
+                        }));
+                    }}
                 >
                     <PlaneHelperMesh
                         id={2}
@@ -407,6 +595,22 @@ export const VolumeXYZClippingControls = React.forwardRef<
                     onDrag={(l, deltaL, w, deltaW) =>
                         onDrag(l, deltaL, w, deltaW, 3)
                     }
+                    onDragEnd={() => {
+                        // set execute log for experiment
+                        set((state) => ({
+                            sceneProperties: {
+                                ...state.sceneProperties,
+                                executeLog: {
+                                    ...state.sceneProperties.executeLog,
+                                    clipping: {
+                                        ...state.sceneProperties.executeLog
+                                            .clipping,
+                                    },
+                                    free: true,
+                                },
+                            },
+                        }));
+                    }}
                 >
                     <PlaneHelperMesh
                         id={3}

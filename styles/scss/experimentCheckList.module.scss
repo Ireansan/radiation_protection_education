@@ -1,0 +1,30 @@
+.experiment {
+    position: absolute;
+    top: 75px;
+    left: 5px;
+    width: 150px;
+    background-color: #878892;
+    border-radius: 2px;
+
+    h2 {
+        margin: 8px 2px;
+        font-size: 12px;
+    }
+
+    .check {
+        font-size: 6px;
+        margin: 2px;
+    }
+
+    .buttonArea {
+        margin: 5px;
+        height: 30px;
+
+        .button {
+            padding: 5px;
+            text-align: center;
+            background-color: #6f41a1;
+            border-radius: 2px;
+        }
+    }
+}

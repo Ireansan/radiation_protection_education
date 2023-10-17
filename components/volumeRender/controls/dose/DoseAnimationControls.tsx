@@ -8,7 +8,7 @@ import {
     DoseAnimationObject,
     VolumeAnimationObject,
 } from "../../../../src";
-extend({ VolumeAnimationObject });
+import { useStore } from "../../../store";
 
 export type DoseAnimationControlsProps = {
     objects: React.RefObject<VolumeAnimationObject | DoseAnimationObject>[];
@@ -27,6 +27,8 @@ export function DoseAnimationControls({
     folderName = "animation",
     ...props
 }: DoseAnimationControlsProps) {
+    const [set] = useStore((state) => [state.set]);
+
     const childMaxLength = React.useRef<{
         index: number;
         length: number;
@@ -133,6 +135,40 @@ export function DoseAnimationControls({
                         }
                     } else {
                         console.log("test");
+                    }
+
+                    // set execute log for experiment
+                    switch (e) {
+                        case "time lapse":
+                            set((state) => ({
+                                sceneProperties: {
+                                    ...state.sceneProperties,
+                                    executeLog: {
+                                        ...state.sceneProperties.executeLog,
+                                        animation: {
+                                            ...state.sceneProperties.executeLog
+                                                .animation,
+                                            timeLapse: true,
+                                        },
+                                    },
+                                },
+                            }));
+                            break;
+                        case "accumulate":
+                            set((state) => ({
+                                sceneProperties: {
+                                    ...state.sceneProperties,
+                                    executeLog: {
+                                        ...state.sceneProperties.executeLog,
+                                        animation: {
+                                            ...state.sceneProperties.executeLog
+                                                .animation,
+                                            accumulate: true,
+                                        },
+                                    },
+                                },
+                            }));
+                            break;
                     }
                 },
             },

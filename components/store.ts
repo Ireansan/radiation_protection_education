@@ -61,6 +61,57 @@ export const playerConfig = {
     jointMatcap: matcapList[0],
 };
 
+const executeLog = {
+    animation: {
+        timeLapse: false,
+        accumulate: false,
+    },
+    parameter: {
+        colormap: {
+            parula: false,
+            heat: false,
+            jet: false,
+            turbo: false,
+            hot: false,
+            gray: false,
+            magma: false,
+            inferno: false,
+            plasma: false,
+            viridis: false,
+            cividis: false,
+            github: false,
+            cubehelix: false,
+        },
+        renderStyle: {
+            iso: false,
+            mip: false,
+        },
+    },
+    clipping: {
+        x: false,
+        y: false,
+        z: false,
+        free: false,
+        invert: false,
+    },
+    avatar: {
+        translate: false,
+        leftHand: false,
+        rightHand: false,
+    },
+    shield: {
+        translate: false,
+        enabled: false,
+    },
+    dosimeter: {
+        goggle: false,
+        neckGuard: false,
+        apron: false,
+        glove: false,
+    },
+};
+type ExecuteLog = typeof executeLog;
+
 const playerProperties = {
     position: new THREE.Vector3(),
     quaternion: new THREE.Quaternion(),
@@ -72,6 +123,7 @@ const onlinePlayers = {
 
 const sceneProperties = {
     dosimeterResults: [] as ResultsByName[],
+    executeLog: executeLog as ExecuteLog,
 };
 
 const actionNames = ["reset"] as const;

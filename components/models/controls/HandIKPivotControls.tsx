@@ -34,7 +34,7 @@ export const HandIKPivotControls = React.forwardRef<
     },
     ref
 ) {
-    const [viewing] = useStore((state) => [state.viewing]);
+    const [set, viewing] = useStore((state) => [state.set, state.viewing]);
 
     const controls = React.useMemo(() => new IKControlsImpl(), []);
     const group = React.useRef<THREE.Group>(null);
@@ -88,6 +88,22 @@ export const HandIKPivotControls = React.forwardRef<
                             new THREE.Vector3().setFromMatrixPosition(w)
                         );
                     }}
+                    onDragEnd={() => {
+                        // set execute log for experiment
+                        set((state) => ({
+                            sceneProperties: {
+                                ...state.sceneProperties,
+                                executeLog: {
+                                    ...state.sceneProperties.executeLog,
+                                    avatar: {
+                                        ...state.sceneProperties.executeLog
+                                            .avatar,
+                                        leftHand: true,
+                                    },
+                                },
+                            },
+                        }));
+                    }}
                 />
 
                 {/* Right Hand IK */}
@@ -107,6 +123,21 @@ export const HandIKPivotControls = React.forwardRef<
                             "mixamorigRightHandIK",
                             new THREE.Vector3().setFromMatrixPosition(w)
                         );
+                    }}
+                    onDragEnd={() => {
+                        set((state) => ({
+                            sceneProperties: {
+                                ...state.sceneProperties,
+                                executeLog: {
+                                    ...state.sceneProperties.executeLog,
+                                    avatar: {
+                                        ...state.sceneProperties.executeLog
+                                            .avatar,
+                                        rightHand: true,
+                                    },
+                                },
+                            },
+                        }));
                     }}
                 />
             </group>

@@ -1,0 +1,26 @@
+.experiment {
+  position: absolute;
+  top: 75px;
+  left: 5px;
+  width: 150px;
+  background-color: #878892;
+  border-radius: 2px;
+}
+.experiment h2 {
+  margin: 8px 2px;
+  font-size: 12px;
+}
+.experiment .check {
+  font-size: 6px;
+  margin: 2px;
+}
+.experiment .buttonArea {
+  margin: 5px;
+  height: 30px;
+}
+.experiment .buttonArea .button {
+  padding: 5px;
+  text-align: center;
+  background-color: #6f41a1;
+  border-radius: 2px;
+}/*# sourceMappingURL=experimentCheckList.module.css.map */
