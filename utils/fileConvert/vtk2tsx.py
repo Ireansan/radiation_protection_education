@@ -48,10 +48,10 @@ def vtk2tsx(
 
     # Generate accumulate nrrd and tsx
     nrrd_input_dir = os.path.join("../../public", out_dir_public)
-    nrrd_path = os.path.join(out_dir_public, "{}_accumulate.nrrd".format(name_nrrd))
-    nrrd_out_path = os.path.join("../../public", nrrd_path)
-    nrrd2accumulate(input_dir=nrrd_input_dir, out_path=nrrd_out_path)
+    nrrd_out_file = "{}_accumulate.nrrd".format(name_nrrd)
+    nrrd2accumulate(input_dir=nrrd_input_dir, out_file=nrrd_out_file)
 
+    nrrd_path = os.path.join(out_dir_public, nrrd_out_file)
     tsx_name = "{}_accumulate".format(name_component)
     tsx_names.append(tsx_name)
     nrrd2tsx(
@@ -70,6 +70,9 @@ def vtk2tsx(
 import sys
 import json
 
+"""
+PATH/fileConvert % python vtk2tsx.py ./json/order.SOME.json
+"""
 if __name__ == "__main__":
     args = sys.argv
     # vtk2tsx(* args[1:])

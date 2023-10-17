@@ -4,11 +4,15 @@ import numpy as np
 import nrrd
 
 
-def nrrd2accumulate(input_dir, out_path):
+def nrrd2accumulate(input_dir, out_file):
+    out_path = os.path.join(input_dir, out_file)
+
     # Get a list of all files in the directory
     files = os.listdir(input_dir)
     if ".DS_Store" in files:
         files.remove(".DS_Store")
+    if out_file in files:
+        files.remove(out_file)
 
     # Sort the files based on their names
     sorted_files = natsort.natsorted(files)
@@ -45,6 +49,6 @@ if __name__ == "__main__":
         order = json.load(f)
 
     order_adding = order["volume"]
-    nrrd2accumulate(
-        input_dir=os.path.join("../../public", order_adding["out_dir_public"])
-    )
+    # nrrd2accumulate(
+    #     input_dir=os.path.join("../../public", order_adding["out_dir_public"])
+    # )
