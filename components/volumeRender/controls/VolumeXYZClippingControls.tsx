@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import * as THREE from "three";
+import { MeshBVH } from "three-mesh-bvh";
 import { useCursor, PivotControls } from "@react-three/drei";
 import { useControls, folder, button, Leva } from "leva";
 
@@ -7,37 +8,190 @@ import { VolumeBase, VolumeControls as VolumeControlsImpl } from "../../../src";
 import { useStore } from "../../store";
 
 /**
- * Plane Helper Mesh
+ * Line Helper
  */
-type planeHelperMeshProps = {
-    id: number;
-    subPlaneSize: number;
-    subPlaneColor: THREE.Color;
-} & JSX.IntrinsicElements["mesh"];
-function PlaneHelperMesh({
-    id,
-    subPlaneSize,
-    subPlaneColor,
+type intersectLineHelperProps = {
+    index: number;
+    plane: THREE.Plane;
+    clipping: boolean;
+    viewing: boolean;
+    boxSize: [number, number, number];
+    planes: THREE.Plane[];
+    renderOrder?: number;
+    center?: THREE.Vector3;
+    activeAxes?: [boolean, boolean, boolean];
+    linewidth?: number;
+    color?: THREE.Color;
+    onDrag: (
+        l: THREE.Matrix4,
+        deltaL: THREE.Matrix4,
+        w: THREE.Matrix4,
+        deltaW: THREE.Matrix4,
+        index: number
+    ) => void;
+    onDragEnd: () => void;
+} & JSX.IntrinsicElements["group"];
+function IntersectLineHelper({
+    index,
+    plane,
+    clipping,
+    viewing,
+    boxSize,
+    planes,
+    renderOrder = 50,
+    center = new THREE.Vector3(),
+    activeAxes = [true, true, true],
+    linewidth = 1,
+    color = new THREE.Color(0xccff15),
+    onDrag,
+    onDragEnd,
     ...props
-}: planeHelperMeshProps) {
-    const meshRef = React.useRef<THREE.Mesh>(new THREE.Mesh());
-    const [hovered, setHovered] = React.useState(false);
-    useCursor(hovered);
+}: intersectLineHelperProps) {
+    const pivotRef = React.useRef<THREE.Group>(null!);
+    const lineSegmentsRef = React.useRef<THREE.LineSegments>(null!);
+    const geometryRef = React.useRef<THREE.BufferGeometry>(null!);
+    const bvhMesh = React.useMemo(() => {
+        // setup BVH Mesh
+        const geometry = new THREE.BoxBufferGeometry(...boxSize).translate(
+            center.x,
+            center.y,
+            center.z
+        );
+        return new MeshBVH(geometry, { maxLeafTris: 3 });
+    }, [boxSize, center]);
+    const defaultArray = new Float32Array(9999);
+
+    const onDragLine = () => {
+        const tmpVector3 = new THREE.Vector3();
+        const tmpLine3 = new THREE.Line3();
+
+        if (bvhMesh && geometryRef.current && lineSegmentsRef.current) {
+            if (geometryRef.current) {
+                if (!geometryRef.current.hasAttribute("position")) {
+                    const positionAttribute = new THREE.BufferAttribute(
+                        defaultArray,
+                        3,
+                        false
+                    );
+                    positionAttribute.setUsage(THREE.DynamicDrawUsage);
+                    geometryRef.current.setAttribute(
+                        "position",
+                        positionAttribute
+                    );
+                }
+            }
+
+            let index = 0;
+            const positionAttribute = geometryRef.current.attributes.position;
+
+            // code re-used and adjusted from https://gkjohnson.github.io/three-mesh-bvh/example/bundle/clippedEdges.html
+            bvhMesh.shapecast({
+                intersectsBounds: (box) => {
+                    return plane.intersectsBox(box);
+                },
+                intersectsTriangle: (triangle) => {
+                    // check each triangle edge to see if it intersects with the clippingPlane. If so then
+                    // add it to the list of segments.
+                    let count = 0;
+                    tmpLine3.start.copy(triangle.a);
+                    tmpLine3.end.copy(triangle.b);
+                    if (plane.intersectLine(tmpLine3, tmpVector3)) {
+                        positionAttribute.setXYZ(
+                            index,
+                            tmpVector3.x,
+                            tmpVector3.y,
+                            tmpVector3.z
+                        );
+                        index++;
+                        count++;
+                    }
+
+                    tmpLine3.start.copy(triangle.b);
+                    tmpLine3.end.copy(triangle.c);
+                    if (plane.intersectLine(tmpLine3, tmpVector3)) {
+                        positionAttribute.setXYZ(
+                            index,
+                            tmpVector3.x,
+                            tmpVector3.y,
+                            tmpVector3.z
+                        );
+                        count++;
+                        index++;
+                    }
+
+                    tmpLine3.start.copy(triangle.c);
+                    tmpLine3.end.copy(triangle.a);
+                    if (plane.intersectLine(tmpLine3, tmpVector3)) {
+                        positionAttribute.setXYZ(
+                            index,
+                            tmpVector3.x,
+                            tmpVector3.y,
+                            tmpVector3.z
+                        );
+                        count++;
+                        index++;
+                    }
+
+                    // If we only intersected with one or three sides then just remove it. This could be handled
+                    // more gracefully.
+                    if (count !== 2) {
+                        index -= count;
+                    }
+                },
+            });
+
+            // set the draw range to only the new segments and offset the lines so they don't intersect with the geometry
+            geometryRef.current.setDrawRange(0, index);
+            positionAttribute.needsUpdate = true;
+        }
+    };
+
+    useEffect(() => {
+        pivotRef.current.matrix.setPosition(center);
+    }, [center]);
+    useEffect(() => {
+        if (clipping) {
+            onDragLine();
+        }
+    }, [clipping]);
 
     return (
         <>
-            <mesh
-                ref={meshRef}
-                name={`plane${id}`}
-                scale={subPlaneSize}
-                onPointerOver={() => setHovered(true)}
-                onPointerOut={() => setHovered(false)}
-                // visible={visible}
-                {...props}
+            <PivotControls
+                ref={pivotRef}
+                disableAxes={!clipping}
+                disableRotations={!clipping}
+                disableSliders={!clipping}
+                visible={clipping}
+                activeAxes={activeAxes}
+                onDrag={(l, deltaL, w, deltaW) => {
+                    onDrag(l, deltaL, w, deltaW, index);
+                    onDragLine();
+                }}
+            />
+
+            {/* Line */}
+            <lineSegments
+                ref={lineSegmentsRef}
+                frustumCulled={false}
+                matrixAutoUpdate={false}
+                renderOrder={renderOrder}
+                visible={clipping ? !viewing : false}
             >
-                <planeGeometry />
-                <meshBasicMaterial color={subPlaneColor} wireframe={true} />
-            </mesh>
+                <bufferGeometry ref={geometryRef} attach="geometry" />
+                <lineBasicMaterial
+                    attach="material"
+                    color={color}
+                    linewidth={linewidth}
+                    linecap={"round"}
+                    linejoin={"round"}
+                    polygonOffset={true}
+                    polygonOffsetFactor={-1.0}
+                    polygonOffsetUnits={4.0}
+                    depthTest={false}
+                    clippingPlanes={planes}
+                />
+            </lineSegments>
         </>
     );
 }
@@ -47,8 +201,10 @@ export type VolumeXYZClippingControlsProps = {
     folderName?: string;
     planeSize?: number;
     planeColor?: THREE.Color;
-    subPlaneSize?: number;
-    subPlaneColor?: THREE.Color;
+    areaSize?: THREE.Vector3Tuple;
+    areaScale?: number;
+    lineWidth?: number;
+    lineColor?: THREE.Color;
 };
 type ClippingFlag = {
     x: boolean;
@@ -68,8 +224,10 @@ export const VolumeXYZClippingControls = React.forwardRef<
         folderName = "Clip",
         planeSize = 2,
         planeColor = new THREE.Color(0xffff00),
-        subPlaneSize = 1,
-        subPlaneColor = new THREE.Color(0xaaaaaa),
+        areaSize = [1, 1, 1],
+        areaScale = 1,
+        lineWidth = 1,
+        lineColor = new THREE.Color(0xccff15),
         ...props
     },
     ref
@@ -80,11 +238,6 @@ export const VolumeXYZClippingControls = React.forwardRef<
         state.viewing,
     ]);
     const controls = React.useMemo(() => new VolumeControlsImpl(), []);
-
-    const xPivotRef = React.useRef<THREE.Group>(null!);
-    const yPivotRef = React.useRef<THREE.Group>(null!);
-    const zPivotRef = React.useRef<THREE.Group>(null!);
-    const freePivotRef = React.useRef<THREE.Group>(null!);
 
     const [center, setCenter] = React.useState<THREE.Vector3>(
         new THREE.Vector3()
@@ -113,11 +266,26 @@ export const VolumeXYZClippingControls = React.forwardRef<
     const Normals: THREE.Vector3[] = normals.map((normal) =>
         new THREE.Vector3().fromArray(normal)
     );
-    const [tmpPlanes, setTmpPlanes] = React.useState<THREE.Plane[]>(
+    const [basePlanes, setBasePlanes] = React.useState<THREE.Plane[]>(
         Normals.map((n) => new THREE.Plane(n, 0))
     );
     const [Planes, setPlanes] = React.useState<THREE.Plane[]>([]);
     const coefficientsRef = React.useRef<number[]>(new Array(4).fill(-1));
+
+    const [boxSize, setBoxSize] = React.useState<[number, number, number]>(
+        areaSize.map((value) => value * 2 * areaScale) as [
+            number,
+            number,
+            number
+        ]
+    );
+    const [lineBasePlanes, setLineBasePlanes] = React.useState<THREE.Plane[]>(
+        Normals.map((n) => {
+            let normal = n.clone().multiplyScalar(-1);
+            return new THREE.Plane(normal, 0);
+        })
+    );
+    const [linePlanes, setLinePlanes] = React.useState<THREE.Plane[]>([]);
 
     /**
      * leva panels
@@ -136,7 +304,7 @@ export const VolumeXYZClippingControls = React.forwardRef<
                                 ...clippingFlagRef.current,
                             });
 
-                            xPivotRef.current.visible = e;
+                            // xPivotRef.current.visible = e;
 
                             if (e) {
                                 // set execute log for experiment
@@ -162,8 +330,8 @@ export const VolumeXYZClippingControls = React.forwardRef<
                         onChange: (e) => {
                             coefficientsRef.current[0] = e ? 1 : -1;
 
-                            tmpPlanes[0].normal.multiplyScalar(-1);
-                            tmpPlanes[0].constant *= -1;
+                            basePlanes[0].normal.multiplyScalar(-1);
+                            basePlanes[0].constant *= -1;
 
                             if (e) {
                                 // set execute log for experiment
@@ -197,8 +365,6 @@ export const VolumeXYZClippingControls = React.forwardRef<
                                 ...clippingFlagRef.current,
                             });
 
-                            yPivotRef.current.visible = e;
-
                             if (e) {
                                 // set execute log for experiment
                                 set((state) => ({
@@ -223,8 +389,8 @@ export const VolumeXYZClippingControls = React.forwardRef<
                         onChange: (e) => {
                             coefficientsRef.current[1] = e ? 1 : -1;
 
-                            tmpPlanes[1].normal.multiplyScalar(-1);
-                            tmpPlanes[1].constant *= -1;
+                            basePlanes[1].normal.multiplyScalar(-1);
+                            basePlanes[1].constant *= -1;
 
                             if (e) {
                                 // set execute log for experiment
@@ -258,8 +424,6 @@ export const VolumeXYZClippingControls = React.forwardRef<
                                 ...clippingFlagRef.current,
                             });
 
-                            zPivotRef.current.visible = e;
-
                             if (e) {
                                 // set execute log for experiment
                                 set((state) => ({
@@ -284,8 +448,8 @@ export const VolumeXYZClippingControls = React.forwardRef<
                         onChange: (e) => {
                             coefficientsRef.current[2] = e ? 1 : -1;
 
-                            tmpPlanes[2].normal.multiplyScalar(-1);
-                            tmpPlanes[2].constant *= -1;
+                            basePlanes[2].normal.multiplyScalar(-1);
+                            basePlanes[2].constant *= -1;
 
                             if (e) {
                                 // set execute log for experiment
@@ -320,8 +484,6 @@ export const VolumeXYZClippingControls = React.forwardRef<
                             });
                             clippingFlagRef.current.free = e;
 
-                            freePivotRef.current.visible = e;
-
                             if (e) {
                                 // set execute log for experiment
                                 set((state) => ({
@@ -346,8 +508,8 @@ export const VolumeXYZClippingControls = React.forwardRef<
                         onChange: (e) => {
                             coefficientsRef.current[3] = e ? 1 : -1;
 
-                            tmpPlanes[3].normal.multiplyScalar(-1);
-                            tmpPlanes[3].constant *= -1;
+                            basePlanes[3].normal.multiplyScalar(-1);
+                            basePlanes[3].constant *= -1;
 
                             if (e) {
                                 // set execute log for experiment
@@ -398,8 +560,15 @@ export const VolumeXYZClippingControls = React.forwardRef<
         }
         direction.normalize().multiplyScalar(coefficientsRef.current[index]);
 
-        tmpPlanes[index].normal.copy(direction);
-        tmpPlanes[index].constant = -position.dot(direction);
+        basePlanes[index].normal.copy(direction);
+        basePlanes[index].constant = -position.dot(direction);
+
+        const lineDirection = direction.clone().multiplyScalar(-1);
+        const offset = direction.clone().multiplyScalar(1e-4);
+        const linePosition = position.clone().add(offset);
+
+        lineBasePlanes[index].normal.copy(lineDirection);
+        lineBasePlanes[index].constant = -linePosition.dot(lineDirection);
     };
 
     // Attach volume to controls
@@ -416,18 +585,11 @@ export const VolumeXYZClippingControls = React.forwardRef<
         return () => void controls.detach();
     }, [object, controls]);
 
-    useEffect(() => {
-        xPivotRef.current.matrix.setPosition(center);
-        tmpPlanes[0].constant = center.x;
-
-        yPivotRef.current.matrix.setPosition(center);
-        tmpPlanes[1].constant = center.y;
-
-        zPivotRef.current.matrix.setPosition(center);
-        tmpPlanes[2].constant = center.z;
-
-        freePivotRef.current.matrix.setPosition(center);
-    }, [center, tmpPlanes]);
+    React.useEffect(() => {
+        basePlanes[0].constant = center.x;
+        basePlanes[1].constant = center.y;
+        basePlanes[2].constant = center.z;
+    }, [center, basePlanes]);
 
     // Push Planes
     React.useEffect(() => {
@@ -449,7 +611,7 @@ export const VolumeXYZClippingControls = React.forwardRef<
         const planes: THREE.Plane[] = clippingArray
             .map((value, index) => {
                 if (value[1]) {
-                    return tmpPlanes[index];
+                    return basePlanes[index];
                 } else {
                     return;
                 }
@@ -460,7 +622,22 @@ export const VolumeXYZClippingControls = React.forwardRef<
 
         setClipping(tmpClipping);
         setPlanes(planes);
-    }, [controls, clippingFlag, tmpPlanes]);
+
+        // Line
+        const linePlanes: THREE.Plane[] = clippingArray
+            .map((value, index) => {
+                if (value[1]) {
+                    return lineBasePlanes[index];
+                } else {
+                    return;
+                }
+            })
+            .filter((value): value is NonNullable<typeof value> => {
+                return value !== undefined;
+            });
+
+        setLinePlanes(linePlanes);
+    }, [controls, clippingFlag, basePlanes, lineBasePlanes]);
 
     return controls ? (
         <>
@@ -468,7 +645,7 @@ export const VolumeXYZClippingControls = React.forwardRef<
 
             {/* -------------------------------------------------- */}
             {/* Planes */}
-            {tmpPlanes.map((plane, index) => (
+            {basePlanes.map((plane, index) => (
                 <>
                     <planeHelper
                         plane={plane}
@@ -477,17 +654,21 @@ export const VolumeXYZClippingControls = React.forwardRef<
                     />
                 </>
             ))}
+
             <group visible={!viewing}>
                 {/* X */}
-                <PivotControls
-                    ref={xPivotRef}
-                    disableAxes={!clippingFlag.x}
-                    disableRotations={!clippingFlag.x}
-                    disableSliders={!clippingFlag.x}
+                <IntersectLineHelper
+                    index={0}
+                    plane={basePlanes[0]}
+                    clipping={clippingFlag.x}
+                    viewing={viewing}
+                    boxSize={boxSize}
+                    planes={linePlanes}
+                    center={center}
                     activeAxes={[true, false, false]}
-                    onDrag={(l, deltaL, w, deltaW) =>
-                        onDrag(l, deltaL, w, deltaW, 0)
-                    }
+                    linewidth={lineWidth}
+                    color={lineColor}
+                    onDrag={onDrag}
                     onDragEnd={() => {
                         // set execute log for experiment
                         set((state) => ({
@@ -504,24 +685,20 @@ export const VolumeXYZClippingControls = React.forwardRef<
                             },
                         }));
                     }}
-                >
-                    <PlaneHelperMesh
-                        id={0}
-                        subPlaneSize={subPlaneSize}
-                        subPlaneColor={subPlaneColor}
-                        rotation={[0, Math.PI / 2, 0]}
-                    />
-                </PivotControls>
+                />
                 {/* Y */}
-                <PivotControls
-                    ref={yPivotRef}
-                    disableAxes={!clippingFlag.y}
-                    disableRotations={!clippingFlag.y}
-                    disableSliders={!clippingFlag.y}
+                <IntersectLineHelper
+                    index={1}
+                    plane={basePlanes[1]}
+                    clipping={clippingFlag.y}
+                    viewing={viewing}
+                    boxSize={boxSize}
+                    planes={linePlanes}
+                    center={center}
                     activeAxes={[false, true, false]}
-                    onDrag={(l, deltaL, w, deltaW) =>
-                        onDrag(l, deltaL, w, deltaW, 1)
-                    }
+                    linewidth={lineWidth}
+                    color={lineColor}
+                    onDrag={onDrag}
                     onDragEnd={() => {
                         // set execute log for experiment
                         set((state) => ({
@@ -538,24 +715,20 @@ export const VolumeXYZClippingControls = React.forwardRef<
                             },
                         }));
                     }}
-                >
-                    <PlaneHelperMesh
-                        id={1}
-                        subPlaneSize={subPlaneSize}
-                        subPlaneColor={subPlaneColor}
-                        rotation={[Math.PI / 2, 0, 0]}
-                    />
-                </PivotControls>
+                />
                 {/* Z */}
-                <PivotControls
-                    ref={zPivotRef}
-                    disableAxes={!clippingFlag.z}
-                    disableRotations={!clippingFlag.z}
-                    disableSliders={!clippingFlag.z}
+                <IntersectLineHelper
+                    index={2}
+                    plane={basePlanes[2]}
+                    clipping={clippingFlag.z}
+                    viewing={viewing}
+                    boxSize={boxSize}
+                    planes={linePlanes}
+                    center={center}
                     activeAxes={[false, false, true]}
-                    onDrag={(l, deltaL, w, deltaW) =>
-                        onDrag(l, deltaL, w, deltaW, 2)
-                    }
+                    linewidth={lineWidth}
+                    color={lineColor}
+                    onDrag={onDrag}
                     onDragEnd={() => {
                         // set execute log for experiment
                         set((state) => ({
@@ -572,23 +745,19 @@ export const VolumeXYZClippingControls = React.forwardRef<
                             },
                         }));
                     }}
-                >
-                    <PlaneHelperMesh
-                        id={2}
-                        subPlaneSize={subPlaneSize}
-                        subPlaneColor={subPlaneColor}
-                        rotation={[0, 0, Math.PI / 2]}
-                    />
-                </PivotControls>
+                />
                 {/* Free */}
-                <PivotControls
-                    ref={freePivotRef}
-                    disableAxes={!clippingFlag.free}
-                    disableRotations={!clippingFlag.free}
-                    disableSliders={!clippingFlag.free}
-                    onDrag={(l, deltaL, w, deltaW) =>
-                        onDrag(l, deltaL, w, deltaW, 3)
-                    }
+                <IntersectLineHelper
+                    index={3}
+                    plane={basePlanes[3]}
+                    clipping={clippingFlag.free}
+                    viewing={viewing}
+                    boxSize={boxSize}
+                    planes={linePlanes}
+                    center={center}
+                    linewidth={lineWidth}
+                    color={lineColor}
+                    onDrag={onDrag}
                     onDragEnd={() => {
                         // set execute log for experiment
                         set((state) => ({
@@ -605,14 +774,7 @@ export const VolumeXYZClippingControls = React.forwardRef<
                             },
                         }));
                     }}
-                >
-                    <PlaneHelperMesh
-                        id={3}
-                        subPlaneSize={subPlaneSize}
-                        subPlaneColor={subPlaneColor}
-                        rotation={[0, 0, Math.PI / 2]}
-                    />
-                </PivotControls>
+                />
             </group>
         </>
     ) : null;
