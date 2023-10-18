@@ -254,7 +254,12 @@ function XRayRoomDosimeterPrototype() {
                             object={ref}
                             folderName="Dose 3"
                             planeSize={2}
-                            subPlaneSize={1}
+                            areaSize={
+                                VOLUMEDATA.XRay_curtain_Configure.volume
+                                    .areaSize
+                            }
+                            areaScale={1.1}
+                            lineColor={new THREE.Color(0x6e0010)}
                         />
 
                         <DosimeterControls
