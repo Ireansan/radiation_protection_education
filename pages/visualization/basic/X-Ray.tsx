@@ -1,12 +1,14 @@
 import React, { useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
-    OrbitControls,
-    Stats,
     GizmoHelper,
     GizmoViewport,
     Grid,
+    OrbitControls,
+    PivotControls,
+    Stats,
 } from "@react-three/drei";
+import * as THREE from "three";
 import { Physics, Debug } from "@react-three/rapier";
 import { useControls, folder } from "leva";
 
@@ -14,44 +16,45 @@ import { useControls, folder } from "leva";
 // Game
 import {
     // ----------
-    // ui
-    DebugPanel,
-    // ----------
     // hook
     useToggle,
-} from "../../components/game";
+} from "../../../components/game";
 
 // ==========
 // Volume
 // ----------
 // object
-import { DoseGroup, DoseAnimationObject } from "../../src";
+import { DoseGroup, DoseAnimationObject } from "../../../src";
 // ----------
 // data
-import * as ENVIROMENT from "../../components/models/Environment";
-import * as VOLUMEDATA from "../../components/models/VolumeData";
+import * as ENVIROMENT from "../../../components/models/Environment";
+import * as VOLUMEDATA from "../../../components/models/VolumeData";
 // ----------
 // controls
 import {
     DoseAnimationControls,
     VolumeParameterControls,
     VolumeXYZClippingControls,
-} from "../../components/volumeRender";
+} from "../../../components/volumeRender";
 
 // ==========
 // UI
-import { SceneConfigPanel } from "../../components/ui";
+import { SceneConfigPanel } from "../../../components/ui";
 
 // ==========
 // Store
-import { useStore } from "../../components/store";
+import { useStore } from "../../../components/store";
 
 // ==========
 // Styles
-import styles from "../../styles/threejs.module.css";
+import styles from "../../../styles/threejs.module.css";
 
-function XRay() {
-    const [debug, viewing] = useStore((state) => [state.debug, state.viewing]);
+function XRayExtra() {
+    const [set, debug, viewing] = useStore((state) => [
+        state.set,
+        state.debug,
+        state.viewing,
+    ]);
 
     const ref = useRef<DoseGroup>(null!);
 
@@ -112,89 +115,57 @@ function XRay() {
                         {/* -------------------------------------------------- */}
                         {/* Volume Object */}
                         <doseGroup ref={ref}>
-                            {/* Time Lapse */}
-                            <doseGroup ref={timelapseRef}>
-                                {/* X-Ray Dose, no curtain */}
-                                <doseAnimationObject
-                                    ref={nocurtainRef}
-                                    name={"x-ray_animation_nocurtain"}
-                                    visible={false}
-                                    position={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.position
-                                    }
-                                    rotation={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.rotation
-                                    }
-                                    scale={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.scale
-                                    }
-                                >
-                                    <VOLUMEDATA.XRay_nocurtain_all_Animation />
-                                </doseAnimationObject>
-                                {/* X-Ray Dose, curtain */}
-                                <doseAnimationObject
-                                    ref={curtainRef}
-                                    name={"x-ray_animation_curtain"}
-                                    position={
-                                        VOLUMEDATA.XRay_curtain_Configure.volume
-                                            .position
-                                    }
-                                    rotation={
-                                        VOLUMEDATA.XRay_curtain_Configure.volume
-                                            .rotation
-                                    }
-                                    scale={
-                                        VOLUMEDATA.XRay_curtain_Configure.volume
-                                            .scale
-                                    }
-                                >
-                                    <VOLUMEDATA.XRay_curtain_all_Animation />
-                                </doseAnimationObject>
-                            </doseGroup>
+                            <doseGroup
+                                position={
+                                    VOLUMEDATA.XRay_nocurtain_Configure.volume
+                                        .position
+                                }
+                                rotation={
+                                    VOLUMEDATA.XRay_nocurtain_Configure.volume
+                                        .rotation
+                                }
+                                scale={
+                                    VOLUMEDATA.XRay_nocurtain_Configure.volume
+                                        .scale
+                                }
+                            >
+                                {/* Time Lapse */}
+                                <doseGroup ref={timelapseRef}>
+                                    {/* X-Ray Dose, no curtain */}
 
-                            {/* Accumulate */}
-                            <doseGroup ref={accumulateRef} visible={false}>
-                                {/* X-Ray Dose, no curtain, Accumulate */}
-                                <doseGroup
-                                    ref={nocurtainAccumuRef}
-                                    name={"x-ray_accumulate_nocurtain"}
-                                    visible={false}
-                                    position={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.position
-                                    }
-                                    rotation={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.rotation
-                                    }
-                                    scale={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.scale
-                                    }
-                                >
-                                    <VOLUMEDATA.XRay_nocurtain_all_accumulate />
+                                    <doseAnimationObject
+                                        ref={nocurtainRef}
+                                        name={"x-ray_animation_nocurtain"}
+                                        visible={false}
+                                    >
+                                        <VOLUMEDATA.XRay_nocurtain_all_Animation />
+                                    </doseAnimationObject>
+                                    {/* X-Ray Dose, curtain */}
+                                    <doseAnimationObject
+                                        ref={curtainRef}
+                                        name={"x-ray_animation_curtain"}
+                                    >
+                                        <VOLUMEDATA.XRay_curtain_all_Animation />
+                                    </doseAnimationObject>
                                 </doseGroup>
-                                {/* X-Ray Dose, curtain, Accumulate */}
-                                <doseGroup
-                                    ref={curtainAccumuRef}
-                                    name={"x-ray_accumulate_curtain"}
-                                    position={
-                                        VOLUMEDATA.XRay_curtain_Configure.volume
-                                            .position
-                                    }
-                                    rotation={
-                                        VOLUMEDATA.XRay_curtain_Configure.volume
-                                            .rotation
-                                    }
-                                    scale={
-                                        VOLUMEDATA.XRay_curtain_Configure.volume
-                                            .scale
-                                    }
-                                >
-                                    <VOLUMEDATA.XRay_curtain_all_accumulate />
+
+                                {/* Accumulate */}
+                                <doseGroup ref={accumulateRef} visible={false}>
+                                    {/* X-Ray Dose, no curtain, Accumulate */}
+                                    <doseGroup
+                                        ref={nocurtainAccumuRef}
+                                        name={"x-ray_accumulate_nocurtain"}
+                                        visible={false}
+                                    >
+                                        <VOLUMEDATA.XRay_nocurtain_all_accumulate />
+                                    </doseGroup>
+                                    {/* X-Ray Dose, curtain, Accumulate */}
+                                    <doseGroup
+                                        ref={curtainAccumuRef}
+                                        name={"x-ray_accumulate_curtain"}
+                                    >
+                                        <VOLUMEDATA.XRay_curtain_all_accumulate />
+                                    </doseGroup>
                                 </doseGroup>
                             </doseGroup>
 
@@ -228,7 +199,12 @@ function XRay() {
                             object={ref}
                             folderName="Clip"
                             planeSize={2}
-                            subPlaneSize={1}
+                            areaSize={
+                                VOLUMEDATA.XRay_curtain_Configure.volume
+                                    .areaSize
+                            }
+                            areaScale={1.1}
+                            lineColor={new THREE.Color(0x6e0010)}
                         />
 
                         {/* -------------------------------------------------- */}
@@ -303,4 +279,4 @@ function XRay() {
     );
 }
 
-export default XRay;
+export default XRayExtra;

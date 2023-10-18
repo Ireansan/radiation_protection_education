@@ -1,11 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
-    OrbitControls,
-    Stats,
     GizmoHelper,
     GizmoViewport,
     Grid,
+    OrbitControls,
+    PivotControls,
+    Stats,
 } from "@react-three/drei";
 import * as THREE from "three";
 import { Physics, Debug } from "@react-three/rapier";
@@ -14,54 +15,62 @@ import { Physics, Debug } from "@react-three/rapier";
 // Game
 import {
     // ----------
+    // ui
+    DebugPanel,
+    // ----------
     // hook
     useToggle,
-} from "../../components/game";
+} from "../../../components/game";
 
 // ==========
 // Volume
 // ----------
 // object
-import { DoseGroup, DoseAnimationObject } from "../../src";
+import { DoseGroup, DoseAnimationObject } from "../../../src";
 // ----------
 // data
-import * as VOLUMEDATA from "../../components/models/VolumeData";
+
+import * as VOLUMEDATA from "../../../components/models/VolumeData";
 // ----------
 // controls
 import {
     DoseAnimationControls,
     VolumeParameterControls,
     VolumeXYZClippingControls,
-} from "../../components/volumeRender";
+} from "../../../components/volumeRender";
 
 // ==========
 // UI
-import { SceneConfigPanel } from "../../components/ui";
+import { SceneConfigPanel } from "../../../components/ui";
 
 // ==========
 // Store
-import { useStore } from "../../components/store";
+import { useStore } from "../../../components/store";
 
 // ==========
 // Styles
-import styles from "../../styles/threejs.module.css";
+import styles from "../../../styles/threejs.module.css";
 
-function CArmRoll180Pitch360() {
-    const [debug] = useStore((state) => [state.debug]);
+function CArmExtra() {
+    const [set, debug, viewing] = useStore((state) => [
+        state.set,
+        state.debug,
+        state.viewing,
+    ]);
 
     const ref = useRef<DoseGroup>(null);
 
     const timelapseRef = useRef<DoseGroup>(null);
-    const cArmRollRef = useRef<DoseAnimationObject>(null);
+    const cArmRef = useRef<DoseAnimationObject>(null);
 
     const accumulateRef = useRef<DoseGroup>(null);
-    const cArmRollAccumuRef = useRef<DoseGroup>(null);
+    const cArmAccumuRef = useRef<DoseGroup>(null);
 
     const ToggledDebug = useToggle(Debug, "debug");
 
     useEffect(() => {
         console.log(ref.current);
-        // console.log(cArmRollRef);
+        // console.log(cArmRef);
     }, [ref]);
 
     return (
@@ -76,36 +85,24 @@ function CArmRoll180Pitch360() {
                     >
                         {/* -------------------------------------------------- */}
                         {/* Volume Object */}
-                        <doseGroup ref={ref}>
+                        <doseGroup
+                            ref={ref}
+                            position={VOLUMEDATA.CArm_Configure.volume.position}
+                            rotation={VOLUMEDATA.CArm_Configure.volume.rotation}
+                            scale={VOLUMEDATA.CArm_Configure.volume.scale}
+                        >
                             {/* Time Lapse */}
                             <doseGroup
                                 ref={timelapseRef}
                                 clim2={
-                                    VOLUMEDATA.CArm_roll180_pitch360_Configure
-                                        .volume.clim2.timelapse
+                                    VOLUMEDATA.CArm_Configure.volume.clim2
+                                        .timelapse
                                 }
                                 clim2AutoUpdate={false}
                             >
                                 {/* C-Arm Dose */}
-                                <doseAnimationObject
-                                    ref={cArmRollRef}
-                                    position={
-                                        VOLUMEDATA
-                                            .CArm_roll180_pitch360_Configure
-                                            .volume.position
-                                    }
-                                    rotation={
-                                        VOLUMEDATA
-                                            .CArm_roll180_pitch360_Configure
-                                            .volume.rotation
-                                    }
-                                    scale={
-                                        VOLUMEDATA
-                                            .CArm_roll180_pitch360_Configure
-                                            .volume.scale
-                                    }
-                                >
-                                    <VOLUMEDATA.CArm_roll180_pitch360_all_Animation />
+                                <doseAnimationObject ref={cArmRef}>
+                                    <VOLUMEDATA.CArm_all_Animation />
                                 </doseAnimationObject>
                             </doseGroup>
 
@@ -114,31 +111,14 @@ function CArmRoll180Pitch360() {
                                 ref={accumulateRef}
                                 visible={false}
                                 clim2={
-                                    VOLUMEDATA.CArm_roll180_pitch360_Configure
-                                        .volume.clim2.accumulate
+                                    VOLUMEDATA.CArm_Configure.volume.clim2
+                                        .accumulate
                                 }
                                 clim2AutoUpdate={false}
                             >
                                 {/* C-Arm Dose, Accumulate */}
-                                <doseGroup
-                                    ref={cArmRollAccumuRef}
-                                    position={
-                                        VOLUMEDATA
-                                            .CArm_roll180_pitch360_Configure
-                                            .volume.position
-                                    }
-                                    rotation={
-                                        VOLUMEDATA
-                                            .CArm_roll180_pitch360_Configure
-                                            .volume.rotation
-                                    }
-                                    scale={
-                                        VOLUMEDATA
-                                            .CArm_roll180_pitch360_Configure
-                                            .volume.scale
-                                    }
-                                >
-                                    <VOLUMEDATA.CArm_roll180_pitch360_all_accumulate />
+                                <doseGroup ref={cArmAccumuRef}>
+                                    <VOLUMEDATA.CArm_all_accumulate />
                                 </doseGroup>
                             </doseGroup>
                         </doseGroup>
@@ -146,7 +126,7 @@ function CArmRoll180Pitch360() {
                         {/* -------------------------------------------------- */}
                         {/* Volume Controls */}
                         <DoseAnimationControls
-                            objects={[cArmRollRef]}
+                            objects={[cArmRef]}
                             mainGroup={timelapseRef}
                             subGroup={accumulateRef}
                             duration={16}
@@ -157,29 +137,27 @@ function CArmRoll180Pitch360() {
                             object={ref}
                             folderName="Clip"
                             planeSize={2}
-                            subPlaneSize={1}
+                            areaSize={VOLUMEDATA.CArm_Configure.volume.areaSize}
+                            areaScale={1.1}
+                            lineColor={new THREE.Color(0x6e0010)}
                         />
 
                         {/* -------------------------------------------------- */}
                         {/* Three.js Object */}
                         <group
                             position={
-                                VOLUMEDATA.CArm_roll180_pitch360_Configure
-                                    .object3d.position
+                                VOLUMEDATA.CArm_Configure.object3d.position
                             }
                             rotation={
-                                VOLUMEDATA.CArm_roll180_pitch360_Configure
-                                    .object3d.rotation
+                                VOLUMEDATA.CArm_Configure.object3d.rotation
                             }
                             scale={
-                                VOLUMEDATA.CArm_roll180_pitch360_Configure
-                                    .volume.scale *
-                                VOLUMEDATA.CArm_roll180_pitch360_Configure
-                                    .object3d.scale
+                                VOLUMEDATA.CArm_Configure.volume.scale *
+                                VOLUMEDATA.CArm_Configure.object3d.scale
                             }
                         >
-                            <VOLUMEDATA.CArm_roll180_pitch360_material />
-                            <VOLUMEDATA.CArm_roll180_pitch360_region />
+                            <VOLUMEDATA.CArm_material />
+                            <VOLUMEDATA.CArm_region />
                         </group>
                         <mesh position={[0, 1, 0]} visible={debug}>
                             <sphereBufferGeometry args={[0.25]} />
@@ -238,4 +216,4 @@ function CArmRoll180Pitch360() {
     );
 }
 
-export default CArmRoll180Pitch360;
+export default CArmExtra;

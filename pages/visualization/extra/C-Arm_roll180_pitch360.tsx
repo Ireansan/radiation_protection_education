@@ -154,7 +154,12 @@ function CArmRoll180Pitch360Extra() {
                             object={ref}
                             folderName="Clip"
                             planeSize={2}
-                            subPlaneSize={1}
+                            areaSize={
+                                VOLUMEDATA.CArm_roll180_pitch360_Configure
+                                    .volume.areaSize
+                            }
+                            areaScale={1.1}
+                            lineColor={new THREE.Color(0x6e0010)}
                         />
 
                         {/* Dosimeter */}

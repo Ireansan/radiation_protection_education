@@ -30,30 +30,6 @@ const Home: NextPage = () => {
                 <h3>Visualization</h3>
                 <div className={styles.grid}>
                     <div className={styles.card}>
-                        <Link href={"/visualization/X-Ray"}>
-                            <h2>X-Ray &rarr;</h2>
-                            <p>Next.js + react-three/fiber, Texture 3D</p>
-                        </Link>
-                    </div>
-
-                    <div className={styles.card}>
-                        <Link href={"/visualization/C-Arm"}>
-                            <h2>C-Arm (Type 1) &rarr;</h2>
-                            <p>Next.js + react-three/fiber, Texture 3D</p>
-                        </Link>
-                    </div>
-
-                    <div className={styles.card}>
-                        <Link href={"/visualization/C-Arm_roll180_pitch360"}>
-                            <h2>C-Arm (Type 2) &rarr;</h2>
-                            <p>Next.js + react-three/fiber, Texture 3D</p>
-                        </Link>
-                    </div>
-                </div>
-
-                <h3>Visualization Extra</h3>
-                <div className={styles.grid}>
-                    <div className={styles.card}>
                         <Link href={"/visualization/extra/X-Ray"}>
                             <h2>X-Ray &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
@@ -70,6 +46,32 @@ const Home: NextPage = () => {
                     <div className={styles.card}>
                         <Link
                             href={"/visualization/extra/C-Arm_roll180_pitch360"}
+                        >
+                            <h2>C-Arm (Type 2) &rarr;</h2>
+                            <p>Next.js + react-three/fiber, Texture 3D</p>
+                        </Link>
+                    </div>
+                </div>
+
+                <h3>Visualization (Basic)</h3>
+                <div className={styles.grid}>
+                    <div className={styles.card}>
+                        <Link href={"/visualization/basic/X-Ray"}>
+                            <h2>X-Ray &rarr;</h2>
+                            <p>Next.js + react-three/fiber, Texture 3D</p>
+                        </Link>
+                    </div>
+
+                    <div className={styles.card}>
+                        <Link href={"/visualization/basic/C-Arm"}>
+                            <h2>C-Arm (Type 1) &rarr;</h2>
+                            <p>Next.js + react-three/fiber, Texture 3D</p>
+                        </Link>
+                    </div>
+
+                    <div className={styles.card}>
+                        <Link
+                            href={"/visualization/basic/C-Arm_roll180_pitch360"}
                         >
                             <h2>C-Arm (Type 2) &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
