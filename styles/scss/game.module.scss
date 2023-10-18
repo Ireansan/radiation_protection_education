@@ -40,17 +40,17 @@
         text-align: center;
     }
 
-    .notready .continue-link {
+    &.notready .continue-link {
         cursor: auto;
         color: #606060;
     }
 
-    .ready .continue-link {
+    &.ready .continue-link {
         cursor: pointer;
         color: white;
     }
 
-    .clicked {
+    &.clicked {
         pointer-events: none;
         opacity: 0;
     }

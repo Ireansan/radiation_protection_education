@@ -38,15 +38,15 @@
   width: 20%;
   text-align: center;
 }
-.fullscreen .notready .continue-link {
+.fullscreen.notready .continue-link {
   cursor: auto;
   color: #606060;
 }
-.fullscreen .ready .continue-link {
+.fullscreen.ready .continue-link {
   cursor: pointer;
   color: white;
 }
-.fullscreen .clicked {
+.fullscreen.clicked {
   pointer-events: none;
   opacity: 0;
 }
