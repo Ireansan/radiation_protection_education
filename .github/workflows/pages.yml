@@ -93,7 +93,6 @@ jobs:
                   echo NEXT_PUBLIC_FIREBASE_AUTH_PROVIDER_X509_CERT_URL=${{ secrets.FIREBASE_AUTH_PROVIDER_X509_CERT_URL }} >> .env.local
                   echo NEXT_PUBLIC_FIREBASE_CLIENT_X509_CERT_URL=${{ secrets.FIREBASE_CLIENT_X509_CERT_URL }} >> .env.local
                   echo NEXT_PUBLIC_FIREBASE_UNIVERSE_DOMAIN=${{ secrets.FIREBASE_UNIVERSE_DOMAIN }} >> .env.local
-                  echo NEXT_PUBLIC_GOOGLE_FORMS=${{ secrets.GOOGLE_FORMS }} >> .env.local
                   ${{ steps.detect-package-manager.outputs.runner }} next build
                   ${{ steps.detect-package-manager.outputs.runner }} next export
             - name: Upload artifact

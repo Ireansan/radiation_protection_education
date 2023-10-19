@@ -3,6 +3,8 @@ import { CheckBox, CheckBoxOutlineBlank } from "@mui/icons-material";
 
 import { useStore } from "../store";
 
+import { googleFormsURL } from "utils/common/experimentsConfig";
+
 import styles from "../../styles/css/experimentCheckList.module.css";
 
 type experimentCheckListProps = {};
@@ -228,7 +230,7 @@ export function ExperimentCheckList({ ...props }: experimentCheckListProps) {
                     ) ? (
                         <div className={`${styles.button}`}>
                             <a
-                                href={`${process.env.NEXT_PUBLIC_GOOGLE_FORMS}`}
+                                href={`${googleFormsURL}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
