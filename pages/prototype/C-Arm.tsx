@@ -1,20 +1,16 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
-    OrbitControls,
-    Stats,
     GizmoHelper,
     GizmoViewport,
-    PivotControls,
     Grid,
+    OrbitControls,
+    PivotControls,
+    Stats,
 } from "@react-three/drei";
 import * as THREE from "three";
 import { Physics, Debug } from "@react-three/rapier";
 import { useControls, folder } from "leva";
-
-// ==========
-// Three.js
-import { YBot } from "../../components/models";
 
 // ==========
 // Game
@@ -29,24 +25,19 @@ import {
 
 // ==========
 // Model
+import * as MODELS from "../../components/models";
 import { Board_Configure } from "../../components/models";
 import { CustomYBotIK } from "../../components/models/Custom_Ybot_IK";
-import { HandIKLevaControls } from "../../components/models/controls";
+import { HandIKPivotControls } from "../../components/models/controls";
 
 // ==========
 // Volume
 // ----------
 // object
-import {
-    Dosimeter,
-    DoseGroup,
-    DoseAnimationObject,
-    DoseBase,
-    DoseObject,
-} from "../../src";
+import { Dosimeter, DoseGroup, DoseAnimationObject } from "../../src";
 // ----------
 // data
-import * as ENVIROMENT from "../../components/models/Environment";
+
 import * as VOLUMEDATA from "../../components/models/VolumeData";
 // ----------
 // controls
@@ -55,11 +46,13 @@ import {
     DoseBoardControls,
     DosimeterControls,
     DosimeterDisplayUI,
-    VolumeAnimationControls,
-    VolumeClippingControls,
     VolumeParameterControls,
     VolumeXYZClippingControls,
 } from "../../components/volumeRender";
+
+// ==========
+// UI
+import { ExperimentCheckList, SceneConfigPanel } from "../../components/ui";
 
 // ==========
 // Store
@@ -69,60 +62,125 @@ import { useStore } from "../../components/store";
 // Styles
 import styles from "../../styles/threejs.module.css";
 
-function XRayRoomDosimeterPrototype() {
-    const [debug] = useStore((state) => [state.debug]);
+function CArmExtra() {
+    const [set, debug, viewing] = useStore((state) => [
+        state.set,
+        state.debug,
+        state.viewing,
+    ]);
 
     const ref = useRef<DoseGroup>(null);
 
     const timelapseRef = useRef<DoseGroup>(null);
-    const nocurtainRef = useRef<DoseAnimationObject>(null);
-    const curtainRef = useRef<DoseAnimationObject>(null);
+    const cArmRef = useRef<DoseAnimationObject>(null);
+    const cArmRoll180Pitch360Ref = useRef<DoseAnimationObject>(null);
 
     const accumulateRef = useRef<DoseGroup>(null);
-    const nocurtainAccumuRef = useRef<DoseGroup>(null);
-    const curtainAccumuRef = useRef<DoseGroup>(null);
+    const cArmAccumuRef = useRef<DoseGroup>(null);
+    const cArmRoll180Pitch360AccumuRef = useRef<DoseGroup>(null);
 
-    const curtainObjRef = useRef<THREE.Group>(null);
-
+    const cArmModelRef = useRef<THREE.Group>(null!);
     const dosimeterRef = useRef<Dosimeter>(null);
-    const yBotRef = useRef<THREE.Group>(null);
+    const yBotRef = useRef<THREE.Group>(null!);
+
+    const options = ["roll 0, pitch 0", "roll 180, pitch 90"];
+    const armConfigs = [
+        {
+            ...VOLUMEDATA.CArm_Configure.object3d.model,
+        },
+        {
+            ...VOLUMEDATA.CArm_roll180_pitch360_Configure.object3d.model,
+        },
+    ];
 
     const ToggledDebug = useToggle(Debug, "debug");
 
+    const getCArmBonebyName = (boneName: string) => {
+        if (cArmModelRef.current && cArmModelRef.current.children[0]) {
+            let element = cArmModelRef.current.children[0];
+            let bone = element.getObjectByName(boneName);
+
+            return bone;
+        }
+
+        return null;
+    };
+    const setCArmMatrix = (
+        rollRad: number,
+        pitchRad: number,
+        height: number = 0.9
+    ) => {
+        let rollBone = getCArmBonebyName("ArmRoll");
+        let pitchBone = getCArmBonebyName("ArmPitch");
+
+        if (rollBone) {
+            rollBone.position.y = height;
+            rollBone.rotation.y = rollRad;
+        }
+
+        if (pitchBone) {
+            pitchBone.rotation.x = pitchRad;
+        }
+    };
+
     const [,] = useControls(() => ({
         scene: folder({
-            curtain: {
-                value: false,
+            type: {
+                options: options,
+                value: options[0],
                 onChange: (e) => {
-                    nocurtainRef.current
-                        ? (nocurtainRef.current.visible = e)
+                    const visibles = options.map((value) => value === e);
+
+                    cArmRef.current
+                        ? (cArmRef.current.visible = visibles[0])
                         : null;
-                    curtainRef.current
-                        ? (curtainRef.current.visible = !e)
+                    cArmAccumuRef.current
+                        ? (cArmAccumuRef.current.visible = visibles[0])
                         : null;
 
-                    nocurtainAccumuRef.current
-                        ? (nocurtainAccumuRef.current.visible = e)
+                    cArmRoll180Pitch360Ref.current
+                        ? (cArmRoll180Pitch360Ref.current.visible = visibles[1])
                         : null;
-                    curtainAccumuRef.current
-                        ? (curtainAccumuRef.current.visible = !e)
+                    cArmRoll180Pitch360AccumuRef.current
+                        ? (cArmRoll180Pitch360AccumuRef.current.visible =
+                              visibles[1])
                         : null;
 
-                    curtainObjRef.current
-                        ? (curtainObjRef.current.visible = e)
-                        : null;
+                    visibles.forEach((value, index) => {
+                        if (value) {
+                            let config = armConfigs[index];
+                            if (cArmModelRef.current) {
+                                cArmModelRef.current.position.set(
+                                    ...config.position
+                                );
+                                cArmModelRef.current.rotation.set(
+                                    ...config.rotation
+                                );
+                            }
+                            setCArmMatrix(
+                                config.roll,
+                                config.pitch,
+                                config.height
+                            );
+                        }
+                    });
                 },
             },
         }),
     }));
 
     useEffect(() => {
-        console.log("ref useEffect");
-    }, [nocurtainRef, curtainRef]);
+        const config = armConfigs[0];
+        if (cArmModelRef.current) {
+            cArmModelRef.current.position.set(...config.position);
+            cArmModelRef.current.rotation.set(...config.rotation);
+        }
+        setCArmMatrix(config.roll, config.pitch, config.height);
+    }, []);
 
     useEffect(() => {
         console.log(ref.current);
-        // console.log(refAnimation);
+        // console.log(cArmRef);
     }, [ref]);
 
     return (
@@ -137,113 +195,64 @@ function XRayRoomDosimeterPrototype() {
                     >
                         {/* -------------------------------------------------- */}
                         {/* Volume Object */}
-                        <doseGroup ref={ref}>
+                        <doseGroup
+                            ref={ref}
+                            position={VOLUMEDATA.CArm_Configure.volume.position}
+                            rotation={VOLUMEDATA.CArm_Configure.volume.rotation}
+                            scale={VOLUMEDATA.CArm_Configure.volume.scale}
+                        >
                             {/* Time Lapse */}
-                            <doseGroup ref={timelapseRef}>
-                                {/* X-Ray Dose, no curtain */}
-                                <doseAnimationObject
-                                    ref={nocurtainRef}
-                                    name={"x-ray_animation_nocurtain"}
-                                    visible={false}
-                                    position={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.position
-                                    }
-                                    rotation={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.rotation
-                                    }
-                                    scale={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.scale
-                                    }
-                                >
-                                    <VOLUMEDATA.XRay_nocurtain_all_Animation />
+                            <doseGroup
+                                ref={timelapseRef}
+                                clim2={
+                                    VOLUMEDATA.CArm_Configure.volume.clim2
+                                        .timelapse
+                                }
+                                clim2AutoUpdate={false}
+                            >
+                                {/* C-Arm Dose */}
+                                <doseAnimationObject ref={cArmRef}>
+                                    <VOLUMEDATA.CArm_all_Animation />
                                 </doseAnimationObject>
-                                {/* X-Ray Dose, curtain */}
+
+                                {/* C-Arm Roll 180 Pitch 360 Dose */}
                                 <doseAnimationObject
-                                    ref={curtainRef}
-                                    name={"x-ray_animation_curtain"}
-                                    position={
-                                        VOLUMEDATA.XRay_curtain_Configure.volume
-                                            .position
-                                    }
-                                    rotation={
-                                        VOLUMEDATA.XRay_curtain_Configure.volume
-                                            .rotation
-                                    }
-                                    scale={
-                                        VOLUMEDATA.XRay_curtain_Configure.volume
-                                            .scale
-                                    }
+                                    ref={cArmRoll180Pitch360Ref}
+                                    visible={false}
                                 >
-                                    <VOLUMEDATA.XRay_curtain_all_Animation />
+                                    <VOLUMEDATA.CArm_roll180_pitch360_all_Animation />
                                 </doseAnimationObject>
                             </doseGroup>
 
                             {/* Accumulate */}
-                            <doseGroup ref={accumulateRef} visible={false}>
-                                {/* X-Ray Dose, no curtain, Accumulate */}
-                                <doseGroup
-                                    ref={nocurtainAccumuRef}
-                                    name={"x-ray_accumulate_nocurtain"}
-                                    visible={false}
-                                    position={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.position
-                                    }
-                                    rotation={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.rotation
-                                    }
-                                    scale={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.scale
-                                    }
-                                >
-                                    <VOLUMEDATA.XRay_nocurtain_all_accumulate />
+                            <doseGroup
+                                ref={accumulateRef}
+                                visible={false}
+                                clim2={
+                                    VOLUMEDATA.CArm_Configure.volume.clim2
+                                        .accumulate
+                                }
+                                clim2AutoUpdate={false}
+                            >
+                                {/* C-Arm Dose, Accumulate */}
+                                <doseGroup ref={cArmAccumuRef}>
+                                    <VOLUMEDATA.CArm_all_accumulate />
                                 </doseGroup>
-                                {/* X-Ray Dose, curtain, Accumulate */}
+
+                                {/* C-Arm Roll 180 Pitch 360 Dose, Accumulate */}
                                 <doseGroup
-                                    ref={curtainAccumuRef}
-                                    name={"x-ray_accumulate_curtain"}
-                                    position={
-                                        VOLUMEDATA.XRay_curtain_Configure.volume
-                                            .position
-                                    }
-                                    rotation={
-                                        VOLUMEDATA.XRay_curtain_Configure.volume
-                                            .rotation
-                                    }
-                                    scale={
-                                        VOLUMEDATA.XRay_curtain_Configure.volume
-                                            .scale
-                                    }
+                                    ref={cArmRoll180Pitch360AccumuRef}
+                                    visible={false}
                                 >
-                                    <VOLUMEDATA.XRay_curtain_all_accumulate />
+                                    <VOLUMEDATA.CArm_roll180_pitch360_all_accumulate />
                                 </doseGroup>
                             </doseGroup>
-
-                            {/* Curtain (Three.js Object) */}
-                            <group
-                                ref={curtainObjRef}
-                                visible={false}
-                                position={
-                                    ENVIROMENT.XRay_Configure.object3d.position
-                                }
-                                rotation={
-                                    ENVIROMENT.XRay_Configure.object3d.rotation
-                                }
-                                scale={ENVIROMENT.XRay_Configure.object3d.scale}
-                            >
-                                <ENVIROMENT.XRay_Curtain />
-                            </group>
                         </doseGroup>
 
                         {/* -------------------------------------------------- */}
                         {/* Volume Controls */}
                         <DoseAnimationControls
-                            objects={[nocurtainRef, curtainRef]}
+                            objects={[cArmRef, cArmRoll180Pitch360Ref]}
                             mainGroup={timelapseRef}
                             subGroup={accumulateRef}
                             duration={16}
@@ -252,16 +261,14 @@ function XRayRoomDosimeterPrototype() {
                         <VolumeParameterControls object={ref} />
                         <VolumeXYZClippingControls
                             object={ref}
-                            folderName="Dose 3"
+                            folderName="Clip"
                             planeSize={2}
-                            areaSize={
-                                VOLUMEDATA.XRay_curtain_Configure.volume
-                                    .areaSize
-                            }
+                            areaSize={VOLUMEDATA.CArm_Configure.volume.areaSize}
                             areaScale={1.1}
                             lineColor={new THREE.Color(0x6e0010)}
                         />
 
+                        {/* Dosimeter */}
                         <DosimeterControls
                             ref={dosimeterRef}
                             object={yBotRef}
@@ -297,36 +304,34 @@ function XRayRoomDosimeterPrototype() {
                                     coefficient: 0.1,
                                 },
                             ]}
-                            targets={[
-                                // nocurtainRef, curtainRef
-                                nocurtainAccumuRef,
-                                curtainAccumuRef,
-                            ]}
+                            targets={[cArmAccumuRef]}
                         />
 
                         {/* -------------------------------------------------- */}
                         {/* Three.js Object */}
                         <group
+                            ref={cArmModelRef}
                             position={
-                                ENVIROMENT.XRay_Configure.object3d.position
+                                VOLUMEDATA.CArm_Configure.object3d.model
+                                    .position
                             }
                             rotation={
-                                ENVIROMENT.XRay_Configure.object3d.rotation
+                                VOLUMEDATA.CArm_Configure.object3d.model
+                                    .rotation
                             }
-                            scale={ENVIROMENT.XRay_Configure.object3d.scale}
+                            scale={
+                                VOLUMEDATA.CArm_Configure.object3d.model.scale
+                            }
                         >
-                            <ENVIROMENT.XRay_Bed />
-                            <ENVIROMENT.XRay_Machine />
-                            <ENVIROMENT.XRay_Patient />
+                            <MODELS.CArmModel />
                         </group>
+
                         <mesh position={[0, 1, 0]} visible={debug}>
                             <sphereBufferGeometry args={[0.25]} />
                         </mesh>
 
                         {/* Avatar */}
                         <PivotControls
-                            // offset={[0, 0, -0.5]}
-                            // rotation={[0, Math.PI, 0]}
                             matrix={new THREE.Matrix4().compose(
                                 new THREE.Vector3(2, 0, 0),
                                 new THREE.Quaternion().setFromEuler(
@@ -334,45 +339,72 @@ function XRayRoomDosimeterPrototype() {
                                 ),
                                 new THREE.Vector3(1, 1, 1)
                             )}
+                            scale={70}
+                            fixed={true}
                             activeAxes={[true, false, true]}
+                            visible={!viewing}
+                            onDrag={(l, deltaL, w, deltaW) => {
+                                yBotRef.current.position.setFromMatrixPosition(
+                                    w
+                                );
+                                yBotRef.current.rotation.setFromRotationMatrix(
+                                    w
+                                );
+                            }}
                             onDragEnd={() => {
                                 if (dosimeterRef.current) {
                                     dosimeterRef.current.updateResults();
-                                    console.log(
-                                        dosimeterRef.current.results
-                                        // refAnimation.current?.name
-                                    );
                                 }
+
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            avatar: {
+                                                ...state.sceneProperties
+                                                    .executeLog.avatar,
+                                                translate: true,
+                                            },
+                                        },
+                                    },
+                                }));
                             }}
+                        />
+                        <group
+                            ref={yBotRef}
+                            position={[2, 0, 0]}
+                            rotation={[0, -Math.PI / 2, 0]}
                         >
-                            <group ref={yBotRef}>
-                                <CustomYBotIK />
-                            </group>
-                        </PivotControls>
+                            <CustomYBotIK />
+                            <HandIKPivotControls object={yBotRef} />
+                        </group>
 
                         {/* -------------------------------------------------- */}
                         {/* Three.js Controls */}
                         <OrbitControls makeDefault />
 
-                        <HandIKLevaControls object={yBotRef} />
-
                         {/* -------------------------------------------------- */}
                         {/* Physics */}
                         <Physics gravity={[0, -30, 0]}>
                             <ToggledDebug />
+
                             {/* Dose Board */}
                             <DoseBoardControls
                                 object={ref}
                                 origin={new THREE.Vector3(0, 1, 0)}
-                                areaSize={[2.2, 1.2, 3.1]}
+                                areaSize={
+                                    VOLUMEDATA.CArm_Configure.volume.areaSize
+                                }
                                 width={Board_Configure.size.x}
                                 height={Board_Configure.size.y}
                                 position={new THREE.Vector3(2.5, 1.25, -0.5)}
                                 rotation={new THREE.Euler(0, Math.PI / 2, 0)}
+                                planeSize={Board_Configure.size.y}
+                                scale={50}
+                                fixed={true}
                                 offset={[0, 0, 0.1]}
                                 opacity={0.75}
-                                planeSize={Board_Configure.size.y}
-                                scale={Board_Configure.size.x}
                             >
                                 <mesh position={[0, 0, 0]}>
                                     <boxBufferGeometry
@@ -423,12 +455,13 @@ function XRayRoomDosimeterPrototype() {
                             />
                         </GizmoHelper>
                     </Canvas>
+                    <SceneConfigPanel activateStats={false} />
                     <DosimeterDisplayUI />
-                    <DebugPanel />
+                    <ExperimentCheckList />
                 </div>
             </div>
         </>
     );
 }
 
-export default XRayRoomDosimeterPrototype;
+export default CArmExtra;

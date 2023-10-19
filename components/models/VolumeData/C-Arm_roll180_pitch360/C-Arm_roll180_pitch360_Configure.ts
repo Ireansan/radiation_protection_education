@@ -13,6 +13,14 @@ const CArm_roll180_pitch360_Configure = {
         position: [0, 1.3, 0] as THREE.Vector3Tuple, // world position
         rotation: [0, Math.PI / 2, 0] as THREE.Vector3Tuple,
         scale: 1 / 4.5, // local scale
+        model: {
+            position: [-0.85, 0, 0] as THREE.Vector3Tuple, // world position
+            rotation: [0, Math.PI / 2, 0] as THREE.Vector3Tuple,
+            scale: 1.15,
+            roll: Math.PI,
+            pitch: 0,
+            height: 1.15,
+        },
     },
 };
 

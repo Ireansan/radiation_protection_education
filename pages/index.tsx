@@ -126,26 +126,14 @@ const Home: NextPage = () => {
                         </Link>
                     </div>
                     <div className={styles.card}>
-                        <Link href={"/prototype/XRay_position_scale_rough"}>
-                            <h2>XRay Position & Scale &rarr;</h2>
-                            <p>Next.js + react-three/fiber</p>
-                        </Link>
-                    </div>
-                    <div className={styles.card}>
-                        <Link href={"/prototype/XRay_room_Dosimeter_Prototype"}>
-                            <h2>XRay Dosimeter &rarr;</h2>
+                        <Link href={"/prototype/C-Arm"}>
+                            <h2>C-Arm &rarr;</h2>
                             <p>Next.js + react-three/fiber</p>
                         </Link>
                     </div>
                     <div className={styles.card}>
                         <Link href={"/prototype/YBot_IK_Prototype"}>
                             <h2>Y-Bot IK &rarr;</h2>
-                            <p>Next.js + react-three/fiber</p>
-                        </Link>
-                    </div>
-                    <div className={styles.card}>
-                        <Link href={"/prototype/XRay_room_switch_data"}>
-                            <h2>XRay (no)curtain &rarr;</h2>
                             <p>Next.js + react-three/fiber</p>
                         </Link>
                     </div>
