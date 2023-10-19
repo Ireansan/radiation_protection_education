@@ -76,9 +76,11 @@ export function ExperimentCheckList({ ...props }: experimentCheckListProps) {
                         {animation.reduce(
                             (previous, current) => previous && current
                         ) ? (
-                            <CheckBox sx={{ color: color, fontSize: "12px" }} />
+                            <CheckBox
+                                sx={{ color: color, fontSize: "0.8rem" }}
+                            />
                         ) : (
-                            <CheckBoxOutlineBlank sx={{ fontSize: "12px" }} />
+                            <CheckBoxOutlineBlank sx={{ fontSize: "0.8rem" }} />
                         )}
                     </div>
                     <div className={`${styles.content}`}>
@@ -93,9 +95,11 @@ export function ExperimentCheckList({ ...props }: experimentCheckListProps) {
                         {colormap.reduce(
                             (previous, current) => previous && current
                         ) ? (
-                            <CheckBox sx={{ color: color, fontSize: "12px" }} />
+                            <CheckBox
+                                sx={{ color: color, fontSize: "0.8rem" }}
+                            />
                         ) : (
-                            <CheckBoxOutlineBlank sx={{ fontSize: "12px" }} />
+                            <CheckBoxOutlineBlank sx={{ fontSize: "0.8rem" }} />
                         )}
                     </div>
                     <div className={`${styles.content}`}>
@@ -106,14 +110,17 @@ export function ExperimentCheckList({ ...props }: experimentCheckListProps) {
                 </div>
                 {/* render style */}
                 <div className={`${styles.item}`}>
-                    <div className={`${styles.check}`}></div>
-                    {renderStyle.reduce(
-                        (previous, current) => previous && current
-                    ) ? (
-                        <CheckBox sx={{ color: color, fontSize: "12px" }} />
-                    ) : (
-                        <CheckBoxOutlineBlank sx={{ fontSize: "12px" }} />
-                    )}
+                    <div className={`${styles.check}`}>
+                        {renderStyle.reduce(
+                            (previous, current) => previous && current
+                        ) ? (
+                            <CheckBox
+                                sx={{ color: color, fontSize: "0.8rem" }}
+                            />
+                        ) : (
+                            <CheckBoxOutlineBlank sx={{ fontSize: "0.8rem" }} />
+                        )}
+                    </div>
                     <div className={`${styles.content}`}>
                         render style &nbsp;
                         {renderStyle.filter((v) => v === true).length}/
@@ -126,9 +133,11 @@ export function ExperimentCheckList({ ...props }: experimentCheckListProps) {
                         {clipping.reduce(
                             (previous, current) => previous && current
                         ) ? (
-                            <CheckBox sx={{ color: color, fontSize: "12px" }} />
+                            <CheckBox
+                                sx={{ color: color, fontSize: "0.8rem" }}
+                            />
                         ) : (
-                            <CheckBoxOutlineBlank sx={{ fontSize: "12px" }} />
+                            <CheckBoxOutlineBlank sx={{ fontSize: "0.8rem" }} />
                         )}
                     </div>
                     <div className={`${styles.content}`}>
@@ -142,9 +151,11 @@ export function ExperimentCheckList({ ...props }: experimentCheckListProps) {
                         {clippingInvert.reduce(
                             (previous, current) => previous && current
                         ) ? (
-                            <CheckBox sx={{ color: color, fontSize: "12px" }} />
+                            <CheckBox
+                                sx={{ color: color, fontSize: "0.8rem" }}
+                            />
                         ) : (
-                            <CheckBoxOutlineBlank sx={{ fontSize: "12px" }} />
+                            <CheckBoxOutlineBlank sx={{ fontSize: "0.8rem" }} />
                         )}
                     </div>
                     <div className={`${styles.content}`}>
@@ -159,9 +170,11 @@ export function ExperimentCheckList({ ...props }: experimentCheckListProps) {
                         {avatar.reduce(
                             (previous, current) => previous && current
                         ) ? (
-                            <CheckBox sx={{ color: color, fontSize: "12px" }} />
+                            <CheckBox
+                                sx={{ color: color, fontSize: "0.8rem" }}
+                            />
                         ) : (
-                            <CheckBoxOutlineBlank sx={{ fontSize: "12px" }} />
+                            <CheckBoxOutlineBlank sx={{ fontSize: "0.8rem" }} />
                         )}
                     </div>
                     <div className={`${styles.content}`}>
@@ -176,9 +189,11 @@ export function ExperimentCheckList({ ...props }: experimentCheckListProps) {
                         {shield.reduce(
                             (previous, current) => previous && current
                         ) ? (
-                            <CheckBox sx={{ color: color, fontSize: "12px" }} />
+                            <CheckBox
+                                sx={{ color: color, fontSize: "0.8rem" }}
+                            />
                         ) : (
-                            <CheckBoxOutlineBlank sx={{ fontSize: "12px" }} />
+                            <CheckBoxOutlineBlank sx={{ fontSize: "0.8rem" }} />
                         )}
                     </div>
                     <div className={`${styles.content}`}>
@@ -193,13 +208,15 @@ export function ExperimentCheckList({ ...props }: experimentCheckListProps) {
                         {dosimeter.reduce(
                             (previous, current) => previous && current
                         ) ? (
-                            <CheckBox sx={{ color: color, fontSize: "12px" }} />
+                            <CheckBox
+                                sx={{ color: color, fontSize: "0.8rem" }}
+                            />
                         ) : (
-                            <CheckBoxOutlineBlank sx={{ fontSize: "12px" }} />
+                            <CheckBoxOutlineBlank sx={{ fontSize: "0.8rem" }} />
                         )}
                     </div>
                     <div className={`${styles.content}`}>
-                        dosimeter &nbsp;
+                        dosimeter equipment &nbsp;
                         {dosimeter.filter((v) => v === true).length}/
                         {dosimeter.length}
                     </div>

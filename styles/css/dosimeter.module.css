@@ -17,7 +17,7 @@
 .dose .name .identifier {
   width: 50%;
   height: 100%;
-  font-size: 14px;
+  font-size: 0.8rem;
   float: left;
 }
 .dose .name .icon {
@@ -57,7 +57,7 @@
 }
 .dose .data .numerical {
   height: 15px;
-  font-size: 14px;
+  font-size: 0.8rem;
 }
 .dose .data .numerical .category {
   height: 100%;
@@ -71,6 +71,6 @@
   color: #bcc2d2;
 }
 .dose .data .numerical .value .maxHp {
-  font-size: 10px;
+  font-size: 0.6rem;
   color: #8c93a3;
 }/*# sourceMappingURL=dosimeter.module.css.map */

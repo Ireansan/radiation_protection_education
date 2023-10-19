@@ -46,19 +46,19 @@ function ResultIcon({
     return (
         <>
             {state.includes("shield") ? (
-                <HealthAndSafety sx={{ color: color, fontSize: "14px" }} />
+                <HealthAndSafety sx={{ color: color, fontSize: "1rem" }} />
             ) : null}
             {state.includes("goggle") ? (
-                <Visibility sx={{ color: color, fontSize: "14px" }} />
+                <Visibility sx={{ color: color, fontSize: "1rem" }} />
             ) : null}
             {state.includes("neck") ? (
-                <PersonAddAlt1 sx={{ color: color, fontSize: "14px" }} />
+                <PersonAddAlt1 sx={{ color: color, fontSize: "1rem" }} />
             ) : null}
             {state.includes("apron") ? (
-                <Person sx={{ color: color, fontSize: "14px" }} />
+                <Person sx={{ color: color, fontSize: "1rem" }} />
             ) : null}
             {state.includes("glove") ? (
-                <SignLanguage sx={{ color: color, fontSize: "14px" }} />
+                <SignLanguage sx={{ color: color, fontSize: "1rem" }} />
             ) : null}
         </>
     );
