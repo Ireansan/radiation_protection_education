@@ -4,7 +4,7 @@ Command: npx gltfjsx@6.2.3 ./public/models/glb/radiation/C-Arm_rough.glb -t
 */
 
 import * as THREE from "three";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useGLTF, useMatcapTexture } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 
@@ -25,7 +25,12 @@ const modelURL = applyBasePath(
     `/models/glb/environments/machine/C-Arm_rough.glb`
 );
 
-export function CArmModel(props: JSX.IntrinsicElements["group"]) {
+type cArmModelProps = {
+    roll?: number;
+    pitch?: number;
+    height?: number;
+} & JSX.IntrinsicElements["group"];
+export function CArmModel({ roll, pitch, height, ...props }: cArmModelProps) {
     const { nodes, materials } = useGLTF(modelURL) as GLTFResult;
 
     const [ArmMatcap] = useMatcapTexture("28292A_D3DAE5_A3ACB8_818183", 512);
@@ -42,6 +47,19 @@ export function CArmModel(props: JSX.IntrinsicElements["group"]) {
         512
     );
     const [BodyMatcap] = useMatcapTexture("28292A_D3DAE5_A3ACB8_818183", 512);
+
+    useEffect(() => {
+        const rollBone = nodes.Root.getObjectByName("ArmRoll");
+        if (rollBone) {
+            height ? (rollBone.position.y = height) : null;
+            roll ? (rollBone.rotation.y = roll) : null;
+        }
+
+        const pitchBone = nodes.Root.getObjectByName("ArmPitch");
+        if (pitchBone) {
+            pitch ? (pitchBone.rotation.x = pitch) : null;
+        }
+    }, [nodes, roll, pitch, height]);
 
     return (
         <group {...props} dispose={null}>
