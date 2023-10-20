@@ -25,7 +25,7 @@ import * as VOLUMEDATA from "../../components/models/VolumeData";
 // controls
 import {
     VolumeParameterControls,
-    VolumeClippingControls,
+    VolumeXYZClippingControls,
 } from "../../components/volumeRender";
 
 import styles from "../../styles/threejs.module.css";
@@ -89,16 +89,7 @@ function ExampleStent() {
                     {/* -------------------------------------------------- */}
                     {/* Volume Controls */}
                     <VolumeParameterControls object={ref} />
-                    <VolumeClippingControls
-                        object={ref}
-                        folderName="Stent"
-                        normals={[
-                            [0, 0, -1],
-                            // [-1, 0, 0],
-                        ]}
-                        planeSize={100}
-                        subPlaneSize={50}
-                    />
+                    <VolumeXYZClippingControls object={ref} planeSize={100} />
 
                     {/* -------------------------------------------------- */}
                     {/* Three.js Controls */}

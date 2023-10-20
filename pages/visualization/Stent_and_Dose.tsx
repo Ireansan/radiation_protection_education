@@ -20,7 +20,7 @@ import * as VOLUMEDATA from "../../components/models/VolumeData";
 // controls
 import {
     VolumeAnimationControls,
-    VolumeClippingControls,
+    VolumeXYZClippingControls,
     VolumeParameterControls,
 } from "../../components/volumeRender";
 
@@ -98,24 +98,9 @@ function StentAndDose() {
                             objects={[refDoseAnimation]}
                             duration={16}
                         />
-                        <VolumeParameterControls
-                            object={refStent}
-                            folderName="Stent Param"
-                        />
-                        <VolumeParameterControls
-                            object={refDose}
-                            folderName="Dose Param"
-                        />
-                        <VolumeClippingControls
-                            object={ref}
-                            folderName="Clipping"
-                            normals={[
-                                [0, 0, -1],
-                                // [-1, 0, 0],
-                            ]}
-                            planeSize={2}
-                            subPlaneSize={1}
-                        />
+                        <VolumeParameterControls object={refStent} />
+                        <VolumeParameterControls object={refDose} />
+                        <VolumeXYZClippingControls object={ref} planeSize={2} />
 
                         {/* -------------------------------------------------- */}
                         {/* Three.js Objects */}

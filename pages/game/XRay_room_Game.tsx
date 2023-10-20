@@ -43,7 +43,7 @@ import {
     DosimeterDisplayUI,
     VolumeAnimationControls,
     VolumeParameterControls,
-    VolumeClippingControls,
+    VolumeXYZClippingControls,
 } from "../../components/volumeRender";
 
 // ==========
@@ -111,14 +111,7 @@ function XRayRoomGame() {
                             duration={16}
                         />
                         <VolumeParameterControls object={ref} />
-                        <VolumeClippingControls
-                            object={ref}
-                            folderName="Dose"
-                            normals={[
-                                [0, 0, -1],
-                                // [-1, 0, 0],
-                            ]}
-                        />
+                        <VolumeXYZClippingControls object={ref} />
 
                         <DosimeterControls
                             ref={dosimeterRef}

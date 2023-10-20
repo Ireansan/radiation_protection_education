@@ -45,7 +45,7 @@ import * as VOLUMEDATA from "../../components/models/VolumeData";
 // controls
 import {
     VolumeParameterControls,
-    VolumeClippingControls,
+    VolumeXYZClippingControls,
 } from "../../components/volumeRender";
 
 // ==========
@@ -91,14 +91,7 @@ function StentGame() {
                         {/* -------------------------------------------------- */}
                         {/* Volume Controls */}
                         <VolumeParameterControls object={ref} />
-                        <VolumeClippingControls
-                            object={ref}
-                            folderName="Stent"
-                            normals={[
-                                [0, 0, -1],
-                                // [-1, 0, 0],
-                            ]}
-                        />
+                        <VolumeXYZClippingControls object={ref} />
 
                         {/* -------------------------------------------------- */}
                         {/* Three.js Object */}

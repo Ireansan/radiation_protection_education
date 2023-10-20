@@ -15,7 +15,7 @@ import * as VOLUMEDATA from "../../components/models/VolumeData";
 // controls
 import {
     VolumeAnimationControls,
-    VolumeClippingControls,
+    VolumeXYZClippingControls,
     VolumeParameterControls,
 } from "../../components/volumeRender";
 
@@ -51,16 +51,7 @@ function XRayRoomVR() {
                         duration={16}
                     />
                     <VolumeParameterControls object={ref} />
-                    <VolumeClippingControls
-                        object={ref}
-                        folderName="Dose"
-                        normals={[
-                            [0, 0, -1],
-                            // [-1, 0, 0],
-                        ]}
-                        planeSize={2}
-                        subPlaneSize={1}
-                    />
+                    <VolumeXYZClippingControls object={ref} planeSize={2} />
 
                     {/* -------------------------------------------------- */}
                     {/* Three.js Object */}
