@@ -67,7 +67,7 @@ function ResultIcon({
 const MemoResultIcon = memo(ResultIcon);
 
 type ResultDataProps = {
-    category: string;
+    children: React.ReactNode;
     value: number;
     coefficient: number;
     maxHp: number;
@@ -77,7 +77,7 @@ type ResultDataProps = {
     bgColor?: string;
 };
 function ResultData({
-    category,
+    children,
     value,
     coefficient,
     maxHp,
@@ -162,7 +162,7 @@ function ResultData({
                 </div>
                 {/* Value */}
                 <div className={`${style.numerical}`}>
-                    <div className={`${style.category}`}>{category}</div>
+                    <div className={`${style.category}`}>{children}</div>
                     <div className={`${style.value}`}>
                         {Math.round(maxHp - 120 * coefficient * value)}
                         <span className={`${style.maxHp}`}>/{maxHp}</span>
@@ -177,16 +177,16 @@ const MemoResultData = memo(ResultData);
 type DosimeterResultProps = {
     result: ResultsByName;
     equipments: Equipments;
-    yearCoefficient: number;
+    coefficient: number;
+    yearN: number;
     onceMaxHp: number;
-    onceCoefficient: number;
 };
 function DosimeterResult({
     result,
     equipments,
-    yearCoefficient,
+    coefficient,
+    yearN,
     onceMaxHp,
-    onceCoefficient,
     ...props
 }: DosimeterResultProps) {
     const [value, state] = useMemo(() => {
@@ -236,19 +236,21 @@ function DosimeterResult({
                 <div className={`${style.result}`}>
                     <div className={`${style.year}`}>
                         <MemoResultData
-                            category={"Year"}
                             value={value}
-                            coefficient={yearCoefficient}
+                            coefficient={yearN * coefficient}
                             maxHp={20000}
-                        />
+                        >
+                            Year
+                        </MemoResultData>
                     </div>
                     <div className={`${style.once}`}>
                         <MemoResultData
-                            category={"Once"}
                             value={value}
-                            coefficient={onceCoefficient}
+                            coefficient={coefficient}
                             maxHp={onceMaxHp}
-                        />
+                        >
+                            Once
+                        </MemoResultData>
                     </div>
                 </div>
             </div>
@@ -257,7 +259,17 @@ function DosimeterResult({
 }
 const MemoDosimeterResult = memo(DosimeterResult);
 
-export function DosimeterDisplayUI({ ...props }) {
+type dosimeterDisplayUIProps = {
+    nPerPatient?: number;
+    nPerYear?: number;
+    limitOnce?: number;
+};
+export function DosimeterDisplayUI({
+    nPerPatient = 1,
+    nPerYear = 500,
+    limitOnce = 100,
+    ...props
+}: dosimeterDisplayUIProps) {
     const [set, playerProperties, sceneProperties] = useStore((state) => [
         state.set,
         state.playerProperties,
@@ -274,27 +286,23 @@ export function DosimeterDisplayUI({ ...props }) {
         Player: folder({
             "Dosimeter Config": folder(
                 {
-                    Year: folder({
-                        N_year: {
-                            value: 500,
-                            min: 1,
-                            step: 1,
-                            label: "N",
-                        },
-                    }),
-                    Once: folder({
-                        Limit_once: {
-                            value: 100,
-                            min: 1,
-                            label: "Limit",
-                        },
-                        N_once: {
-                            value: 1,
-                            min: 1,
-                            step: 1,
-                            label: "N",
-                        },
-                    }),
+                    N_perPatient: {
+                        value: nPerPatient,
+                        min: 1,
+                        step: 1,
+                        label: "N (/patient)",
+                    },
+                    N_perYear: {
+                        value: nPerYear,
+                        min: 1,
+                        step: 1,
+                        label: "N (/year)",
+                    },
+                    Limit_once: {
+                        value: limitOnce,
+                        min: 1,
+                        label: "Limit (/once)",
+                    },
                 },
                 { collapsed: true }
             ),
@@ -317,9 +325,9 @@ export function DosimeterDisplayUI({ ...props }) {
                         key={index}
                         result={result}
                         equipments={equipments}
-                        yearCoefficient={dosimeterConfig.N_year}
+                        coefficient={dosimeterConfig.N_perPatient}
+                        yearN={dosimeterConfig.N_perYear}
                         onceMaxHp={dosimeterConfig.Limit_once}
-                        onceCoefficient={dosimeterConfig.N_once}
                     />
                 ))}
             </div>
