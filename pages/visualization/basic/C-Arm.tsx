@@ -31,7 +31,7 @@ import * as MODELS from "../../../components/models";
 // Volume
 // ----------
 // object
-import { DoseGroup, DoseAnimationObject } from "../../src";
+import { DoseGroup, DoseAnimationObject } from "../../../src";
 // ----------
 // data
 
@@ -75,9 +75,6 @@ function CArmBasic() {
 
     const patientRef = useRef<THREE.Group>(null!);
     const cArmModelRef = useRef<THREE.Group>(null!);
-
-    const dosimeterRef = useRef<Dosimeter>(null);
-    const yBotRef = useRef<THREE.Group>(null!);
 
     const options = ["type 1", "type 2"];
     const cArmConfigs = [

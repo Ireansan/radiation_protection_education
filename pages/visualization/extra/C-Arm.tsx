@@ -34,7 +34,7 @@ import { HandIKPivotControls } from "../../../components/models/controls";
 // Volume
 // ----------
 // object
-import { Dosimeter, DoseGroup, DoseAnimationObject } from "../../src";
+import { Dosimeter, DoseGroup, DoseAnimationObject } from "../../../src";
 // ----------
 // data
 
