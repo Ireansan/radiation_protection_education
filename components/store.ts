@@ -110,11 +110,20 @@ const executeLog = {
         glove: false,
     },
 };
-type ExecuteLog = typeof executeLog;
+export type ExecuteLog = typeof executeLog;
+
+const equipments = {
+    goggle: false,
+    neck: false,
+    apron: false,
+    glove: false,
+};
+export type Equipments = typeof equipments;
 
 const playerProperties = {
     position: new THREE.Vector3(),
     quaternion: new THREE.Quaternion(),
+    equipments: equipments as Equipments,
 };
 
 const onlinePlayers = {

@@ -17,6 +17,7 @@ import {
 } from "@mui/icons-material";
 
 import { useStore } from "../../store";
+import type { Equipments } from "../../store";
 import type { ResultsByName } from "../../../src";
 
 import style from "../../../styles/css/dosimeter.module.css";
@@ -175,17 +176,17 @@ const MemoResultData = memo(ResultData);
 
 type DosimeterResultProps = {
     result: ResultsByName;
+    equipments: Equipments;
     yearCoefficient: number;
     onceMaxHp: number;
     onceCoefficient: number;
-    equipmentRef: React.RefObject<EquipmentProps>;
 };
 function DosimeterResult({
     result,
+    equipments,
     yearCoefficient,
     onceMaxHp,
     onceCoefficient,
-    equipmentRef,
     ...props
 }: DosimeterResultProps) {
     const [value, state] = useMemo(() => {
@@ -202,13 +203,12 @@ function DosimeterResult({
         let state = doseValue.state ? doseValue.state : [];
 
         // check equipment
-        if (result.category && equipmentRef.current) {
-            let categoryIndex: number = Object.keys(
-                equipmentRef.current
-            ).indexOf(result.category);
-            let isEquipped: boolean | undefined = Object.values(
-                equipmentRef.current
-            )[categoryIndex];
+        if (result.category) {
+            let categoryIndex: number = Object.keys(equipments).indexOf(
+                result.category
+            );
+            let isEquipped: boolean | undefined =
+                Object.values(equipments)[categoryIndex];
             let coefficient = result.coefficient ? result.coefficient : 1;
 
             if (isEquipped) {
@@ -218,7 +218,7 @@ function DosimeterResult({
         }
 
         return [value, state];
-    }, [result, equipmentRef]);
+    }, [result, equipments]);
 
     return (
         <>
@@ -258,18 +258,13 @@ function DosimeterResult({
 const MemoDosimeterResult = memo(DosimeterResult);
 
 export function DosimeterDisplayUI({ ...props }) {
-    const [set, sceneProperties] = useStore((state) => [
+    const [set, playerProperties, sceneProperties] = useStore((state) => [
         state.set,
+        state.playerProperties,
         state.sceneProperties,
     ]);
+    const { equipments } = playerProperties;
     const { dosimeterResults } = sceneProperties;
-
-    const equipmentRef = useRef<EquipmentProps>({
-        goggle: false,
-        neck: false,
-        apron: false,
-        glove: false,
-    });
 
     /**
      * leva panels
@@ -277,101 +272,6 @@ export function DosimeterDisplayUI({ ...props }) {
     // Volume
     const [dosimeterConfig, setVolume] = useControls(() => ({
         Dosimeter: folder({
-            Equipment: folder({
-                Goggle: {
-                    value: false,
-                    onChange: (e) => {
-                        equipmentRef.current.goggle = e;
-
-                        // set execute log for experiment
-                        if (e) {
-                            set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
-                                    executeLog: {
-                                        ...state.sceneProperties.executeLog,
-                                        dosimeter: {
-                                            ...state.sceneProperties.executeLog
-                                                .dosimeter,
-                                            goggle: true,
-                                        },
-                                    },
-                                },
-                            }));
-                        }
-                    },
-                },
-                NeckGuard: {
-                    value: false,
-                    label: "Neck Guard",
-                    onChange: (e) => {
-                        equipmentRef.current.neck = e;
-
-                        // set execute log for experiment
-                        if (e) {
-                            set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
-                                    executeLog: {
-                                        ...state.sceneProperties.executeLog,
-                                        dosimeter: {
-                                            ...state.sceneProperties.executeLog
-                                                .dosimeter,
-                                            neckGuard: true,
-                                        },
-                                    },
-                                },
-                            }));
-                        }
-                    },
-                },
-                Apron: {
-                    value: false,
-                    onChange: (e) => {
-                        equipmentRef.current.apron = e;
-
-                        // set execute log for experiment
-                        if (e) {
-                            set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
-                                    executeLog: {
-                                        ...state.sceneProperties.executeLog,
-                                        dosimeter: {
-                                            ...state.sceneProperties.executeLog
-                                                .dosimeter,
-                                            apron: true,
-                                        },
-                                    },
-                                },
-                            }));
-                        }
-                    },
-                },
-                Glove: {
-                    value: false,
-                    onChange: (e) => {
-                        equipmentRef.current.glove = e;
-
-                        // set execute log for experiment
-                        if (e) {
-                            set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
-                                    executeLog: {
-                                        ...state.sceneProperties.executeLog,
-                                        dosimeter: {
-                                            ...state.sceneProperties.executeLog
-                                                .dosimeter,
-                                            glove: true,
-                                        },
-                                    },
-                                },
-                            }));
-                        }
-                    },
-                },
-            }),
             Config: folder(
                 {
                     Year: folder({
@@ -416,10 +316,10 @@ export function DosimeterDisplayUI({ ...props }) {
                     <MemoDosimeterResult
                         key={index}
                         result={result}
+                        equipments={equipments}
                         yearCoefficient={dosimeterConfig.N_year}
                         onceMaxHp={dosimeterConfig.Limit_once}
                         onceCoefficient={dosimeterConfig.N_once}
-                        equipmentRef={equipmentRef}
                     />
                 ))}
             </div>
