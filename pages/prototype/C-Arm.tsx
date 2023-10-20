@@ -193,7 +193,6 @@ function CArmExtra() {
                         {/* -------------------------------------------------- */}
                         {/* Volume Object */}
                         <doseGroup
-                            visible={false} // FIXME:
                             ref={ref}
                             position={VOLUMEDATA.CArm_Configure.volume.position}
                             rotation={VOLUMEDATA.CArm_Configure.volume.rotation}
