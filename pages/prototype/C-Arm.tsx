@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
     GizmoHelper,
@@ -56,7 +56,7 @@ import { ExperimentCheckList, SceneConfigPanel } from "../../components/ui";
 
 // ==========
 // Store
-import { useStore } from "../../components/store";
+import { position, useStore } from "../../components/store";
 
 // ==========
 // Styles
@@ -79,47 +79,57 @@ function CArmExtra() {
     const cArmAccumuRef = useRef<DoseGroup>(null);
     const cArmRoll180Pitch360AccumuRef = useRef<DoseGroup>(null);
 
+    const patientRef = useRef<THREE.Group>(null!);
     const cArmModelRef = useRef<THREE.Group>(null!);
+
     const dosimeterRef = useRef<Dosimeter>(null);
     const yBotRef = useRef<THREE.Group>(null!);
 
-    const options = ["roll 0, pitch 0", "roll 180, pitch 90"];
-    const armConfigs = [
+    const options = ["type 1", "type 2"];
+    const cArmConfigs = [
         {
-            ...VOLUMEDATA.CArm_Configure.object3d.model,
+            model: { ...VOLUMEDATA.CArm_Configure.object3d.model },
+            patient: { ...VOLUMEDATA.CArm_Configure.object3d.patient },
         },
         {
-            ...VOLUMEDATA.CArm_roll180_pitch360_Configure.object3d.model,
+            model: {
+                ...VOLUMEDATA.CArm_roll180_pitch360_Configure.object3d.model,
+            },
+            patient: {
+                ...VOLUMEDATA.CArm_roll180_pitch360_Configure.object3d.patient,
+            },
         },
+    ];
+    const refs = [
+        { time: cArmRef, accumu: cArmAccumuRef },
+        { time: cArmRoll180Pitch360Ref, accumu: cArmRoll180Pitch360AccumuRef },
     ];
 
     const ToggledDebug = useToggle(Debug, "debug");
 
-    const getCArmBonebyName = (boneName: string) => {
-        if (cArmModelRef.current && cArmModelRef.current.children[0]) {
-            let element = cArmModelRef.current.children[0];
-            let bone = element.getObjectByName(boneName);
-
-            return bone;
-        }
-
-        return null;
-    };
-    const setCArmMatrix = (
-        rollRad: number,
-        pitchRad: number,
-        height: number = 0.9
+    const updateCArmModel = (
+        position: THREE.Vector3Tuple,
+        rotation: THREE.Vector3Tuple,
+        roll: number,
+        pitch: number,
+        height?: number
     ) => {
-        let rollBone = getCArmBonebyName("ArmRoll");
-        let pitchBone = getCArmBonebyName("ArmPitch");
+        if (cArmModelRef.current && cArmModelRef.current.children[0]) {
+            cArmModelRef.current.position.set(...position);
+            cArmModelRef.current.rotation.set(...rotation);
 
-        if (rollBone) {
-            rollBone.position.y = height;
-            rollBone.rotation.y = rollRad;
-        }
+            let element = cArmModelRef.current.children[0];
 
-        if (pitchBone) {
-            pitchBone.rotation.x = pitchRad;
+            let rollBone = element.getObjectByName("ArmRoll");
+            if (rollBone) {
+                height ? (rollBone.position.y = height) : null;
+                rollBone.rotation.y = roll;
+            }
+
+            let pitchBone = element.getObjectByName("ArmPitch");
+            if (pitchBone) {
+                pitchBone.rotation.x = pitch;
+            }
         }
     };
 
@@ -131,52 +141,39 @@ function CArmExtra() {
                 onChange: (e) => {
                     const visibles = options.map((value) => value === e);
 
-                    cArmRef.current
-                        ? (cArmRef.current.visible = visibles[0])
-                        : null;
-                    cArmAccumuRef.current
-                        ? (cArmAccumuRef.current.visible = visibles[0])
-                        : null;
-
-                    cArmRoll180Pitch360Ref.current
-                        ? (cArmRoll180Pitch360Ref.current.visible = visibles[1])
-                        : null;
-                    cArmRoll180Pitch360AccumuRef.current
-                        ? (cArmRoll180Pitch360AccumuRef.current.visible =
-                              visibles[1])
-                        : null;
-
                     visibles.forEach((value, index) => {
+                        let config = cArmConfigs[index];
+
+                        let refTime = refs[index].time.current;
+                        refTime ? (refTime.visible = value) : null;
+                        let refAccumu = refs[index].accumu.current;
+                        refAccumu ? (refAccumu.visible = value) : null;
+
                         if (value) {
-                            let config = armConfigs[index];
-                            if (cArmModelRef.current) {
-                                cArmModelRef.current.position.set(
-                                    ...config.position
+                            updateCArmModel(
+                                config.model.position,
+                                config.model.rotation,
+                                config.model.roll,
+                                config.model.pitch,
+                                config.model.height
+                            );
+                            if (patientRef.current) {
+                                patientRef.current.position.set(
+                                    ...config.patient.position
                                 );
-                                cArmModelRef.current.rotation.set(
-                                    ...config.rotation
+                                patientRef.current.rotation.set(
+                                    ...config.patient.rotation
+                                );
+                                patientRef.current.scale.setScalar(
+                                    config.patient.scale
                                 );
                             }
-                            setCArmMatrix(
-                                config.roll,
-                                config.pitch,
-                                config.height
-                            );
                         }
                     });
                 },
             },
         }),
     }));
-
-    useEffect(() => {
-        const config = armConfigs[0];
-        if (cArmModelRef.current) {
-            cArmModelRef.current.position.set(...config.position);
-            cArmModelRef.current.rotation.set(...config.rotation);
-        }
-        setCArmMatrix(config.roll, config.pitch, config.height);
-    }, []);
 
     useEffect(() => {
         console.log(ref.current);
@@ -196,6 +193,7 @@ function CArmExtra() {
                         {/* -------------------------------------------------- */}
                         {/* Volume Object */}
                         <doseGroup
+                            visible={false} // FIXME:
                             ref={ref}
                             position={VOLUMEDATA.CArm_Configure.volume.position}
                             rotation={VOLUMEDATA.CArm_Configure.volume.rotation}
@@ -309,6 +307,25 @@ function CArmExtra() {
 
                         {/* -------------------------------------------------- */}
                         {/* Three.js Object */}
+                        {/* Patient */}
+                        <group
+                            ref={patientRef}
+                            position={
+                                VOLUMEDATA.CArm_Configure.object3d.patient
+                                    .position
+                            }
+                            rotation={
+                                VOLUMEDATA.CArm_Configure.object3d.patient
+                                    .rotation
+                            }
+                            scale={
+                                VOLUMEDATA.CArm_Configure.object3d.patient.scale
+                            }
+                        >
+                            <MODELS.XRay_Bed />
+                            <MODELS.XRay_Patient />
+                        </group>
+                        {/* C Arm */}
                         <group
                             ref={cArmModelRef}
                             position={
@@ -323,7 +340,20 @@ function CArmExtra() {
                                 VOLUMEDATA.CArm_Configure.object3d.model.scale
                             }
                         >
-                            <MODELS.CArmModel />
+                            <MODELS.CArmModel
+                                roll={
+                                    VOLUMEDATA.CArm_Configure.object3d.model
+                                        .roll
+                                }
+                                pitch={
+                                    VOLUMEDATA.CArm_Configure.object3d.model
+                                        .pitch
+                                }
+                                height={
+                                    VOLUMEDATA.CArm_Configure.object3d.model
+                                        .height
+                                }
+                            />
                         </group>
 
                         <mesh position={[0, 1, 0]} visible={debug}>

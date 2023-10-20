@@ -14,12 +14,17 @@ const CArm_roll180_pitch360_Configure = {
         rotation: [0, Math.PI / 2, 0] as THREE.Vector3Tuple,
         scale: 1 / 4.5, // local scale
         model: {
-            position: [-0.85, 0, 0] as THREE.Vector3Tuple, // world position
+            position: [-0.875, 0, -0.01] as THREE.Vector3Tuple, // world position
             rotation: [0, Math.PI / 2, 0] as THREE.Vector3Tuple,
             scale: 1.15,
             roll: Math.PI,
             pitch: 0,
             height: 1.15,
+        },
+        patient: {
+            position: [0, 0.2, 0] as THREE.Vector3Tuple, // world position
+            rotation: [0, Math.PI / 2, 0] as THREE.Vector3Tuple,
+            scale: 1 / 8.5, // local scale
         },
     },
 };

@@ -21,6 +21,11 @@ const CArm_Configure = {
             pitch: -Math.PI / 2,
             height: 1.05,
         },
+        patient: {
+            position: [0, -0.05, 0] as THREE.Vector3Tuple, // world position
+            rotation: [0, Math.PI / 2, 0] as THREE.Vector3Tuple,
+            scale: 1 / 8.5, // local scale
+        },
     },
 };
 
