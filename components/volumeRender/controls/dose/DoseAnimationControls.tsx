@@ -16,7 +16,6 @@ export type DoseAnimationControlsProps = {
     subGroup?: React.RefObject<VolumeBase>;
     duration: number;
     customSpeed?: number[];
-    folderName?: string;
 };
 export function DoseAnimationControls({
     objects,
@@ -24,7 +23,6 @@ export function DoseAnimationControls({
     subGroup,
     duration,
     customSpeed,
-    folderName = "animation",
     ...props
 }: DoseAnimationControlsProps) {
     const [set] = useStore((state) => [state.set]);
@@ -109,7 +107,7 @@ export function DoseAnimationControls({
      */
     const [edit, setEdit] = React.useState<boolean>(false);
     const [animationConfig, setAnimationConfig] = useControls(() => ({
-        [folderName as string]: folder({
+        Data: folder({
             mode: {
                 options: ["time lapse", "accumulate"],
                 onChange: (e) => {
@@ -172,7 +170,7 @@ export function DoseAnimationControls({
                     }
                 },
             },
-            "time lapse config": folder({
+            Animation: folder({
                 play: {
                     value: true,
                     onChange: (e) => {

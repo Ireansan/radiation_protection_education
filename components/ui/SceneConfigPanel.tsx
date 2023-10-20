@@ -24,15 +24,8 @@ export function SceneConfigPanel({
     ]);
 
     const [, setDebug] = useControls(() => ({
-        "Scene Config": folder(
-            {
-                debug: {
-                    value: debug,
-                    onChange: (debug) => set({ debug }),
-                    render: () => {
-                        return activateDebug;
-                    },
-                },
+        Scene: folder({
+            Gimmick: folder({
                 viewing: {
                     value: viewing,
                     onChange: (viewing) => set({ viewing }),
@@ -40,16 +33,27 @@ export function SceneConfigPanel({
                         return activateViewing;
                     },
                 },
-                stats: {
-                    value: stats,
-                    onChange: (stats) => set({ stats }),
-                    render: () => {
-                        return activateStats;
+            }),
+            Config: folder(
+                {
+                    debug: {
+                        value: debug,
+                        onChange: (debug) => set({ debug }),
+                        render: () => {
+                            return activateDebug;
+                        },
+                    },
+                    stats: {
+                        value: stats,
+                        onChange: (stats) => set({ stats }),
+                        render: () => {
+                            return activateStats;
+                        },
                     },
                 },
-            },
-            { collapsed: true }
-        ),
+                { collapsed: true }
+            ),
+        }),
     }));
 
     return <></>;

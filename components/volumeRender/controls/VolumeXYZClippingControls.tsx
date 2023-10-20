@@ -198,7 +198,6 @@ function IntersectLineHelper({
 
 export type VolumeXYZClippingControlsProps = {
     object: React.RefObject<VolumeBase>;
-    folderName?: string;
     planeSize?: number;
     planeColor?: THREE.Color;
     areaSize?: THREE.Vector3Tuple;
@@ -221,7 +220,6 @@ export const VolumeXYZClippingControls = React.forwardRef<
 >(function VolumeXYZClippingControls(
     {
         object,
-        folderName = "Clip",
         planeSize = 2,
         planeColor = new THREE.Color(0xffff00),
         areaSize = [1, 1, 1],
@@ -292,246 +290,256 @@ export const VolumeXYZClippingControls = React.forwardRef<
      */
     // Volume
     const [,] = useControls(() => ({
-        [folderName as string]: folder({
-            X: folder(
-                {
-                    "XOn/Off": {
-                        value: false,
-                        label: "on/off",
-                        onChange: (e) => {
-                            clippingFlagRef.current.x = e;
-                            setClippingFlag({
-                                ...clippingFlagRef.current,
-                            });
+        Data: folder({
+            Clip: folder({
+                X: folder(
+                    {
+                        "XOn/Off": {
+                            value: false,
+                            label: "on/off",
+                            onChange: (e) => {
+                                clippingFlagRef.current.x = e;
+                                setClippingFlag({
+                                    ...clippingFlagRef.current,
+                                });
 
-                            // xPivotRef.current.visible = e;
+                                // xPivotRef.current.visible = e;
 
-                            if (e) {
-                                // set execute log for experiment
-                                set((state) => ({
-                                    sceneProperties: {
-                                        ...state.sceneProperties,
-                                        executeLog: {
-                                            ...state.sceneProperties.executeLog,
-                                            clipping: {
+                                if (e) {
+                                    // set execute log for experiment
+                                    set((state) => ({
+                                        sceneProperties: {
+                                            ...state.sceneProperties,
+                                            executeLog: {
                                                 ...state.sceneProperties
-                                                    .executeLog.clipping,
-                                                x: true,
+                                                    .executeLog,
+                                                clipping: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.clipping,
+                                                    x: true,
+                                                },
                                             },
                                         },
-                                    },
-                                }));
-                            }
+                                    }));
+                                }
+                            },
                         },
-                    },
-                    XInvert: {
-                        value: false,
-                        label: "invert",
-                        onChange: (e) => {
-                            coefficientsRef.current[0] = e ? 1 : -1;
+                        XInvert: {
+                            value: false,
+                            label: "invert",
+                            onChange: (e) => {
+                                coefficientsRef.current[0] = e ? 1 : -1;
 
-                            basePlanes[0].normal.multiplyScalar(-1);
-                            basePlanes[0].constant *= -1;
+                                basePlanes[0].normal.multiplyScalar(-1);
+                                basePlanes[0].constant *= -1;
 
-                            if (e) {
-                                // set execute log for experiment
-                                set((state) => ({
-                                    sceneProperties: {
-                                        ...state.sceneProperties,
-                                        executeLog: {
-                                            ...state.sceneProperties.executeLog,
-                                            clipping: {
+                                if (e) {
+                                    // set execute log for experiment
+                                    set((state) => ({
+                                        sceneProperties: {
+                                            ...state.sceneProperties,
+                                            executeLog: {
                                                 ...state.sceneProperties
-                                                    .executeLog.clipping,
-                                                invert: true,
+                                                    .executeLog,
+                                                clipping: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.clipping,
+                                                    invert: true,
+                                                },
                                             },
                                         },
-                                    },
-                                }));
-                            }
+                                    }));
+                                }
+                            },
                         },
                     },
-                },
-                { collapsed: true }
-            ),
-            Y: folder(
-                {
-                    "YOn/Off": {
-                        value: false,
-                        label: "on/off",
-                        onChange: (e) => {
-                            clippingFlagRef.current.y = e;
-                            setClippingFlag({
-                                ...clippingFlagRef.current,
-                            });
+                    { collapsed: true }
+                ),
+                Y: folder(
+                    {
+                        "YOn/Off": {
+                            value: false,
+                            label: "on/off",
+                            onChange: (e) => {
+                                clippingFlagRef.current.y = e;
+                                setClippingFlag({
+                                    ...clippingFlagRef.current,
+                                });
 
-                            if (e) {
-                                // set execute log for experiment
-                                set((state) => ({
-                                    sceneProperties: {
-                                        ...state.sceneProperties,
-                                        executeLog: {
-                                            ...state.sceneProperties.executeLog,
-                                            clipping: {
+                                if (e) {
+                                    // set execute log for experiment
+                                    set((state) => ({
+                                        sceneProperties: {
+                                            ...state.sceneProperties,
+                                            executeLog: {
                                                 ...state.sceneProperties
-                                                    .executeLog.clipping,
-                                                y: true,
+                                                    .executeLog,
+                                                clipping: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.clipping,
+                                                    y: true,
+                                                },
                                             },
                                         },
-                                    },
-                                }));
-                            }
+                                    }));
+                                }
+                            },
                         },
-                    },
-                    YInvert: {
-                        value: false,
-                        label: "invert",
-                        onChange: (e) => {
-                            coefficientsRef.current[1] = e ? 1 : -1;
+                        YInvert: {
+                            value: false,
+                            label: "invert",
+                            onChange: (e) => {
+                                coefficientsRef.current[1] = e ? 1 : -1;
 
-                            basePlanes[1].normal.multiplyScalar(-1);
-                            basePlanes[1].constant *= -1;
+                                basePlanes[1].normal.multiplyScalar(-1);
+                                basePlanes[1].constant *= -1;
 
-                            if (e) {
-                                // set execute log for experiment
-                                set((state) => ({
-                                    sceneProperties: {
-                                        ...state.sceneProperties,
-                                        executeLog: {
-                                            ...state.sceneProperties.executeLog,
-                                            clipping: {
+                                if (e) {
+                                    // set execute log for experiment
+                                    set((state) => ({
+                                        sceneProperties: {
+                                            ...state.sceneProperties,
+                                            executeLog: {
                                                 ...state.sceneProperties
-                                                    .executeLog.clipping,
-                                                invert: true,
+                                                    .executeLog,
+                                                clipping: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.clipping,
+                                                    invert: true,
+                                                },
                                             },
                                         },
-                                    },
-                                }));
-                            }
+                                    }));
+                                }
+                            },
                         },
                     },
-                },
-                { collapsed: true }
-            ),
-            Z: folder(
-                {
-                    "ZOn/Off": {
-                        value: false,
-                        label: "on/off",
-                        onChange: (e) => {
-                            clippingFlagRef.current.z = e;
-                            setClippingFlag({
-                                ...clippingFlagRef.current,
-                            });
+                    { collapsed: true }
+                ),
+                Z: folder(
+                    {
+                        "ZOn/Off": {
+                            value: false,
+                            label: "on/off",
+                            onChange: (e) => {
+                                clippingFlagRef.current.z = e;
+                                setClippingFlag({
+                                    ...clippingFlagRef.current,
+                                });
 
-                            if (e) {
-                                // set execute log for experiment
-                                set((state) => ({
-                                    sceneProperties: {
-                                        ...state.sceneProperties,
-                                        executeLog: {
-                                            ...state.sceneProperties.executeLog,
-                                            clipping: {
+                                if (e) {
+                                    // set execute log for experiment
+                                    set((state) => ({
+                                        sceneProperties: {
+                                            ...state.sceneProperties,
+                                            executeLog: {
                                                 ...state.sceneProperties
-                                                    .executeLog.clipping,
-                                                z: true,
+                                                    .executeLog,
+                                                clipping: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.clipping,
+                                                    z: true,
+                                                },
                                             },
                                         },
-                                    },
-                                }));
-                            }
+                                    }));
+                                }
+                            },
                         },
-                    },
-                    ZInvert: {
-                        value: false,
-                        label: "invert",
-                        onChange: (e) => {
-                            coefficientsRef.current[2] = e ? 1 : -1;
+                        ZInvert: {
+                            value: false,
+                            label: "invert",
+                            onChange: (e) => {
+                                coefficientsRef.current[2] = e ? 1 : -1;
 
-                            basePlanes[2].normal.multiplyScalar(-1);
-                            basePlanes[2].constant *= -1;
+                                basePlanes[2].normal.multiplyScalar(-1);
+                                basePlanes[2].constant *= -1;
 
-                            if (e) {
-                                // set execute log for experiment
-                                set((state) => ({
-                                    sceneProperties: {
-                                        ...state.sceneProperties,
-                                        executeLog: {
-                                            ...state.sceneProperties.executeLog,
-                                            clipping: {
+                                if (e) {
+                                    // set execute log for experiment
+                                    set((state) => ({
+                                        sceneProperties: {
+                                            ...state.sceneProperties,
+                                            executeLog: {
                                                 ...state.sceneProperties
-                                                    .executeLog.clipping,
-                                                invert: true,
+                                                    .executeLog,
+                                                clipping: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.clipping,
+                                                    invert: true,
+                                                },
                                             },
                                         },
-                                    },
-                                }));
-                            }
+                                    }));
+                                }
+                            },
                         },
                     },
-                },
-                { collapsed: true }
-            ),
-            "Free Axis": folder(
-                {
-                    "FreeAxisOn/Off": {
-                        value: false,
-                        label: "on/off",
-                        onChange: (e) => {
-                            setClippingFlag({
-                                ...clippingFlagRef.current,
-                                free: e,
-                            });
-                            clippingFlagRef.current.free = e;
+                    { collapsed: true }
+                ),
+                "Free Axis": folder(
+                    {
+                        "FreeAxisOn/Off": {
+                            value: false,
+                            label: "on/off",
+                            onChange: (e) => {
+                                setClippingFlag({
+                                    ...clippingFlagRef.current,
+                                    free: e,
+                                });
+                                clippingFlagRef.current.free = e;
 
-                            if (e) {
-                                // set execute log for experiment
-                                set((state) => ({
-                                    sceneProperties: {
-                                        ...state.sceneProperties,
-                                        executeLog: {
-                                            ...state.sceneProperties.executeLog,
-                                            clipping: {
+                                if (e) {
+                                    // set execute log for experiment
+                                    set((state) => ({
+                                        sceneProperties: {
+                                            ...state.sceneProperties,
+                                            executeLog: {
                                                 ...state.sceneProperties
-                                                    .executeLog.clipping,
-                                                free: true,
+                                                    .executeLog,
+                                                clipping: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.clipping,
+                                                    free: true,
+                                                },
                                             },
                                         },
-                                    },
-                                }));
-                            }
+                                    }));
+                                }
+                            },
                         },
-                    },
-                    FreeAxisInvert: {
-                        value: false,
-                        label: "invert",
-                        onChange: (e) => {
-                            coefficientsRef.current[3] = e ? 1 : -1;
+                        FreeAxisInvert: {
+                            value: false,
+                            label: "invert",
+                            onChange: (e) => {
+                                coefficientsRef.current[3] = e ? 1 : -1;
 
-                            basePlanes[3].normal.multiplyScalar(-1);
-                            basePlanes[3].constant *= -1;
+                                basePlanes[3].normal.multiplyScalar(-1);
+                                basePlanes[3].constant *= -1;
 
-                            if (e) {
-                                // set execute log for experiment
-                                set((state) => ({
-                                    sceneProperties: {
-                                        ...state.sceneProperties,
-                                        executeLog: {
-                                            ...state.sceneProperties.executeLog,
-                                            clipping: {
+                                if (e) {
+                                    // set execute log for experiment
+                                    set((state) => ({
+                                        sceneProperties: {
+                                            ...state.sceneProperties,
+                                            executeLog: {
                                                 ...state.sceneProperties
-                                                    .executeLog.clipping,
-                                                invert: true,
+                                                    .executeLog,
+                                                clipping: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.clipping,
+                                                    invert: true,
+                                                },
                                             },
                                         },
-                                    },
-                                }));
-                            }
+                                    }));
+                                }
+                            },
                         },
                     },
-                },
-                { collapsed: true }
-            ),
+                    { collapsed: true }
+                ),
+            }),
         }),
     }));
 

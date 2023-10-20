@@ -22,132 +22,134 @@ export function DoseEquipmentsUI({ ...props }) {
      */
     // Volume
     const [dosimeterConfig, setVolume] = useControls(() => ({
-        Equipment: folder({
-            Goggle: {
-                value: false,
-                onChange: (e) => {
-                    set((state) => ({
-                        playerProperties: {
-                            ...state.playerProperties,
-                            equipments: {
-                                ...state.playerProperties.equipments,
-                                goggle: e,
-                            },
-                        },
-                    }));
-
-                    // set execute log for experiment
-                    if (e) {
+        Player: folder({
+            Equipment: folder({
+                Goggle: {
+                    value: false,
+                    onChange: (e) => {
                         set((state) => ({
-                            sceneProperties: {
-                                ...state.sceneProperties,
-                                executeLog: {
-                                    ...state.sceneProperties.executeLog,
-                                    dosimeter: {
-                                        ...state.sceneProperties.executeLog
-                                            .dosimeter,
-                                        goggle: true,
-                                    },
+                            playerProperties: {
+                                ...state.playerProperties,
+                                equipments: {
+                                    ...state.playerProperties.equipments,
+                                    goggle: e,
                                 },
                             },
                         }));
-                    }
-                },
-            },
-            NeckGuard: {
-                value: false,
-                label: "Neck Guard",
-                onChange: (e) => {
-                    set((state) => ({
-                        playerProperties: {
-                            ...state.playerProperties,
-                            equipments: {
-                                ...state.playerProperties.equipments,
-                                neck: e,
-                            },
-                        },
-                    }));
 
-                    // set execute log for experiment
-                    if (e) {
-                        set((state) => ({
-                            sceneProperties: {
-                                ...state.sceneProperties,
-                                executeLog: {
-                                    ...state.sceneProperties.executeLog,
-                                    dosimeter: {
-                                        ...state.sceneProperties.executeLog
-                                            .dosimeter,
-                                        neckGuard: true,
+                        // set execute log for experiment
+                        if (e) {
+                            set((state) => ({
+                                sceneProperties: {
+                                    ...state.sceneProperties,
+                                    executeLog: {
+                                        ...state.sceneProperties.executeLog,
+                                        dosimeter: {
+                                            ...state.sceneProperties.executeLog
+                                                .dosimeter,
+                                            goggle: true,
+                                        },
                                     },
+                                },
+                            }));
+                        }
+                    },
+                },
+                NeckGuard: {
+                    value: false,
+                    label: "Neck Guard",
+                    onChange: (e) => {
+                        set((state) => ({
+                            playerProperties: {
+                                ...state.playerProperties,
+                                equipments: {
+                                    ...state.playerProperties.equipments,
+                                    neck: e,
                                 },
                             },
                         }));
-                    }
-                },
-            },
-            Apron: {
-                value: false,
-                onChange: (e) => {
-                    set((state) => ({
-                        playerProperties: {
-                            ...state.playerProperties,
-                            equipments: {
-                                ...state.playerProperties.equipments,
-                                apron: e,
-                            },
-                        },
-                    }));
 
-                    // set execute log for experiment
-                    if (e) {
-                        set((state) => ({
-                            sceneProperties: {
-                                ...state.sceneProperties,
-                                executeLog: {
-                                    ...state.sceneProperties.executeLog,
-                                    dosimeter: {
-                                        ...state.sceneProperties.executeLog
-                                            .dosimeter,
-                                        apron: true,
+                        // set execute log for experiment
+                        if (e) {
+                            set((state) => ({
+                                sceneProperties: {
+                                    ...state.sceneProperties,
+                                    executeLog: {
+                                        ...state.sceneProperties.executeLog,
+                                        dosimeter: {
+                                            ...state.sceneProperties.executeLog
+                                                .dosimeter,
+                                            neckGuard: true,
+                                        },
                                     },
+                                },
+                            }));
+                        }
+                    },
+                },
+                Apron: {
+                    value: false,
+                    onChange: (e) => {
+                        set((state) => ({
+                            playerProperties: {
+                                ...state.playerProperties,
+                                equipments: {
+                                    ...state.playerProperties.equipments,
+                                    apron: e,
                                 },
                             },
                         }));
-                    }
-                },
-            },
-            Glove: {
-                value: false,
-                onChange: (e) => {
-                    set((state) => ({
-                        playerProperties: {
-                            ...state.playerProperties,
-                            equipments: {
-                                ...state.playerProperties.equipments,
-                                glove: e,
-                            },
-                        },
-                    }));
 
-                    // set execute log for experiment
-                    if (e) {
-                        set((state) => ({
-                            sceneProperties: {
-                                ...state.sceneProperties,
-                                executeLog: {
-                                    ...state.sceneProperties.executeLog,
-                                    dosimeter: {
-                                        ...state.sceneProperties.executeLog
-                                            .dosimeter,
-                                        glove: true,
+                        // set execute log for experiment
+                        if (e) {
+                            set((state) => ({
+                                sceneProperties: {
+                                    ...state.sceneProperties,
+                                    executeLog: {
+                                        ...state.sceneProperties.executeLog,
+                                        dosimeter: {
+                                            ...state.sceneProperties.executeLog
+                                                .dosimeter,
+                                            apron: true,
+                                        },
                                     },
+                                },
+                            }));
+                        }
+                    },
+                },
+                Glove: {
+                    value: false,
+                    onChange: (e) => {
+                        set((state) => ({
+                            playerProperties: {
+                                ...state.playerProperties,
+                                equipments: {
+                                    ...state.playerProperties.equipments,
+                                    glove: e,
                                 },
                             },
                         }));
-                    }
+
+                        // set execute log for experiment
+                        if (e) {
+                            set((state) => ({
+                                sceneProperties: {
+                                    ...state.sceneProperties,
+                                    executeLog: {
+                                        ...state.sceneProperties.executeLog,
+                                        dosimeter: {
+                                            ...state.sceneProperties.executeLog
+                                                .dosimeter,
+                                            glove: true,
+                                        },
+                                    },
+                                },
+                            }));
+                        }
+                    },
                 },
-            },
+            }),
         }),
     }));
 

@@ -271,8 +271,8 @@ export function DosimeterDisplayUI({ ...props }) {
      */
     // Volume
     const [dosimeterConfig, setVolume] = useControls(() => ({
-        Dosimeter: folder({
-            Config: folder(
+        Player: folder({
+            "Dosimeter Config": folder(
                 {
                     Year: folder({
                         N_year: {
