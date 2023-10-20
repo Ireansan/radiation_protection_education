@@ -311,15 +311,11 @@ export function DosimeterDisplayUI({
 
     return (
         <>
-            <div
-                id={"DosimeterDisplayUI"}
-                style={{
-                    position: "absolute",
-                    bottom: "5px",
-                    left: "5px",
-                    // width: "200px",
-                }}
-            >
+            <div className={`${style.dose_list}`}>
+                <div className={`${style.label}`}>
+                    Dose
+                    <span className={`${style.unit}`}>[&micro;Sv]</span>
+                </div>
                 {dosimeterResults.map((result, index) => (
                     <MemoDosimeterResult
                         key={index}
