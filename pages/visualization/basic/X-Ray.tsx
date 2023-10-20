@@ -24,7 +24,7 @@ import {
 // Volume
 // ----------
 // object
-import { DoseGroup, DoseAnimationObject } from "../../../src";
+import { Dosimeter, DoseGroup, DoseAnimationObject } from "../../../src";
 // ----------
 // data
 import * as ENVIROMENT from "../../../components/models/Environment";
@@ -49,7 +49,7 @@ import { useStore } from "../../../components/store";
 // Styles
 import styles from "../../../styles/threejs.module.css";
 
-function XRayExtra() {
+function XRayBasic() {
     const [set, debug, viewing] = useStore((state) => [
         state.set,
         state.debug,
@@ -71,29 +71,30 @@ function XRayExtra() {
     const ToggledDebug = useToggle(Debug, "debug");
 
     const [,] = useControls(() => ({
-        scene: folder({
-            curtain: {
-                value: false,
-                onChange: (e) => {
-                    nocurtainRef.current
-                        ? (nocurtainRef.current.visible = e)
-                        : null;
-                    curtainRef.current
-                        ? (curtainRef.current.visible = !e)
-                        : null;
+        Scene: folder({
+            Gimmick: folder({
+                curtain: {
+                    value: false,
+                    onChange: (e) => {
+                        nocurtainRef.current
+                            ? (nocurtainRef.current.visible = e)
+                            : null;
+                        nocurtainAccumuRef.current
+                            ? (nocurtainAccumuRef.current.visible = e)
+                            : null;
 
-                    nocurtainAccumuRef.current
-                        ? (nocurtainAccumuRef.current.visible = e)
-                        : null;
-                    curtainAccumuRef.current
-                        ? (curtainAccumuRef.current.visible = !e)
-                        : null;
-
-                    curtainObjRef.current
-                        ? (curtainObjRef.current.visible = e)
-                        : null;
+                        curtainRef.current
+                            ? (curtainRef.current.visible = !e)
+                            : null;
+                        curtainAccumuRef.current
+                            ? (curtainAccumuRef.current.visible = !e)
+                            : null;
+                        curtainObjRef.current
+                            ? (curtainObjRef.current.visible = e)
+                            : null;
+                    },
                 },
-            },
+            }),
         }),
     }));
 
@@ -114,6 +115,7 @@ function XRayExtra() {
                     >
                         {/* -------------------------------------------------- */}
                         {/* Volume Object */}
+
                         <doseGroup
                             ref={ref}
                             position={
@@ -131,7 +133,6 @@ function XRayExtra() {
                             {/* Time Lapse */}
                             <doseGroup ref={timelapseRef}>
                                 {/* X-Ray Dose, no curtain */}
-
                                 <doseAnimationObject
                                     ref={nocurtainRef}
                                     name={"x-ray_animation_nocurtain"}
@@ -180,7 +181,6 @@ function XRayExtra() {
                         <VolumeParameterControls object={ref} />
                         <VolumeXYZClippingControls
                             object={ref}
-                            folderName="Clip"
                             planeSize={2}
                             areaSize={
                                 VOLUMEDATA.XRay_curtain_Configure.volume
@@ -267,4 +267,4 @@ function XRayExtra() {
     );
 }
 
-export default XRayExtra;
+export default XRayBasic;

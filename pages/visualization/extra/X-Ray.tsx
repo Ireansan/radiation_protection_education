@@ -40,6 +40,7 @@ import * as VOLUMEDATA from "../../../components/models/VolumeData";
 import {
     DoseAnimationControls,
     DoseBoardControls,
+    DoseEquipmentsUI,
     DosimeterControls,
     DosimeterDisplayUI,
     VolumeParameterControls,
@@ -83,29 +84,30 @@ function XRayExtra() {
     const ToggledDebug = useToggle(Debug, "debug");
 
     const [,] = useControls(() => ({
-        scene: folder({
-            curtain: {
-                value: false,
-                onChange: (e) => {
-                    nocurtainRef.current
-                        ? (nocurtainRef.current.visible = e)
-                        : null;
-                    curtainRef.current
-                        ? (curtainRef.current.visible = !e)
-                        : null;
+        Scene: folder({
+            Gimmick: folder({
+                curtain: {
+                    value: false,
+                    onChange: (e) => {
+                        nocurtainRef.current
+                            ? (nocurtainRef.current.visible = e)
+                            : null;
+                        nocurtainAccumuRef.current
+                            ? (nocurtainAccumuRef.current.visible = e)
+                            : null;
 
-                    nocurtainAccumuRef.current
-                        ? (nocurtainAccumuRef.current.visible = e)
-                        : null;
-                    curtainAccumuRef.current
-                        ? (curtainAccumuRef.current.visible = !e)
-                        : null;
-
-                    curtainObjRef.current
-                        ? (curtainObjRef.current.visible = e)
-                        : null;
+                        curtainRef.current
+                            ? (curtainRef.current.visible = !e)
+                            : null;
+                        curtainAccumuRef.current
+                            ? (curtainAccumuRef.current.visible = !e)
+                            : null;
+                        curtainObjRef.current
+                            ? (curtainObjRef.current.visible = e)
+                            : null;
+                    },
                 },
-            },
+            }),
         }),
     }));
 
@@ -192,7 +194,6 @@ function XRayExtra() {
                         <VolumeParameterControls object={ref} />
                         <VolumeXYZClippingControls
                             object={ref}
-                            folderName="Clip"
                             planeSize={2}
                             areaSize={
                                 VOLUMEDATA.XRay_curtain_Configure.volume
@@ -392,6 +393,7 @@ function XRayExtra() {
                         </GizmoHelper>
                     </Canvas>
                     <SceneConfigPanel activateStats={false} />
+                    <DoseEquipmentsUI />
                     <DosimeterDisplayUI />
                     <ExperimentCheckList />
                 </div>

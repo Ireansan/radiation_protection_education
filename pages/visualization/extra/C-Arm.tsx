@@ -10,6 +10,7 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 import { Physics, Debug } from "@react-three/rapier";
+import { useControls, folder } from "leva";
 
 // ==========
 // Game
@@ -24,6 +25,7 @@ import {
 
 // ==========
 // Model
+import * as MODELS from "../../../components/models";
 import { Board_Configure } from "../../../components/models";
 import { CustomYBotIK } from "../../../components/models/Custom_Ybot_IK";
 import { HandIKPivotControls } from "../../../components/models/controls";
@@ -32,7 +34,7 @@ import { HandIKPivotControls } from "../../../components/models/controls";
 // Volume
 // ----------
 // object
-import { Dosimeter, DoseGroup, DoseAnimationObject } from "../../../src";
+import { Dosimeter, DoseGroup, DoseAnimationObject } from "../../src";
 // ----------
 // data
 
@@ -42,6 +44,7 @@ import * as VOLUMEDATA from "../../../components/models/VolumeData";
 import {
     DoseAnimationControls,
     DoseBoardControls,
+    DoseEquipmentsUI,
     DosimeterControls,
     DosimeterDisplayUI,
     VolumeParameterControls,
@@ -71,14 +74,84 @@ function CArmExtra() {
 
     const timelapseRef = useRef<DoseGroup>(null);
     const cArmRef = useRef<DoseAnimationObject>(null);
+    const cArmRoll180Pitch360Ref = useRef<DoseAnimationObject>(null);
 
     const accumulateRef = useRef<DoseGroup>(null);
     const cArmAccumuRef = useRef<DoseGroup>(null);
+    const cArmRoll180Pitch360AccumuRef = useRef<DoseGroup>(null);
+
+    const patientRef = useRef<THREE.Group>(null!);
+    const cArmModelRef = useRef<THREE.Group>(null!);
 
     const dosimeterRef = useRef<Dosimeter>(null);
     const yBotRef = useRef<THREE.Group>(null!);
 
+    const options = ["type 1", "type 2"];
+    const cArmConfigs = [
+        {
+            model: { ...VOLUMEDATA.CArm_Configure.object3d.model },
+            patient: { ...VOLUMEDATA.CArm_Configure.object3d.patient },
+        },
+        {
+            model: {
+                ...VOLUMEDATA.CArm_roll180_pitch360_Configure.object3d.model,
+            },
+            patient: {
+                ...VOLUMEDATA.CArm_roll180_pitch360_Configure.object3d.patient,
+            },
+        },
+    ];
+    const refs = [
+        { time: cArmRef, accumu: cArmAccumuRef },
+        { time: cArmRoll180Pitch360Ref, accumu: cArmRoll180Pitch360AccumuRef },
+    ];
+
     const ToggledDebug = useToggle(Debug, "debug");
+
+    const [,] = useControls(() => ({
+        Scene: folder({
+            Gimmick: folder({
+                type: {
+                    options: options,
+                    value: options[0],
+                    onChange: (e) => {
+                        const visibles = options.map((value) => value === e);
+
+                        visibles.forEach((value, index) => {
+                            let config = cArmConfigs[index];
+
+                            let refTime = refs[index].time.current;
+                            refTime ? (refTime.visible = value) : null;
+                            let refAccumu = refs[index].accumu.current;
+                            refAccumu ? (refAccumu.visible = value) : null;
+
+                            if (value) {
+                                MODELS.updateCArmModel(
+                                    cArmModelRef,
+                                    config.model.position,
+                                    config.model.rotation,
+                                    config.model.roll,
+                                    config.model.pitch,
+                                    config.model.height
+                                );
+                                if (patientRef.current) {
+                                    patientRef.current.position.set(
+                                        ...config.patient.position
+                                    );
+                                    patientRef.current.rotation.set(
+                                        ...config.patient.rotation
+                                    );
+                                    patientRef.current.scale.setScalar(
+                                        config.patient.scale
+                                    );
+                                }
+                            }
+                        });
+                    },
+                },
+            }),
+        }),
+    }));
 
     useEffect(() => {
         console.log(ref.current);
@@ -116,6 +189,14 @@ function CArmExtra() {
                                 <doseAnimationObject ref={cArmRef}>
                                     <VOLUMEDATA.CArm_all_Animation />
                                 </doseAnimationObject>
+
+                                {/* C-Arm Roll 180 Pitch 360 Dose */}
+                                <doseAnimationObject
+                                    ref={cArmRoll180Pitch360Ref}
+                                    visible={false}
+                                >
+                                    <VOLUMEDATA.CArm_roll180_pitch360_all_Animation />
+                                </doseAnimationObject>
                             </doseGroup>
 
                             {/* Accumulate */}
@@ -132,13 +213,21 @@ function CArmExtra() {
                                 <doseGroup ref={cArmAccumuRef}>
                                     <VOLUMEDATA.CArm_all_accumulate />
                                 </doseGroup>
+
+                                {/* C-Arm Roll 180 Pitch 360 Dose, Accumulate */}
+                                <doseGroup
+                                    ref={cArmRoll180Pitch360AccumuRef}
+                                    visible={false}
+                                >
+                                    <VOLUMEDATA.CArm_roll180_pitch360_all_accumulate />
+                                </doseGroup>
                             </doseGroup>
                         </doseGroup>
 
                         {/* -------------------------------------------------- */}
                         {/* Volume Controls */}
                         <DoseAnimationControls
-                            objects={[cArmRef]}
+                            objects={[cArmRef, cArmRoll180Pitch360Ref]}
                             mainGroup={timelapseRef}
                             subGroup={accumulateRef}
                             duration={16}
@@ -147,7 +236,6 @@ function CArmExtra() {
                         <VolumeParameterControls object={ref} />
                         <VolumeXYZClippingControls
                             object={ref}
-                            folderName="Clip"
                             planeSize={2}
                             areaSize={VOLUMEDATA.CArm_Configure.volume.areaSize}
                             areaScale={1.1}
@@ -195,21 +283,55 @@ function CArmExtra() {
 
                         {/* -------------------------------------------------- */}
                         {/* Three.js Object */}
+                        {/* Patient */}
                         <group
+                            ref={patientRef}
                             position={
-                                VOLUMEDATA.CArm_Configure.object3d.position
+                                VOLUMEDATA.CArm_Configure.object3d.patient
+                                    .position
                             }
                             rotation={
-                                VOLUMEDATA.CArm_Configure.object3d.rotation
+                                VOLUMEDATA.CArm_Configure.object3d.patient
+                                    .rotation
                             }
                             scale={
-                                VOLUMEDATA.CArm_Configure.volume.scale *
-                                VOLUMEDATA.CArm_Configure.object3d.scale
+                                VOLUMEDATA.CArm_Configure.object3d.patient.scale
                             }
                         >
-                            <VOLUMEDATA.CArm_material />
-                            <VOLUMEDATA.CArm_region />
+                            <MODELS.XRay_Bed />
+                            <MODELS.XRay_Patient />
                         </group>
+                        {/* C Arm */}
+                        <group
+                            ref={cArmModelRef}
+                            position={
+                                VOLUMEDATA.CArm_Configure.object3d.model
+                                    .position
+                            }
+                            rotation={
+                                VOLUMEDATA.CArm_Configure.object3d.model
+                                    .rotation
+                            }
+                            scale={
+                                VOLUMEDATA.CArm_Configure.object3d.model.scale
+                            }
+                        >
+                            <MODELS.CArmModel
+                                roll={
+                                    VOLUMEDATA.CArm_Configure.object3d.model
+                                        .roll
+                                }
+                                pitch={
+                                    VOLUMEDATA.CArm_Configure.object3d.model
+                                        .pitch
+                                }
+                                height={
+                                    VOLUMEDATA.CArm_Configure.object3d.model
+                                        .height
+                                }
+                            />
+                        </group>
+
                         <mesh position={[0, 1, 0]} visible={debug}>
                             <sphereBufferGeometry args={[0.25]} />
                         </mesh>
@@ -340,6 +462,7 @@ function CArmExtra() {
                         </GizmoHelper>
                     </Canvas>
                     <SceneConfigPanel activateStats={false} />
+                    <DoseEquipmentsUI />
                     <DosimeterDisplayUI />
                     <ExperimentCheckList />
                 </div>

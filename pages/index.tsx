@@ -38,16 +38,7 @@ const Home: NextPage = () => {
 
                     <div className={styles.card}>
                         <Link href={"/visualization/extra/C-Arm"}>
-                            <h2>C-Arm (Type 1) &rarr;</h2>
-                            <p>Next.js + react-three/fiber, Texture 3D</p>
-                        </Link>
-                    </div>
-
-                    <div className={styles.card}>
-                        <Link
-                            href={"/visualization/extra/C-Arm_roll180_pitch360"}
-                        >
-                            <h2>C-Arm (Type 2) &rarr;</h2>
+                            <h2>C-Arm &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
                     </div>
@@ -64,16 +55,7 @@ const Home: NextPage = () => {
 
                     <div className={styles.card}>
                         <Link href={"/visualization/basic/C-Arm"}>
-                            <h2>C-Arm (Type 1) &rarr;</h2>
-                            <p>Next.js + react-three/fiber, Texture 3D</p>
-                        </Link>
-                    </div>
-
-                    <div className={styles.card}>
-                        <Link
-                            href={"/visualization/basic/C-Arm_roll180_pitch360"}
-                        >
-                            <h2>C-Arm (Type 2) &rarr;</h2>
+                            <h2>C-Arm &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
                     </div>
