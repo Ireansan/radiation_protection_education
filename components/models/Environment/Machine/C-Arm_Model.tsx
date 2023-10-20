@@ -104,3 +104,30 @@ export function CArmModel({ roll, pitch, height, ...props }: cArmModelProps) {
 }
 
 useGLTF.preload(modelURL);
+
+export function updateCArmModel(
+    cArmModelRef: React.RefObject<THREE.Group>,
+    position: THREE.Vector3Tuple,
+    rotation: THREE.Vector3Tuple,
+    roll: number,
+    pitch: number,
+    height: number
+) {
+    if (cArmModelRef.current && cArmModelRef.current.children[0]) {
+        cArmModelRef.current.position.set(...position);
+        cArmModelRef.current.rotation.set(...rotation);
+
+        let element = cArmModelRef.current.children[0];
+
+        let rollBone = element.getObjectByName("ArmRoll");
+        if (rollBone) {
+            height ? (rollBone.position.y = height) : null;
+            rollBone.rotation.y = roll;
+        }
+
+        let pitchBone = element.getObjectByName("ArmPitch");
+        if (pitchBone) {
+            pitchBone.rotation.x = pitch;
+        }
+    }
+}
