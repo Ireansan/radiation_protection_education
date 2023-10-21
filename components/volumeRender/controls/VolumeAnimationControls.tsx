@@ -3,18 +3,18 @@ import * as THREE from "three";
 import { extend, useFrame } from "@react-three/fiber";
 import { useControls, folder, button, Leva } from "leva";
 
-import { VolumeAnimationObject } from "../../../src";
+import { DoseAnimationObject, VolumeAnimationObject } from "../../../src";
 extend({ VolumeAnimationObject });
 
 export type VolumeAnimationControlsProps = {
-    objects: React.RefObject<VolumeAnimationObject>[];
+    objects: React.RefObject<VolumeAnimationObject | DoseAnimationObject>[];
     duration: number;
     folderName?: string;
 };
 export function VolumeAnimationControls({
     objects,
     duration,
-    folderName = "animation",
+    folderName = "Animation",
     ...props
 }: VolumeAnimationControlsProps) {
     const childMaxLength = React.useRef<{

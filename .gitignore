@@ -15,6 +15,7 @@
 
 # production
 /build
+.firebase
 
 # misc
 .DS_Store
@@ -36,21 +37,30 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
 # VSCode
 /.vscode
 
-/components/game_template/assets/blend
-/components/volumeRender/textures/python/colormap/__pycache__/*
 
 # not use data
 public/models/pcd
 public/models/rar
+
+# not share data
+public/models/vtk
+/components/game_template/assets/blend
+utils/fileConvert/json/**
 
 # log data
 *.log
 
 # Firebase
 firebase/functions/lib
+*firebase-adminsdk*.json
 
 # Skecths
 /shell
@@ -59,3 +69,6 @@ docs/**/*.mp4
 docs/reference
 docs/NOTE.md
 docs/Notes/*
+
+# Blender
+/public/models/blend/*

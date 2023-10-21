@@ -3,9 +3,9 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 
-import styles from "../styles/Home.module.css";
+import styles from "../styles/css/home.module.css";
 
-import { applyBasePath } from "../components/utils";
+import { applyBasePath } from "../utils";
 const logoURL = applyBasePath("/vercel.svg");
 
 const Home: NextPage = () => {
@@ -23,115 +23,99 @@ const Home: NextPage = () => {
             <main className={styles.main}>
                 <h1 className={styles.title}>Radiation Protection Education</h1>
 
-                <p className={styles.description}>
-                    <a href="https://nextjs.org">Next.js</a>,
-                    <a href="https://docs.pmnd.rs/react-three-fiber/getting-started/introduction">
-                        React Three Fiber
-                    </a>
-                </p>
+                <p className={styles.description}></p>
                 {/* <p>process.env.NODE_ENV {process.env.NODE_ENV}</p> */}
 
                 <h2>Content</h2>
+                <h3>Visualization</h3>
                 <div className={styles.grid}>
                     <div className={styles.card}>
-                        <Link href={"/volume_visualization/example_stent"}>
-                            <h2>Example Stent.nrrd &rarr;</h2>
+                        <Link href={"/visualization/extra/X-Ray"}>
+                            <h2>X-Ray &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
                     </div>
 
                     <div className={styles.card}>
-                        <Link href={"/volume_visualization/dose_visualization"}>
-                            <h2>Dose Visualization &rarr;</h2>
+                        <Link href={"/visualization/extra/C-Arm"}>
+                            <h2>C-Arm &rarr;</h2>
+                            <p>Next.js + react-three/fiber, Texture 3D</p>
+                        </Link>
+                    </div>
+                </div>
+
+                <h3>Visualization (Basic)</h3>
+                <div className={styles.grid}>
+                    <div className={styles.card}>
+                        <Link href={"/visualization/basic/X-Ray"}>
+                            <h2>X-Ray &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
                     </div>
 
                     <div className={styles.card}>
-                        <Link
-                            href={
-                                "/volume_visualization/dose_visualization_multi-object"
-                            }
-                        >
-                            <h2>Dose Visualization Multi-Object&rarr;</h2>
+                        <Link href={"/visualization/basic/C-Arm"}>
+                            <h2>C-Arm &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
                     </div>
+                </div>
 
+                <h3>Game</h3>
+                <div className={styles.grid}>
                     <div className={styles.card}>
-                        <Link
-                            href={
-                                "/volume_visualization/dose_visualization_curtain"
-                            }
-                        >
-                            <h2>
-                                Dose Visualization Curtain (&alpha;
-                                Version)&rarr;
-                            </h2>
-                            <p>Next.js + react-three/fiber, Texture 3D</p>
-                        </Link>
-                    </div>
-
-                    <div className={styles.card}>
-                        <Link
-                            href={
-                                "/volume_visualization/dose_visualization_board_prototype"
-                            }
-                        >
-                            <h2>
-                                Dose Visualization Board Prototype (&alpha;
-                                Version)&rarr;
-                            </h2>
-                            <p>Next.js + react-three/fiber, Texture 3D</p>
-                        </Link>
-                    </div>
-
-                    <div className={styles.card}>
-                        <Link href={"/volume_visualization/stent_and_dose"}>
-                            <h2>Stent and Dose</h2>
-                            <p>Next.js + react-three/fiber, Texture 3D</p>
-                        </Link>
-                    </div>
-
-                    {/* <div className={styles.card}>
-                        <Link
-                            href={"/volume_visualization/dose_visualization_VR"}
-                        >
-                            <h2>
-                                Dose Visualization (Ver. VR, &alpha;
-                                Version)&rarr;
-                            </h2>
-                            <p>
-                                Next.js + react-three/fiber + react-three/xr,
-                                Texture 3D
-                            </p>
-                        </Link>
-                    </div> */}
-
-                    <div className={styles.card}>
-                        <Link href={"/multiplay/game_template"}>
-                            <h2>Game Template &rarr;</h2>
+                        <Link href={"/game/room1"}>
+                            <h2>Room 1 &rarr;</h2>
                             <p>Next.js + react-three/fiber</p>
                         </Link>
                     </div>
 
-                    {/* <div className={styles.card}>
-                        <Link href={"/multiplay/the_picture_gallery"}>
-                            <h2>The Picture Gallery (Not Support)</h2>
+                    <div className={styles.card}>
+                        <Link href={"/game/room2"}>
+                            <h2>Room 2 &rarr;</h2>
                             <p>Next.js + react-three/fiber</p>
                         </Link>
-                    </div> */}
+                    </div>
 
                     <div className={styles.card}>
-                        <Link href={"/multiplay/stent_game"}>
+                        <Link href={"/game/SampleScene"}>
+                            <h2>Sample Scene &rarr;</h2>
+                            <p>Next.js + react-three/fiber</p>
+                        </Link>
+                    </div>
+
+                    <div className={styles.card}>
+                        <Link href={"/game/Stent_Game"}>
                             <h2>Stent + Game &rarr;</h2>
                             <p>Next.js + react-three/fiber</p>
                         </Link>
                     </div>
 
                     <div className={styles.card}>
-                        <Link href={"/multiplay/xray_game"}>
+                        <Link href={"/game/XRay_room_Game"}>
                             <h2>XRay + Game &rarr;</h2>
+                            <p>Next.js + react-three/fiber</p>
+                        </Link>
+                    </div>
+                </div>
+
+                <h3>Prototype</h3>
+                <div className={styles.grid}>
+                    <div className={styles.card}>
+                        <Link href={"/prototype/c-arm_scene_rough"}>
+                            <h2>C-Arm Scene &rarr;</h2>
+                            <p>Next.js + react-three/fiber</p>
+                        </Link>
+                    </div>
+                    <div className={styles.card}>
+                        <Link href={"/prototype/C-Arm"}>
+                            <h2>C-Arm &rarr;</h2>
+                            <p>Next.js + react-three/fiber</p>
+                        </Link>
+                    </div>
+                    <div className={styles.card}>
+                        <Link href={"/prototype/YBot_IK_Prototype"}>
+                            <h2>Y-Bot IK &rarr;</h2>
                             <p>Next.js + react-three/fiber</p>
                         </Link>
                     </div>
@@ -139,83 +123,61 @@ const Home: NextPage = () => {
 
                 <h2>References</h2>
                 <div className={styles.grid}>
-                    <a
-                        href="https://threejs.org/examples/?q=texture3d#webgl2_materials_texture3d"
-                        className={styles.card}
-                    >
-                        <h2>Textrue3D example &rarr;</h2>
-                        <p>Three.js examples</p>
-                    </a>
+                    <div className={styles.card}>
+                        <a href="https://threejs.org/examples/?q=texture3d#webgl2_materials_texture3d">
+                            <h2>Textrue3D example &rarr;</h2>
+                            <p>Three.js examples</p>
+                        </a>
+                    </div>
 
-                    <a
-                        href="https://threejs.org/examples/?q=nrrd#webgl_loader_nrrd"
-                        className={styles.card}
-                    >
-                        <h2>NRRDLoader example &rarr;</h2>
-                        <p>Three.js examples</p>
-                    </a>
+                    <div className={styles.card}>
+                        <a href="https://threejs.org/examples/?q=nrrd#webgl_loader_nrrd">
+                            <h2>NRRDLoader example &rarr;</h2>
+                            <p>Three.js examples</p>
+                        </a>
+                    </div>
 
-                    <a
-                        href="https://github.com/cornerstonejs/cornerstoneTools/issues/335#issuecomment-376008409"
-                        className={styles.card}
-                    >
-                        <h2>NRRD Production example &rarr;</h2>
-                        <p>Three.js + NRRD Production</p>
-                    </a>
+                    <div className={styles.card}>
+                        <a href="https://github.com/cornerstonejs/cornerstoneTools/issues/335#issuecomment-376008409">
+                            <h2>NRRD Production example &rarr;</h2>
+                            <p>Three.js + NRRD Production</p>
+                        </a>
+                    </div>
 
-                    <a
-                        href="https://contsrv.icer.kyushu-u.ac.jp/Medu/XraySim/"
-                        className={styles.card}
-                    >
-                        <h2>Radiation visualization 1 &rarr;</h2>
-                        <p>A-Frame</p>
-                    </a>
+                    <div className={styles.card}>
+                        <a href="https://contsrv.icer.kyushu-u.ac.jp/Medu/XraySim/">
+                            <h2>Radiation visualization 1 &rarr;</h2>
+                            <p>A-Frame</p>
+                        </a>
+                    </div>
 
-                    <a
-                        href="https://contsrv.icer.kyushu-u.ac.jp/Medu/XraySim2/"
-                        className={styles.card}
-                    >
-                        <h2>Radiation visualization 2 &rarr;</h2>
-                        <p>A-Frame</p>
-                    </a>
+                    <div className={styles.card}>
+                        <a href="https://contsrv.icer.kyushu-u.ac.jp/Medu/XraySim2/">
+                            <h2>Radiation visualization 2 &rarr;</h2>
+                            <p>A-Frame</p>
+                        </a>
+                    </div>
 
-                    <a href="https://nextjs.org/docs" className={styles.card}>
-                        <h2>Documentation &rarr;</h2>
-                        <p>
-                            Find in-depth information about Next.js features and
-                            API.
-                        </p>
-                    </a>
+                    <div className={styles.card}>
+                        <a href="https://nextjs.org">
+                            <h2>Next.js &rarr;</h2>
+                            <p>React Framework</p>
+                        </a>
+                    </div>
 
-                    <a href="https://nextjs.org/learn" className={styles.card}>
-                        <h2>Learn &rarr;</h2>
-                        <p>
-                            Learn about Next.js in an interactive course with
-                            quizzes!
-                        </p>
-                    </a>
+                    <div className={styles.card}>
+                        <a href="https://docs.pmnd.rs/react-three-fiber/getting-started/introduction">
+                            <h2>React Three Fiber &rarr;</h2>
+                            <p>React renderer for Three.js</p>
+                        </a>
+                    </div>
 
-                    <a
-                        href="https://github.com/vercel/next.js/tree/canary/examples"
-                        className={styles.card}
-                    >
-                        <h2>Examples &rarr;</h2>
-                        <p>
-                            Discover and deploy boilerplate example Next.js
-                            projects.
-                        </p>
-                    </a>
-
-                    <a
-                        href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                        className={styles.card}
-                    >
-                        <h2>Deploy &rarr;</h2>
-                        <p>
-                            Instantly deploy your Next.js site to a public URL
-                            with Vercel.
-                        </p>
-                    </a>
+                    <div className={styles.card}>
+                        <a href="https://threejs.org/">
+                            <h2>Three.js &rarr;</h2>
+                            <p>JavaScript library, WebGL</p>
+                        </a>
+                    </div>
                 </div>
             </main>
 

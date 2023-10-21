@@ -81,7 +81,6 @@ const float shininess=40.;
 uniform vec4 clippingPlanes[NUM_CLIPPING_PLANES];
 uniform bool u_clippedInitValue[NUM_CLIPPING_PLANES];
 uniform int u_clippingPlanesRegion[NUM_CLIPPING_PLANES];
-uniform bool u_clippingPlanesEnabled[NUM_CLIPPING_PLANES];
 uniform bool u_clippedInvert[NUM_CLIPPING_PLANES];
 bool regionResults[NUM_CLIPPING_PLANES];
 #endif
@@ -154,6 +153,9 @@ bool within_boundaries(vec3 position){
     bool clipped;
     
     #if NUM_CLIPPING_PLANES>0
+    regionResults=u_clippedInitValue;
+    bool regionResult;
+    
     vec4 plane;
     int regionIndex;
     bool enabled;
@@ -164,9 +166,8 @@ bool within_boundaries(vec3 position){
     for(int i=0;i<UNION_CLIPPING_PLANES;i++){
         plane=clippingPlanes[i];
         regionIndex=u_clippingPlanesRegion[i];
-        enabled=u_clippingPlanesEnabled[i];
         
-        clipped=clipped||((dot(position,plane.xyz)>plane.w)&&enabled);
+        clipped=clipped||(dot(position,plane.xyz)>plane.w);
         regionResults[regionIndex]=clipped;
     }
     #pragma unroll_loop_end
@@ -175,39 +176,27 @@ bool within_boundaries(vec3 position){
     #if UNION_CLIPPING_PLANES<NUM_CLIPPING_PLANES
     #pragma unroll_loop_start
     for(int i=UNION_CLIPPING_PLANES;i<NUM_CLIPPING_PLANES;i++){
-        regionIndex=u_clippingPlanesRegion[i];
-        initValue=u_clippedInitValue[regionIndex];
-        
-        regionResults[regionIndex]=initValue;
-    }
-    #pragma unroll_loop_end
-    
-    // combine results
-    #pragma unroll_loop_start
-    for(int i=UNION_CLIPPING_PLANES;i<NUM_CLIPPING_PLANES;i++){
         plane=clippingPlanes[i];
         regionIndex=u_clippingPlanesRegion[i];
-        enabled=u_clippingPlanesEnabled[i];
         
         clipped=regionResults[regionIndex];
-        clipped=((dot(position,plane.xyz)>plane.w)&&enabled)&&clipped;
+        clipped=clipped&&(dot(position,plane.xyz)>plane.w);
         regionResults[regionIndex]=clipped;
     }
     #pragma unroll_loop_end
     #endif
     
     bool invert;
-    bool regionResult;
-    
     clipped=false;
     
+    // Calclate result and Apply invert
     #pragma unroll_loop_start
     for(int i=0;i<NUM_CLIPPING_PLANES;i++){
         regionResult=regionResults[i];
         invert=u_clippedInvert[i];
         regionResult=regionResult^^invert;
         
-        clipped=(regionResult)||clipped;
+        clipped=regionResult||clipped;
     }
     #pragma unroll_loop_end
     #endif
@@ -391,7 +380,6 @@ const volumeRenderShader = {
         u_clim: { value: new THREE.Vector2(1, 1) },
         u_clippedInitValue: { value: [] },
         u_clippingPlanesRegion: { value: [] },
-        u_clippingPlanesEnabled: { value: [] },
         u_clippedInvert: { value: [] },
         u_data: { value: null },
         u_cmdata: { value: null },

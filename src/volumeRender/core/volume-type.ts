@@ -10,13 +10,13 @@ export type VolumeAnimationObjectProps = ReactThreeFiber.Object3DNode<
     VolumeAnimationObject,
     typeof VolumeAnimationObject
 >;
-export type VolumeObjectProps = ReactThreeFiber.Object3DNode<
-    VolumeObject,
-    typeof VolumeObject
->;
 export type VolumeGroupProps = ReactThreeFiber.Object3DNode<
     VolumeGroup,
     typeof VolumeGroup
+>;
+export type VolumeObjectProps = ReactThreeFiber.Object3DNode<
+    VolumeObject,
+    typeof VolumeObject
 >;
 
 /**
@@ -25,7 +25,7 @@ export type VolumeGroupProps = ReactThreeFiber.Object3DNode<
 declare module "@react-three/fiber" {
     interface ThreeElements {
         volumeAnimationObject: VolumeAnimationObjectProps;
-        volumeObject: VolumeObjectProps;
         volumeGroup: VolumeGroupProps;
+        volumeObject: VolumeObjectProps;
     }
 }

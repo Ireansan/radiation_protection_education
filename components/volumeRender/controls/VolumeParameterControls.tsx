@@ -8,23 +8,45 @@ import {
     VolumeObject,
     VolumeGroup,
     VolumeControls as VolumeControlsImpl,
+    VolumeBase,
 } from "../../../src";
-extend({ VolumeObject, VolumeGroup });
-import type { VolumeControlsTypes } from "./types";
+import { useStore } from "../../store";
 
-export type VolumeParameterControlsProps = {
-    folderName?: string;
-} & VolumeControlsTypes;
+export type VolumeParameterControlsProps =
+    JSX.IntrinsicElements["volumeGroup"] & {
+        children?: React.ReactElement<VolumeBase>;
+        object?: VolumeBase | React.RefObject<VolumeBase>;
+        opacity?: number;
+        clim1?: number;
+        clim2?: number;
+        colormap?: string;
+        renderstyle?: string;
+        isothreshold?: number;
+        activeClim?: boolean;
+    };
 /**
  * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
  */
 export const VolumeParameterControls = React.forwardRef<
-    VolumeParameterControlsProps,
+    VolumeControlsImpl,
     VolumeParameterControlsProps
 >(function VolumeParameterControls(
-    { children, object, folderName = "volume", ...props },
+    {
+        children, // FIXME: Only supported by VolumeGroup
+        object,
+        opacity = 0.6,
+        clim1 = 0,
+        clim2 = 1,
+        colormap = "viridis",
+        renderstyle = "mip",
+        isothreshold = 0.15,
+        activeClim = false,
+        ...props
+    },
     ref
 ) {
+    const [set] = useStore((state) => [state.set]);
+
     const controls = React.useMemo(() => new VolumeControlsImpl(), []);
     const group = React.useRef<VolumeGroup>(null);
 
@@ -33,88 +55,413 @@ export const VolumeParameterControls = React.forwardRef<
      */
     // Volume
     const [volumeConfig, setVolume] = useControls(() => ({
-        [folderName as string]: folder({
-            opacity: {
-                value: 1,
-                min: 0,
-                max: 1,
-                onChange: (e) => {
-                    controls.opacity = e;
+        Data: folder({
+            Parameter: folder({
+                opacity: {
+                    value: opacity,
+                    min: 0.05,
+                    max: 1,
+                    onChange: (e) => {
+                        controls.opacity = e;
+                    },
                 },
-            },
-            clim1: {
-                value: 0,
-                min: 0,
-                max: 1,
-                onChange: (e) => {
-                    controls.clim1 = e;
+                clim1: {
+                    value: clim1,
+                    min: 0,
+                    max: 1,
+                    onChange: (e) => {
+                        controls.clim1 = e;
+                    },
+                    render: () => {
+                        return activeClim;
+                    },
                 },
-                render: () => {
-                    return false;
+                clim2: {
+                    value: 1,
+                    min: 0,
+                    max: 1,
+                    onChange: (e) => {
+                        controls.clim2 = e;
+                    },
+                    render: () => {
+                        return activeClim;
+                    },
                 },
-            },
-            clim2: {
-                value: 1,
-                min: 0,
-                max: 1,
-                onChange: (e) => {
-                    controls.clim2 = e;
+                colormap: {
+                    value: colormap,
+                    options: [
+                        "parula",
+                        "heat",
+                        "jet",
+                        "turbo",
+                        "hot",
+                        "gray",
+                        "magma",
+                        "inferno",
+                        "plasma",
+                        "viridis",
+                        "cividis",
+                        "github",
+                        "cubehelix",
+                    ],
+                    onChange: (e) => {
+                        controls.colormap = e;
+
+                        // set execute log for experiment
+                        switch (e) {
+                            case "parula":
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            parameter: {
+                                                ...state.sceneProperties
+                                                    .executeLog.parameter,
+                                                colormap: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.parameter
+                                                        .colormap,
+                                                    parula: true,
+                                                },
+                                            },
+                                        },
+                                    },
+                                }));
+                                break;
+                            case "heat":
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            parameter: {
+                                                ...state.sceneProperties
+                                                    .executeLog.parameter,
+                                                colormap: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.parameter
+                                                        .colormap,
+                                                    heat: true,
+                                                },
+                                            },
+                                        },
+                                    },
+                                }));
+                                break;
+                            case "jet":
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            parameter: {
+                                                ...state.sceneProperties
+                                                    .executeLog.parameter,
+                                                colormap: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.parameter
+                                                        .colormap,
+                                                    jet: true,
+                                                },
+                                            },
+                                        },
+                                    },
+                                }));
+                                break;
+                            case "turbo":
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            parameter: {
+                                                ...state.sceneProperties
+                                                    .executeLog.parameter,
+                                                colormap: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.parameter
+                                                        .colormap,
+                                                    turbo: true,
+                                                },
+                                            },
+                                        },
+                                    },
+                                }));
+                                break;
+                            case "hot":
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            parameter: {
+                                                ...state.sceneProperties
+                                                    .executeLog.parameter,
+                                                colormap: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.parameter
+                                                        .colormap,
+                                                    hot: true,
+                                                },
+                                            },
+                                        },
+                                    },
+                                }));
+                                break;
+                            case "gray":
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            parameter: {
+                                                ...state.sceneProperties
+                                                    .executeLog.parameter,
+                                                colormap: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.parameter
+                                                        .colormap,
+                                                    gray: true,
+                                                },
+                                            },
+                                        },
+                                    },
+                                }));
+                                break;
+                            case "magma":
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            parameter: {
+                                                ...state.sceneProperties
+                                                    .executeLog.parameter,
+                                                colormap: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.parameter
+                                                        .colormap,
+                                                    magma: true,
+                                                },
+                                            },
+                                        },
+                                    },
+                                }));
+                                break;
+                            case "inferno":
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            parameter: {
+                                                ...state.sceneProperties
+                                                    .executeLog.parameter,
+                                                colormap: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.parameter
+                                                        .colormap,
+                                                    inferno: true,
+                                                },
+                                            },
+                                        },
+                                    },
+                                }));
+                                break;
+                            case "plasma":
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            parameter: {
+                                                ...state.sceneProperties
+                                                    .executeLog.parameter,
+                                                colormap: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.parameter
+                                                        .colormap,
+                                                    plasma: true,
+                                                },
+                                            },
+                                        },
+                                    },
+                                }));
+                                break;
+                            case "viridis":
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            parameter: {
+                                                ...state.sceneProperties
+                                                    .executeLog.parameter,
+                                                colormap: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.parameter
+                                                        .colormap,
+                                                    viridis: true,
+                                                },
+                                            },
+                                        },
+                                    },
+                                }));
+                                break;
+                            case "cividis":
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            parameter: {
+                                                ...state.sceneProperties
+                                                    .executeLog.parameter,
+                                                colormap: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.parameter
+                                                        .colormap,
+                                                    cividis: true,
+                                                },
+                                            },
+                                        },
+                                    },
+                                }));
+                                break;
+                            case "github":
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            parameter: {
+                                                ...state.sceneProperties
+                                                    .executeLog.parameter,
+                                                colormap: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.parameter
+                                                        .colormap,
+                                                    github: true,
+                                                },
+                                            },
+                                        },
+                                    },
+                                }));
+                                break;
+                            case "cubehelix":
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            parameter: {
+                                                ...state.sceneProperties
+                                                    .executeLog.parameter,
+                                                colormap: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.parameter
+                                                        .colormap,
+                                                    cubehelix: true,
+                                                },
+                                            },
+                                        },
+                                    },
+                                }));
+                                break;
+                        }
+                    },
                 },
-                render: () => {
-                    return false;
+                renderstyle: {
+                    value: renderstyle,
+                    options: ["mip", "iso"],
+                    onChange: (e) => {
+                        controls.renderstyle = e;
+
+                        // set execute log for experiment
+                        switch (e) {
+                            case "mip":
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            parameter: {
+                                                ...state.sceneProperties
+                                                    .executeLog.parameter,
+                                                renderStyle: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.parameter
+                                                        .renderStyle,
+                                                    mip: true,
+                                                },
+                                            },
+                                        },
+                                    },
+                                }));
+                                break;
+                            case "iso":
+                                set((state) => ({
+                                    sceneProperties: {
+                                        ...state.sceneProperties,
+                                        executeLog: {
+                                            ...state.sceneProperties.executeLog,
+                                            parameter: {
+                                                ...state.sceneProperties
+                                                    .executeLog.parameter,
+                                                renderStyle: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.parameter
+                                                        .renderStyle,
+                                                    iso: true,
+                                                },
+                                            },
+                                        },
+                                    },
+                                }));
+                                break;
+                        }
+                    },
                 },
-            },
-            colormap: {
-                value: "viridis",
-                options: [
-                    "parula",
-                    "heat",
-                    "jet",
-                    "turbo",
-                    "hot",
-                    "gray",
-                    "magma",
-                    "inferno",
-                    "plasma",
-                    "viridis",
-                    "cividis",
-                    "github",
-                    "cubehelix",
-                ],
-                onChange: (e) => {
-                    controls.colormap = e;
+                isothreshold: {
+                    value: isothreshold,
+                    min: 0,
+                    max: 1,
+                    onChange: (e) => {
+                        controls.isothreshold = e;
+
+                        // set();
+                    },
                 },
-            },
-            renderstyle: {
-                options: ["mip", "iso"],
-                onChange: (e) => {
-                    controls.renderstyle = e;
-                    console.log("leva renderstyle", object);
-                },
-            },
-            isothreshold: {
-                value: 0.15,
-                min: 0,
-                max: 1,
-                onChange: (e) => {
-                    controls.isothreshold = e;
-                },
-            },
+            }),
         }),
     }));
+
+    React.useEffect(() => {
+        controls.opacity = opacity;
+    }, [controls, opacity]);
+    React.useEffect(() => {
+        controls.clim1 = clim1;
+    }, [controls, clim1]);
+    React.useEffect(() => {
+        controls.clim2 = clim2;
+    }, [controls, clim2]);
+    React.useEffect(() => {
+        controls.colormap = colormap;
+    }, [controls, colormap]);
+    React.useEffect(() => {
+        controls.renderstyle = renderstyle;
+    }, [controls, renderstyle]);
+    React.useEffect(() => {
+        controls.isothreshold = isothreshold;
+    }, [controls, isothreshold]);
 
     // Attach volume to controls
     React.useLayoutEffect(() => {
         if (object) {
-            if (
-                object instanceof VolumeObject ||
-                object instanceof VolumeGroup
-            ) {
+            if (object instanceof VolumeBase) {
                 controls.attach(object);
-            } else if (
-                object.current instanceof VolumeObject ||
-                object.current instanceof VolumeGroup
-            ) {
+            } else if (object.current instanceof VolumeBase) {
                 controls.attach(object.current);
             }
         } else if (group.current instanceof VolumeGroup) {
@@ -127,6 +474,7 @@ export const VolumeParameterControls = React.forwardRef<
     return controls ? (
         <>
             <primitive ref={ref} object={controls} />
+            {/* FIXME: Only supported by VolumeGroup */}
             <volumeGroup ref={group}>{children}</volumeGroup>
         </>
     ) : null;

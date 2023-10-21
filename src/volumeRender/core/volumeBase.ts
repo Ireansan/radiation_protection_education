@@ -1,24 +1,27 @@
 import * as THREE from "three";
 
-class ClippingPlanesObject {
+export class ClippingPlanesObject {
     id: number;
     planes: THREE.Plane[];
     enabled: boolean;
     intersection: boolean;
     invert: boolean;
+    isType?: string;
 
     constructor(
         id: number,
         planes: THREE.Plane[],
         enabled: boolean,
         intersection: boolean,
-        invert: boolean
+        invert: boolean,
+        isType?: string
     ) {
         this.id = id;
         this.planes = planes;
         this.enabled = enabled;
         this.intersection = intersection;
         this.invert = invert;
+        isType ? (this.isType = isType) : null;
     }
 }
 
@@ -45,13 +48,27 @@ class VolumeBase extends THREE.Object3D {
 
     _clippedInitValue: boolean[];
     _clippingPlanesRegion: number[];
-    _clippingPlanesEnabled: boolean[];
     _clippedInvert: boolean[];
+    _clippingPlanesObject: ClippingPlanesObject | undefined;
+    // -> [...parent.ClippingPlanesObject[], ...this.ClippingPlanesObject[]]
 
+    parentId: string | undefined;
+    parentRegionOffset: number;
+    planesLength: number;
     clippingPlanesObjects: ClippingPlanesObject[];
+    totalClippingPlanesObjects: ClippingPlanesObject[];
 
     volumeParamAutoUpdate: boolean;
     volumeClippingAutoUpdate: boolean;
+
+    coefficientAutoUpdate: boolean;
+    offsetAutoUpdate: boolean;
+    opacityAutoUpdate: boolean;
+    clim1AutoUpdate: boolean;
+    clim2AutoUpdate: boolean;
+    colormapAutoUpdate: boolean;
+    renderstyleAutoUpdate: boolean;
+    isothresholdAutoUpdate: boolean;
 
     volumeParamWorldAutoUpdate: boolean;
     volumeClippingWorldAutoUpdate: boolean;
@@ -75,13 +92,24 @@ class VolumeBase extends THREE.Object3D {
 
         this._clippedInitValue = [];
         this._clippingPlanesRegion = [];
-        this._clippingPlanesEnabled = [];
         this._clippedInvert = [];
 
+        this.parentRegionOffset = 0;
+        this.planesLength = 0;
         this.clippingPlanesObjects = [];
+        this.totalClippingPlanesObjects = [];
 
         this.volumeParamAutoUpdate = true;
         this.volumeClippingAutoUpdate = true;
+
+        this.coefficientAutoUpdate = true;
+        this.offsetAutoUpdate = true;
+        this.opacityAutoUpdate = true;
+        this.clim1AutoUpdate = true;
+        this.clim2AutoUpdate = true;
+        this.colormapAutoUpdate = true;
+        this.renderstyleAutoUpdate = true;
+        this.isothresholdAutoUpdate = true;
 
         this.volumeParamWorldAutoUpdate = true;
         this.volumeClippingWorldAutoUpdate = true;
@@ -92,12 +120,14 @@ class VolumeBase extends THREE.Object3D {
     }
     set coefficient(coefficient: number) {
         this._coefficient = coefficient;
+        this.updateVolumeParam(false, true);
     }
     get offset() {
         return this._offset;
     }
     set offset(offset: number) {
         this._offset = offset;
+        this.updateVolumeParam(false, true);
     }
 
     get opacity() {
@@ -151,6 +181,9 @@ class VolumeBase extends THREE.Object3D {
     }
     set clipping(clipping: boolean) {
         this._clipping = clipping;
+        this._clippingPlanesObject
+            ? (this._clippingPlanesObject.enabled = clipping)
+            : null;
         this.updateVolumeClipping(false, true);
     }
     get clippingPlanes() {
@@ -158,6 +191,9 @@ class VolumeBase extends THREE.Object3D {
     }
     set clippingPlanes(planes: THREE.Plane[]) {
         this._clippingPlanes = planes;
+        this._clippingPlanesObject
+            ? (this._clippingPlanesObject.planes = planes)
+            : null;
         this.updateVolumeClipping(false, true);
     }
     get clipIntersection() {
@@ -165,81 +201,25 @@ class VolumeBase extends THREE.Object3D {
     }
     set clipIntersection(clipIntersection: boolean) {
         this._clipIntersection = clipIntersection;
+        this._clippingPlanesObject
+            ? (this._clippingPlanesObject.intersection = clipIntersection)
+            : null;
         this.updateVolumeClipping(false, true);
     }
 
-    get clippedInitValue() {
-        return this._clippedInitValue;
-    }
-    set clippedInitValue(initValues: boolean[]) {
-        this._clippedInitValue = initValues;
-        this.updateVolumeClipping(false, true);
-    }
-    get clippingPlanesRegion() {
-        return this._clippingPlanesRegion;
-    }
-    set clippingPlanesRegion(planesRegion: number[]) {
-        this._clippingPlanesRegion = planesRegion;
-        this.updateVolumeClipping(false, true);
-    }
-    get clippingPlanesEnabled() {
-        return this._clippingPlanesEnabled;
-    }
-    set clippingPlanesEnabled(planesEnabled: boolean[]) {
-        this._clippingPlanesEnabled = planesEnabled;
-        this.updateVolumeClipping(false, true);
-    }
-    get clippedInvert() {
-        return this._clippedInvert;
-    }
-    set clippedInvert(invert: boolean[]) {
-        this._clippedInvert = invert;
-        this.updateVolumeClipping(false, true);
-    }
-
-    pushClippingPlanesObjects(
-        planes: THREE.Plane[],
-        clipping: boolean = false,
-        intersection: boolean = false,
-        invert: boolean = false
-    ) {
+    pushClippingPlanesObjects(clippingPlanesObject: ClippingPlanesObject) {
         let index = this.clippingPlanesObjects.length;
-        this.clippingPlanesObjects.push(
-            new ClippingPlanesObject(
-                index,
-                planes,
-                clipping,
-                intersection,
-                invert
-            )
-        );
-        this.updateVolumeClipping(false, true);
-    }
-    setClippingPlanesObjects(
-        id: number,
-        clipping?: boolean,
-        planes?: THREE.Plane[],
-        intersection?: boolean,
-        invert?: boolean
-    ) {
-        clipping !== undefined
-            ? (this.clippingPlanesObjects[id].enabled = clipping)
-            : null;
-        planes !== undefined
-            ? (this.clippingPlanesObjects[id].planes = planes)
-            : null;
-        intersection !== undefined
-            ? (this.clippingPlanesObjects[id].intersection = intersection)
-            : null;
-        invert !== undefined
-            ? (this.clippingPlanesObjects[id].invert = invert)
-            : null;
+        clippingPlanesObject.id = index;
+
+        this.clippingPlanesObjects.push(clippingPlanesObject);
         this.updateVolumeClipping(false, true);
     }
 
     // https://github.com/mrdoob/three.js/blob/master/src/core/Object3D.js#L601
     updateVolumeParam(updateParents: boolean, updateChildren: boolean) {
+        // ----------
         // update parent
+        // ----------
         const parent = this.parent;
         if (
             updateParents === true &&
@@ -251,19 +231,35 @@ class VolumeBase extends THREE.Object3D {
             }
         }
 
+        // ----------
         // update this by parent
+        // ----------
         if (parent !== null && this.volumeParamAutoUpdate) {
             if (parent instanceof VolumeBase) {
-                this._opacity = parent._opacity;
-                this._clim1 = parent._clim1;
-                this._clim2 = parent._clim2;
-                this._colormap = parent._colormap;
-                this._renderstyle = parent._renderstyle;
-                this._isothreshold = parent._isothreshold;
+                this.coefficientAutoUpdate
+                    ? (this._coefficient = parent._coefficient)
+                    : null;
+                this.offsetAutoUpdate ? (this._offset = parent._offset) : null;
+                this.opacityAutoUpdate
+                    ? (this._opacity = parent._opacity)
+                    : null;
+                this.clim1AutoUpdate ? (this._clim1 = parent._clim1) : null;
+                this.clim2AutoUpdate ? (this._clim2 = parent._clim2) : null;
+                this.colormapAutoUpdate
+                    ? (this._colormap = parent._colormap)
+                    : null;
+                this.renderstyleAutoUpdate
+                    ? (this._renderstyle = parent._renderstyle)
+                    : null;
+                this.isothresholdAutoUpdate
+                    ? (this._isothreshold = parent._isothreshold)
+                    : null;
             }
         }
 
+        // ----------
         // update children
+        // ----------
         if (updateChildren === true) {
             const children = this.children;
 
@@ -282,57 +278,6 @@ class VolumeBase extends THREE.Object3D {
 
     updateVolumeClipping(updateParents: boolean, updateChildren: boolean) {
         // ----------
-        // update this
-        // ----------
-        this._clipping = false;
-        this._clippingPlanes = [];
-        this._clipIntersection = false;
-
-        this._clippingPlanesEnabled = [];
-        this._clippingPlanesRegion = [];
-        for (let i = 0; i < this.clippingPlanesObjects.length; i++) {
-            let element = this.clippingPlanesObjects[i];
-
-            // Clipping
-            this._clipping = this._clipping || element.enabled;
-
-            // Planes
-            this._clippingPlanes = this._clippingPlanes.concat(element.planes);
-
-            // Intersection
-            this._clipIntersection =
-                this._clipIntersection || element.intersection;
-
-            // Enabled
-            let enabledArray = new Array(element.planes.length).fill(
-                element.enabled
-            );
-            this._clippingPlanesEnabled =
-                this._clippingPlanesEnabled.concat(enabledArray);
-
-            // Region
-            let regionArray = new Array(element.planes.length).fill(i);
-            this._clippingPlanesRegion =
-                this._clippingPlanesRegion.concat(regionArray);
-        }
-
-        // Init Value, Invert
-        this._clippedInitValue = new Array(this._clippingPlanes.length).fill(
-            false
-        );
-        this._clippedInvert = new Array(this._clippingPlanes.length).fill(
-            false
-        );
-
-        for (let i = 0; i < this.clippingPlanesObjects.length; i++) {
-            let element = this.clippingPlanesObjects[i];
-            this._clippedInitValue[i] =
-                this._clipIntersection && element.enabled;
-            this._clippedInvert[i] = element.invert && element.enabled;
-            console.log(element);
-        }
-
-        // ----------
         // update parent
         // ----------
         const parent = this.parent;
@@ -347,30 +292,113 @@ class VolumeBase extends THREE.Object3D {
         }
 
         // ----------
+        // reset this values
+        // ----------
+        this.planesLength = 0;
+        this.parentRegionOffset = 0;
+
+        this._clipping = false;
+        this._clippingPlanes = [];
+        this._clipIntersection = false;
+
+        this._clippedInitValue = [];
+        this._clippingPlanesRegion = [];
+        this._clippedInvert = [];
+
+        this.totalClippingPlanesObjects = [];
+
+        // ----------
         // update this by parent
         // ----------
-        if (parent !== null && this.volumeClippingAutoUpdate) {
-            if (parent instanceof VolumeBase) {
-                this._clipping = parent._clipping;
-                this._clippingPlanes = parent._clipping
-                    ? parent._clippingPlanes
-                    : [];
-                this._clipIntersection = parent._clipIntersection;
+        if (
+            parent !== null &&
+            this.volumeClippingAutoUpdate &&
+            parent instanceof VolumeBase
+        ) {
+            this._clipping = parent._clipping;
+            this._clippingPlanes = parent._clipping
+                ? parent._clippingPlanes.concat()
+                : [];
+            this._clipIntersection = parent._clipIntersection;
 
-                this._clippedInitValue = parent._clipping
-                    ? parent._clippedInitValue
-                    : [];
-                this._clippingPlanesRegion = parent._clipping
-                    ? parent._clippingPlanesRegion
-                    : [];
-                this._clippingPlanesEnabled = parent._clipping
-                    ? parent._clippingPlanesEnabled
-                    : [];
-                this._clippedInvert = parent._clipping
-                    ? parent._clippedInvert
-                    : [];
+            this._clippedInitValue = parent._clipping
+                ? parent._clippedInitValue.concat()
+                : [];
+            this._clippingPlanesRegion = parent._clipping
+                ? parent._clippingPlanesRegion.concat()
+                : [];
+            this._clippedInvert = parent._clipping
+                ? parent._clippedInvert.concat()
+                : [];
+
+            this.totalClippingPlanesObjects = parent._clipping
+                ? parent.totalClippingPlanesObjects.concat()
+                : [];
+
+            this.parentRegionOffset = parent._clipping
+                ? parent._clippingPlanesRegion.reduce(
+                      (a, b) => Math.max(a, b),
+                      -1
+                  ) + 1
+                : 0;
+        }
+
+        // ----------
+        // update this
+        // ----------
+        let numEnableElement = 0;
+        for (let i = 0; i < this.clippingPlanesObjects.length; i++) {
+            let element = this.clippingPlanesObjects[i];
+
+            // Clipping
+            this._clipping = this._clipping || element.enabled;
+
+            if (element.enabled) {
+                // Planes
+                this._clippingPlanes = this._clippingPlanes.concat(
+                    element.planes
+                );
+                this.planesLength += element.planes.length;
+
+                // Intersection
+                this._clipIntersection =
+                    this._clipIntersection || element.intersection;
+
+                // Region
+                let regionArray = new Array(element.planes.length).fill(
+                    i + this.parentRegionOffset
+                );
+                this._clippingPlanesRegion =
+                    this._clippingPlanesRegion.concat(regionArray);
+
+                numEnableElement += 1;
             }
         }
+
+        // Init Value
+        let initValueArray = new Array(this.planesLength).fill(false);
+        this._clippedInitValue = this._clippedInitValue.concat(initValueArray);
+
+        for (let i = 0; i < this.parentRegionOffset; i++) {
+            this._clippedInitValue[i] = this._clipIntersection;
+        }
+
+        // Invert
+        let invertArray = new Array(this.planesLength).fill(false);
+        this._clippedInvert = this._clippedInvert.concat(invertArray);
+
+        // set Init Value, Invert
+        for (let i = 0; i < this.clippingPlanesObjects.length; i++) {
+            let element = this.clippingPlanesObjects[i];
+
+            this._clippedInitValue[i + this.parentRegionOffset] =
+                this._clipIntersection && element.enabled;
+            this._clippedInvert[i + this.parentRegionOffset] = element.invert;
+        }
+
+        // update totalClippingPlanesObjects
+        this.totalClippingPlanesObjects =
+            this.totalClippingPlanesObjects.concat(this.clippingPlanesObjects);
 
         // ----------
         // update children
