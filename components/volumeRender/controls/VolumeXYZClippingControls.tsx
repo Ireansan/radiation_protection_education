@@ -193,13 +193,27 @@ function IntersectLineHelper({
     }));
 
     useEffect(() => {
-        pivotRef.current.matrix.setPosition(center);
-    }, [center]);
-    useEffect(() => {
         if (clipping) {
             onDragLine();
         }
     });
+    useEffect(() => {
+        pivotRef.current.matrix.setPosition(center);
+    }, [center]);
+    useEffect(() => {
+        const worldMatrix = pivotRef.current.matrixWorld.clone();
+        if (clipping) {
+            onDrag(
+                new THREE.Matrix4(),
+                new THREE.Matrix4(),
+                worldMatrix,
+                new THREE.Matrix4(),
+                index,
+                invert
+            );
+            onDragLine();
+        }
+    }, [invert]);
 
     return (
         <>
