@@ -153,7 +153,7 @@ function IntersectLineHelper({
         if (clipping) {
             onDragLine();
         }
-    }, [clipping]);
+    });
 
     return (
         <>
@@ -597,6 +597,16 @@ export const VolumeXYZClippingControls = React.forwardRef<
         basePlanes[0].constant = center.x;
         basePlanes[1].constant = center.y;
         basePlanes[2].constant = center.z;
+
+        basePlanes.forEach((plane, index) => {
+            onDrag(
+                new THREE.Matrix4(),
+                new THREE.Matrix4(),
+                new THREE.Matrix4().setPosition(center),
+                new THREE.Matrix4(),
+                index
+            );
+        });
     }, [center, basePlanes]);
 
     // Push Planes
