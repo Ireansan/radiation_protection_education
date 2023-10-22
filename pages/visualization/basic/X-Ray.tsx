@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { Suspense, useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
     GizmoHelper,
@@ -39,7 +39,7 @@ import {
 
 // ==========
 // UI
-import { SceneConfigPanel } from "../../../components/ui";
+import { Loader, SceneConfigPanel } from "../../../components/ui";
 
 // ==========
 // Store
@@ -113,152 +113,155 @@ function XRayBasic() {
                         orthographic
                         camera={{ position: [4, 8, 4], zoom: 50 }}
                     >
-                        {/* -------------------------------------------------- */}
-                        {/* Volume Object */}
+                        <Suspense fallback={<Loader />}>
+                            {/* -------------------------------------------------- */}
+                            {/* Volume Object */}
 
-                        <doseGroup
-                            ref={ref}
-                            position={
-                                VOLUMEDATA.XRay_nocurtain_Configure.volume
-                                    .position
-                            }
-                            rotation={
-                                VOLUMEDATA.XRay_nocurtain_Configure.volume
-                                    .rotation
-                            }
-                            scale={
-                                VOLUMEDATA.XRay_nocurtain_Configure.volume.scale
-                            }
-                        >
-                            {/* Time Lapse */}
-                            <doseGroup ref={timelapseRef}>
-                                {/* X-Ray Dose, no curtain */}
-                                <doseAnimationObject
-                                    ref={nocurtainRef}
-                                    name={"x-ray_animation_nocurtain"}
-                                    visible={false}
-                                >
-                                    <VOLUMEDATA.XRay_nocurtain_all_Animation />
-                                </doseAnimationObject>
-                                {/* X-Ray Dose, curtain */}
-                                <doseAnimationObject
-                                    ref={curtainRef}
-                                    name={"x-ray_animation_curtain"}
-                                >
-                                    <VOLUMEDATA.XRay_curtain_all_Animation />
-                                </doseAnimationObject>
+                            <doseGroup
+                                ref={ref}
+                                position={
+                                    VOLUMEDATA.XRay_nocurtain_Configure.volume
+                                        .position
+                                }
+                                rotation={
+                                    VOLUMEDATA.XRay_nocurtain_Configure.volume
+                                        .rotation
+                                }
+                                scale={
+                                    VOLUMEDATA.XRay_nocurtain_Configure.volume
+                                        .scale
+                                }
+                            >
+                                {/* Time Lapse */}
+                                <doseGroup ref={timelapseRef}>
+                                    {/* X-Ray Dose, no curtain */}
+                                    <doseAnimationObject
+                                        ref={nocurtainRef}
+                                        name={"x-ray_animation_nocurtain"}
+                                        visible={false}
+                                    >
+                                        <VOLUMEDATA.XRay_nocurtain_all_Animation />
+                                    </doseAnimationObject>
+                                    {/* X-Ray Dose, curtain */}
+                                    <doseAnimationObject
+                                        ref={curtainRef}
+                                        name={"x-ray_animation_curtain"}
+                                    >
+                                        <VOLUMEDATA.XRay_curtain_all_Animation />
+                                    </doseAnimationObject>
+                                </doseGroup>
+
+                                {/* Accumulate */}
+                                <doseGroup ref={accumulateRef} visible={false}>
+                                    {/* X-Ray Dose, no curtain, Accumulate */}
+                                    <doseGroup
+                                        ref={nocurtainAccumuRef}
+                                        name={"x-ray_accumulate_nocurtain"}
+                                        visible={false}
+                                    >
+                                        <VOLUMEDATA.XRay_nocurtain_all_accumulate />
+                                    </doseGroup>
+                                    {/* X-Ray Dose, curtain, Accumulate */}
+                                    <doseGroup
+                                        ref={curtainAccumuRef}
+                                        name={"x-ray_accumulate_curtain"}
+                                    >
+                                        <VOLUMEDATA.XRay_curtain_all_accumulate />
+                                    </doseGroup>
+                                </doseGroup>
                             </doseGroup>
 
-                            {/* Accumulate */}
-                            <doseGroup ref={accumulateRef} visible={false}>
-                                {/* X-Ray Dose, no curtain, Accumulate */}
-                                <doseGroup
-                                    ref={nocurtainAccumuRef}
-                                    name={"x-ray_accumulate_nocurtain"}
-                                    visible={false}
-                                >
-                                    <VOLUMEDATA.XRay_nocurtain_all_accumulate />
-                                </doseGroup>
-                                {/* X-Ray Dose, curtain, Accumulate */}
-                                <doseGroup
-                                    ref={curtainAccumuRef}
-                                    name={"x-ray_accumulate_curtain"}
-                                >
-                                    <VOLUMEDATA.XRay_curtain_all_accumulate />
-                                </doseGroup>
-                            </doseGroup>
-                        </doseGroup>
-
-                        {/* -------------------------------------------------- */}
-                        {/* Volume Controls */}
-                        <DoseAnimationControls
-                            objects={[nocurtainRef, curtainRef]}
-                            mainGroup={timelapseRef}
-                            subGroup={accumulateRef}
-                            duration={16}
-                            customSpeed={[8.0, 16.0]}
-                        />
-                        <VolumeParameterControls object={ref} />
-                        <VolumeXYZClippingControls
-                            object={ref}
-                            planeSize={2}
-                            areaSize={
-                                VOLUMEDATA.XRay_curtain_Configure.volume
-                                    .areaSize
-                            }
-                            areaScale={1.1}
-                            lineColor={new THREE.Color(0x6e0010)}
-                        />
-
-                        {/* -------------------------------------------------- */}
-                        {/* Three.js Object */}
-                        <group
-                            position={
-                                ENVIROMENT.XRay_Configure.object3d.position
-                            }
-                            rotation={
-                                ENVIROMENT.XRay_Configure.object3d.rotation
-                            }
-                            scale={ENVIROMENT.XRay_Configure.object3d.scale}
-                        >
-                            <ENVIROMENT.XRay_Bed />
-                            <ENVIROMENT.XRay_Machine />
-                            <ENVIROMENT.XRay_Patient />
-
-                            {/* Curtain (Three.js Object) */}
-                            <group ref={curtainObjRef} visible={false}>
-                                <ENVIROMENT.XRay_Curtain />
-                            </group>
-                        </group>
-                        <mesh position={[0, 1, 0]} visible={debug}>
-                            <sphereBufferGeometry args={[0.25]} />
-                        </mesh>
-
-                        {/* -------------------------------------------------- */}
-                        {/* Three.js Controls */}
-                        <OrbitControls makeDefault />
-
-                        {/* -------------------------------------------------- */}
-                        {/* Physics */}
-                        <Physics gravity={[0, -30, 0]}>
-                            <ToggledDebug />
-                        </Physics>
-
-                        {/* -------------------------------------------------- */}
-                        {/* Enviroment */}
-                        <ambientLight intensity={0.5} />
-
-                        <Grid
-                            position={[0, -0.01, 0]}
-                            args={[10.5, 10.5]}
-                            cellColor={"#121d7d"}
-                            sectionColor={"#262640"}
-                            fadeDistance={20}
-                            followCamera
-                            infiniteGrid
-                            matrixWorldAutoUpdate={undefined}
-                            getObjectsByProperty={undefined}
-                            getVertexPosition={undefined}
-                        />
-
-                        {/* ================================================== */}
-                        {/* UI */}
-                        <Stats />
-
-                        <GizmoHelper
-                            alignment="bottom-right"
-                            margin={[80, 80]}
-                            renderPriority={1}
-                        >
-                            <GizmoViewport
-                                axisColors={[
-                                    "hotpink",
-                                    "aquamarine",
-                                    "#3498DB",
-                                ]}
-                                labelColor="black"
+                            {/* -------------------------------------------------- */}
+                            {/* Volume Controls */}
+                            <DoseAnimationControls
+                                objects={[nocurtainRef, curtainRef]}
+                                mainGroup={timelapseRef}
+                                subGroup={accumulateRef}
+                                duration={16}
+                                customSpeed={[8.0, 16.0]}
                             />
-                        </GizmoHelper>
+                            <VolumeParameterControls object={ref} />
+                            <VolumeXYZClippingControls
+                                object={ref}
+                                planeSize={2}
+                                areaSize={
+                                    VOLUMEDATA.XRay_curtain_Configure.volume
+                                        .areaSize
+                                }
+                                areaScale={1.1}
+                                lineColor={new THREE.Color(0x6e0010)}
+                            />
+
+                            {/* -------------------------------------------------- */}
+                            {/* Three.js Object */}
+                            <group
+                                position={
+                                    ENVIROMENT.XRay_Configure.object3d.position
+                                }
+                                rotation={
+                                    ENVIROMENT.XRay_Configure.object3d.rotation
+                                }
+                                scale={ENVIROMENT.XRay_Configure.object3d.scale}
+                            >
+                                <ENVIROMENT.XRay_Bed />
+                                <ENVIROMENT.XRay_Machine />
+                                <ENVIROMENT.XRay_Patient />
+
+                                {/* Curtain (Three.js Object) */}
+                                <group ref={curtainObjRef} visible={false}>
+                                    <ENVIROMENT.XRay_Curtain />
+                                </group>
+                            </group>
+                            <mesh position={[0, 1, 0]} visible={debug}>
+                                <sphereBufferGeometry args={[0.25]} />
+                            </mesh>
+
+                            {/* -------------------------------------------------- */}
+                            {/* Three.js Controls */}
+                            <OrbitControls makeDefault />
+
+                            {/* -------------------------------------------------- */}
+                            {/* Physics */}
+                            <Physics gravity={[0, -30, 0]}>
+                                <ToggledDebug />
+                            </Physics>
+
+                            {/* -------------------------------------------------- */}
+                            {/* Enviroment */}
+                            <ambientLight intensity={0.5} />
+
+                            <Grid
+                                position={[0, -0.01, 0]}
+                                args={[10.5, 10.5]}
+                                cellColor={"#121d7d"}
+                                sectionColor={"#262640"}
+                                fadeDistance={20}
+                                followCamera
+                                infiniteGrid
+                                matrixWorldAutoUpdate={undefined}
+                                getObjectsByProperty={undefined}
+                                getVertexPosition={undefined}
+                            />
+
+                            {/* ================================================== */}
+                            {/* UI */}
+                            <Stats />
+
+                            <GizmoHelper
+                                alignment="bottom-right"
+                                margin={[80, 80]}
+                                renderPriority={1}
+                            >
+                                <GizmoViewport
+                                    axisColors={[
+                                        "hotpink",
+                                        "aquamarine",
+                                        "#3498DB",
+                                    ]}
+                                    labelColor="black"
+                                />
+                            </GizmoHelper>
+                        </Suspense>
                     </Canvas>
                     <SceneConfigPanel activateStats={false} />
                 </div>
