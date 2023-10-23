@@ -12,11 +12,11 @@ import { useStore } from "../../store";
  */
 type intersectLineHelperProps = {
     index: number;
-    plane: THREE.Plane;
     clipping: boolean;
-    viewing: boolean;
     boxSize: [number, number, number];
+    basePlanes: THREE.Plane[];
     planes: THREE.Plane[];
+    folderName: string;
     renderOrder?: number;
     center?: THREE.Vector3;
     activeAxes?: [boolean, boolean, boolean];
@@ -27,17 +27,18 @@ type intersectLineHelperProps = {
         deltaL: THREE.Matrix4,
         w: THREE.Matrix4,
         deltaW: THREE.Matrix4,
-        index: number
+        index: number,
+        invert: boolean
     ) => void;
     onDragEnd: () => void;
 } & JSX.IntrinsicElements["group"];
 function IntersectLineHelper({
     index,
-    plane,
     clipping,
-    viewing,
     boxSize,
+    basePlanes,
     planes,
+    folderName,
     renderOrder = 50,
     center = new THREE.Vector3(),
     activeAxes = [true, true, true],
@@ -47,6 +48,10 @@ function IntersectLineHelper({
     onDragEnd,
     ...props
 }: intersectLineHelperProps) {
+    const [set, viewing] = useStore((state) => [state.set, state.viewing]);
+
+    const [invert, setInvert] = React.useState<boolean>(false);
+
     const pivotRef = React.useRef<THREE.Group>(null!);
     const lineSegmentsRef = React.useRef<THREE.LineSegments>(null!);
     const geometryRef = React.useRef<THREE.BufferGeometry>(null!);
@@ -62,6 +67,7 @@ function IntersectLineHelper({
     const defaultArray = new Float32Array(9999);
 
     const onDragLine = () => {
+        const plane = basePlanes[index];
         const tmpVector3 = new THREE.Vector3();
         const tmpLine3 = new THREE.Line3();
 
@@ -146,14 +152,68 @@ function IntersectLineHelper({
         }
     };
 
-    useEffect(() => {
-        pivotRef.current.matrix.setPosition(center);
-    }, [center]);
+    const [,] = useControls(() => ({
+        Data: folder({
+            Clip: folder({
+                [folderName as string]: folder(
+                    {
+                        Test: {
+                            value: false,
+                            label: "invert",
+                            onChange: (e) => {
+                                setInvert(e);
+
+                                basePlanes[index].normal.multiplyScalar(-1);
+                                basePlanes[index].constant *= -1;
+
+                                // set execute log for experiment
+                                if (e) {
+                                    set((state) => ({
+                                        sceneProperties: {
+                                            ...state.sceneProperties,
+                                            executeLog: {
+                                                ...state.sceneProperties
+                                                    .executeLog,
+                                                clipping: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.clipping,
+                                                    invert: true,
+                                                },
+                                            },
+                                        },
+                                    }));
+                                }
+                            },
+                        },
+                    },
+                    { collapsed: true }
+                ),
+            }),
+        }),
+    }));
+
     useEffect(() => {
         if (clipping) {
             onDragLine();
         }
-    }, [clipping]);
+    });
+    useEffect(() => {
+        pivotRef.current.matrix.setPosition(center);
+    }, [center]);
+    useEffect(() => {
+        const worldMatrix = pivotRef.current.matrixWorld.clone();
+        if (clipping) {
+            onDrag(
+                new THREE.Matrix4(),
+                new THREE.Matrix4(),
+                worldMatrix,
+                new THREE.Matrix4(),
+                index,
+                invert
+            );
+            onDragLine();
+        }
+    }, [invert]);
 
     return (
         <>
@@ -165,7 +225,7 @@ function IntersectLineHelper({
                 visible={clipping}
                 activeAxes={activeAxes}
                 onDrag={(l, deltaL, w, deltaW) => {
-                    onDrag(l, deltaL, w, deltaW, index);
+                    onDrag(l, deltaL, w, deltaW, index, invert);
                     onDragLine();
                 }}
             />
@@ -268,7 +328,6 @@ export const VolumeXYZClippingControls = React.forwardRef<
         Normals.map((n) => new THREE.Plane(n, 0))
     );
     const [Planes, setPlanes] = React.useState<THREE.Plane[]>([]);
-    const coefficientsRef = React.useRef<number[]>(new Array(4).fill(-1));
 
     const [boxSize, setBoxSize] = React.useState<[number, number, number]>(
         areaSize.map((value) => value * 2 * areaScale) as [
@@ -324,34 +383,6 @@ export const VolumeXYZClippingControls = React.forwardRef<
                                 }
                             },
                         },
-                        XInvert: {
-                            value: false,
-                            label: "invert",
-                            onChange: (e) => {
-                                coefficientsRef.current[0] = e ? 1 : -1;
-
-                                basePlanes[0].normal.multiplyScalar(-1);
-                                basePlanes[0].constant *= -1;
-
-                                if (e) {
-                                    // set execute log for experiment
-                                    set((state) => ({
-                                        sceneProperties: {
-                                            ...state.sceneProperties,
-                                            executeLog: {
-                                                ...state.sceneProperties
-                                                    .executeLog,
-                                                clipping: {
-                                                    ...state.sceneProperties
-                                                        .executeLog.clipping,
-                                                    invert: true,
-                                                },
-                                            },
-                                        },
-                                    }));
-                                }
-                            },
-                        },
                     },
                     { collapsed: true }
                 ),
@@ -385,34 +416,6 @@ export const VolumeXYZClippingControls = React.forwardRef<
                                 }
                             },
                         },
-                        YInvert: {
-                            value: false,
-                            label: "invert",
-                            onChange: (e) => {
-                                coefficientsRef.current[1] = e ? 1 : -1;
-
-                                basePlanes[1].normal.multiplyScalar(-1);
-                                basePlanes[1].constant *= -1;
-
-                                if (e) {
-                                    // set execute log for experiment
-                                    set((state) => ({
-                                        sceneProperties: {
-                                            ...state.sceneProperties,
-                                            executeLog: {
-                                                ...state.sceneProperties
-                                                    .executeLog,
-                                                clipping: {
-                                                    ...state.sceneProperties
-                                                        .executeLog.clipping,
-                                                    invert: true,
-                                                },
-                                            },
-                                        },
-                                    }));
-                                }
-                            },
-                        },
                     },
                     { collapsed: true }
                 ),
@@ -439,34 +442,6 @@ export const VolumeXYZClippingControls = React.forwardRef<
                                                     ...state.sceneProperties
                                                         .executeLog.clipping,
                                                     z: true,
-                                                },
-                                            },
-                                        },
-                                    }));
-                                }
-                            },
-                        },
-                        ZInvert: {
-                            value: false,
-                            label: "invert",
-                            onChange: (e) => {
-                                coefficientsRef.current[2] = e ? 1 : -1;
-
-                                basePlanes[2].normal.multiplyScalar(-1);
-                                basePlanes[2].constant *= -1;
-
-                                if (e) {
-                                    // set execute log for experiment
-                                    set((state) => ({
-                                        sceneProperties: {
-                                            ...state.sceneProperties,
-                                            executeLog: {
-                                                ...state.sceneProperties
-                                                    .executeLog,
-                                                clipping: {
-                                                    ...state.sceneProperties
-                                                        .executeLog.clipping,
-                                                    invert: true,
                                                 },
                                             },
                                         },
@@ -508,34 +483,6 @@ export const VolumeXYZClippingControls = React.forwardRef<
                                 }
                             },
                         },
-                        FreeAxisInvert: {
-                            value: false,
-                            label: "invert",
-                            onChange: (e) => {
-                                coefficientsRef.current[3] = e ? 1 : -1;
-
-                                basePlanes[3].normal.multiplyScalar(-1);
-                                basePlanes[3].constant *= -1;
-
-                                if (e) {
-                                    // set execute log for experiment
-                                    set((state) => ({
-                                        sceneProperties: {
-                                            ...state.sceneProperties,
-                                            executeLog: {
-                                                ...state.sceneProperties
-                                                    .executeLog,
-                                                clipping: {
-                                                    ...state.sceneProperties
-                                                        .executeLog.clipping,
-                                                    invert: true,
-                                                },
-                                            },
-                                        },
-                                    }));
-                                }
-                            },
-                        },
                     },
                     { collapsed: true }
                 ),
@@ -551,7 +498,8 @@ export const VolumeXYZClippingControls = React.forwardRef<
         deltaL: THREE.Matrix4,
         w: THREE.Matrix4,
         deltaW: THREE.Matrix4,
-        index: number
+        index: number,
+        invert: boolean
     ) => {
         const direction = new THREE.Vector3();
         const position = new THREE.Vector3();
@@ -566,7 +514,9 @@ export const VolumeXYZClippingControls = React.forwardRef<
             const e = w.elements;
             direction.set(e[8], e[9], e[10]);
         }
-        direction.normalize().multiplyScalar(coefficientsRef.current[index]);
+
+        const coefficient = invert ? 1 : -1;
+        direction.normalize().multiplyScalar(coefficient);
 
         basePlanes[index].normal.copy(direction);
         basePlanes[index].constant = -position.dot(direction);
@@ -597,6 +547,17 @@ export const VolumeXYZClippingControls = React.forwardRef<
         basePlanes[0].constant = center.x;
         basePlanes[1].constant = center.y;
         basePlanes[2].constant = center.z;
+
+        basePlanes.forEach((plane, index) => {
+            onDrag(
+                new THREE.Matrix4(),
+                new THREE.Matrix4(),
+                new THREE.Matrix4().setPosition(center),
+                new THREE.Matrix4(),
+                index,
+                false
+            );
+        });
     }, [center, basePlanes]);
 
     // Push Planes
@@ -667,11 +628,11 @@ export const VolumeXYZClippingControls = React.forwardRef<
                 {/* X */}
                 <IntersectLineHelper
                     index={0}
-                    plane={basePlanes[0]}
                     clipping={clippingFlag.x}
-                    viewing={viewing}
                     boxSize={boxSize}
+                    basePlanes={basePlanes}
                     planes={linePlanes}
+                    folderName="X"
                     center={center}
                     activeAxes={[true, false, false]}
                     linewidth={lineWidth}
@@ -697,11 +658,11 @@ export const VolumeXYZClippingControls = React.forwardRef<
                 {/* Y */}
                 <IntersectLineHelper
                     index={1}
-                    plane={basePlanes[1]}
                     clipping={clippingFlag.y}
-                    viewing={viewing}
                     boxSize={boxSize}
+                    basePlanes={basePlanes}
                     planes={linePlanes}
+                    folderName="Y"
                     center={center}
                     activeAxes={[false, true, false]}
                     linewidth={lineWidth}
@@ -727,11 +688,11 @@ export const VolumeXYZClippingControls = React.forwardRef<
                 {/* Z */}
                 <IntersectLineHelper
                     index={2}
-                    plane={basePlanes[2]}
                     clipping={clippingFlag.z}
-                    viewing={viewing}
                     boxSize={boxSize}
                     planes={linePlanes}
+                    basePlanes={basePlanes}
+                    folderName="Z"
                     center={center}
                     activeAxes={[false, false, true]}
                     linewidth={lineWidth}
@@ -757,11 +718,11 @@ export const VolumeXYZClippingControls = React.forwardRef<
                 {/* Free */}
                 <IntersectLineHelper
                     index={3}
-                    plane={basePlanes[3]}
                     clipping={clippingFlag.free}
-                    viewing={viewing}
                     boxSize={boxSize}
+                    basePlanes={basePlanes}
                     planes={linePlanes}
+                    folderName="Free Axis"
                     center={center}
                     linewidth={lineWidth}
                     color={lineColor}

@@ -29,6 +29,12 @@ export function ExperimentCheckList({ ...props }: experimentCheckListProps) {
 
     const color = "#65BF74";
 
+    const dosimeter = [
+        Dosimeter.goggle,
+        Dosimeter.neckGuard,
+        Dosimeter.apron,
+        Dosimeter.glove,
+    ];
     const animation = [Animation.timeLapse, Animation.accumulate];
     const colormap = [
         Colormap.parula,
@@ -50,14 +56,9 @@ export function ExperimentCheckList({ ...props }: experimentCheckListProps) {
     const clippingInvert = [Clipping.invert];
     const avatar = [Avatar.translate, Avatar.leftHand, Avatar.rightHand];
     const shield = [Shield.translate, Shield.enabled];
-    const dosimeter = [
-        Dosimeter.goggle,
-        Dosimeter.neckGuard,
-        Dosimeter.apron,
-        Dosimeter.glove,
-    ];
 
     const total = [
+        ...dosimeter,
         ...animation,
         ...colormap,
         ...renderStyle,
@@ -65,162 +66,220 @@ export function ExperimentCheckList({ ...props }: experimentCheckListProps) {
         ...clippingInvert,
         ...avatar,
         ...shield,
-        ...dosimeter,
     ];
+
+    const dosimeterResult = dosimeter.reduce(
+        (previous, current) => previous && current
+    );
+    const animationResult = animation.reduce(
+        (previous, current) => previous && current
+    );
+    const colormapResult = colormap.reduce(
+        (previous, current) => previous && current
+    );
+    const renderStyleResult = renderStyle.reduce(
+        (previous, current) => previous && current
+    );
+    const clippingResult = clipping.reduce(
+        (previous, current) => previous && current
+    );
+    const clippingInvertResult = clippingInvert.reduce(
+        (previous, current) => previous && current
+    );
+    const avatarResult = avatar.reduce(
+        (previous, current) => previous && current
+    );
+    const shieldResult = shield.reduce(
+        (previous, current) => previous && current
+    );
 
     return (
         <>
             <div className={`${styles.experiment}`}>
                 <h2>Exepriment Check List</h2>
-                {/* animation mode */}
-                <div className={`${styles.item}`}>
-                    <div className={`${styles.check}`}>
-                        {animation.reduce(
-                            (previous, current) => previous && current
-                        ) ? (
-                            <CheckBox
-                                sx={{ color: color, fontSize: "0.8rem" }}
-                            />
-                        ) : (
-                            <CheckBoxOutlineBlank sx={{ fontSize: "0.8rem" }} />
-                        )}
+                <div className={`${styles.items}`}>
+                    {/* Equipments */}
+                    <div className={`${styles.item}`}>
+                        <div className={`${styles.check}`}>
+                            {dosimeterResult ? (
+                                <CheckBox
+                                    sx={{ color: color, fontSize: "0.8rem" }}
+                                />
+                            ) : (
+                                <CheckBoxOutlineBlank
+                                    sx={{ fontSize: "0.8rem" }}
+                                />
+                            )}
+                        </div>
+                        <div
+                            className={`${styles.content} ${
+                                dosimeterResult && `${styles.done}`
+                            }`}
+                        >
+                            equipments &nbsp;
+                            {dosimeter.filter((v) => v === true).length}/
+                            {dosimeter.length}
+                        </div>
                     </div>
-                    <div className={`${styles.content}`}>
-                        animation mode &nbsp;
-                        {animation.filter((v) => v === true).length}/
-                        {animation.length}
+                    {/* data mode */}
+                    <div className={`${styles.item}`}>
+                        <div className={`${styles.check}`}>
+                            {animationResult ? (
+                                <CheckBox
+                                    sx={{ color: color, fontSize: "0.8rem" }}
+                                />
+                            ) : (
+                                <CheckBoxOutlineBlank
+                                    sx={{ fontSize: "0.8rem" }}
+                                />
+                            )}
+                        </div>
+                        <div
+                            className={`${styles.content} ${
+                                animationResult && `${styles.done}`
+                            }`}
+                        >
+                            data mode &nbsp;
+                            {animation.filter((v) => v === true).length}/
+                            {animation.length}
+                        </div>
                     </div>
-                </div>
-                {/* color map */}
-                <div className={`${styles.item}`}>
-                    <div className={`${styles.check}`}>
-                        {colormap.reduce(
-                            (previous, current) => previous && current
-                        ) ? (
-                            <CheckBox
-                                sx={{ color: color, fontSize: "0.8rem" }}
-                            />
-                        ) : (
-                            <CheckBoxOutlineBlank sx={{ fontSize: "0.8rem" }} />
-                        )}
+                    {/* color map */}
+                    <div className={`${styles.item}`}>
+                        <div className={`${styles.check}`}>
+                            {colormapResult ? (
+                                <CheckBox
+                                    sx={{ color: color, fontSize: "0.8rem" }}
+                                />
+                            ) : (
+                                <CheckBoxOutlineBlank
+                                    sx={{ fontSize: "0.8rem" }}
+                                />
+                            )}
+                        </div>
+                        <div
+                            className={`${styles.content} ${
+                                colormapResult && `${styles.done}`
+                            }`}
+                        >
+                            colormap &nbsp;
+                            {colormap.filter((v) => v === true).length}/
+                            {colormap.length}
+                        </div>
                     </div>
-                    <div className={`${styles.content}`}>
-                        colormap &nbsp;
-                        {colormap.filter((v) => v === true).length}/
-                        {colormap.length}
+                    {/* render style */}
+                    <div className={`${styles.item}`}>
+                        <div className={`${styles.check}`}>
+                            {renderStyleResult ? (
+                                <CheckBox
+                                    sx={{ color: color, fontSize: "0.8rem" }}
+                                />
+                            ) : (
+                                <CheckBoxOutlineBlank
+                                    sx={{ fontSize: "0.8rem" }}
+                                />
+                            )}
+                        </div>
+                        <div
+                            className={`${styles.content} ${
+                                renderStyleResult && `${styles.done}`
+                            }`}
+                        >
+                            render style &nbsp;
+                            {renderStyle.filter((v) => v === true).length}/
+                            {renderStyle.length}
+                        </div>
                     </div>
-                </div>
-                {/* render style */}
-                <div className={`${styles.item}`}>
-                    <div className={`${styles.check}`}>
-                        {renderStyle.reduce(
-                            (previous, current) => previous && current
-                        ) ? (
-                            <CheckBox
-                                sx={{ color: color, fontSize: "0.8rem" }}
-                            />
-                        ) : (
-                            <CheckBoxOutlineBlank sx={{ fontSize: "0.8rem" }} />
-                        )}
+                    {/* Clip */}
+                    <div className={`${styles.item}`}>
+                        <div className={`${styles.check}`}>
+                            {clippingResult ? (
+                                <CheckBox
+                                    sx={{ color: color, fontSize: "0.8rem" }}
+                                />
+                            ) : (
+                                <CheckBoxOutlineBlank
+                                    sx={{ fontSize: "0.8rem" }}
+                                />
+                            )}
+                        </div>
+                        <div
+                            className={`${styles.content} ${
+                                clippingResult && `${styles.done}`
+                            }`}
+                        >
+                            clip x, y, z, free axis &nbsp;
+                            {clipping.filter((v) => v === true).length}/
+                            {clipping.length}
+                        </div>
                     </div>
-                    <div className={`${styles.content}`}>
-                        render style &nbsp;
-                        {renderStyle.filter((v) => v === true).length}/
-                        {renderStyle.length}
+                    <div className={`${styles.item}`}>
+                        <div className={`${styles.check}`}>
+                            {clippingInvertResult ? (
+                                <CheckBox
+                                    sx={{ color: color, fontSize: "0.8rem" }}
+                                />
+                            ) : (
+                                <CheckBoxOutlineBlank
+                                    sx={{ fontSize: "0.8rem" }}
+                                />
+                            )}
+                        </div>
+                        <div
+                            className={`${styles.content} ${
+                                clippingInvertResult && `${styles.done}`
+                            }`}
+                        >
+                            clip invert &nbsp;
+                            {clippingInvert.filter((v) => v === true).length}/
+                            {clippingInvert.length}
+                        </div>
                     </div>
-                </div>
-                {/* clipping */}
-                <div className={`${styles.item}`}>
-                    <div className={`${styles.check}`}>
-                        {clipping.reduce(
-                            (previous, current) => previous && current
-                        ) ? (
-                            <CheckBox
-                                sx={{ color: color, fontSize: "0.8rem" }}
-                            />
-                        ) : (
-                            <CheckBoxOutlineBlank sx={{ fontSize: "0.8rem" }} />
-                        )}
+                    {/* Avatar */}
+                    <div className={`${styles.item}`}>
+                        <div className={`${styles.check}`}>
+                            {avatarResult ? (
+                                <CheckBox
+                                    sx={{ color: color, fontSize: "0.8rem" }}
+                                />
+                            ) : (
+                                <CheckBoxOutlineBlank
+                                    sx={{ fontSize: "0.8rem" }}
+                                />
+                            )}
+                        </div>
+                        <div
+                            className={`${styles.content} ${
+                                avatarResult && `${styles.done}`
+                            }`}
+                        >
+                            avatar &nbsp;
+                            {avatar.filter((v) => v === true).length}/
+                            {avatar.length}
+                        </div>
                     </div>
-                    <div className={`${styles.content}`}>
-                        clipping x, y, z, free &nbsp;
-                        {clipping.filter((v) => v === true).length}/
-                        {clipping.length}
-                    </div>
-                </div>
-                <div className={`${styles.item}`}>
-                    <div className={`${styles.check}`}>
-                        {clippingInvert.reduce(
-                            (previous, current) => previous && current
-                        ) ? (
-                            <CheckBox
-                                sx={{ color: color, fontSize: "0.8rem" }}
-                            />
-                        ) : (
-                            <CheckBoxOutlineBlank sx={{ fontSize: "0.8rem" }} />
-                        )}
-                    </div>
-                    <div className={`${styles.content}`}>
-                        clipping invert &nbsp;
-                        {clippingInvert.filter((v) => v === true).length}/
-                        {clippingInvert.length}
-                    </div>
-                </div>
-                {/* avatar */}
-                <div className={`${styles.item}`}>
-                    <div className={`${styles.check}`}>
-                        {avatar.reduce(
-                            (previous, current) => previous && current
-                        ) ? (
-                            <CheckBox
-                                sx={{ color: color, fontSize: "0.8rem" }}
-                            />
-                        ) : (
-                            <CheckBoxOutlineBlank sx={{ fontSize: "0.8rem" }} />
-                        )}
-                    </div>
-                    <div className={`${styles.content}`}>
-                        avatar &nbsp;
-                        {avatar.filter((v) => v === true).length}/
-                        {avatar.length}
-                    </div>
-                </div>
-                {/* shield */}
-                <div className={`${styles.item}`}>
-                    <div className={`${styles.check}`}>
-                        {shield.reduce(
-                            (previous, current) => previous && current
-                        ) ? (
-                            <CheckBox
-                                sx={{ color: color, fontSize: "0.8rem" }}
-                            />
-                        ) : (
-                            <CheckBoxOutlineBlank sx={{ fontSize: "0.8rem" }} />
-                        )}
-                    </div>
-                    <div className={`${styles.content}`}>
-                        shield &nbsp;
-                        {shield.filter((v) => v === true).length}/
-                        {shield.length}
-                    </div>
-                </div>
-                {/* dosimeter */}
-                <div className={`${styles.item}`}>
-                    <div className={`${styles.check}`}>
-                        {dosimeter.reduce(
-                            (previous, current) => previous && current
-                        ) ? (
-                            <CheckBox
-                                sx={{ color: color, fontSize: "0.8rem" }}
-                            />
-                        ) : (
-                            <CheckBoxOutlineBlank sx={{ fontSize: "0.8rem" }} />
-                        )}
-                    </div>
-                    <div className={`${styles.content}`}>
-                        dosimeter equipment &nbsp;
-                        {dosimeter.filter((v) => v === true).length}/
-                        {dosimeter.length}
+                    {/* Shield */}
+                    <div className={`${styles.item}`}>
+                        <div className={`${styles.check}`}>
+                            {shieldResult ? (
+                                <CheckBox
+                                    sx={{ color: color, fontSize: "0.8rem" }}
+                                />
+                            ) : (
+                                <CheckBoxOutlineBlank
+                                    sx={{ fontSize: "0.8rem" }}
+                                />
+                            )}
+                        </div>
+                        <div
+                            className={`${styles.content} ${
+                                shieldResult && `${styles.done}`
+                            }`}
+                        >
+                            shield &nbsp;
+                            {shield.filter((v) => v === true).length}/
+                            {shield.length}
+                        </div>
                     </div>
                 </div>
                 {/* Google Form */}
