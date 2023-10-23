@@ -6,6 +6,7 @@ import {
     Grid,
     OrbitControls,
     PivotControls,
+    Loader,
     Stats,
 } from "@react-three/drei";
 import * as THREE from "three";
@@ -39,7 +40,7 @@ import {
 
 // ==========
 // UI
-import { Loader, SceneConfigPanel } from "../../../components/ui";
+import { SceneConfigPanel } from "../../../components/ui";
 
 // ==========
 // Store
@@ -113,7 +114,7 @@ function XRayBasic() {
                         orthographic
                         camera={{ position: [4, 8, 4], zoom: 50 }}
                     >
-                        <Suspense fallback={<Loader />}>
+                        <Suspense fallback={null}>
                             {/* -------------------------------------------------- */}
                             {/* Volume Object */}
 
@@ -263,6 +264,7 @@ function XRayBasic() {
                             </GizmoHelper>
                         </Suspense>
                     </Canvas>
+                    <Loader />
                     <SceneConfigPanel activateStats={false} />
                 </div>
             </div>
