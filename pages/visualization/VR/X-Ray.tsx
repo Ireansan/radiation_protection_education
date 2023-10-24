@@ -7,6 +7,7 @@ import {
     OrbitControls,
     PivotControls,
     Stats,
+    Sky,
 } from "@react-three/drei";
 import * as THREE from "three";
 import { Physics, Debug } from "@react-three/rapier";
@@ -146,12 +147,16 @@ function XRayVR() {
 
                     {/* ================================================== */}
                     {/* Three.js Canvas */}
-                    <Canvas>
+                    <Canvas
+                        orthographic
+                        camera={{ position: [4, 8, 4], zoom: 50 }}
+                    >
                         <XR>
                             <TeleportationPlane
                                 leftHand={true}
                                 rightHand={true}
                             />
+                            <Controllers />
 
                             <group position={[0, 0, -10]}>
                                 {/* -------------------------------------------------- */}
@@ -353,7 +358,7 @@ function XRayVR() {
                                     rotation={[0, -Math.PI / 2, 0]}
                                 >
                                     <CustomYBotIK />
-                                    <HandIKPivotControls object={yBotRef} />
+                                    {/* <HandIKPivotControls object={yBotRef} /> */}
                                 </group>
 
                                 {/* -------------------------------------------------- */}
@@ -405,6 +410,7 @@ function XRayVR() {
 
                             {/* -------------------------------------------------- */}
                             {/* Enviroment */}
+                            <Sky sunPosition={[0, 1, 0]} />
                             <ambientLight intensity={0.5} />
 
                             <Grid
