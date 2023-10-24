@@ -226,6 +226,14 @@ class DoseObject extends DoseBase {
 
         return volumeData;
     }
+
+    updateProjectionMatrix(updateParents: boolean, updateChildren: boolean) {
+        super.updateProjectionMatrix(updateParents, updateChildren);
+
+        this.material.uniforms.u_projectionMatrix.value.copy(
+            this.projectionMatrix
+        );
+    }
 }
 
 export { DoseObject };

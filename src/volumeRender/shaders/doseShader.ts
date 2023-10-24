@@ -16,8 +16,9 @@ varying vec3 v_position;
 // https://github.com/mrdoob/three.js/blob/dev/src/renderers/shaders/ShaderChunk/clipping_planes_pars_vertex.glsl.js
 varying mat4 viewtransformf;
 
+uniform mat4 u_projectionMatrix;
+
 void main(){
-    
     // Prepare transforms to map to "camera view". See also:
     // https://threejs.org/docs/#api/renderers/webgl/WebGLProgram
     viewtransformf=modelViewMatrix;
@@ -40,7 +41,9 @@ void main(){
     
     // Set varyings and output pos
     v_position=position;
-    gl_Position=projectionMatrix*viewMatrix*modelMatrix*position4;
+    // gl_Position=projectionMatrix*viewMatrix*modelMatrix*position4;
+    
+    gl_Position=u_projectionMatrix*viewMatrix*modelMatrix*position4;
     
 }
 `;
@@ -431,6 +434,7 @@ vec4 add_lighting(float val,vec3 loc,vec3 step,vec3 view_ray,float coefficient,f
 
 const doseShader = {
     uniforms: {
+        u_projectionMatrix: { value: new THREE.Matrix4() },
         u_size: { value: new THREE.Vector3(1, 1, 1) },
         u_renderstyle: { value: 0 },
         u_renderthreshold: { value: 0.5 },
