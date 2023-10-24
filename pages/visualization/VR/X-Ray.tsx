@@ -10,7 +10,14 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 import { Physics, Debug } from "@react-three/rapier";
-import { VRButton, XR, Interactive, Controllers, useXR } from "@react-three/xr";
+import {
+    VRButton,
+    XR,
+    Interactive,
+    Controllers,
+    TeleportationPlane,
+    useXR,
+} from "@react-three/xr";
 import { useControls, folder } from "leva";
 
 // ==========
@@ -139,15 +146,12 @@ function XRayVR() {
 
                     {/* ================================================== */}
                     {/* Three.js Canvas */}
-                    <Canvas
-                        // orthographic
-                        camera={{
-                            position: [4, 8, 4],
-                            // , zoom: 50
-                        }}
-                    >
+                    <Canvas>
                         <XR>
-                            <Controllers />
+                            <TeleportationPlane
+                                leftHand={true}
+                                rightHand={true}
+                            />
 
                             <group position={[0, 0, -10]}>
                                 {/* -------------------------------------------------- */}
@@ -436,10 +440,10 @@ function XRayVR() {
                             </GizmoHelper>
                         </XR>
                     </Canvas>
-                    <SceneConfigPanel activateStats={false} />
-                    <DoseEquipmentsUI />
-                    <DosimeterDisplayUI />
-                    <ExperimentCheckList />
+                    {/* <SceneConfigPanel activateStats={false} /> */}
+                    {/* <DoseEquipmentsUI /> */}
+                    {/* <DosimeterDisplayUI /> */}
+                    {/* <ExperimentCheckList /> */}
                 </div>
             </div>
         </>
