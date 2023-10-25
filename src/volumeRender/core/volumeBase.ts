@@ -52,6 +52,8 @@ class VolumeBase extends THREE.Object3D {
     _clippingPlanesObject: ClippingPlanesObject | undefined;
     // -> [...parent.ClippingPlanesObject[], ...this.ClippingPlanesObject[]]
 
+    _projectionMatrix: THREE.Matrix4;
+
     parentId: string | undefined;
     parentRegionOffset: number;
     planesLength: number;
@@ -73,7 +75,11 @@ class VolumeBase extends THREE.Object3D {
     volumeParamWorldAutoUpdate: boolean;
     volumeClippingWorldAutoUpdate: boolean;
 
-    constructor() {
+    isPerspective: boolean;
+    projectionMatrixAutoUpdate: boolean;
+    projectionMatrixWorldAutoUpdate: boolean;
+
+    constructor(isPerspective = false) {
         super();
 
         this._coefficient = 1.0;
@@ -94,6 +100,8 @@ class VolumeBase extends THREE.Object3D {
         this._clippingPlanesRegion = [];
         this._clippedInvert = [];
 
+        this._projectionMatrix = new THREE.Matrix4();
+
         this.parentRegionOffset = 0;
         this.planesLength = 0;
         this.clippingPlanesObjects = [];
@@ -113,6 +121,10 @@ class VolumeBase extends THREE.Object3D {
 
         this.volumeParamWorldAutoUpdate = true;
         this.volumeClippingWorldAutoUpdate = true;
+
+        this.isPerspective = isPerspective;
+        this.projectionMatrixAutoUpdate = true;
+        this.projectionMatrixWorldAutoUpdate = true;
     }
 
     get coefficient() {
@@ -205,6 +217,14 @@ class VolumeBase extends THREE.Object3D {
             ? (this._clippingPlanesObject.intersection = clipIntersection)
             : null;
         this.updateVolumeClipping(false, true);
+    }
+
+    get projectionMatrix() {
+        return this._projectionMatrix;
+    }
+    set projectionMatrix(matrix: THREE.Matrix4) {
+        this._projectionMatrix = matrix;
+        this.updateProjectionMatrix(false, true);
     }
 
     pushClippingPlanesObjects(clippingPlanesObject: ClippingPlanesObject) {
@@ -414,6 +434,49 @@ class VolumeBase extends THREE.Object3D {
                     child.volumeClippingWorldAutoUpdate
                 ) {
                     child.updateVolumeClipping(false, true);
+                }
+            }
+        }
+    }
+
+    updateProjectionMatrix(updateParents: boolean, updateChildren: boolean) {
+        // ----------
+        // update parent
+        // ----------
+        const parent = this.parent;
+        if (
+            updateParents === true &&
+            parent !== null &&
+            this.projectionMatrixWorldAutoUpdate
+        ) {
+            if (parent instanceof VolumeBase) {
+                parent.updateProjectionMatrix(true, false);
+            }
+        }
+
+        // ----------
+        // update this by parent
+        // ----------
+        if (parent !== null && this.projectionMatrixAutoUpdate) {
+            if (parent instanceof VolumeBase) {
+                this._projectionMatrix = parent._projectionMatrix;
+            }
+        }
+
+        // ----------
+        // update children
+        // ----------
+        if (updateChildren === true) {
+            const children = this.children;
+
+            for (let i = 0, l = children.length; i < l; i++) {
+                const child = children[i];
+
+                if (
+                    child instanceof VolumeBase &&
+                    child.projectionMatrixWorldAutoUpdate === true
+                ) {
+                    child.updateProjectionMatrix(false, true);
                 }
             }
         }
