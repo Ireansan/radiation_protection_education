@@ -6,7 +6,7 @@ import { OrbitControls } from "three-stdlib";
 import { VolumeBase } from "../../src";
 
 type dosePerspectiveToOrthographicProps = {
-    objects: React.RefObject<VolumeBase>[];
+    object: React.RefObject<VolumeBase>;
     control?: React.RefObject<OrbitControls>;
     zoom?: number;
 };
@@ -15,7 +15,7 @@ type dosePerspectiveToOrthographicProps = {
  * packages/fiber/src/core/utils.ts > function updateCamera(camera: Camera & { manual?: boolean }, size: Size)
  */
 export function DosePerspectiveToOrthographic({
-    objects,
+    object,
     control,
     zoom = 1,
     ...props
@@ -34,17 +34,31 @@ export function DosePerspectiveToOrthographic({
 
             if (control && control.current) {
                 const controlCameraDistance = control.current.getDistance();
-                orthographicCamera.zoom = (zoom * 1) / controlCameraDistance; // FIXME:
+                orthographicCamera.zoom = (zoom * 1) / controlCameraDistance;
+            } else if (object.current) {
+                // FIXME:
+                const cameraWorldPosition = new THREE.Vector3();
+                const cameraLocalPosition = new THREE.Vector3();
+                const objectCenter = new THREE.Vector3(); // recommend: select object layer is world
+
+                camera.getWorldPosition(cameraWorldPosition);
+                cameraLocalPosition.copy(
+                    object.current.worldToLocal(cameraWorldPosition)
+                );
+
+                const bbox = new THREE.Box3().setFromObject(object.current);
+                bbox.getCenter(objectCenter);
+
+                const distance = cameraLocalPosition.distanceTo(objectCenter);
+                orthographicCamera.zoom = (zoom * 1) / distance;
             }
 
             orthographicCamera.updateProjectionMatrix();
 
-            objects.forEach((ref) => {
-                if (ref.current) {
-                    ref.current.projectionMatrix =
-                        orthographicCamera.projectionMatrix;
-                }
-            });
+            if (object.current) {
+                object.current.projectionMatrix =
+                    orthographicCamera.projectionMatrix;
+            }
         }
     });
 

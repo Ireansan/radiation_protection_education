@@ -82,9 +82,9 @@ function XRayRoomGame() {
                     {/* Three.js Canvas */}
                     <Canvas shadows camera={{ fov: 45 }} id={"mainCanvas"}>
                         <DosePerspectiveToOrthographic
-                            objects={[ref]}
-                            control={controlRef}
-                            zoom={500}
+                            object={ref}
+                            // control={controlRef}
+                            zoom={1000}
                         />
 
                         {/* -------------------------------------------------- */}

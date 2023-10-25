@@ -122,7 +122,7 @@ function XRayBasic() {
                         }}
                     >
                         <DosePerspectiveToOrthographic
-                            objects={[ref]}
+                            object={ref}
                             control={controlRef}
                             zoom={500}
                         />
