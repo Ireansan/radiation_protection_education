@@ -75,10 +75,11 @@ class VolumeBase extends THREE.Object3D {
     volumeParamWorldAutoUpdate: boolean;
     volumeClippingWorldAutoUpdate: boolean;
 
+    isPerspective: boolean;
     projectionMatrixAutoUpdate: boolean;
     projectionMatrixWorldAutoUpdate: boolean;
 
-    constructor() {
+    constructor(isPerspective = false) {
         super();
 
         this._coefficient = 1.0;
@@ -121,6 +122,7 @@ class VolumeBase extends THREE.Object3D {
         this.volumeParamWorldAutoUpdate = true;
         this.volumeClippingWorldAutoUpdate = true;
 
+        this.isPerspective = isPerspective;
         this.projectionMatrixAutoUpdate = true;
         this.projectionMatrixWorldAutoUpdate = true;
     }
