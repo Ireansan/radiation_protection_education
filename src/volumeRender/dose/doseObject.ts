@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { Volume } from "three-stdlib";
 
 import doseShader from "../shaders/doseShader";
+import doseShaderPerspective from "../shaders/doseShaderPerspective";
 import { cmtextures } from "../textures";
 import { DoseBase } from "./doseBase";
 import type { DoseValue } from "./doseBase";
@@ -18,6 +19,7 @@ class DoseObject extends DoseBase {
 
     constructor(
         volume = new Volume(),
+        isPerspective = false,
         coefficient = 1.0,
         offset = 0.0,
         boardCoefficient = 0.01,
@@ -33,7 +35,7 @@ class DoseObject extends DoseBase {
         clipIntersection = false
     ) {
         // Init
-        super();
+        super(isPerspective);
 
         this.volume = volume;
         this.width = this.volume.xLength;
@@ -74,9 +76,11 @@ class DoseObject extends DoseBase {
         texture.needsUpdate = true;
 
         // Material
-        const uniforms = THREE.UniformsUtils.clone(doseShader.uniforms);
+        const shader = this.isPerspective ? doseShaderPerspective : doseShader;
+        const uniforms = THREE.UniformsUtils.clone(shader.uniforms);
         uniforms.u_data.value = texture;
         uniforms.u_size.value.set(this.width, this.height, this.depth);
+        uniforms.u_projectionMatrix.value.set(new THREE.Matrix4());
 
         uniforms.u_coefficient.value = this._coefficient;
         uniforms.u_offset.value = this._offset;
@@ -98,8 +102,8 @@ class DoseObject extends DoseBase {
 
         this.material = new THREE.ShaderMaterial({
             uniforms: uniforms,
-            vertexShader: doseShader.vertexShader,
-            fragmentShader: doseShader.fragmentShader,
+            vertexShader: shader.vertexShader,
+            fragmentShader: shader.fragmentShader,
             side: THREE.BackSide, // The volume shader uses the backface as its "reference point"
             transparent: true,
             depthTest: false,
@@ -225,6 +229,14 @@ class DoseObject extends DoseBase {
         );
 
         return volumeData;
+    }
+
+    updateProjectionMatrix(updateParents: boolean, updateChildren: boolean) {
+        super.updateProjectionMatrix(updateParents, updateChildren);
+
+        this.material.uniforms.u_projectionMatrix.value.copy(
+            this.projectionMatrix
+        );
     }
 }
 

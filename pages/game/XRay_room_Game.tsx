@@ -38,6 +38,7 @@ import * as VOLUMEDATA from "../../components/models/VolumeData";
 // ----------
 // controls
 import {
+    DosePerspectiveToOrthographic,
     DoseBoardControls,
     DosimeterControls,
     DosimeterDisplayUI,
@@ -80,6 +81,12 @@ function XRayRoomGame() {
                     {/* ================================================== */}
                     {/* Three.js Canvas */}
                     <Canvas shadows camera={{ fov: 45 }} id={"mainCanvas"}>
+                        <DosePerspectiveToOrthographic
+                            object={ref}
+                            // control={controlRef}
+                            zoom={1000}
+                        />
+
                         {/* -------------------------------------------------- */}
                         {/* Volume Objects */}
                         <volumeGroup ref={ref} position={[xOffset, 0, zOffset]}>

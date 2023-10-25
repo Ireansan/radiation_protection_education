@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
     GizmoHelper,
@@ -6,10 +6,10 @@ import {
     Grid,
     OrbitControls,
     PivotControls,
-    Loader,
     Stats,
 } from "@react-three/drei";
 import * as THREE from "three";
+import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { Physics, Debug } from "@react-three/rapier";
 import { useControls, folder } from "leva";
 
@@ -33,6 +33,7 @@ import * as VOLUMEDATA from "../../../components/models/VolumeData";
 // ----------
 // controls
 import {
+    DosePerspectiveToOrthographic,
     DoseAnimationControls,
     VolumeParameterControls,
     VolumeXYZClippingControls,
@@ -68,6 +69,8 @@ function XRayBasic() {
     const curtainAccumuRef = useRef<DoseGroup>(null);
 
     const curtainObjRef = useRef<THREE.Group>(null);
+
+    const controlRef = useRef<OrbitControlsImpl>(null!);
 
     const ToggledDebug = useToggle(Debug, "debug");
 
@@ -111,14 +114,27 @@ function XRayBasic() {
                     {/* ================================================== */}
                     {/* Three.js Canvas */}
                     <Canvas
-                        orthographic
-                        camera={{ position: [4, 8, 4], zoom: 50 }}
+                        // orthographic
+                        camera={{
+                            position: [4, 8, 4],
+                            near: 1e-32,
+                            // zoom: 50,
+                        }}
                     >
-                        <Suspense fallback={null}>
-                            {/* -------------------------------------------------- */}
-                            {/* Volume Object */}
+                        <DosePerspectiveToOrthographic
+                            object={ref}
+                            control={controlRef}
+                            zoom={500}
+                        />
+
+                        {/* -------------------------------------------------- */}
+                        {/* Volume Object */}
+                        <doseGroup
+                            name="Ref Group"
+                            ref={ref}
+                            position={[0, 0, 0]}
+                        >
                             <doseGroup
-                                ref={ref}
                                 position={
                                     VOLUMEDATA.XRay_nocurtain_Configure.volume
                                         .position
@@ -170,100 +186,99 @@ function XRayBasic() {
                                     </doseGroup>
                                 </doseGroup>
                             </doseGroup>
+                        </doseGroup>
 
-                            {/* -------------------------------------------------- */}
-                            {/* Volume Controls */}
-                            <DoseAnimationControls
-                                objects={[nocurtainRef, curtainRef]}
-                                mainGroup={timelapseRef}
-                                subGroup={accumulateRef}
-                                duration={16}
-                                customSpeed={[8.0, 16.0]}
-                            />
-                            <VolumeParameterControls object={ref} />
-                            <VolumeXYZClippingControls
-                                object={ref}
-                                planeSize={2}
-                                areaSize={
-                                    VOLUMEDATA.XRay_curtain_Configure.volume
-                                        .areaSize
-                                }
-                                areaScale={1.1}
-                                lineColor={new THREE.Color(0x6e0010)}
-                            />
+                        {/* -------------------------------------------------- */}
+                        {/* Volume Controls */}
+                        <DoseAnimationControls
+                            objects={[nocurtainRef, curtainRef]}
+                            mainGroup={timelapseRef}
+                            subGroup={accumulateRef}
+                            duration={16}
+                            customSpeed={[8.0, 16.0]}
+                        />
+                        <VolumeParameterControls object={ref} />
+                        <VolumeXYZClippingControls
+                            object={ref}
+                            planeSize={2}
+                            areaSize={
+                                VOLUMEDATA.XRay_curtain_Configure.volume
+                                    .areaSize
+                            }
+                            areaScale={1.1}
+                            lineColor={new THREE.Color(0x6e0010)}
+                        />
 
-                            {/* -------------------------------------------------- */}
-                            {/* Three.js Object */}
-                            <group
-                                position={
-                                    ENVIROMENT.XRay_Configure.object3d.position
-                                }
-                                rotation={
-                                    ENVIROMENT.XRay_Configure.object3d.rotation
-                                }
-                                scale={ENVIROMENT.XRay_Configure.object3d.scale}
-                            >
-                                <ENVIROMENT.XRay_Bed />
-                                <ENVIROMENT.XRay_Machine />
-                                <ENVIROMENT.XRay_Patient />
+                        {/* -------------------------------------------------- */}
+                        {/* Three.js Object */}
+                        <group
+                            position={
+                                ENVIROMENT.XRay_Configure.object3d.position
+                            }
+                            rotation={
+                                ENVIROMENT.XRay_Configure.object3d.rotation
+                            }
+                            scale={ENVIROMENT.XRay_Configure.object3d.scale}
+                        >
+                            <ENVIROMENT.XRay_Bed />
+                            <ENVIROMENT.XRay_Machine />
+                            <ENVIROMENT.XRay_Patient />
 
-                                {/* Curtain (Three.js Object) */}
-                                <group ref={curtainObjRef} visible={false}>
-                                    <ENVIROMENT.XRay_Curtain />
-                                </group>
+                            {/* Curtain (Three.js Object) */}
+                            <group ref={curtainObjRef} visible={false}>
+                                <ENVIROMENT.XRay_Curtain />
                             </group>
-                            <mesh position={[0, 1, 0]} visible={debug}>
-                                <sphereBufferGeometry args={[0.25]} />
-                            </mesh>
+                        </group>
+                        <mesh position={[0, 1, 0]} visible={debug}>
+                            <sphereBufferGeometry args={[0.25]} />
+                        </mesh>
 
-                            {/* -------------------------------------------------- */}
-                            {/* Three.js Controls */}
-                            <OrbitControls makeDefault />
+                        {/* -------------------------------------------------- */}
+                        {/* Three.js Controls */}
+                        <OrbitControls ref={controlRef} makeDefault />
 
-                            {/* -------------------------------------------------- */}
-                            {/* Physics */}
-                            <Physics gravity={[0, -30, 0]}>
-                                <ToggledDebug />
-                            </Physics>
+                        {/* -------------------------------------------------- */}
+                        {/* Physics */}
+                        <Physics gravity={[0, -30, 0]}>
+                            <ToggledDebug />
+                        </Physics>
 
-                            {/* -------------------------------------------------- */}
-                            {/* Enviroment */}
-                            <ambientLight intensity={0.5} />
+                        {/* -------------------------------------------------- */}
+                        {/* Enviroment */}
+                        <ambientLight intensity={0.5} />
 
-                            <Grid
-                                position={[0, -0.01, 0]}
-                                args={[10.5, 10.5]}
-                                cellColor={"#121d7d"}
-                                sectionColor={"#262640"}
-                                fadeDistance={20}
-                                followCamera
-                                infiniteGrid
-                                matrixWorldAutoUpdate={undefined}
-                                getObjectsByProperty={undefined}
-                                getVertexPosition={undefined}
+                        <Grid
+                            position={[0, -0.01, 0]}
+                            args={[10.5, 10.5]}
+                            cellColor={"#121d7d"}
+                            sectionColor={"#262640"}
+                            fadeDistance={20}
+                            followCamera
+                            infiniteGrid
+                            matrixWorldAutoUpdate={undefined}
+                            getObjectsByProperty={undefined}
+                            getVertexPosition={undefined}
+                        />
+
+                        {/* ================================================== */}
+                        {/* UI */}
+                        <Stats />
+
+                        <GizmoHelper
+                            alignment="bottom-right"
+                            margin={[80, 80]}
+                            renderPriority={1}
+                        >
+                            <GizmoViewport
+                                axisColors={[
+                                    "hotpink",
+                                    "aquamarine",
+                                    "#3498DB",
+                                ]}
+                                labelColor="black"
                             />
-
-                            {/* ================================================== */}
-                            {/* UI */}
-                            <Stats />
-
-                            <GizmoHelper
-                                alignment="bottom-right"
-                                margin={[80, 80]}
-                                renderPriority={1}
-                            >
-                                <GizmoViewport
-                                    axisColors={[
-                                        "hotpink",
-                                        "aquamarine",
-                                        "#3498DB",
-                                    ]}
-                                    labelColor="black"
-                                />
-                            </GizmoHelper>
-                        </Suspense>
+                        </GizmoHelper>
                     </Canvas>
-                    <Loader />
                     <SceneConfigPanel activateStats={false} />
                 </div>
             </div>

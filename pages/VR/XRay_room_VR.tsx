@@ -14,6 +14,7 @@ import * as VOLUMEDATA from "../../components/models/VolumeData";
 // ----------
 // controls
 import {
+    DosePerspectiveToOrthographic,
     VolumeAnimationControls,
     VolumeXYZClippingControls,
     VolumeParameterControls,
@@ -31,6 +32,8 @@ function XRayRoomVR() {
             {/* Three.js Canvas */}
             <Canvas>
                 <XR>
+                    <DosePerspectiveToOrthographic object={ref} zoom={1000} />
+
                     {/* -------------------------------------------------- */}
                     {/* Volume Object */}
                     <volumeGroup ref={ref}>

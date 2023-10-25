@@ -23,8 +23,8 @@ class DoseBase extends VolumeBase {
     boardCoefficientAutoUpdate: boolean;
     boardOffsetAutoUpdate: boolean;
 
-    constructor() {
-        super();
+    constructor(isPerspective = false) {
+        super(isPerspective);
 
         this._boardEffect = false;
         this._boardCoefficient = 0.01;

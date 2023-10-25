@@ -27,7 +27,13 @@ import { useStore } from "../store";
 import { applyBasePath } from "../../utils";
 const modelURL = applyBasePath(`/models/glb/Custom_Y-Bot.glb`);
 
-export function CustomYBotIK(props: JSX.IntrinsicElements["group"]) {
+type customYBotIKProps = {
+    shoulderUp?: boolean;
+} & JSX.IntrinsicElements["group"];
+export function CustomYBotIK({
+    shoulderUp = false,
+    ...props
+}: customYBotIKProps) {
     const [debug] = useStore((state) => [state.debug]);
 
     const group = useRef<THREE.Group>(null!);
@@ -48,7 +54,11 @@ export function CustomYBotIK(props: JSX.IntrinsicElements["group"]) {
                     },
                     {
                         index: 10, // "mixamorigLeftArm"
-                        rotationMin: new THREE.Vector3(0.0, -1.5, 0.0),
+                        rotationMin: new THREE.Vector3(
+                            shoulderUp ? 0.0 : 1.4,
+                            -1.5,
+                            0.0
+                        ),
                         rotationMax: new THREE.Vector3(1.5, 0.8, 1.7),
                     },
                 ],
@@ -64,7 +74,11 @@ export function CustomYBotIK(props: JSX.IntrinsicElements["group"]) {
                     },
                     {
                         index: 35, // "mixamorigRightArm"
-                        rotationMin: new THREE.Vector3(0, -0.8, -1.7),
+                        rotationMin: new THREE.Vector3(
+                            shoulderUp ? 0 : 1.4,
+                            -0.8,
+                            -1.7
+                        ),
                         rotationMax: new THREE.Vector3(1.5, 1.5, 0.0),
                     },
                 ],
@@ -76,7 +90,7 @@ export function CustomYBotIK(props: JSX.IntrinsicElements["group"]) {
             // @ts-ignore
             new CCDIKHelper(nodes.Alpha_Surface, iks, 0.025),
         ];
-    }, []);
+    }, [shoulderUp]);
 
     React.useEffect(() => {
         console.log(group.current);

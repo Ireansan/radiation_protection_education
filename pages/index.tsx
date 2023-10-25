@@ -129,6 +129,12 @@ const Home: NextPage = () => {
                             <p>Next.js + react-three/fiber</p>
                         </Link>
                     </div>
+                    <div className={styles.card}>
+                        <Link href={"/prototype/basic/X-Ray"}>
+                            <h2>X-ray &rarr;</h2>
+                            <p>Next.js + react-three/fiber</p>
+                        </Link>
+                    </div>
                 </div>
 
                 <h2>References</h2>
