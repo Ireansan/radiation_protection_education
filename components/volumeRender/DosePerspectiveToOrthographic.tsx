@@ -36,20 +36,20 @@ export function DosePerspectiveToOrthographic({
                 const controlCameraDistance = control.current.getDistance();
                 orthographicCamera.zoom = (zoom * 1) / controlCameraDistance;
             } else if (object.current) {
-                // FIXME:
                 const cameraWorldPosition = new THREE.Vector3();
-                const cameraLocalPosition = new THREE.Vector3();
+                const cameraWorldDirection = new THREE.Vector3();
                 const objectCenter = new THREE.Vector3(); // recommend: select object layer is world
+                const cameraToCenter = new THREE.Vector3();
 
                 camera.getWorldPosition(cameraWorldPosition);
-                cameraLocalPosition.copy(
-                    object.current.worldToLocal(cameraWorldPosition)
-                );
+                camera.getWorldDirection(cameraWorldDirection);
+                cameraWorldDirection.normalize();
 
                 const bbox = new THREE.Box3().setFromObject(object.current);
                 bbox.getCenter(objectCenter);
 
-                const distance = cameraLocalPosition.distanceTo(objectCenter);
+                cameraToCenter.copy(objectCenter).sub(cameraWorldPosition); // vector from cameraWorldPosition to objectCenter
+                const distance = cameraToCenter.dot(cameraWorldDirection);
                 orthographicCamera.zoom = (zoom * 1) / distance;
             }
 
