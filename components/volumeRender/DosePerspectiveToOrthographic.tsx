@@ -6,8 +6,8 @@ import { OrbitControls } from "three-stdlib";
 import { VolumeBase } from "../../src";
 
 type dosePerspectiveToOrthographicProps = {
-    control: React.RefObject<OrbitControls>;
     objects: React.RefObject<VolumeBase>[];
+    control?: React.RefObject<OrbitControls>;
     zoom?: number;
 };
 /**
@@ -15,8 +15,8 @@ type dosePerspectiveToOrthographicProps = {
  * packages/fiber/src/core/utils.ts > function updateCamera(camera: Camera & { manual?: boolean }, size: Size)
  */
 export function DosePerspectiveToOrthographic({
-    control,
     objects,
+    control,
     zoom = 1,
     ...props
 }: dosePerspectiveToOrthographicProps) {
@@ -25,15 +25,17 @@ export function DosePerspectiveToOrthographic({
     useFrame((state) => {
         const { camera, size } = state;
 
-        if (camera instanceof THREE.PerspectiveCamera && control.current) {
+        if (camera instanceof THREE.PerspectiveCamera) {
             orthographicCamera.left = size.width / -2;
             orthographicCamera.right = size.width / 2;
             orthographicCamera.top = size.height / 2;
             orthographicCamera.bottom = size.height / -2;
             // orthographicCamera.zoom = camera.zoom; // then perspective, no update
 
-            const controlCameraDistance = control.current.getDistance();
-            orthographicCamera.zoom = (zoom * 1) / controlCameraDistance; // FIXME:
+            if (control && control.current) {
+                const controlCameraDistance = control.current.getDistance();
+                orthographicCamera.zoom = (zoom * 1) / controlCameraDistance; // FIXME:
+            }
 
             orthographicCamera.updateProjectionMatrix();
 

@@ -33,6 +33,7 @@ import * as VOLUMEDATA from "../../../components/models/VolumeData";
 // ----------
 // controls
 import {
+    DosePerspectiveToOrthographic,
     DoseAnimationControls,
     VolumeParameterControls,
     VolumeXYZClippingControls,
@@ -45,8 +46,6 @@ import { SceneConfigPanel } from "../../../components/ui";
 // ==========
 // Store
 import { useStore } from "../../../components/store";
-
-import { DosePerspectiveToOrthographic } from "../../../components/volumeRender/DosePerspectiveToOrthographic";
 
 // ==========
 // Styles
