@@ -61,6 +61,16 @@ const Home: NextPage = () => {
                     </div>
                 </div>
 
+                <h3>Visualization (VR)</h3>
+                <div className={styles.grid}>
+                    <div className={styles.card}>
+                        <Link href={"/visualization/VR/X-Ray"}>
+                            <h2>X-Ray &rarr;</h2>
+                            <p>Next.js + react-three/fiber, Texture 3D</p>
+                        </Link>
+                    </div>
+                </div>
+
                 <h3>Game</h3>
                 <div className={styles.grid}>
                     <div className={styles.card}>

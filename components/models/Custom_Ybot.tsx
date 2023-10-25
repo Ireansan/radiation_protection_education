@@ -58,7 +58,7 @@ export function CustomYBot(props: JSX.IntrinsicElements["group"]) {
     );
 }
 
-useGLTF.preload("/Custom_Y-Bot.glb");
+useGLTF.preload(modelURL);
 
 /*
 # Rig Structure

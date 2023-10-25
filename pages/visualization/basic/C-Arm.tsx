@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { Suspense, useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
     GizmoHelper,
@@ -6,6 +6,7 @@ import {
     Grid,
     OrbitControls,
     PivotControls,
+    Loader,
     Stats,
 } from "@react-three/drei";
 import * as THREE from "three";
@@ -158,181 +159,192 @@ function CArmBasic() {
                         orthographic
                         camera={{ position: [4, 8, 4], zoom: 50 }}
                     >
-                        {/* -------------------------------------------------- */}
-                        {/* Volume Object */}
-                        <doseGroup
-                            ref={ref}
-                            position={VOLUMEDATA.CArm_Configure.volume.position}
-                            rotation={VOLUMEDATA.CArm_Configure.volume.rotation}
-                            scale={VOLUMEDATA.CArm_Configure.volume.scale}
-                        >
-                            {/* Time Lapse */}
+                        <Suspense fallback={null}>
+                            {/* -------------------------------------------------- */}
+                            {/* Volume Object */}
                             <doseGroup
-                                ref={timelapseRef}
-                                clim2={
-                                    VOLUMEDATA.CArm_Configure.volume.clim2
-                                        .timelapse
+                                ref={ref}
+                                position={
+                                    VOLUMEDATA.CArm_Configure.volume.position
                                 }
-                                clim2AutoUpdate={false}
-                            >
-                                {/* C-Arm Dose */}
-                                <doseAnimationObject ref={cArmRef}>
-                                    <VOLUMEDATA.CArm_all_Animation />
-                                </doseAnimationObject>
-
-                                {/* C-Arm Roll 180 Pitch 360 Dose */}
-                                <doseAnimationObject
-                                    ref={cArmRoll180Pitch360Ref}
-                                    visible={false}
-                                >
-                                    <VOLUMEDATA.CArm_roll180_pitch360_all_Animation />
-                                </doseAnimationObject>
-                            </doseGroup>
-
-                            {/* Accumulate */}
-                            <doseGroup
-                                ref={accumulateRef}
-                                visible={false}
-                                clim2={
-                                    VOLUMEDATA.CArm_Configure.volume.clim2
-                                        .accumulate
+                                rotation={
+                                    VOLUMEDATA.CArm_Configure.volume.rotation
                                 }
-                                clim2AutoUpdate={false}
+                                scale={VOLUMEDATA.CArm_Configure.volume.scale}
                             >
-                                {/* C-Arm Dose, Accumulate */}
-                                <doseGroup ref={cArmAccumuRef}>
-                                    <VOLUMEDATA.CArm_all_accumulate />
-                                </doseGroup>
-
-                                {/* C-Arm Roll 180 Pitch 360 Dose, Accumulate */}
+                                {/* Time Lapse */}
                                 <doseGroup
-                                    ref={cArmRoll180Pitch360AccumuRef}
-                                    visible={false}
+                                    ref={timelapseRef}
+                                    clim2={
+                                        VOLUMEDATA.CArm_Configure.volume.clim2
+                                            .timelapse
+                                    }
+                                    clim2AutoUpdate={false}
                                 >
-                                    <VOLUMEDATA.CArm_roll180_pitch360_all_accumulate />
+                                    {/* C-Arm Dose */}
+                                    <doseAnimationObject ref={cArmRef}>
+                                        <VOLUMEDATA.CArm_all_Animation />
+                                    </doseAnimationObject>
+
+                                    {/* C-Arm Roll 180 Pitch 360 Dose */}
+                                    <doseAnimationObject
+                                        ref={cArmRoll180Pitch360Ref}
+                                        visible={false}
+                                    >
+                                        <VOLUMEDATA.CArm_roll180_pitch360_all_Animation />
+                                    </doseAnimationObject>
+                                </doseGroup>
+
+                                {/* Accumulate */}
+                                <doseGroup
+                                    ref={accumulateRef}
+                                    visible={false}
+                                    clim2={
+                                        VOLUMEDATA.CArm_Configure.volume.clim2
+                                            .accumulate
+                                    }
+                                    clim2AutoUpdate={false}
+                                >
+                                    {/* C-Arm Dose, Accumulate */}
+                                    <doseGroup ref={cArmAccumuRef}>
+                                        <VOLUMEDATA.CArm_all_accumulate />
+                                    </doseGroup>
+
+                                    {/* C-Arm Roll 180 Pitch 360 Dose, Accumulate */}
+                                    <doseGroup
+                                        ref={cArmRoll180Pitch360AccumuRef}
+                                        visible={false}
+                                    >
+                                        <VOLUMEDATA.CArm_roll180_pitch360_all_accumulate />
+                                    </doseGroup>
                                 </doseGroup>
                             </doseGroup>
-                        </doseGroup>
 
-                        {/* -------------------------------------------------- */}
-                        {/* Volume Controls */}
-                        <DoseAnimationControls
-                            objects={[cArmRef, cArmRoll180Pitch360Ref]}
-                            mainGroup={timelapseRef}
-                            subGroup={accumulateRef}
-                            duration={16}
-                            customSpeed={[8.0, 16.0]}
-                        />
-                        <VolumeParameterControls object={ref} />
-                        <VolumeXYZClippingControls
-                            object={ref}
-                            planeSize={2}
-                            areaSize={VOLUMEDATA.CArm_Configure.volume.areaSize}
-                            areaScale={1.1}
-                            lineColor={new THREE.Color(0x6e0010)}
-                        />
-
-                        {/* -------------------------------------------------- */}
-                        {/* Three.js Object */}
-                        {/* Patient */}
-                        <group
-                            ref={patientRef}
-                            position={
-                                VOLUMEDATA.CArm_Configure.object3d.patient
-                                    .position
-                            }
-                            rotation={
-                                VOLUMEDATA.CArm_Configure.object3d.patient
-                                    .rotation
-                            }
-                            scale={
-                                VOLUMEDATA.CArm_Configure.object3d.patient.scale
-                            }
-                        >
-                            <MODELS.XRay_Bed />
-                            <MODELS.XRay_Patient />
-                        </group>
-                        {/* C Arm */}
-                        <group
-                            ref={cArmModelRef}
-                            position={
-                                VOLUMEDATA.CArm_Configure.object3d.model
-                                    .position
-                            }
-                            rotation={
-                                VOLUMEDATA.CArm_Configure.object3d.model
-                                    .rotation
-                            }
-                            scale={
-                                VOLUMEDATA.CArm_Configure.object3d.model.scale
-                            }
-                        >
-                            <MODELS.CArmModel
-                                roll={
-                                    VOLUMEDATA.CArm_Configure.object3d.model
-                                        .roll
-                                }
-                                pitch={
-                                    VOLUMEDATA.CArm_Configure.object3d.model
-                                        .pitch
-                                }
-                                height={
-                                    VOLUMEDATA.CArm_Configure.object3d.model
-                                        .height
-                                }
+                            {/* -------------------------------------------------- */}
+                            {/* Volume Controls */}
+                            <DoseAnimationControls
+                                objects={[cArmRef, cArmRoll180Pitch360Ref]}
+                                mainGroup={timelapseRef}
+                                subGroup={accumulateRef}
+                                duration={16}
+                                customSpeed={[8.0, 16.0]}
                             />
-                        </group>
-
-                        <mesh position={[0, 1, 0]} visible={debug}>
-                            <sphereBufferGeometry args={[0.25]} />
-                        </mesh>
-
-                        {/* -------------------------------------------------- */}
-                        {/* Three.js Controls */}
-                        <OrbitControls makeDefault />
-
-                        {/* -------------------------------------------------- */}
-                        {/* Physics */}
-                        <Physics gravity={[0, -30, 0]}>
-                            <ToggledDebug />
-                        </Physics>
-
-                        {/* -------------------------------------------------- */}
-                        {/* Enviroment */}
-                        <ambientLight intensity={0.5} />
-
-                        <Grid
-                            position={[0, -0.01, 0]}
-                            args={[10.5, 10.5]}
-                            cellColor={"#121d7d"}
-                            sectionColor={"#262640"}
-                            fadeDistance={20}
-                            followCamera
-                            infiniteGrid
-                            matrixWorldAutoUpdate={undefined}
-                            getObjectsByProperty={undefined}
-                            getVertexPosition={undefined}
-                        />
-
-                        {/* ================================================== */}
-                        {/* UI */}
-                        <Stats />
-
-                        <GizmoHelper
-                            alignment="bottom-right"
-                            margin={[80, 80]}
-                            renderPriority={1}
-                        >
-                            <GizmoViewport
-                                axisColors={[
-                                    "hotpink",
-                                    "aquamarine",
-                                    "#3498DB",
-                                ]}
-                                labelColor="black"
+                            <VolumeParameterControls object={ref} />
+                            <VolumeXYZClippingControls
+                                object={ref}
+                                planeSize={2}
+                                areaSize={
+                                    VOLUMEDATA.CArm_Configure.volume.areaSize
+                                }
+                                areaScale={1.1}
+                                lineColor={new THREE.Color(0x6e0010)}
                             />
-                        </GizmoHelper>
+
+                            {/* -------------------------------------------------- */}
+                            {/* Three.js Object */}
+                            {/* Patient */}
+                            <group
+                                ref={patientRef}
+                                position={
+                                    VOLUMEDATA.CArm_Configure.object3d.patient
+                                        .position
+                                }
+                                rotation={
+                                    VOLUMEDATA.CArm_Configure.object3d.patient
+                                        .rotation
+                                }
+                                scale={
+                                    VOLUMEDATA.CArm_Configure.object3d.patient
+                                        .scale
+                                }
+                            >
+                                <MODELS.XRay_Bed />
+                                <MODELS.XRay_Patient />
+                            </group>
+                            {/* C Arm */}
+                            <group
+                                ref={cArmModelRef}
+                                position={
+                                    VOLUMEDATA.CArm_Configure.object3d.model
+                                        .position
+                                }
+                                rotation={
+                                    VOLUMEDATA.CArm_Configure.object3d.model
+                                        .rotation
+                                }
+                                scale={
+                                    VOLUMEDATA.CArm_Configure.object3d.model
+                                        .scale
+                                }
+                            >
+                                <MODELS.CArmModel
+                                    roll={
+                                        VOLUMEDATA.CArm_Configure.object3d.model
+                                            .roll
+                                    }
+                                    pitch={
+                                        VOLUMEDATA.CArm_Configure.object3d.model
+                                            .pitch
+                                    }
+                                    height={
+                                        VOLUMEDATA.CArm_Configure.object3d.model
+                                            .height
+                                    }
+                                />
+                            </group>
+
+                            <mesh position={[0, 1, 0]} visible={debug}>
+                                <sphereBufferGeometry args={[0.25]} />
+                            </mesh>
+
+                            {/* -------------------------------------------------- */}
+                            {/* Three.js Controls */}
+                            <OrbitControls makeDefault />
+
+                            {/* -------------------------------------------------- */}
+                            {/* Physics */}
+                            <Physics gravity={[0, -30, 0]}>
+                                <ToggledDebug />
+                            </Physics>
+
+                            {/* -------------------------------------------------- */}
+                            {/* Enviroment */}
+                            <ambientLight intensity={0.5} />
+
+                            <Grid
+                                position={[0, -0.01, 0]}
+                                args={[10.5, 10.5]}
+                                cellColor={"#121d7d"}
+                                sectionColor={"#262640"}
+                                fadeDistance={20}
+                                followCamera
+                                infiniteGrid
+                                matrixWorldAutoUpdate={undefined}
+                                getObjectsByProperty={undefined}
+                                getVertexPosition={undefined}
+                            />
+
+                            {/* ================================================== */}
+                            {/* UI */}
+                            <Stats />
+
+                            <GizmoHelper
+                                alignment="bottom-right"
+                                margin={[80, 80]}
+                                renderPriority={1}
+                            >
+                                <GizmoViewport
+                                    axisColors={[
+                                        "hotpink",
+                                        "aquamarine",
+                                        "#3498DB",
+                                    ]}
+                                    labelColor="black"
+                                />
+                            </GizmoHelper>
+                        </Suspense>
                     </Canvas>
+                    <Loader />
                     <SceneConfigPanel activateStats={false} />
                 </div>
             </div>
