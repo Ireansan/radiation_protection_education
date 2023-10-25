@@ -47,6 +47,7 @@ import * as VOLUMEDATA from "../../../components/models/VolumeData";
 // ----------
 // controls
 import {
+    DosePerspectiveToOrthographic,
     DoseAnimationControls,
     DoseBoardControls,
     DoseEquipmentsUI,
@@ -59,6 +60,8 @@ import {
 // ==========
 // UI
 import { ExperimentCheckList, SceneConfigPanel } from "../../../components/ui";
+
+import { VRStats } from "components/vr";
 
 // ==========
 // Store
@@ -148,8 +151,11 @@ function XRayVR() {
                     {/* ================================================== */}
                     {/* Three.js Canvas */}
                     <Canvas
-                        orthographic
-                        camera={{ position: [4, 8, 4], zoom: 50 }}
+                        // orthographic
+                        camera={{
+                            position: [4, 8, 4],
+                            // zoom: 50
+                        }}
                     >
                         <XR>
                             <TeleportationPlane
@@ -158,12 +164,17 @@ function XRayVR() {
                             />
                             <Controllers />
 
-                            <group position={[0, 0, -10]}>
-                                {/* -------------------------------------------------- */}
-                                {/* Volume Object */}
+                            <DosePerspectiveToOrthographic
+                                object={ref}
+                                zoom={250}
+                                // zoom={500}
+                            />
 
+                            {/* -------------------------------------------------- */}
+                            {/* Volume Object */}
+
+                            <doseGroup ref={ref} position={[0, 0, -10]}>
                                 <doseGroup
-                                    ref={ref}
                                     position={
                                         VOLUMEDATA.XRay_nocurtain_Configure
                                             .volume.position
@@ -218,7 +229,9 @@ function XRayVR() {
                                         </doseGroup>
                                     </doseGroup>
                                 </doseGroup>
+                            </doseGroup>
 
+                            <group position={[0, 0, -10]}>
                                 {/* -------------------------------------------------- */}
                                 {/* Volume Controls */}
                                 <DoseAnimationControls
@@ -428,7 +441,8 @@ function XRayVR() {
 
                             {/* ================================================== */}
                             {/* UI */}
-                            <Stats />
+                            {/* <Stats /> */}
+                            <VRStats position={[-5, 1, -5]} />
 
                             <GizmoHelper
                                 alignment="bottom-right"
