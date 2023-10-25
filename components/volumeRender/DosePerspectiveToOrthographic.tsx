@@ -22,6 +22,20 @@ export function DosePerspectiveToOrthographic({
 }: dosePerspectiveToOrthographicProps) {
     const orthographicCamera = new THREE.OrthographicCamera();
 
+    const [center, setCenter] = React.useState<THREE.Vector3>(
+        new THREE.Vector3()
+    );
+
+    React.useEffect(() => {
+        if (object.current) {
+            const objectCenter = new THREE.Vector3(); // recommend: select object layer is world
+            const bbox = new THREE.Box3().setFromObject(object.current);
+            bbox.getCenter(objectCenter);
+
+            setCenter(objectCenter);
+        }
+    }, [object]);
+
     useFrame((state) => {
         const { camera, size } = state;
 
@@ -35,20 +49,17 @@ export function DosePerspectiveToOrthographic({
             if (control && control.current) {
                 const controlCameraDistance = control.current.getDistance();
                 orthographicCamera.zoom = (zoom * 1) / controlCameraDistance;
-            } else if (object.current) {
+            } else {
                 const cameraWorldPosition = new THREE.Vector3();
                 const cameraWorldDirection = new THREE.Vector3();
-                const objectCenter = new THREE.Vector3(); // recommend: select object layer is world
+
                 const cameraToCenter = new THREE.Vector3();
 
                 camera.getWorldPosition(cameraWorldPosition);
                 camera.getWorldDirection(cameraWorldDirection);
                 cameraWorldDirection.normalize();
 
-                const bbox = new THREE.Box3().setFromObject(object.current);
-                bbox.getCenter(objectCenter);
-
-                cameraToCenter.copy(objectCenter).sub(cameraWorldPosition); // vector from cameraWorldPosition to objectCenter
+                cameraToCenter.copy(center).sub(cameraWorldPosition); // vector from cameraWorldPosition to objectCenter
                 const distance = cameraToCenter.dot(cameraWorldDirection);
                 orthographicCamera.zoom = (zoom * 1) / distance;
             }
