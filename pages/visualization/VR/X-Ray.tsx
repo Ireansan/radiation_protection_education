@@ -24,6 +24,7 @@ import { useControls, folder } from "leva";
 // ==========
 // Game
 import {
+    ControlPanel,
     // ----------
     // hook
     useToggle,
@@ -420,6 +421,11 @@ function XRayVR() {
                                     </DoseBoardControls>
                                 </Physics>
                             </group>
+
+                            <ControlPanel
+                                position={[-2, 2, 5]}
+                                rotation={[0, Math.PI, 0]}
+                            />
 
                             {/* -------------------------------------------------- */}
                             {/* Enviroment */}
