@@ -77,17 +77,17 @@ function XRayBasic() {
                     value: false,
                     onChange: (e) => {
                         nocurtainRef.current
-                            ? (nocurtainRef.current.visible = e)
+                            ? (nocurtainRef.current.visible = !e)
                             : null;
                         nocurtainAccumuRef.current
-                            ? (nocurtainAccumuRef.current.visible = e)
+                            ? (nocurtainAccumuRef.current.visible = !e)
                             : null;
 
                         curtainRef.current
-                            ? (curtainRef.current.visible = !e)
+                            ? (curtainRef.current.visible = e)
                             : null;
                         curtainAccumuRef.current
-                            ? (curtainAccumuRef.current.visible = !e)
+                            ? (curtainAccumuRef.current.visible = e)
                             : null;
                         curtainObjRef.current
                             ? (curtainObjRef.current.visible = e)
@@ -136,7 +136,6 @@ function XRayBasic() {
                                 <doseAnimationObject
                                     ref={nocurtainRef}
                                     name={"x-ray_animation_nocurtain"}
-                                    visible={false}
                                 >
                                     <VOLUMEDATA.XRay_nocurtain_all_Animation />
                                 </doseAnimationObject>
@@ -144,6 +143,7 @@ function XRayBasic() {
                                 <doseAnimationObject
                                     ref={curtainRef}
                                     name={"x-ray_animation_curtain"}
+                                    visible={false}
                                 >
                                     <VOLUMEDATA.XRay_curtain_all_Animation />
                                 </doseAnimationObject>
@@ -155,7 +155,6 @@ function XRayBasic() {
                                 <doseGroup
                                     ref={nocurtainAccumuRef}
                                     name={"x-ray_accumulate_nocurtain"}
-                                    visible={false}
                                 >
                                     <VOLUMEDATA.XRay_nocurtain_all_accumulate />
                                 </doseGroup>
@@ -163,6 +162,7 @@ function XRayBasic() {
                                 <doseGroup
                                     ref={curtainAccumuRef}
                                     name={"x-ray_accumulate_curtain"}
+                                    visible={false}
                                 >
                                     <VOLUMEDATA.XRay_curtain_all_accumulate />
                                 </doseGroup>
