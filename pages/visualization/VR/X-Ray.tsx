@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import React, { useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
@@ -62,7 +63,7 @@ import {
 // UI
 import { ExperimentCheckList, SceneConfigPanel } from "../../../components/ui";
 
-import { VRStats } from "components/vr";
+import { VRPanle, VRStats } from "components/vr";
 
 // ==========
 // Store
@@ -167,8 +168,7 @@ function XRayVR() {
 
                             <DosePerspectiveToOrthographic
                                 object={ref}
-                                zoom={250}
-                                // zoom={500}
+                                zoom={350}
                             />
 
                             {/* -------------------------------------------------- */}
@@ -422,11 +422,6 @@ function XRayVR() {
                                 </Physics>
                             </group>
 
-                            <ControlPanel
-                                position={[-2, 2, 5]}
-                                rotation={[0, Math.PI, 0]}
-                            />
-
                             {/* -------------------------------------------------- */}
                             {/* Enviroment */}
                             <Sky sunPosition={[0, 1, 0]} />
@@ -447,8 +442,6 @@ function XRayVR() {
 
                             {/* ================================================== */}
                             {/* UI */}
-                            {/* <Stats /> */}
-                            <VRStats position={[-5, 1, -5]} />
 
                             <GizmoHelper
                                 alignment="bottom-right"
@@ -464,6 +457,18 @@ function XRayVR() {
                                     labelColor="black"
                                 />
                             </GizmoHelper>
+
+                            {/* VR UI */}
+                            <VRStats
+                                position={[-0.75, 2, -0.6]}
+                                rotation={[0, Math.PI / 4, 0]}
+                                scale={2.5}
+                            />
+                            <VRPanle
+                                position={[-0.75, 1.5, -0.5]}
+                                rotation={[0, Math.PI / 4, 0]}
+                                scale={2}
+                            />
                         </XR>
                     </Canvas>
                     {/* <SceneConfigPanel activateStats={false} /> */}
