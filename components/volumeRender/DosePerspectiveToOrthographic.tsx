@@ -61,7 +61,7 @@ export function DosePerspectiveToOrthographic({
 
                 cameraToCenter.copy(center).sub(cameraWorldPosition); // vector from cameraWorldPosition to objectCenter
                 const distance = cameraToCenter.dot(cameraWorldDirection);
-                orthographicCamera.zoom = (zoom * 1) / distance;
+                orthographicCamera.zoom = zoom / distance;
             }
 
             orthographicCamera.updateProjectionMatrix();
@@ -73,5 +73,12 @@ export function DosePerspectiveToOrthographic({
         }
     });
 
-    return <></>;
+    return (
+        <>
+            <mesh position={center}>
+                <boxBufferGeometry args={[0.5, 0.5, 0.5]} />
+                <meshBasicMaterial color={"red"} />
+            </mesh>
+        </>
+    );
 }
