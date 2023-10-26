@@ -68,6 +68,8 @@ import { VRStats } from "components/vr";
 // Store
 import { useStore } from "../../../components/store";
 
+import { HtmlSample } from "../../../components/vr/ui/HtmlSample";
+
 // ==========
 // Styles
 import styles from "../../../styles/threejs.module.css";
@@ -164,16 +166,13 @@ function XRayVR() {
                                 rightHand={true}
                             />
                             <Controllers />
-
                             <DosePerspectiveToOrthographic
                                 object={ref}
                                 zoom={250}
                                 // zoom={500}
                             />
-
                             {/* -------------------------------------------------- */}
                             {/* Volume Object */}
-
                             <doseGroup ref={ref} position={[0, 0, -10]}>
                                 <doseGroup
                                     position={
@@ -231,7 +230,6 @@ function XRayVR() {
                                     </doseGroup>
                                 </doseGroup>
                             </doseGroup>
-
                             <group position={[0, 0, -10]}>
                                 {/* -------------------------------------------------- */}
                                 {/* Volume Controls */}
@@ -421,17 +419,14 @@ function XRayVR() {
                                     </DoseBoardControls>
                                 </Physics>
                             </group>
-
                             <ControlPanel
                                 position={[-2, 2, 5]}
                                 rotation={[0, Math.PI, 0]}
                             />
-
                             {/* -------------------------------------------------- */}
                             {/* Enviroment */}
                             <Sky sunPosition={[0, 1, 0]} />
                             <ambientLight intensity={0.5} />
-
                             <Grid
                                 position={[0, -0.01, 0]}
                                 args={[10.5, 10.5]}
@@ -444,11 +439,11 @@ function XRayVR() {
                                 getObjectsByProperty={undefined}
                                 getVertexPosition={undefined}
                             />
-
                             {/* ================================================== */}
                             {/* UI */}
                             {/* <Stats /> */}
                             <VRStats position={[-5, 1, -5]} />
+                            <HtmlSample />
 
                             <GizmoHelper
                                 alignment="bottom-right"
