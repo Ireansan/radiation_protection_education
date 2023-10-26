@@ -83,8 +83,7 @@ function XRayRoomGame() {
                     <Canvas shadows camera={{ fov: 45 }} id={"mainCanvas"}>
                         <DosePerspectiveToOrthographic
                             object={ref}
-                            // control={controlRef}
-                            zoom={1000}
+                            zoom={900}
                         />
 
                         {/* -------------------------------------------------- */}

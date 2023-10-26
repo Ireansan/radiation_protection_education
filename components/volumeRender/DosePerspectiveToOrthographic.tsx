@@ -75,6 +75,7 @@ export function DosePerspectiveToOrthographic({
 
     return (
         <>
+            {/* FIXME: for Debug */}
             <mesh position={center}>
                 <boxBufferGeometry args={[0.5, 0.5, 0.5]} />
                 <meshBasicMaterial color={"red"} />
