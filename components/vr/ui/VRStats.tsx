@@ -13,21 +13,31 @@ export function VRStats({ ...props }: JSX.IntrinsicElements["group"]) {
         () => new InteractiveGroup(gl, camera),
         [gl, camera]
     );
-    // @ts-ignore
-    const stats = React.useMemo(() => new Stats(), []);
-
-    React.useEffect(() => {
+    const [stats, statsMesh] = React.useMemo(() => {
         // Add stats.js
+        // @ts-ignore
+        const stats = new Stats();
         stats.dom.style.width = "80px";
         stats.dom.style.height = "48px";
         document.body.appendChild(stats.dom);
 
         const statsMesh = new HTMLMesh(stats.dom);
         group.add(statsMesh);
-    }, []);
+
+        return [stats, statsMesh];
+    }, [group]);
 
     useFrame(() => {
         stats.update();
+
+        // Canvas elements doesn't trigger DOM updates, so we have to update the texture
+        /**
+         * type:
+         * statsMesh.material: MeshBasicMaterial
+         * statsMesh.material.map: HTMLTexture
+         */
+        // @ts-ignore
+        statsMesh.material.map.update();
     });
 
     return (

@@ -471,7 +471,7 @@ function XRayVR() {
                                 scale={2}
                             />
                             <VRDosimeterUI
-                                position={[-0.75, 1.5, 0.5]}
+                                position={[-0.75, 2, 0.25]}
                                 rotation={[0, Math.PI / 2, 0]}
                                 scale={2}
                             />
