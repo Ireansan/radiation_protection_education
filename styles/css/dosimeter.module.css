@@ -51,27 +51,35 @@
 .dose_list .dose .result .year {
   width: 60%;
 }
+.dose_list .dose .result .year .data .bar .bg {
+  height: 30%;
+}
 .dose_list .dose .result .once {
   width: 40%;
+}
+.dose_list .dose .result .once .data .bar .bg {
+  height: 20%;
 }
 .dose_list .dose .data {
   padding: 2px;
 }
 .dose_list .dose .data .bar {
   height: 15px;
+  display: flex;
 }
-.dose_list .dose .data .bar .svg {
+.dose_list .dose .data .bar .bg {
+  width: 95%;
+  background-color: #132237;
+  margin: auto;
+  position: relative;
+}
+.dose_list .dose .data .bar .bg .damage {
   width: 100%;
   height: 100%;
 }
-.dose_list .dose .data .bar .svg .bg {
-  stroke-width: 7px;
-}
-.dose_list .dose .data .bar .svg .damage {
-  stroke-width: 5px;
-}
-.dose_list .dose .data .bar .svg .hp {
-  stroke-width: 5px;
+.dose_list .dose .data .bar .bg .damage .hp {
+  height: 100%;
+  background-color: #56b35d;
 }
 .dose_list .dose .data .numerical {
   height: 15px;

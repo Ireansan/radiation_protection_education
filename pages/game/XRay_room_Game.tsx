@@ -41,7 +41,7 @@ import {
     DosePerspectiveToOrthographic,
     DoseBoardControls,
     DosimeterControls,
-    DosimeterDisplayUI,
+    DosimeterUI,
     VolumeAnimationControls,
     VolumeParameterControls,
     VolumeXYZClippingControls,
@@ -231,7 +231,7 @@ function XRayRoomGame() {
                     {/* UI */}
                     <Help />
                     <Leva />
-                    <DosimeterDisplayUI />
+                    <DosimeterUI />
                 </div>
 
                 <Menu />

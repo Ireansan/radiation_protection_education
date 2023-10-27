@@ -54,7 +54,7 @@ import {
     DoseBoardControls,
     DoseEquipmentsUI,
     DosimeterControls,
-    DosimeterDisplayUI,
+    DosimeterUI,
     VolumeParameterControls,
     VolumeXYZClippingControls,
 } from "../../../components/volumeRender";
@@ -479,7 +479,7 @@ function XRayVR() {
                     </Canvas>
                     {/* <SceneConfigPanel activateStats={false} /> */}
                     {/* <DoseEquipmentsUI /> */}
-                    <DosimeterDisplayUI />
+                    <DosimeterUI />
                     {/* <ExperimentCheckList /> */}
                 </div>
             </div>

@@ -25,15 +25,8 @@ import style from "../../../styles/css/dosimeter.module.css";
 /**
  * @link https://codesandbox.io/s/lo6kp?file=/src/ui/Speed/Boost.tsx
  * @link https://codesandbox.io/s/lo6kp?file=/src/styles.css
+ * @link https://codesandbox.io/s/i2160?file=/src/Hud.js
  */
-const strokeDasharray = 200;
-
-type EquipmentProps = {
-    goggle: boolean;
-    neck: boolean;
-    apron: boolean;
-    glove: boolean;
-};
 
 type ResultIconProps = {
     state: string[];
@@ -71,94 +64,48 @@ type ResultDataProps = {
     value: number;
     coefficient: number;
     maxHp: number;
-    hpColor?: string;
     damageColor?: string;
-    cautionColor?: string;
-    bgColor?: string;
+    dangerColor?: string;
 };
 function ResultData({
     children,
     value,
     coefficient,
     maxHp,
-    hpColor = "#56B35D", // Green
     damageColor = "#DEAD29", // Orange
-    cautionColor = "#B83100", // Red
-    bgColor = "#132237",
+    dangerColor = "#B83100", // Red
     ...props
 }: ResultDataProps) {
-    const damageRef = useRef<SVGPathElement>(null);
-    const hpRef = useRef<SVGPathElement>(null);
+    const [color, length] = useMemo(() => {
+        const dose = 120 * coefficient * value;
+        const hp = maxHp - dose;
+        const percent = hp / maxHp;
 
-    const getColor = () => {
-        let hp = maxHp - 120 * coefficient * value;
+        const color = hp < 0 ? dangerColor : damageColor;
+        const length = hp < 0 ? 0 : percent > 1.0 ? 100 : 100 * percent;
 
-        return hp < 0 ? cautionColor : damageColor;
-    };
-    const getLength = () => {
-        let offset = (120 * coefficient * value) / maxHp;
-
-        return `${offset > 1.0 ? strokeDasharray : strokeDasharray * offset}`;
-    };
-
-    let stroke = getColor();
-    let strokeDashoffset = getLength();
-
-    useEffect(() =>
-        addEffect(() => {
-            if (!damageRef.current) return;
-
-            stroke = getColor();
-            if (damageRef.current.style.stroke !== stroke) {
-                damageRef.current.style.stroke = stroke;
-            }
-
-            if (!hpRef.current) return;
-
-            strokeDashoffset = getLength();
-            if (hpRef.current.style.strokeDashoffset !== strokeDashoffset) {
-                hpRef.current.style.strokeDashoffset = strokeDashoffset;
-            }
-        })
-    );
+        return [color, length];
+    }, [value, coefficient, maxHp, damageColor, dangerColor]);
 
     return (
         <>
             <div className={`${style.data}`}>
                 {/* Bar */}
                 <div className={`${style.bar}`}>
-                    <svg
-                        className={`${style.svg}`}
-                        viewBox={`0 0 200 15`}
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        {/* back ground */}
-                        <path
-                            className={`${style.bg}`}
-                            d="M0,4 L200,4"
-                            stroke={bgColor}
-                            strokeDasharray={206}
-                        />
+                    {/* back ground */}
+                    <div className={`${style.bg}`}>
                         {/* Damage Bar */}
-                        <path
+                        <div
                             className={`${style.damage}`}
-                            d="M2,4 L198,4"
-                            ref={damageRef}
-                            strokeDasharray={200}
-                            style={{ stroke }}
-                        />
-                        {/* HP Bar */}
-                        <path
-                            className={`${style.hp}`}
-                            d="M2,4 L198,4"
-                            ref={hpRef}
-                            stroke={hpColor}
-                            strokeDasharray={200}
-                            style={{
-                                strokeDashoffset,
-                            }}
-                        />
-                    </svg>
+                            style={{ backgroundColor: color }}
+                        >
+                            {/* HP Bar */}
+                            <div
+                                className={`${style.hp}`}
+                                style={{ width: `${length}%` }}
+                            />
+                        </div>
+                    </div>
                 </div>
                 {/* Value */}
                 <div className={`${style.numerical}`}>
@@ -259,17 +206,17 @@ function DosimeterResult({
 }
 const MemoDosimeterResult = memo(DosimeterResult);
 
-type dosimeterDisplayUIProps = {
+type dosimeterUIProps = {
     nPerPatient?: number;
     nPerYear?: number;
     limitOnce?: number;
 };
-export function DosimeterDisplayUI({
+export function DosimeterUI({
     nPerPatient = 1,
     nPerYear = 500,
     limitOnce = 100,
     ...props
-}: dosimeterDisplayUIProps) {
+}: dosimeterUIProps) {
     const [set, playerProperties, sceneProperties] = useStore((state) => [
         state.set,
         state.playerProperties,

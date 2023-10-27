@@ -47,7 +47,7 @@ import {
     DoseBoardControls,
     DoseEquipmentsUI,
     DosimeterControls,
-    DosimeterDisplayUI,
+    DosimeterUI,
     VolumeParameterControls,
     VolumeXYZClippingControls,
 } from "../../../components/volumeRender";
@@ -481,7 +481,7 @@ function CArmExtra() {
                     <Loader />
                     <SceneConfigPanel activateStats={false} />
                     <DoseEquipmentsUI />
-                    <DosimeterDisplayUI />
+                    <DosimeterUI />
                     <ExperimentCheckList />
                 </div>
             </div>

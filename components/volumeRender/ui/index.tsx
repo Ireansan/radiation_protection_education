@@ -1,2 +1,2 @@
 export * from "./DoseEquipments";
-export * from "./DosimeterDisplay";
+export * from "./DosimeterUI";
