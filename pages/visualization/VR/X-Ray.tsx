@@ -169,7 +169,7 @@ function XRayVR() {
 
                             <DosePerspectiveToOrthographic
                                 object={ref}
-                                zoom={300}
+                                zoom={450}
                             />
 
                             {/* -------------------------------------------------- */}
