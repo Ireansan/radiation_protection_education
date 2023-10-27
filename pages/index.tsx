@@ -131,8 +131,14 @@ const Home: NextPage = () => {
                     </div>
                     <div className={styles.card}>
                         <Link href={"/prototype/basic/X-Ray"}>
-                            <h2>X-ray &rarr;</h2>
-                            <p>Next.js + react-three/fiber</p>
+                            <h2>X-ray (Basic)&rarr;</h2>
+                            <p>Perspective Camera</p>
+                        </Link>
+                    </div>
+                    <div className={styles.card}>
+                        <Link href={"/prototype/extra/X-Ray"}>
+                            <h2>X-ray (Extra)&rarr;</h2>
+                            <p>Dosimeter UI, HP Bar (CSS only)</p>
                         </Link>
                     </div>
                 </div>
