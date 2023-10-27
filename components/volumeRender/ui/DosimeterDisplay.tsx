@@ -311,7 +311,7 @@ export function DosimeterDisplayUI({
 
     return (
         <>
-            <div className={`${style.dose_list}`}>
+            <div id="DosimeterUI" className={`${style.dose_list}`}>
                 <div className={`${style.label}`}>
                     Dose
                     <span className={`${style.unit}`}>[&micro;Sv]</span>

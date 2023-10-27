@@ -72,6 +72,7 @@ import { useStore } from "../../../components/store";
 // ==========
 // Styles
 import styles from "../../../styles/threejs.module.css";
+import { VRDosimeterUI } from "components/vr/ui/VRDosimeterUI";
 
 function XRInit() {
     const { isPresenting, player } = useXR();
@@ -469,11 +470,16 @@ function XRayVR() {
                                 rotation={[0, Math.PI / 4, 0]}
                                 scale={2}
                             />
+                            <VRDosimeterUI
+                                position={[-0.75, 1.5, 0.5]}
+                                rotation={[0, Math.PI / 2, 0]}
+                                scale={2}
+                            />
                         </XR>
                     </Canvas>
                     {/* <SceneConfigPanel activateStats={false} /> */}
                     {/* <DoseEquipmentsUI /> */}
-                    {/* <DosimeterDisplayUI /> */}
+                    <DosimeterDisplayUI />
                     {/* <ExperimentCheckList /> */}
                 </div>
             </div>

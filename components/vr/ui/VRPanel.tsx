@@ -23,16 +23,20 @@ export function VRPanle({ ...props }: JSX.IntrinsicElements["group"]) {
         [gl, camera]
     );
 
+    const ref = React.useRef<THREE.Mesh>(null!);
+
     React.useEffect(() => {
         import("lil-gui").then(({ GUI }) => {
             const gui = new GUI({ width: 300 });
-            gui.add(parameters, "radius", 0.0, 1.0);
-            gui.add(parameters, "tube", 0.0, 1.0);
-            gui.add(parameters, "tubularSegments", 10, 150, 1);
-            gui.add(parameters, "radialSegments", 2, 20, 1);
-            gui.add(parameters, "p", 1, 10, 1);
-            gui.add(parameters, "q", 0, 10, 1);
-            gui.add(parameters, "thickness", 0, 1);
+            gui.add(ref.current.position, "x", 0.0).onChange(
+                (value: number) => {
+                    console.log(value);
+                    ref.current.position.x = value;
+                }
+            );
+            gui.add(ref.current.position, "y", 0.0);
+            gui.add(ref.current.position, "z", 0.0);
+            // gui.add(ref.current, "scale", 0, 1);
             gui.domElement.style.visibility = "hidden";
 
             // const group = new InteractiveGroup(gl, camera);
@@ -46,6 +50,11 @@ export function VRPanle({ ...props }: JSX.IntrinsicElements["group"]) {
     return (
         <>
             <primitive object={group} {...props} />
+
+            <mesh ref={ref}>
+                <torusKnotBufferGeometry args={[0.6, 0.2, 150, 20]} />
+                <meshBasicMaterial color={"red"} />
+            </mesh>
         </>
     );
 }
