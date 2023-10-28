@@ -15,6 +15,8 @@ export type DoseAnimationControlsProps = {
     mainGroup: React.RefObject<VolumeBase>;
     subGroup?: React.RefObject<VolumeBase>;
     duration: number;
+    mode?: string;
+    speed?: number;
     customSpeed?: number[];
 };
 export function DoseAnimationControls({
@@ -22,6 +24,8 @@ export function DoseAnimationControls({
     mainGroup,
     subGroup,
     duration,
+    mode = "time lapse",
+    speed = 1.0,
     customSpeed,
     ...props
 }: DoseAnimationControlsProps) {
@@ -109,6 +113,7 @@ export function DoseAnimationControls({
     const [animationConfig, setAnimationConfig] = useControls(() => ({
         Data: folder({
             mode: {
+                value: mode,
                 options: ["time lapse", "accumulate"],
                 onChange: (e) => {
                     if (e === "time lapse") {
@@ -182,8 +187,8 @@ export function DoseAnimationControls({
                     },
                 },
                 speed: {
+                    value: speed,
                     options: speedList,
-                    value: 1.0,
                 },
                 time: {
                     value: 0,
