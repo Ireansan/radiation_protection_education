@@ -60,7 +60,7 @@ export function DosePerspectiveToOrthographic({
                 cameraWorldDirection.normalize();
 
                 cameraToCenter.copy(center).sub(cameraWorldPosition); // vector from cameraWorldPosition to objectCenter
-                const distance = cameraToCenter.dot(cameraWorldDirection);
+                const distance = cameraToCenter.length();
                 orthographicCamera.zoom = zoom / distance;
             }
 
