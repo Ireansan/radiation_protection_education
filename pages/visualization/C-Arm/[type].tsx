@@ -459,38 +459,54 @@ function VisualizationCArm({ ...props }: PageProps) {
                                 <ToggledDebug />
 
                                 {/* Dose Board */}
-                                <DoseBoardControls
-                                    object={ref}
-                                    origin={new THREE.Vector3(0, 1, 0)}
-                                    areaSize={
-                                        VOLUMEDATA.CArm_Configure.volume
-                                            .areaSize
-                                    }
-                                    width={Board_Configure.size.x}
-                                    height={Board_Configure.size.y}
-                                    position={
-                                        new THREE.Vector3(2.5, 1.25, -0.5)
-                                    }
-                                    rotation={
-                                        new THREE.Euler(0, Math.PI / 2, 0)
-                                    }
-                                    planeSize={Board_Configure.size.y}
-                                    scale={50}
-                                    fixed={true}
-                                    offset={[0, 0, 0.1]}
-                                    opacity={0.75}
-                                >
-                                    <mesh position={[0, 0, 0]}>
-                                        <boxBufferGeometry
-                                            args={[
-                                                ...Board_Configure.size.toArray(),
-                                            ]}
-                                        />
-                                        <meshBasicMaterial
-                                            color={new THREE.Color(0xb39a7b)}
-                                        />
-                                    </mesh>
-                                </DoseBoardControls>
+                                {props.isExtra ? (
+                                    <>
+                                        <DoseBoardControls
+                                            object={ref}
+                                            origin={new THREE.Vector3(0, 1, 0)}
+                                            areaSize={
+                                                VOLUMEDATA.CArm_Configure.volume
+                                                    .areaSize
+                                            }
+                                            width={Board_Configure.size.x}
+                                            height={Board_Configure.size.y}
+                                            position={
+                                                new THREE.Vector3(
+                                                    2.5,
+                                                    1.25,
+                                                    -0.5
+                                                )
+                                            }
+                                            rotation={
+                                                new THREE.Euler(
+                                                    0,
+                                                    Math.PI / 2,
+                                                    0
+                                                )
+                                            }
+                                            planeSize={Board_Configure.size.y}
+                                            scale={50}
+                                            fixed={true}
+                                            offset={[0, 0, 0.1]}
+                                            opacity={0.75}
+                                        >
+                                            <mesh position={[0, 0, 0]}>
+                                                <boxBufferGeometry
+                                                    args={[
+                                                        ...Board_Configure.size.toArray(),
+                                                    ]}
+                                                />
+                                                <meshBasicMaterial
+                                                    color={
+                                                        new THREE.Color(
+                                                            0xb39a7b
+                                                        )
+                                                    }
+                                                />
+                                            </mesh>
+                                        </DoseBoardControls>
+                                    </>
+                                ) : null}
                             </Physics>
 
                             {/* -------------------------------------------------- */}
