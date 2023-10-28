@@ -192,9 +192,13 @@ function XRayExtra() {
                                 mainGroup={timelapseRef}
                                 subGroup={accumulateRef}
                                 duration={16}
+                                speed={8.0}
                                 customSpeed={[8.0, 16.0]}
                             />
-                            <VolumeParameterControls object={ref} />
+                            <VolumeParameterControls
+                                object={ref}
+                                colormap="jet"
+                            />
                             <VolumeXYZClippingControls
                                 object={ref}
                                 planeSize={2}
