@@ -141,6 +141,30 @@ const Home: NextPage = () => {
                             <p>Dosimeter UI, HP Bar (CSS only)</p>
                         </Link>
                     </div>
+                    <div className={styles.card}>
+                        <Link href={"/visualization/X-Ray/basic"}>
+                            <h2>X-ray (Basic)&rarr;</h2>
+                            <p>Static Path</p>
+                        </Link>
+                    </div>
+                    <div className={styles.card}>
+                        <Link href={"/visualization/X-Ray/extra"}>
+                            <h2>X-ray (Extra)&rarr;</h2>
+                            <p>Static Path</p>
+                        </Link>
+                    </div>
+                    <div className={styles.card}>
+                        <Link href={"/visualization/C-Arm/basic"}>
+                            <h2>C-Arm (Basic)&rarr;</h2>
+                            <p>Static Path</p>
+                        </Link>
+                    </div>
+                    <div className={styles.card}>
+                        <Link href={"/visualization/C-Arm/extra"}>
+                            <h2>C-Arm (Extra)&rarr;</h2>
+                            <p>Static Path</p>
+                        </Link>
+                    </div>
                 </div>
 
                 <h2>References</h2>
