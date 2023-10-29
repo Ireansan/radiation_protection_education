@@ -29,9 +29,11 @@ const modelURL = applyBasePath(`/models/glb/Custom_Y-Bot.glb`);
 
 type customYBotIKProps = {
     shoulderUp?: boolean;
+    rollUp?: boolean;
 } & JSX.IntrinsicElements["group"];
 export function CustomYBotIK({
     shoulderUp = false,
+    rollUp = false,
     ...props
 }: customYBotIKProps) {
     const [debug] = useStore((state) => [state.debug]);
@@ -56,7 +58,7 @@ export function CustomYBotIK({
                         index: 10, // "mixamorigLeftArm"
                         rotationMin: new THREE.Vector3(
                             shoulderUp ? 0.0 : 1.4,
-                            -1.5,
+                            rollUp ? -1.5 : -0.1,
                             0.0
                         ),
                         rotationMax: new THREE.Vector3(1.5, 0.8, 1.7),
@@ -79,7 +81,11 @@ export function CustomYBotIK({
                             -0.8,
                             -1.7
                         ),
-                        rotationMax: new THREE.Vector3(1.5, 1.5, 0.0),
+                        rotationMax: new THREE.Vector3(
+                            1.5,
+                            rollUp ? 1.5 : 0.1,
+                            0.0
+                        ),
                     },
                 ],
             },
