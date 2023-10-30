@@ -326,7 +326,10 @@ function VisualizationCArm({ ...props }: PageProps) {
                                                 coefficient: 0.1,
                                             },
                                         ]}
-                                        targets={[cArmAccumuRef]}
+                                        targets={[
+                                            cArmAccumuRef,
+                                            cArmRoll180Pitch360AccumuRef,
+                                        ]}
                                     />
                                 </>
                             ) : null}

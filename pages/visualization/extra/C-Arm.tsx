@@ -290,7 +290,10 @@ function CArmExtra() {
                                         coefficient: 0.1,
                                     },
                                 ]}
-                                targets={[cArmAccumuRef]}
+                                targets={[
+                                    cArmAccumuRef,
+                                    cArmRoll180Pitch360AccumuRef,
+                                ]}
                             />
 
                             {/* -------------------------------------------------- */}
