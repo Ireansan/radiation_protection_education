@@ -356,7 +356,7 @@ function CArmExtra() {
                             {/* Avatar */}
                             <PivotControls
                                 matrix={new THREE.Matrix4().compose(
-                                    new THREE.Vector3(2, 0, 0),
+                                    new THREE.Vector3(1.5, 0, 0),
                                     new THREE.Quaternion().setFromEuler(
                                         new THREE.Euler(0, -Math.PI / 2, 0)
                                     ),
@@ -397,7 +397,7 @@ function CArmExtra() {
                             />
                             <group
                                 ref={yBotRef}
-                                position={[2, 0, 0]}
+                                position={[1.5, 0, 0]}
                                 rotation={[0, -Math.PI / 2, 0]}
                             >
                                 <CustomYBotIK />
@@ -492,7 +492,7 @@ function CArmExtra() {
                     <Loader />
                     <SceneConfigPanel activateStats={false} />
                     <DoseEquipmentsUI />
-                    <DosimeterUI />
+                    <DosimeterUI nPerPatient={5e5} />
                     <ExperimentCheckList />
                 </div>
             </div>

@@ -400,7 +400,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                                 <>
                                     <PivotControls
                                         matrix={new THREE.Matrix4().compose(
-                                            new THREE.Vector3(2, 0, 0),
+                                            new THREE.Vector3(1.5, 0, 0),
                                             new THREE.Quaternion().setFromEuler(
                                                 new THREE.Euler(
                                                     0,
@@ -447,7 +447,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                                     />
                                     <group
                                         ref={yBotRef}
-                                        position={[2, 0, 0]}
+                                        position={[1.5, 0, 0]}
                                         rotation={[0, -Math.PI / 2, 0]}
                                     >
                                         <CustomYBotIK />
@@ -562,7 +562,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                     {props.isExtra || props.isExperiment ? (
                         <>
                             <DoseEquipmentsUI />
-                            <DosimeterUI />
+                            <DosimeterUI nPerPatient={5e5} />
                         </>
                     ) : null}
                     {props.isExperiment ? (
