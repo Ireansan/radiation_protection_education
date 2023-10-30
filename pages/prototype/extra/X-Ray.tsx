@@ -317,7 +317,11 @@ function XRayExtra() {
                                 rotation={[0, -Math.PI / 2, 0]}
                             >
                                 <CustomYBotIK />
-                                <HandIKPivotControls object={yBotRef} />
+                                <HandIKPivotControls
+                                    object={yBotRef}
+                                    scale={35}
+                                    fixed={true}
+                                />
                             </group>
 
                             {/* -------------------------------------------------- */}
