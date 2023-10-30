@@ -28,6 +28,8 @@ export const HandIKPivotControls = React.forwardRef<
         object,
         children,
         scale = 0.75,
+        lineWidth = 2,
+        fixed = false,
         disableRotations = true,
         opacity = 1,
         ...props
@@ -78,6 +80,8 @@ export const HandIKPivotControls = React.forwardRef<
                 {/* Left Hand IK */}
                 <PivotControls
                     scale={scale}
+                    lineWidth={lineWidth}
+                    fixed={fixed}
                     disableRotations={disableRotations}
                     opacity={opacity}
                     matrix={new THREE.Matrix4().setPosition(0.3, 0.5, 0)}
@@ -109,6 +113,8 @@ export const HandIKPivotControls = React.forwardRef<
                 {/* Right Hand IK */}
                 <PivotControls
                     scale={scale}
+                    lineWidth={lineWidth}
+                    fixed={fixed}
                     disableRotations={disableRotations}
                     opacity={opacity}
                     matrix={new THREE.Matrix4()
