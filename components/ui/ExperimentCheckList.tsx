@@ -235,7 +235,7 @@ export function ExperimentCheckList({ ...props }: experimentCheckListProps) {
                             {clippingInvert.length}
                         </div>
                     </div>
-                    {/* Avatar */}
+                    {/* Player (Avatar) */}
                     <div className={`${styles.item}`}>
                         <div className={`${styles.check}`}>
                             {avatarResult ? (
@@ -253,7 +253,7 @@ export function ExperimentCheckList({ ...props }: experimentCheckListProps) {
                                 avatarResult && `${styles.done}`
                             }`}
                         >
-                            avatar &nbsp;
+                            player &nbsp;
                             {avatar.filter((v) => v === true).length}/
                             {avatar.length}
                         </div>
