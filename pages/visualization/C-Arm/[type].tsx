@@ -80,6 +80,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
             {
                 params: { type: "extra" },
             },
+            {
+                params: { type: "experiment" },
+            },
         ],
         fallback: false,
     };
@@ -94,6 +97,7 @@ export const getStaticProps: GetStaticProps = async ({
         props: {
             isBasic: pageType === "basic",
             isExtra: pageType === "extra",
+            isExperiment: pageType === "experiment",
         },
     };
 };
@@ -289,7 +293,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                             />
 
                             {/* Dosimeter */}
-                            {props.isExtra ? (
+                            {props.isExtra || props.isExperiment ? (
                                 <>
                                     <DosimeterControls
                                         ref={dosimeterRef}
@@ -392,7 +396,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                             </mesh>
 
                             {/* Avatar */}
-                            {props.isExtra ? (
+                            {props.isExtra || props.isExperiment ? (
                                 <>
                                     <PivotControls
                                         matrix={new THREE.Matrix4().compose(
@@ -466,7 +470,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                                 <ToggledDebug />
 
                                 {/* Dose Board */}
-                                {props.isExtra ? (
+                                {props.isExtra || props.isExperiment ? (
                                     <>
                                         <DoseBoardControls
                                             object={ref}
@@ -555,10 +559,14 @@ function VisualizationCArm({ ...props }: PageProps) {
                     </Canvas>
                     <Loader />
                     <SceneConfigPanel activateStats={false} />
-                    {props.isExtra ? (
+                    {props.isExtra || props.isExperiment ? (
                         <>
                             <DoseEquipmentsUI />
                             <DosimeterUI />
+                        </>
+                    ) : null}
+                    {props.isExperiment ? (
+                        <>
                             <ExperimentCheckList />
                         </>
                     ) : null}

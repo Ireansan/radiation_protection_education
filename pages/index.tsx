@@ -154,6 +154,12 @@ const Home: NextPage = () => {
                         </Link>
                     </div>
                     <div className={styles.card}>
+                        <Link href={"/visualization/X-Ray/experiment"}>
+                            <h2>X-ray (Exepriment)&rarr;</h2>
+                            <p>Static Path</p>
+                        </Link>
+                    </div>
+                    <div className={styles.card}>
                         <Link href={"/visualization/C-Arm/basic"}>
                             <h2>C-Arm (Basic)&rarr;</h2>
                             <p>Static Path</p>
@@ -162,6 +168,12 @@ const Home: NextPage = () => {
                     <div className={styles.card}>
                         <Link href={"/visualization/C-Arm/extra"}>
                             <h2>C-Arm (Extra)&rarr;</h2>
+                            <p>Static Path</p>
+                        </Link>
+                    </div>
+                    <div className={styles.card}>
+                        <Link href={"/visualization/C-Arm/experiment"}>
+                            <h2>C-Arm (Exepriment)&rarr;</h2>
                             <p>Static Path</p>
                         </Link>
                     </div>
