@@ -274,12 +274,58 @@ function XRayExtra() {
                             </mesh>
 
                             {/* Avatar */}
+                            <PivotControls
+                                matrix={new THREE.Matrix4().compose(
+                                    new THREE.Vector3(2, 0, 0),
+                                    new THREE.Quaternion().setFromEuler(
+                                        new THREE.Euler(0, -Math.PI / 2, 0)
+                                    ),
+                                    new THREE.Vector3(1, 1, 1)
+                                )}
+                                scale={70}
+                                fixed={true}
+                                activeAxes={[true, false, true]}
+                                visible={!viewing}
+                                onDrag={(l, deltaL, w, deltaW) => {
+                                    yBotRef.current.position.setFromMatrixPosition(
+                                        w
+                                    );
+                                    yBotRef.current.rotation.setFromRotationMatrix(
+                                        w
+                                    );
+                                }}
+                                onDragEnd={() => {
+                                    if (dosimeterRef.current) {
+                                        dosimeterRef.current.updateResults();
+                                    }
+
+                                    set((state) => ({
+                                        sceneProperties: {
+                                            ...state.sceneProperties,
+                                            executeLog: {
+                                                ...state.sceneProperties
+                                                    .executeLog,
+                                                avatar: {
+                                                    ...state.sceneProperties
+                                                        .executeLog.avatar,
+                                                    translate: true,
+                                                },
+                                            },
+                                        },
+                                    }));
+                                }}
+                            />
                             <group
                                 ref={yBotRef}
                                 position={[2, 0, 0]}
                                 rotation={[0, -Math.PI / 2, 0]}
                             >
                                 <CustomYBotIK />
+                                <HandIKPivotControls
+                                    object={yBotRef}
+                                    scale={35}
+                                    fixed={true}
+                                />
                             </group>
 
                             {/* -------------------------------------------------- */}
@@ -367,6 +413,7 @@ function XRayExtra() {
                     <SceneConfigPanel activateStats={false} />
                     <DoseEquipmentsUI />
                     <DosimeterUI />
+                    <ExperimentCheckList />
                 </div>
             </div>
         </>
