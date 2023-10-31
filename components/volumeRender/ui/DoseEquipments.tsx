@@ -23,7 +23,7 @@ export function DoseEquipmentsUI({ ...props }) {
     // Volume
     const [dosimeterConfig, setVolume] = useControls(() => ({
         Player: folder({
-            Equipment: folder({
+            Equipments: folder({
                 Goggle: {
                     value: false,
                     onChange: (e) => {
