@@ -427,6 +427,7 @@ export const VolumeParameterControls = React.forwardRef<
                     value: isothreshold,
                     min: 0,
                     max: 1,
+                    step: 0.001,
                     onChange: (e) => {
                         controls.isothreshold = e;
 
