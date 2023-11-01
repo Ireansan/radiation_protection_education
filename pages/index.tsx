@@ -179,6 +179,16 @@ const Home: NextPage = () => {
                     </div>
                 </div>
 
+                <h3>Material</h3>
+                <div className={styles.grid}>
+                    <div className={styles.card}>
+                        <Link href={"/material/MUI_Icons"}>
+                            <h2>MUI Icons&rarr;</h2>
+                            <p></p>
+                        </Link>
+                    </div>
+                </div>
+
                 <h2>References</h2>
                 <div className={styles.grid}>
                     <div className={styles.card}>
