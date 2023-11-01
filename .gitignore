@@ -67,6 +67,7 @@ firebase/functions/lib
 /components/skecths
 docs/**/*.mp4
 docs/**/*.mov
+docs/**/original/
 docs/reference
 docs/NOTE.md
 docs/Notes/*
