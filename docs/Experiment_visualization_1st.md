@@ -80,13 +80,13 @@
 （防護具は種類によらず，全て0.1倍としています）
 
 アイコンの種類は以下の通りになっています。
-| 種類              | アイコン                                                               |
-|:----------------:|:---------------------------------------------------------------------:|
-| 防護板            | ![](./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Shield.png)    |
-| ゴーグル          | ![](./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Goggle.png)    |
-| ネックガード      | ![](./img/manual/experiment/01/png/UI/DosimeterUI/Icon_NeckGuard.png) |
-| エプロン          | ![](./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Apron.png)     |
-| 手袋              | ![](./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Glove.png)     |
+| 種類              | アイコン                                                                                    |
+|:----------------:|:-----------------------------------------------------------------------------------------=:|
+| 防護板            | <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Shield.png" width="25%" />    |
+| ゴーグル          | <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Goggle.png" width="25%" />    |
+| ネックガード      | <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_NeckGuard.png" width="25%" /> |
+| エプロン          | <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Apron.png" width="25%" />     |
+| 手袋              | <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Glove.png" width="25%" />     |
 
 ---
 # 操作マニュアル
