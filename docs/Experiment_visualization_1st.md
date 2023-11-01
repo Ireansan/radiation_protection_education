@@ -9,7 +9,7 @@
     <img src=./img/manual/experiment/01/png/UI/ExperimentCheckList/before_after.png width="50%" alt="img/UI/ExperimentCheckList" />
 </div>
 
-### チェックリスト
+### チェックリスト 詳細
 注意：一度，操作を行うと「実施した」と記録されるため，全ての項目を同時に満たす必要はありません。
 
 #### equipments
@@ -78,6 +78,15 @@
 
 今回の教材内では，被ばく量に対して防護具で0.1倍，防護板で0.01倍になるようにしています。
 （防護具は種類によらず，全て0.1倍としています）
+
+アイコンの種類は以下の通りになっています。
+| 種類              | アイコン                                                               |
+|:----------------:|:---------------------------------------------------------------------:|
+| 防護板            | ![](./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Shield.png)    |
+| ゴーグル          | ![](./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Goggle.png)    |
+| ネックガード      | ![](./img/manual/experiment/01/png/UI/DosimeterUI/Icon_NeckGuard.png) |
+| エプロン          | ![](./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Apron.png)     |
+| 手袋              | ![](./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Glove.png)     |
 
 ---
 # 操作マニュアル
@@ -160,6 +169,8 @@ Cアームでは，`type`で患者に対して真上から照射した場合の`
 - `colormap`：データに適用されるカラーマップ
 - `renderstyle`：描画形式（`mip`（Maximuｍ Intensity Projection, 最大値投影），`iso`（Isosurface, 等値面）が選択できます）
 - `isothreshold`：描画される下限の閾値（`renderstyle`が`iso`の時のみ反映されます）
+
+カラーマップの種類は[こちらのリンク](https://github.com/yuki-koyama/tinycolormap)を参照してください。
 
 #### Clip
 X, Y, Z軸に垂直なクリッピング平面3つと，自由に位置・向きを変更できるクリッピング平面の4つについて，それぞれ有効にするか操作ができます。
