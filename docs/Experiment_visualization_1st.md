@@ -5,7 +5,7 @@
 全て実施すると下図の左側から右側のようになり，Google フォームのリンクがアクセス可能になるので，回答をお願いいたします。
 
 <div align="center">
-<img src=./img/manual/experiment/01/png/UI/ExperimentCheckList/before_after.png width="50%" alt="img/UI/ExperimentCheckList" />
+    <img src=./img/manual/experiment/01/png/UI/ExperimentCheckList/before_after.png width="50%" alt="img/UI/ExperimentCheckList" />
 </div>
 
 ### チェックリスト
@@ -83,13 +83,13 @@
 レントゲン室では，`curtain`でカーテンの有無を操作できます。
 
 <div align="center">
-<img src="./img/manual/experiment/01/png/All/Gimmick_X-Ray.png" width="50%" alt="img/All/Gimmick/X-Ray" />
+    <img src="./img/manual/experiment/01/png/All/Gimmick_X-Ray.png" width="50%" alt="img/All/Gimmick/X-Ray" />
 </div>
 
 Cアームでは，`type`で患者に対して真上から照射した場合の`type 1`と，横から照射した場合の`type 2`に切り替えられます。
 
 <div align="center">
-<img src="./img/manual/experiment/01/png/All/Gimmick_C-Arm.png" width="50%" alt="img/All/Gimmick/C-Arm" />
+    <img src="./img/manual/experiment/01/png/All/Gimmick_C-Arm.png" width="50%" alt="img/All/Gimmick/C-Arm" />
 </div>
 
 #### Player
@@ -98,7 +98,7 @@ Cアームでは，`type`で患者に対して真上から照射した場合の`
 放射線防護具の装備の有無を選択できます。
 
 <div align="center">
-<img src="./img/manual/experiment/01/png/leva/Player/Equipments.png" width="50%" alt="img/leva/Player/Equipments" />
+    <img src="./img/manual/experiment/01/png/leva/Player/Equipments.png" width="25%" alt="img/leva/Player/Equipments" />
 </div>
 
 装備を有効にすることで，線量計UIに種類に応じたアイコンが表示され，被ばく量が変化します。
@@ -107,7 +107,7 @@ Cアームでは，`type`で患者に対して真上から照射した場合の`
 線量計UIの表示と，被ばく量の計算に関係する値の設定ができます。
 
 <div align="center">
-<img src="./img/manual/experiment/01/png/leva/Player/Dosimeter_Config.png" width="50%" alt="img/leva/Player/Dosimeter_Config" />
+    <img src="./img/manual/experiment/01/png/leva/Player/Dosimeter_Config.png" width="25%" alt="img/leva/Player/Dosimeter_Config" />
 </div>
 
 - `N (/patient)`：患者一人に対して行う照射回数
@@ -122,7 +122,7 @@ Cアームでは，`type`で患者に対して真上から照射した場合の`
 時間経過データ(`time lapse`)と累積データ(`accumulate`)の2つのデータ表示形式を設定できます。
 
 <div align="center">
-<img src="./img/manual/experiment/01/png/leva/Data/mode.png" width="50%" alt="img/leva/Data/mode" />
+    <img src="./img/manual/experiment/01/png/leva/Data/mode.png" width="25%" alt="img/leva/Data/mode" />
 </div>
 
 
@@ -130,7 +130,7 @@ Cアームでは，`type`で患者に対して真上から照射した場合の`
 データ表示形式が`time lapse`の際，アニメーションを操作できます。
 
 <div align="center">
-<img src="./img/manual/experiment/01/png/leva/Data/Animation.png" width="50%" alt="img/leva/Data/Animation" />
+    <img src="./img/manual/experiment/01/png/leva/Data/Animation.png" width="25%" alt="img/leva/Data/Animation" />
 </div>
 
 
@@ -143,7 +143,7 @@ Cアームでは，`type`で患者に対して真上から照射した場合の`
 線量分布データの描画に関係する値を設定できます。
 
 <div align="center">
-<img src="./img/manual/experiment/01/png/leva/Data/Parameter.png" width="50%" alt="img/leva/Data/Parameter" />
+    <img src="./img/manual/experiment/01/png/leva/Data/Parameter.png" width="25%" alt="img/leva/Data/Parameter" />
 </div>
 
 
@@ -157,7 +157,7 @@ X, Y, Z軸に垂直なクリッピング平面3つと，自由に位置・向き
 また，それぞれのクリッピング平面の向きを反転させることもできます。
 
 <div align="center">
-<img src="./img/manual/experiment/01/png/leva/Data/Clip.png" width="50%" alt="img/leva/Data/Clip" />
+    <img src="./img/manual/experiment/01/png/leva/Data/Clip.png" width="25%" alt="img/leva/Data/Clip" />
 </div>
 
 
@@ -176,14 +176,14 @@ X, Y, Z軸に垂直なクリッピング平面3つと，自由に位置・向き
 プレイヤーの位置，手の位置を移動させることで，被ばく量が変化します。
 
 <div align="center">
-<img src="./img/manual/experiment/01/gif/3D/Player/Move_and_HandIK.gif" width="50%" alt="gif/Player" />
+    <img src="./img/manual/experiment/01/gif/3D/Player/Move_and_HandIK.gif" width="50%" alt="gif/Player" />
 </div>
 
 #### Shield
 防護板を線量分布内に移動させることで，線量分布に影響が反映されます。
 
 <div align="center">
-<img src="./img/manual/experiment/01/gif/3D/Shield/Move.gif" width="50%" alt="gif/Shield" />
+    <img src="./img/manual/experiment/01/gif/3D/Shield/Move.gif" width="50%" alt="gif/Shield" />
 </div>
 
 
@@ -194,14 +194,14 @@ X, Y, Z軸に垂直なクリッピング平面3つと，自由に位置・向き
 クリッピングの断面となる部分には赤い枠が表示されます。
 
 <div align="center">
-<img src="./img/manual/experiment/01/gif/3D/Clip/FreeAxis.gif" width="50%" alt="gif/Clip/FreeAxis" />
+    <img src="./img/manual/experiment/01/gif/3D/Clip/FreeAxis.gif" width="50%" alt="gif/Clip/FreeAxis" />
 </div>
 
 有効にした全ての平面に対してクリッピングが成り立つ部分がクリッピングされます。
 例えば，XとZを有効にした場合，下図のような結果になります。
 
 <div align="center">
-<img src="./img/manual/experiment/01/png/3D/Clip/X_and_Z.png" width="50%" alt="img/3D/Clip" />
+    <img src="./img/manual/experiment/01/png/3D/Clip/X_and_Z.png" width="50%" alt="img/3D/Clip" />
 </div>
 
 
