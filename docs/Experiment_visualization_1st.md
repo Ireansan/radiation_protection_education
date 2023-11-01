@@ -80,13 +80,52 @@
 （防護具は種類によらず，全て0.1倍としています）
 
 アイコンの種類は以下の通りになっています。
-| 種類              | アイコン                                                                                    |
-|:----------------:|:-----------------------------------------------------------------------------------------=:|
-| 防護板            | <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Shield.png" width="25%" />    |
-| ゴーグル          | <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Goggle.png" width="25%" />    |
-| ネックガード      | <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_NeckGuard.png" width="25%" /> |
-| エプロン          | <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Apron.png" width="25%" />     |
-| 手袋              | <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Glove.png" width="25%" />     |
+<table>
+    <tr>
+        <th>種類</th>
+        <th>アイコン</th>
+    </tr>
+    <tr>
+        <td>防護板</td>
+        <td>
+            <div align="center">
+                <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Shield.png" width="25%" />
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>ゴーグル</td>
+        <td>
+            <div align="center">
+                <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Goggle.png" width="25%" />
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>ネックガード</td>
+        <td>
+            <div align="center">
+                <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_NeckGuard.png" width="25%" />
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>エプロン</td>
+        <td>
+            <div align="center">
+                <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Apron.png" width="25%" />
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>手袋</td>
+        <td>
+            <div align="center">
+                <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Glove.png" width="25%" />
+            </div>
+        </td>
+    </tr>
+</table>
 
 ---
 # 操作マニュアル
