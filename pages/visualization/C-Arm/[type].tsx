@@ -93,20 +93,28 @@ export const getStaticProps: GetStaticProps = async ({
 }: GetStaticPropsContext) => {
     const pageType = params!.type;
 
+    const isBasic = pageType === "basic";
+    const isExtra = pageType === "extra";
+    const isExperiment = pageType === "experiment";
+
     return {
         props: {
-            isBasic: pageType === "basic",
-            isExtra: pageType === "extra",
-            isExperiment: pageType === "experiment",
+            availables: {
+                player: isExtra || isExperiment,
+                shield: isExtra || isExperiment,
+                dosimeter: isExtra || isExperiment,
+                experimentUI: isExperiment,
+            },
         },
     };
 };
 
 function VisualizationCArm({ ...props }: PageProps) {
-    const [set, debug, viewing] = useStore((state) => [
+    const [set, debug, viewing, objectVisibles] = useStore((state) => [
         state.set,
         state.debug,
         state.viewing,
+        state.sceneProperties.objectVisibles,
     ]);
 
     const ref = useRef<DoseGroup>(null);
@@ -205,13 +213,14 @@ function VisualizationCArm({ ...props }: PageProps) {
                     {/* Three.js Canvas */}
                     <Canvas
                         orthographic
-                        camera={{ position: [4, 8, 4], zoom: 50 }}
+                        camera={{ position: [4, 8, 4], zoom: 75 }}
                     >
                         <Suspense fallback={null}>
                             {/* -------------------------------------------------- */}
                             {/* Volume Object */}
                             <doseGroup
                                 ref={ref}
+                                visible={objectVisibles.dose}
                                 position={
                                     VOLUMEDATA.CArm_Configure.volume.position
                                 }
@@ -293,7 +302,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                             />
 
                             {/* Dosimeter */}
-                            {props.isExtra || props.isExperiment ? (
+                            {props.availables.dosimeter ? (
                                 <>
                                     <DosimeterControls
                                         ref={dosimeterRef}
@@ -340,55 +349,57 @@ function VisualizationCArm({ ...props }: PageProps) {
 
                             {/* -------------------------------------------------- */}
                             {/* Three.js Object */}
-                            {/* Patient */}
-                            <group
-                                ref={patientRef}
-                                position={
-                                    VOLUMEDATA.CArm_Configure.object3d.patient
-                                        .position
-                                }
-                                rotation={
-                                    VOLUMEDATA.CArm_Configure.object3d.patient
-                                        .rotation
-                                }
-                                scale={
-                                    VOLUMEDATA.CArm_Configure.object3d.patient
-                                        .scale
-                                }
-                            >
-                                <MODELS.XRay_Bed />
-                                <MODELS.XRay_Patient />
-                            </group>
-                            {/* C Arm */}
-                            <group
-                                ref={cArmModelRef}
-                                position={
-                                    VOLUMEDATA.CArm_Configure.object3d.model
-                                        .position
-                                }
-                                rotation={
-                                    VOLUMEDATA.CArm_Configure.object3d.model
-                                        .rotation
-                                }
-                                scale={
-                                    VOLUMEDATA.CArm_Configure.object3d.model
-                                        .scale
-                                }
-                            >
-                                <MODELS.CArmModel
-                                    roll={
-                                        VOLUMEDATA.CArm_Configure.object3d.model
-                                            .roll
+                            <group visible={objectVisibles.object3d}>
+                                {/* Patient */}
+                                <group
+                                    ref={patientRef}
+                                    position={
+                                        VOLUMEDATA.CArm_Configure.object3d
+                                            .patient.position
                                     }
-                                    pitch={
-                                        VOLUMEDATA.CArm_Configure.object3d.model
-                                            .pitch
+                                    rotation={
+                                        VOLUMEDATA.CArm_Configure.object3d
+                                            .patient.rotation
                                     }
-                                    height={
-                                        VOLUMEDATA.CArm_Configure.object3d.model
-                                            .height
+                                    scale={
+                                        VOLUMEDATA.CArm_Configure.object3d
+                                            .patient.scale
                                     }
-                                />
+                                >
+                                    <MODELS.XRay_Bed />
+                                    <MODELS.XRay_Patient />
+                                </group>
+                                {/* C Arm */}
+                                <group
+                                    ref={cArmModelRef}
+                                    position={
+                                        VOLUMEDATA.CArm_Configure.object3d.model
+                                            .position
+                                    }
+                                    rotation={
+                                        VOLUMEDATA.CArm_Configure.object3d.model
+                                            .rotation
+                                    }
+                                    scale={
+                                        VOLUMEDATA.CArm_Configure.object3d.model
+                                            .scale
+                                    }
+                                >
+                                    <MODELS.CArmModel
+                                        roll={
+                                            VOLUMEDATA.CArm_Configure.object3d
+                                                .model.roll
+                                        }
+                                        pitch={
+                                            VOLUMEDATA.CArm_Configure.object3d
+                                                .model.pitch
+                                        }
+                                        height={
+                                            VOLUMEDATA.CArm_Configure.object3d
+                                                .model.height
+                                        }
+                                    />
+                                </group>
                             </group>
 
                             <mesh position={[0, 1, 0]} visible={debug}>
@@ -396,7 +407,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                             </mesh>
 
                             {/* Avatar */}
-                            {props.isExtra || props.isExperiment ? (
+                            {props.availables.player ? (
                                 <>
                                     <PivotControls
                                         matrix={new THREE.Matrix4().compose(
@@ -413,7 +424,11 @@ function VisualizationCArm({ ...props }: PageProps) {
                                         scale={70}
                                         fixed={true}
                                         activeAxes={[true, false, true]}
-                                        visible={!viewing}
+                                        visible={
+                                            !viewing &&
+                                            objectVisibles.player &&
+                                            objectVisibles.playerPivot
+                                        }
                                         onDrag={(l, deltaL, w, deltaW) => {
                                             yBotRef.current.position.setFromMatrixPosition(
                                                 w
@@ -447,6 +462,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                                     />
                                     <group
                                         ref={yBotRef}
+                                        visible={objectVisibles.player}
                                         position={[1.5, 0, 0]}
                                         rotation={[0, -Math.PI / 2, 0]}
                                     >
@@ -455,6 +471,9 @@ function VisualizationCArm({ ...props }: PageProps) {
                                             object={yBotRef}
                                             scale={35}
                                             fixed={true}
+                                            visible={
+                                                objectVisibles.playerHandPivot
+                                            }
                                         />
                                     </group>
                                 </>
@@ -470,7 +489,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                                 <ToggledDebug />
 
                                 {/* Dose Board */}
-                                {props.isExtra || props.isExperiment ? (
+                                {props.availables.shield ? (
                                     <>
                                         <DoseBoardControls
                                             object={ref}
@@ -500,8 +519,15 @@ function VisualizationCArm({ ...props }: PageProps) {
                                             fixed={true}
                                             offset={[0, 0, 0.1]}
                                             opacity={0.75}
+                                            visible={
+                                                objectVisibles.shield &&
+                                                objectVisibles.shieldPivot
+                                            }
                                         >
-                                            <mesh position={[0, 0, 0]}>
+                                            <mesh
+                                                visible={objectVisibles.shield}
+                                                position={[0, 0, 0]}
+                                            >
                                                 <boxBufferGeometry
                                                     args={[
                                                         ...Board_Configure.size.toArray(),
@@ -559,13 +585,15 @@ function VisualizationCArm({ ...props }: PageProps) {
                     </Canvas>
                     <Loader />
                     <SceneConfigPanel activateStats={false} />
-                    {props.isExtra || props.isExperiment ? (
+                    {objectVisibles.dosimeterUI &&
+                    props.availables.dosimeter ? (
                         <>
                             <DoseEquipmentsUI />
                             <DosimeterUI nPerPatient={5e5} />
                         </>
                     ) : null}
-                    {props.isExperiment ? (
+                    {objectVisibles.experimentUI &&
+                    props.availables.experimentUI ? (
                         <>
                             <ExperimentCheckList />
                         </>
