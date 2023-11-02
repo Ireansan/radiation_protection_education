@@ -95,29 +95,22 @@ export const getStaticProps: GetStaticProps = async ({
 
     return {
         props: {
-            visibles: {
-                dose: true,
-                doseEnviroment: true,
+            availables: {
                 player: isExtra || isExperiment,
-                playerPivot: isExtra || isExperiment,
-                playerHandIK: isExtra || isExperiment,
                 shield: isExtra || isExperiment,
-                shieldPivot: isExtra || isExperiment,
-                dosimeterUI: isExtra || isExperiment,
-                otherUI: isExperiment, // FIXME:
+                dosimeter: isExtra || isExperiment,
+                experimentUI: isExperiment,
             },
-            isBasic: pageType === "basic",
-            isExtra: pageType === "extra",
-            isExperiment: pageType === "experiment",
         },
     };
 };
 
 function VisualizationXRay({ ...props }: PageProps) {
-    const [set, debug, viewing] = useStore((state) => [
+    const [set, debug, viewing, objectVisibles] = useStore((state) => [
         state.set,
         state.debug,
         state.viewing,
+        state.sceneProperties.objectVisibles,
     ]);
 
     const ref = useRef<DoseGroup>(null!);
@@ -137,7 +130,7 @@ function VisualizationXRay({ ...props }: PageProps) {
 
     const ToggledDebug = useToggle(Debug, "debug");
 
-    const [sceneConfig, setSceneConfig] = useControls(() => ({
+    const [,] = useControls(() => ({
         Scene: folder({
             Gimmick: folder({
                 curtain: {
@@ -162,47 +155,6 @@ function VisualizationXRay({ ...props }: PageProps) {
                     },
                 },
             }),
-            Config: folder(
-                {
-                    Visibles: folder({
-                        dose: {
-                            value: props.visibles.dose as boolean,
-                        },
-                        doseEnviroment: {
-                            value: props.visibles.doseEnviroment as boolean,
-                        },
-                        Player: folder({
-                            player: {
-                                value: props.visibles.player as boolean,
-                            },
-                            playerPivot: {
-                                value: props.visibles.playerPivot as boolean,
-                                label: "Pivot",
-                            },
-                            playerHandIK: {
-                                value: props.visibles.playerHandIK as boolean,
-                                label: "HandIK",
-                            },
-                        }),
-                        Shield: folder({
-                            shield: { value: props.visibles.shield as boolean },
-                            shieldPivot: {
-                                value: props.visibles.shieldPivot as boolean,
-                                label: "Pivot",
-                            },
-                        }),
-                        UI: folder({
-                            dosimeterUI: {
-                                value: props.visibles.dosimeterUI as boolean,
-                            },
-                            otherUI: {
-                                value: props.visibles.otherUI as boolean,
-                            },
-                        }),
-                    }),
-                },
-                { collapsed: true }
-            ),
         }),
     }));
 
@@ -227,7 +179,7 @@ function VisualizationXRay({ ...props }: PageProps) {
 
                             <doseGroup
                                 ref={ref}
-                                visible={sceneConfig.dose}
+                                visible={objectVisibles.dose}
                                 position={
                                     VOLUMEDATA.XRay_nocurtain_Configure.volume
                                         .position
@@ -306,49 +258,55 @@ function VisualizationXRay({ ...props }: PageProps) {
                             />
 
                             {/* Dosimeter */}
-
-                            <DosimeterControls
-                                ref={dosimeterRef}
-                                object={yBotRef}
-                                names={[
-                                    {
-                                        name: "mixamorigNeck",
-                                        displayName: "Neck",
-                                        category: "neck",
-                                        coefficient: 0.1,
-                                    },
-                                    {
-                                        name: "mixamorigLeftEye",
-                                        displayName: "Left Eye",
-                                        category: "goggle",
-                                        coefficient: 0.1,
-                                    },
-                                    {
-                                        name: "mixamorigRightEye",
-                                        displayName: "Right Eye",
-                                        category: "goggle",
-                                        coefficient: 0.1,
-                                    },
-                                    {
-                                        name: "mixamorigLeftHand",
-                                        displayName: "Left Hand",
-                                        category: "glove",
-                                        coefficient: 0.1,
-                                    },
-                                    {
-                                        name: "mixamorigRightHand",
-                                        displayName: "Right Hand",
-                                        category: "glove",
-                                        coefficient: 0.1,
-                                    },
-                                ]}
-                                targets={[nocurtainAccumuRef, curtainAccumuRef]}
-                            />
+                            {props.availables.dosimeter ? (
+                                <>
+                                    <DosimeterControls
+                                        ref={dosimeterRef}
+                                        object={yBotRef}
+                                        names={[
+                                            {
+                                                name: "mixamorigNeck",
+                                                displayName: "Neck",
+                                                category: "neck",
+                                                coefficient: 0.1,
+                                            },
+                                            {
+                                                name: "mixamorigLeftEye",
+                                                displayName: "Left Eye",
+                                                category: "goggle",
+                                                coefficient: 0.1,
+                                            },
+                                            {
+                                                name: "mixamorigRightEye",
+                                                displayName: "Right Eye",
+                                                category: "goggle",
+                                                coefficient: 0.1,
+                                            },
+                                            {
+                                                name: "mixamorigLeftHand",
+                                                displayName: "Left Hand",
+                                                category: "glove",
+                                                coefficient: 0.1,
+                                            },
+                                            {
+                                                name: "mixamorigRightHand",
+                                                displayName: "Right Hand",
+                                                category: "glove",
+                                                coefficient: 0.1,
+                                            },
+                                        ]}
+                                        targets={[
+                                            nocurtainAccumuRef,
+                                            curtainAccumuRef,
+                                        ]}
+                                    />
+                                </>
+                            ) : null}
 
                             {/* -------------------------------------------------- */}
                             {/* Three.js Object */}
                             <group
-                                visible={sceneConfig.doseEnviroment}
+                                visible={objectVisibles.object3d}
                                 position={
                                     ENVIROMENT.XRay_Configure.object3d.position
                                 }
@@ -371,66 +329,77 @@ function VisualizationXRay({ ...props }: PageProps) {
                             </mesh>
 
                             {/* Avatar */}
+                            {props.availables.player ? (
+                                <>
+                                    <PivotControls
+                                        matrix={new THREE.Matrix4().compose(
+                                            new THREE.Vector3(2, 0, 0),
+                                            new THREE.Quaternion().setFromEuler(
+                                                new THREE.Euler(
+                                                    0,
+                                                    -Math.PI / 2,
+                                                    0
+                                                )
+                                            ),
+                                            new THREE.Vector3(1, 1, 1)
+                                        )}
+                                        scale={70}
+                                        fixed={true}
+                                        activeAxes={[true, false, true]}
+                                        visible={
+                                            !viewing &&
+                                            objectVisibles.player &&
+                                            objectVisibles.playerPivot
+                                        }
+                                        onDrag={(l, deltaL, w, deltaW) => {
+                                            yBotRef.current.position.setFromMatrixPosition(
+                                                w
+                                            );
+                                            yBotRef.current.rotation.setFromRotationMatrix(
+                                                w
+                                            );
+                                        }}
+                                        onDragEnd={() => {
+                                            if (dosimeterRef.current) {
+                                                dosimeterRef.current.updateResults();
+                                            }
 
-                            <PivotControls
-                                matrix={new THREE.Matrix4().compose(
-                                    new THREE.Vector3(2, 0, 0),
-                                    new THREE.Quaternion().setFromEuler(
-                                        new THREE.Euler(0, -Math.PI / 2, 0)
-                                    ),
-                                    new THREE.Vector3(1, 1, 1)
-                                )}
-                                scale={70}
-                                fixed={true}
-                                activeAxes={[true, false, true]}
-                                visible={
-                                    !viewing &&
-                                    sceneConfig.player &&
-                                    sceneConfig.playerPivot
-                                }
-                                onDrag={(l, deltaL, w, deltaW) => {
-                                    yBotRef.current.position.setFromMatrixPosition(
-                                        w
-                                    );
-                                    yBotRef.current.rotation.setFromRotationMatrix(
-                                        w
-                                    );
-                                }}
-                                onDragEnd={() => {
-                                    if (dosimeterRef.current) {
-                                        dosimeterRef.current.updateResults();
-                                    }
-
-                                    set((state) => ({
-                                        sceneProperties: {
-                                            ...state.sceneProperties,
-                                            executeLog: {
-                                                ...state.sceneProperties
-                                                    .executeLog,
-                                                avatar: {
-                                                    ...state.sceneProperties
-                                                        .executeLog.avatar,
-                                                    translate: true,
+                                            set((state) => ({
+                                                sceneProperties: {
+                                                    ...state.sceneProperties,
+                                                    executeLog: {
+                                                        ...state.sceneProperties
+                                                            .executeLog,
+                                                        avatar: {
+                                                            ...state
+                                                                .sceneProperties
+                                                                .executeLog
+                                                                .avatar,
+                                                            translate: true,
+                                                        },
+                                                    },
                                                 },
-                                            },
-                                        },
-                                    }));
-                                }}
-                            />
-                            <group
-                                ref={yBotRef}
-                                visible={sceneConfig.player}
-                                position={[2, 0, 0]}
-                                rotation={[0, -Math.PI / 2, 0]}
-                            >
-                                <CustomYBotIK />
-                                <HandIKPivotControls
-                                    object={yBotRef}
-                                    scale={35}
-                                    fixed={true}
-                                    visible={sceneConfig.playerHandIK}
-                                />
-                            </group>
+                                            }));
+                                        }}
+                                    />
+                                    <group
+                                        ref={yBotRef}
+                                        visible={objectVisibles.player}
+                                        position={[2, 0, 0]}
+                                        rotation={[0, -Math.PI / 2, 0]}
+                                    >
+                                        <CustomYBotIK />
+                                        <HandIKPivotControls
+                                            object={yBotRef}
+                                            scale={35}
+                                            fixed={true}
+                                            visible={
+                                                objectVisibles.playerHandPivot
+                                            }
+                                        />
+                                    </group>
+                                </>
+                            ) : null}
 
                             {/* -------------------------------------------------- */}
                             {/* Three.js Controls */}
@@ -442,46 +411,62 @@ function VisualizationXRay({ ...props }: PageProps) {
                                 <ToggledDebug />
 
                                 {/* Dose Board */}
-
-                                <DoseBoardControls
-                                    object={ref}
-                                    origin={new THREE.Vector3(0, 1, 0)}
-                                    areaSize={
-                                        VOLUMEDATA.XRay_curtain_Configure.volume
-                                            .areaSize
-                                    }
-                                    width={Board_Configure.size.x}
-                                    height={Board_Configure.size.y}
-                                    position={
-                                        new THREE.Vector3(2.5, 1.25, -0.5)
-                                    }
-                                    rotation={
-                                        new THREE.Euler(0, Math.PI / 2, 0)
-                                    }
-                                    planeSize={Board_Configure.size.y}
-                                    scale={50}
-                                    fixed={true}
-                                    offset={[0, 0, 0.1]}
-                                    opacity={0.75}
-                                    visible={
-                                        sceneConfig.shield &&
-                                        sceneConfig.shieldPivot
-                                    }
-                                >
-                                    <mesh
-                                        visible={sceneConfig.shield}
-                                        position={[0, 0, 0]}
-                                    >
-                                        <boxBufferGeometry
-                                            args={[
-                                                ...Board_Configure.size.toArray(),
-                                            ]}
-                                        />
-                                        <meshBasicMaterial
-                                            color={new THREE.Color(0xb39a7b)}
-                                        />
-                                    </mesh>
-                                </DoseBoardControls>
+                                {props.availables.shield ? (
+                                    <>
+                                        <DoseBoardControls
+                                            object={ref}
+                                            origin={new THREE.Vector3(0, 1, 0)}
+                                            areaSize={
+                                                VOLUMEDATA
+                                                    .XRay_curtain_Configure
+                                                    .volume.areaSize
+                                            }
+                                            width={Board_Configure.size.x}
+                                            height={Board_Configure.size.y}
+                                            position={
+                                                new THREE.Vector3(
+                                                    2.5,
+                                                    1.25,
+                                                    -0.5
+                                                )
+                                            }
+                                            rotation={
+                                                new THREE.Euler(
+                                                    0,
+                                                    Math.PI / 2,
+                                                    0
+                                                )
+                                            }
+                                            planeSize={Board_Configure.size.y}
+                                            scale={50}
+                                            fixed={true}
+                                            offset={[0, 0, 0.1]}
+                                            opacity={0.75}
+                                            visible={
+                                                objectVisibles.shield &&
+                                                objectVisibles.shieldPivot
+                                            }
+                                        >
+                                            <mesh
+                                                visible={objectVisibles.shield}
+                                                position={[0, 0, 0]}
+                                            >
+                                                <boxBufferGeometry
+                                                    args={[
+                                                        ...Board_Configure.size.toArray(),
+                                                    ]}
+                                                />
+                                                <meshBasicMaterial
+                                                    color={
+                                                        new THREE.Color(
+                                                            0xb39a7b
+                                                        )
+                                                    }
+                                                />
+                                            </mesh>
+                                        </DoseBoardControls>
+                                    </>
+                                ) : null}
                             </Physics>
 
                             {/* -------------------------------------------------- */}
@@ -523,13 +508,15 @@ function VisualizationXRay({ ...props }: PageProps) {
                     </Canvas>
                     <Loader />
                     <SceneConfigPanel activateStats={false} />
-                    {sceneConfig.dosimeterUI ? (
+                    {objectVisibles.dosimeterUI &&
+                    props.availables.dosimeter ? (
                         <>
                             <DoseEquipmentsUI />
                             <DosimeterUI />
                         </>
                     ) : null}
-                    {sceneConfig.otherUI ? (
+                    {objectVisibles.experimentUI &&
+                    props.availables.experimentUI ? (
                         <>
                             <ExperimentCheckList />
                         </>
