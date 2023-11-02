@@ -61,6 +61,37 @@ export const playerConfig = {
     jointMatcap: matcapList[0],
 };
 
+const equipments = {
+    goggle: false,
+    neck: false,
+    apron: false,
+    glove: false,
+};
+export type Equipments = typeof equipments;
+
+const playerProperties = {
+    position: new THREE.Vector3(),
+    quaternion: new THREE.Quaternion(),
+    equipments: equipments as Equipments,
+};
+
+const onlinePlayers = {
+    player1: undefined,
+};
+
+const objectVisibles = {
+    dose: true,
+    object3d: true,
+    player: true,
+    playerPivot: true,
+    playerHandPivot: true,
+    shield: true,
+    shieldPivot: true,
+    dosimeterUI: true,
+    experimentUI: true,
+};
+export type ObjectVisibles = typeof objectVisibles;
+
 const executeLog = {
     animation: {
         timeLapse: false,
@@ -112,26 +143,9 @@ const executeLog = {
 };
 export type ExecuteLog = typeof executeLog;
 
-const equipments = {
-    goggle: false,
-    neck: false,
-    apron: false,
-    glove: false,
-};
-export type Equipments = typeof equipments;
-
-const playerProperties = {
-    position: new THREE.Vector3(),
-    quaternion: new THREE.Quaternion(),
-    equipments: equipments as Equipments,
-};
-
-const onlinePlayers = {
-    player1: undefined,
-};
-
 const sceneProperties = {
     dosimeterResults: [] as ResultsByName[],
+    objectVisibles: objectVisibles as ObjectVisibles,
     executeLog: executeLog as ExecuteLog,
 };
 
