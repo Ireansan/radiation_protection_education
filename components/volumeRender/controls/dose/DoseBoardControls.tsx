@@ -21,7 +21,6 @@ export type DoseBoardControlsProps = {
     height?: number;
     position?: THREE.Vector3;
     rotation?: THREE.Euler;
-    folderName?: string;
     planeSize?: number;
     planeColor?: THREE.Color;
     scale?: number;
@@ -31,6 +30,7 @@ export type DoseBoardControlsProps = {
     activeAxes?: [boolean, boolean, boolean];
     axisColors?: [string | number, string | number, string | number];
     opacity?: number;
+    visible?: boolean;
 };
 /**
  * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
@@ -48,7 +48,6 @@ export const DoseBoardControls = React.forwardRef<
         height = 1,
         position = new THREE.Vector3(),
         rotation = new THREE.Euler(),
-        folderName = "board",
         planeSize = 2,
         planeColor = new THREE.Color(0xffff00),
         scale = 1,
@@ -58,6 +57,7 @@ export const DoseBoardControls = React.forwardRef<
         activeAxes = [true, true, true],
         axisColors = ["#ff2060", "#20df80", "#2080ff"],
         opacity = 0.5,
+        visible = true,
         ...props
     },
     ref
@@ -351,7 +351,7 @@ export const DoseBoardControls = React.forwardRef<
                 activeAxes={activeAxes}
                 axisColors={axisColors}
                 opacity={opacity}
-                visible={!viewing}
+                visible={visible && !viewing}
                 onDrag={(l, deltaL, w, deltaW) => {
                     onDrag(l, deltaL, w, deltaW);
                 }}
