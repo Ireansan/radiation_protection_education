@@ -34,6 +34,7 @@ export function SceneConfigPanel({
                     },
                 },
             }),
+            // FIXME: change folder name, "Config" to "Debug"
             Config: folder(
                 {
                     debug: {
