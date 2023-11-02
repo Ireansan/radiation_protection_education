@@ -138,14 +138,12 @@
 
 レントゲン室では，`curtain`でカーテンの有無を操作できます。
 
-<!-- FIXME: -->
 <div align="center">
     <img src="./img/manual/experiment/01/png/All/Gimmick_X-Ray.png" width="50%" alt="img/All/Gimmick/X-Ray" />
 </div>
 
 Cアームでは，`type`で患者に対して真上から照射した場合の`type 1`と，横から照射した場合の`type 2`に切り替えられます。
 
-<!-- FIXME: -->
 <div align="center">
     <img src="./img/manual/experiment/01/png/All/Gimmick_C-Arm.png" width="50%" alt="img/All/Gimmick/C-Arm" />
 </div>
@@ -234,15 +232,13 @@ X, Y, Z軸に垂直なクリッピング平面3つと，自由に位置・向き
 ### Player
 プレイヤーの位置，手の位置を移動させることで，被ばく量が変化します。
 
-<!-- FIXME: -->
 <div align="center">
-    <img src="./img/manual/experiment/01/gif/3D/Player/Move_and_HandIK.gif" width="50%" alt="gif/Player" />
+    <img src="./img/manual/experiment/01/gif/3D/Player/Move_and_HandIK.gif" alt="gif/Player" />
 </div>
 
 ### Shield
 防護板を線量分布内に移動させることで，線量分布に影響が反映されます。
 
-<!-- FIXME: -->
 <div align="center">
     <img src="./img/manual/experiment/01/gif/3D/Shield/Move.gif" width="50%" alt="gif/Shield" />
 </div>
@@ -254,7 +250,6 @@ X, Y, Z軸に垂直なクリッピング平面3つと，自由に位置・向き
 操作パネル内の`Clip`で有効にしたクリッピング平面が3D空間内に表示され，操作が可能になります。
 クリッピングの断面となる部分には赤い枠が表示されます。
 
-<!-- FIXME: -->
 <div align="center">
     <img src="./img/manual/experiment/01/gif/3D/Clip/FreeAxis.gif" width="50%" alt="gif/Clip/FreeAxis" />
 </div>
@@ -262,7 +257,6 @@ X, Y, Z軸に垂直なクリッピング平面3つと，自由に位置・向き
 有効にした全ての平面に対してクリッピングが成り立つ部分がクリッピングされます。
 例えば，XとZを有効にした場合，下図のような結果になります。
 
-<!-- FIXME: -->
 <div align="center">
     <img src="./img/manual/experiment/01/png/3D/Clip/X_and_Z.png" width="50%" alt="img/3D/Clip" />
 </div>
