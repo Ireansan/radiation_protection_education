@@ -19,6 +19,7 @@ type HandIKPivotControlsProps = {
     activeAxes?: [boolean, boolean, boolean];
     disableRotations?: boolean;
     opacity?: number;
+    visible?: boolean;
 };
 export const HandIKPivotControls = React.forwardRef<
     IKControlsImpl,
@@ -32,6 +33,7 @@ export const HandIKPivotControls = React.forwardRef<
         fixed = false,
         disableRotations = true,
         opacity = 1,
+        visible = true,
         ...props
     },
     ref
@@ -76,7 +78,7 @@ export const HandIKPivotControls = React.forwardRef<
             <primitive ref={ref} object={controls} />
             <group ref={group}>{children}</group>
 
-            <group ref={pivotGroupRef} visible={!viewing}>
+            <group ref={pivotGroupRef} visible={!viewing && visible}>
                 {/* Left Hand IK */}
                 <PivotControls
                     scale={scale}
