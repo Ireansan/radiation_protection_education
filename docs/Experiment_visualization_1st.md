@@ -233,7 +233,7 @@ X, Y, Z軸に垂直なクリッピング平面3つと，自由に位置・向き
 プレイヤーの位置，手の位置を移動させることで，被ばく量が変化します。
 
 <div align="center">
-    <img src="./img/manual/experiment/01/gif/3D/Player/Move_and_HandIK.gif" alt="gif/Player" />
+    <img src="./img/manual/experiment/01/gif/3D/Player/Move_and_HandIK.gif" width="50%" alt="gif/Player" />
 </div>
 
 ### Shield
