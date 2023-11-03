@@ -3,6 +3,10 @@
 ## 実験内容
 レントゲン室，Cアームの少なくとも一つのページで，可視化教材としてチェックリストの内容を全て実施していただきます。
 
+- レントゲン室 : https://ireansan.github.io/radiation_protection_education/visualization/extra/X-Ray/
+- Cアーム: https://ireansan.github.io/radiation_protection_education/visualization/extra/C-Arm/
+
+
 全て実施すると，下図の左側から右側のようになり，Google フォームのリンクがアクセス可能になるので，回答をお願いいたします。
 
 <div align="center">
@@ -40,8 +44,9 @@
 # 画面構成
 この教材の画面構成は大きく3つに分かれています。
 
-[img/canvas]
-<!-- FIXME: -->
+<div align="center">
+    <img src=./img/manual/experiment/01/png/All/screen_all.png width="50%" alt="img/UI/ExperimentCheckList" />
+</div>
 
 ### 3D空間
 線量分布データや，プレイヤーのとしての3Dオブジェクト，防護板などが表示されます。
@@ -226,8 +231,6 @@ X, Y, Z軸に垂直なクリッピング平面3つと，自由に位置・向き
 - 弧に対して左ボタンをドラッグ：選択した軸周りに回転
 
 となっています。
-
-[gif/PivotControls]
 
 ### Player
 プレイヤーの位置，手の位置を移動させることで，被ばく量が変化します。
