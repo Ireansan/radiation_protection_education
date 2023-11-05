@@ -3,13 +3,17 @@
 ## 実験内容
 レントゲン室，Cアームの少なくとも一つのページで，可視化教材としてチェックリストの内容を全て実施していただきます。
 
+- レントゲン室 : https://ireansan.github.io/radiation_protection_education/visualization/extra/X-Ray/
+- Cアーム: https://ireansan.github.io/radiation_protection_education/visualization/extra/C-Arm/
+
+
 全て実施すると，下図の左側から右側のようになり，Google フォームのリンクがアクセス可能になるので，回答をお願いいたします。
 
 <div align="center">
     <img src=./img/manual/experiment/01/png/UI/ExperimentCheckList/before_after.png width="50%" alt="img/UI/ExperimentCheckList" />
 </div>
 
-### チェックリスト
+### チェックリスト 詳細
 注意：一度，操作を行うと「実施した」と記録されるため，全ての項目を同時に満たす必要はありません。
 
 #### equipments
@@ -40,8 +44,9 @@
 # 画面構成
 この教材の画面構成は大きく3つに分かれています。
 
-[img/canvas]
-<!-- FIXME: -->
+<div align="center">
+    <img src=./img/manual/experiment/01/png/All/screen_all.png width="50%" alt="img/UI/ExperimentCheckList" />
+</div>
 
 ### 3D空間
 線量分布データや，プレイヤーのとしての3Dオブジェクト，防護板などが表示されます。
@@ -79,6 +84,54 @@
 今回の教材内では，被ばく量に対して防護具で0.1倍，防護板で0.01倍になるようにしています。
 （防護具は種類によらず，全て0.1倍としています）
 
+アイコンの種類は以下の通りになっています。
+<table>
+    <tr>
+        <th>種類</th>
+        <th>アイコン</th>
+    </tr>
+    <tr>
+        <td>防護板</td>
+        <td>
+            <div align="center">
+                <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Shield.png" width="25%" />
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>ゴーグル</td>
+        <td>
+            <div align="center">
+                <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Goggle.png" width="25%" />
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>ネックガード</td>
+        <td>
+            <div align="center">
+                <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_NeckGuard.png" width="25%" />
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>エプロン</td>
+        <td>
+            <div align="center">
+                <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Apron.png" width="25%" />
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>手袋</td>
+        <td>
+            <div align="center">
+                <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Glove.png" width="25%" />
+            </div>
+        </td>
+    </tr>
+</table>
+
 ---
 # 操作マニュアル
 
@@ -90,14 +143,12 @@
 
 レントゲン室では，`curtain`でカーテンの有無を操作できます。
 
-<!-- FIXME: -->
 <div align="center">
     <img src="./img/manual/experiment/01/png/All/Gimmick_X-Ray.png" width="50%" alt="img/All/Gimmick/X-Ray" />
 </div>
 
 Cアームでは，`type`で患者に対して真上から照射した場合の`type 1`と，横から照射した場合の`type 2`に切り替えられます。
 
-<!-- FIXME: -->
 <div align="center">
     <img src="./img/manual/experiment/01/png/All/Gimmick_C-Arm.png" width="50%" alt="img/All/Gimmick/C-Arm" />
 </div>
@@ -161,6 +212,8 @@ Cアームでは，`type`で患者に対して真上から照射した場合の`
 - `renderstyle`：描画形式（`mip`（Maximuｍ Intensity Projection, 最大値投影），`iso`（Isosurface, 等値面）が選択できます）
 - `isothreshold`：描画される下限の閾値（`renderstyle`が`iso`の時のみ反映されます）
 
+カラーマップの種類は[こちらのリンク](https://github.com/yuki-koyama/tinycolormap)を参照してください。
+
 #### Clip
 X, Y, Z軸に垂直なクリッピング平面3つと，自由に位置・向きを変更できるクリッピング平面の4つについて，それぞれ有効にするか操作ができます。
 また，それぞれのクリッピング平面の向きを反転させることもできます。
@@ -179,12 +232,9 @@ X, Y, Z軸に垂直なクリッピング平面3つと，自由に位置・向き
 
 となっています。
 
-[gif/PivotControls]
-
 ### Player
 プレイヤーの位置，手の位置を移動させることで，被ばく量が変化します。
 
-<!-- FIXME: -->
 <div align="center">
     <img src="./img/manual/experiment/01/gif/3D/Player/Move_and_HandIK.gif" width="50%" alt="gif/Player" />
 </div>
@@ -192,7 +242,6 @@ X, Y, Z軸に垂直なクリッピング平面3つと，自由に位置・向き
 ### Shield
 防護板を線量分布内に移動させることで，線量分布に影響が反映されます。
 
-<!-- FIXME: -->
 <div align="center">
     <img src="./img/manual/experiment/01/gif/3D/Shield/Move.gif" width="50%" alt="gif/Shield" />
 </div>
@@ -204,7 +253,6 @@ X, Y, Z軸に垂直なクリッピング平面3つと，自由に位置・向き
 操作パネル内の`Clip`で有効にしたクリッピング平面が3D空間内に表示され，操作が可能になります。
 クリッピングの断面となる部分には赤い枠が表示されます。
 
-<!-- FIXME: -->
 <div align="center">
     <img src="./img/manual/experiment/01/gif/3D/Clip/FreeAxis.gif" width="50%" alt="gif/Clip/FreeAxis" />
 </div>
@@ -212,7 +260,6 @@ X, Y, Z軸に垂直なクリッピング平面3つと，自由に位置・向き
 有効にした全ての平面に対してクリッピングが成り立つ部分がクリッピングされます。
 例えば，XとZを有効にした場合，下図のような結果になります。
 
-<!-- FIXME: -->
 <div align="center">
     <img src="./img/manual/experiment/01/png/3D/Clip/X_and_Z.png" width="50%" alt="img/3D/Clip" />
 </div>
