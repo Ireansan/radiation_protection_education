@@ -67,8 +67,25 @@ export function DosePerspectiveToOrthographic({
             orthographicCamera.updateProjectionMatrix();
 
             if (object.current) {
-                object.current.projectionMatrix =
-                    orthographicCamera.projectionMatrix;
+                // object.current.projectionMatrix =
+                //     orthographicCamera.projectionMatrix;
+
+                const positionView = center
+                    .clone()
+                    .applyMatrix4(camera.matrixWorldInverse);
+                const shearMatrix = new THREE.Matrix4().makeShear(
+                    0,
+                    Math.abs(positionView.x / positionView.z),
+                    0,
+                    Math.abs(positionView.y / positionView.z),
+                    0,
+                    0
+                );
+                object.current.projectionMatrix = shearMatrix;
+                // console.log(
+                //     positionView.toArray()
+                //     // camera.matrixWorldInverse.toArray()
+                // );
             }
         }
     });
