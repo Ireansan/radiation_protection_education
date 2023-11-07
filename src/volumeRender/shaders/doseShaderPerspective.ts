@@ -29,6 +29,7 @@ void main(){
     // the same for the far clipping plane. This gives us all the information we
     // need to calculate the ray and truncate it to the viewing cone.
     vec4 position4=vec4(position,1.);
+    // vec4 position4=u_projectionMatrix*vec4(position,1.);
     vec4 pos_in_cam=viewtransformf*position4;
     
     // Intersection of ray and near clipping plane (z = -1 in clip coords)
@@ -41,7 +42,8 @@ void main(){
     
     // Set varyings and output pos
     v_position=position;
-    gl_Position=u_projectionMatrix*viewMatrix*modelMatrix*position4;
+    // gl_Position=u_projectionMatrix*viewMatrix*modelMatrix*position4;
+    gl_Position=projectionMatrix*viewMatrix*modelMatrix*position4;
 }
 `;
 
