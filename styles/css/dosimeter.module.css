@@ -38,11 +38,26 @@
   font-size: 0.8rem;
   float: left;
 }
-.dose_list .dose .name .icon {
+.dose_list .dose .name .icons {
   width: 50%;
   height: 100%;
   float: right;
   text-align: right;
+  justify-content: flex-end;
+  display: flex;
+}
+.dose_list .dose .name .icons .icon {
+  height: 100%;
+  width: 0%;
+  opacity: 0;
+}
+.dose_list .dose .name .icons .icon.active {
+  width: auto;
+  opacity: 1;
+}
+.dose_list .dose .name .icons .icon img {
+  max-width: 100%;
+  height: 100%;
 }
 .dose_list .dose .result {
   height: 30px;
