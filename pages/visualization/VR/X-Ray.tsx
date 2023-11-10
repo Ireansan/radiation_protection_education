@@ -70,6 +70,8 @@ import {
     VRVolumeParameterControls,
     VRDoseEquipmentsUI,
     VRDosimeterUI,
+    VRPlayer,
+    VRHandIKControls,
 } from "../../../components/vr";
 
 import { VRPanle, VRStats } from "components/vr";
@@ -154,6 +156,12 @@ function XRayVR() {
                             // zoom: 50
                         }}
                     >
+                        {/* -------------------------------------------------- */}
+                        {/* Three.js Controls */}
+                        <OrbitControls />
+
+                        {/* -------------------------------------------------- */}
+                        {/* VR Canvas */}
                         <XR>
                             <TeleportationPlane
                                 leftHand={true}
@@ -308,61 +316,6 @@ function XRayVR() {
                                     <sphereBufferGeometry args={[0.25]} />
                                 </mesh>
 
-                                {/* Avatar */}
-                                <PivotControls
-                                    matrix={new THREE.Matrix4().compose(
-                                        new THREE.Vector3(2, 0, 0),
-                                        new THREE.Quaternion().setFromEuler(
-                                            new THREE.Euler(0, -Math.PI / 2, 0),
-                                        ),
-                                        new THREE.Vector3(1, 1, 1),
-                                    )}
-                                    scale={70}
-                                    fixed={true}
-                                    activeAxes={[true, false, true]}
-                                    visible={!viewing}
-                                    onDrag={(l, deltaL, w, deltaW) => {
-                                        yBotRef.current.position.setFromMatrixPosition(
-                                            w,
-                                        );
-                                        yBotRef.current.rotation.setFromRotationMatrix(
-                                            w,
-                                        );
-                                    }}
-                                    onDragEnd={() => {
-                                        if (dosimeterRef.current) {
-                                            dosimeterRef.current.updateResults();
-                                        }
-
-                                        set((state) => ({
-                                            sceneProperties: {
-                                                ...state.sceneProperties,
-                                                executeLog: {
-                                                    ...state.sceneProperties
-                                                        .executeLog,
-                                                    avatar: {
-                                                        ...state.sceneProperties
-                                                            .executeLog.avatar,
-                                                        translate: true,
-                                                    },
-                                                },
-                                            },
-                                        }));
-                                    }}
-                                />
-                                <group
-                                    ref={yBotRef}
-                                    position={[2, 0, 0]}
-                                    rotation={[0, -Math.PI / 2, 0]}
-                                >
-                                    <CustomYBotIK />
-                                    {/* <HandIKPivotControls object={yBotRef} scale={35} fixed={true}/> */}
-                                </group>
-
-                                {/* -------------------------------------------------- */}
-                                {/* Three.js Controls */}
-                                <OrbitControls makeDefault />
-
                                 {/* -------------------------------------------------- */}
                                 {/* Physics */}
                                 <Physics gravity={[0, -30, 0]}>
@@ -405,6 +358,14 @@ function XRayVR() {
                                     </DoseBoardControls>
                                 </Physics>
                             </group>
+
+                            {/* Player */}
+                            <VRPlayer>
+                                <group ref={yBotRef} visible={false}>
+                                    <CustomYBotIK />
+                                </group>
+                            </VRPlayer>
+                            <VRHandIKControls object={yBotRef} />
 
                             {/* -------------------------------------------------- */}
                             {/* Enviroment */}
