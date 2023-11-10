@@ -220,15 +220,15 @@ export function VRDoseAnimationControls({
                 .min(0)
                 .max(duration)
                 .step(1)
-                .listen()
-                .disable()
                 .onChange((e: number) => {
                     edit.current = true;
                     timeRef.current.time = e;
                 })
                 .onFinishChange(() => {
                     edit.current = false;
-                });
+                })
+                .listen()
+                .disable();
 
             gui.domElement.style.visibility = "hidden";
 
@@ -263,8 +263,9 @@ export function VRDoseAnimationControls({
                 actionsMaxLength["volumeAnimation"].time !==
                     timeRef.current.time &&
                 actionsMaxLength["volumeAnimation"].time < duration
-                    ? (timeRef.current.time =
-                          actionsMaxLength["volumeAnimation"].time)
+                    ? (timeRef.current.time = Math.floor(
+                          actionsMaxLength["volumeAnimation"].time,
+                      ))
                     : null;
             }
 

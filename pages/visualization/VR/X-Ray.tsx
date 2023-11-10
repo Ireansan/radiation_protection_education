@@ -69,6 +69,7 @@ import {
     VRDoseAnimationControls,
     VRVolumeParameterControls,
     VRDoseEquipmentsUI,
+    VRDosimeterUI,
 } from "../../../components/vr";
 
 import { VRPanle, VRStats } from "components/vr";
@@ -80,21 +81,6 @@ import { useStore } from "../../../components/store";
 // ==========
 // Styles
 import styles from "../../../styles/threejs.module.css";
-import { VRDosimeterUI } from "components/vr/ui/VRDosimeterUI";
-
-function XRInit() {
-    const { isPresenting, player } = useXR();
-
-    useEffect(() => {
-        if (isPresenting) {
-            player.position.x = 4;
-            player.position.y = 1;
-            player.position.z = 4;
-        }
-    }, [isPresenting]);
-
-    return <></>;
-}
 
 function XRayVR() {
     const [set, debug, viewing] = useStore((state) => [
@@ -173,7 +159,7 @@ function XRayVR() {
                                 leftHand={true}
                                 rightHand={true}
                             />
-                            <Controllers />
+                            <Controllers rayMaterial={{ color: "#B30900" }} />
 
                             <DosePerspectiveToOrthographic
                                 object={ref}
