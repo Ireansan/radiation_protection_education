@@ -1,4 +1,5 @@
 import React from "react";
+import * as THREE from "three";
 import { useThree, useFrame } from "@react-three/fiber";
 import { HTMLMesh, InteractiveGroup } from "three-stdlib";
 import Stats from "three/examples/jsm/libs/stats.module";
@@ -11,7 +12,7 @@ export function VRStats({ ...props }: JSX.IntrinsicElements["group"]) {
     const { gl, camera } = useThree();
     const group = React.useMemo(
         () => new InteractiveGroup(gl, camera),
-        [gl, camera]
+        [gl, camera],
     );
     const [stats, statsMesh] = React.useMemo(() => {
         // Add stats.js
@@ -27,6 +28,14 @@ export function VRStats({ ...props }: JSX.IntrinsicElements["group"]) {
         return [stats, statsMesh];
     }, [group]);
 
+    React.useEffect(() => {
+        statsMesh.position.set(-0.4, 0.25, -2);
+        statsMesh.scale.setScalar(3);
+        statsMesh.lookAt(0, 0, 0);
+
+        camera.add(statsMesh);
+    }, [camera, statsMesh]);
+
     useFrame(() => {
         stats.update();
 
@@ -40,9 +49,5 @@ export function VRStats({ ...props }: JSX.IntrinsicElements["group"]) {
         statsMesh.material.map.update();
     });
 
-    return (
-        <>
-            <primitive object={group} {...props} />
-        </>
-    );
+    return <>{/* <primitive object={group} {...props} /> */}</>;
 }
