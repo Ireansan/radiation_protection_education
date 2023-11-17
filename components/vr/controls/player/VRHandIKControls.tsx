@@ -7,7 +7,7 @@ import { useFrame } from "@react-three/fiber";
 
 type VRHandIKControlsProps = {
     children?: React.ReactElement<THREE.Object3D>;
-    object: React.RefObject<THREE.Object3D>;
+    object?: React.RefObject<THREE.Object3D>;
 };
 export const VRHandIKControls = React.forwardRef<
     IKControlsImpl,
@@ -24,10 +24,12 @@ export const VRHandIKControls = React.forwardRef<
     React.useEffect(() => {
         const player = scene.getObjectByName("VRCustomYBotIK");
 
-        if (player) {
-            controls.attach(player);
+        if (object && object.current) {
+            controls.attach(object.current);
         } else if (group.current) {
             controls.attach(group.current);
+        } else if (player) {
+            controls.attach(player);
         }
 
         return () => {
