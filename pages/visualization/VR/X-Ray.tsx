@@ -72,6 +72,11 @@ import {
     VRDosimeterUI,
     VRPlayer,
     VRHandIKControls,
+    VRUI,
+    VRUpperLeft,
+    VRUpperRight,
+    VRLowerLeft,
+    VRLowerRight,
 } from "../../../components/vr";
 
 import { VRPanle, VRStats } from "components/vr";
@@ -237,17 +242,6 @@ function XRayVR() {
                             {/* -------------------------------------------------- */}
                             {/* Volume Controls */}
 
-                            <VolumeXYZClippingControls
-                                object={ref}
-                                planeSize={2}
-                                areaSize={
-                                    VOLUMEDATA.XRay_curtain_Configure.volume
-                                        .areaSize
-                                }
-                                areaScale={1.1}
-                                lineColor={new THREE.Color(0x6e0010)}
-                            />
-
                             {/* Dosimeter */}
                             <DosimeterControls
                                 ref={dosimeterRef}
@@ -312,7 +306,10 @@ function XRayVR() {
                                         <ENVIROMENT.XRay_Curtain />
                                     </group>
                                 </group>
-                                <mesh position={[0, 1, 0]} visible={debug}>
+                                <mesh
+                                    position={[0, 1, 0]}
+                                    // visible={debug}
+                                >
                                     <sphereBufferGeometry args={[0.25]} />
                                 </mesh>
 
@@ -409,8 +406,6 @@ function XRayVR() {
                                 position={[2, 0, -9]}
                                 rotation={[0, Math.PI, 0]}
                             >
-                                <VRStats position={[-0.75, 2, 0]} scale={3} />
-
                                 <group position={[0, 1.5, 0]} scale={3}>
                                     <VRDoseAnimationControls
                                         // position={[-0.325, 0, 0.1]}
@@ -428,12 +423,14 @@ function XRayVR() {
                                     />
                                 </group>
                                 <group position={[-3, 1.5, 0]} scale={3}>
-                                    <VRDosimeterUI position={[0, 0, 0]} />
                                     <VRDoseEquipmentsUI
                                         position={[0.325, 0, 0]}
                                     />
                                 </group>
                             </group>
+
+                            <VRDosimeterUI />
+                            <VRStats />
                         </XR>
                     </Canvas>
                 </div>
