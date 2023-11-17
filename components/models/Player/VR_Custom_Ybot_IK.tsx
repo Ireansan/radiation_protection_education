@@ -39,7 +39,6 @@ export function VRCustomYBotIK({
     const [debug] = useStore((state) => [state.debug]);
     const { scene, camera } = useThree();
 
-    const group = useRef<THREE.Group>(null!);
     const { nodes, materials, animations } = useGLTF(
         modelURL,
     ) as unknown as GLTFResult;
@@ -99,16 +98,25 @@ export function VRCustomYBotIK({
         return [new CCDIKSolver(nodes.Alpha_Surface, iks), ccdIkHelper];
     }, [shoulderUp, rollUp]);
 
-    React.useEffect(() => {
+    const group = React.useMemo(() => {
         const group = new THREE.Group();
         group.add(nodes.Alpha_Joints);
         group.add(nodes.Alpha_Surface);
         group.add(nodes.mixamorigHips);
-
         group.name = "VRCustomYBotIK";
+        group.rotation.set(Math.PI / 2, 0, 0);
+        group.scale.setScalar(0.01);
 
+        return group;
+    }, [nodes]);
+
+    React.useEffect(() => {
         camera.add(group);
-    }, [camera, nodes]);
+
+        return () => {
+            camera.remove(group);
+        };
+    }, [camera, group]);
 
     React.useEffect(() => {
         ccdIkHelper.visible = debug;
@@ -116,6 +124,9 @@ export function VRCustomYBotIK({
 
     useFrame(() => {
         ccdIkSolver.update();
+
+        const targetGroup = scene.getObjectByName("VRCustomYBotIK");
+        console.log(targetGroup);
     });
 
     return <></>;
