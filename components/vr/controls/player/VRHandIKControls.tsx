@@ -1,4 +1,5 @@
 import React from "react";
+import { useThree } from "@react-three/fiber";
 import { useController } from "@react-three/xr";
 
 import { IKControls as IKControlsImpl } from "../../../../src";
@@ -12,15 +13,19 @@ export const VRHandIKControls = React.forwardRef<
     IKControlsImpl,
     VRHandIKControlsProps
 >(function VRHandIKControls({ children, object }, ref) {
-    const controls = React.useMemo(() => new IKControlsImpl(), []);
-    const group = React.useRef<THREE.Group>(null);
+    const { scene } = useThree();
     const leftController = useController("left");
     const rightController = useController("right");
 
+    const controls = React.useMemo(() => new IKControlsImpl(), []);
+    const group = React.useRef<THREE.Group>(null);
+
     // Init
     React.useEffect(() => {
-        if (object.current) {
-            controls.attach(object.current);
+        const player = scene.getObjectByName("VRCustomYBotIK");
+
+        if (player) {
+            controls.attach(player);
         } else if (group.current) {
             controls.attach(group.current);
         }
@@ -28,7 +33,7 @@ export const VRHandIKControls = React.forwardRef<
         return () => {
             controls.detach();
         };
-    }, [object, children, controls]);
+    }, [scene, controls]);
 
     useFrame(() => {
         // Left Hand
