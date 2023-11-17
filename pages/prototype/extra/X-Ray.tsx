@@ -24,7 +24,7 @@ import {
 // ==========
 // Model
 import { Board_Configure } from "../../../components/models";
-import { CustomYBotIK } from "../../../components/models/Custom_Ybot_IK";
+import { CustomYBotIK } from "../../../components/models/Player";
 import { HandIKPivotControls } from "../../../components/models/controls";
 
 // ==========
@@ -274,9 +274,9 @@ function XRayExtra() {
                                 matrix={new THREE.Matrix4().compose(
                                     new THREE.Vector3(2, 0, 0),
                                     new THREE.Quaternion().setFromEuler(
-                                        new THREE.Euler(0, -Math.PI / 2, 0)
+                                        new THREE.Euler(0, -Math.PI / 2, 0),
                                     ),
-                                    new THREE.Vector3(1, 1, 1)
+                                    new THREE.Vector3(1, 1, 1),
                                 )}
                                 scale={70}
                                 fixed={true}
@@ -284,10 +284,10 @@ function XRayExtra() {
                                 visible={!viewing}
                                 onDrag={(l, deltaL, w, deltaW) => {
                                     yBotRef.current.position.setFromMatrixPosition(
-                                        w
+                                        w,
                                     );
                                     yBotRef.current.rotation.setFromRotationMatrix(
-                                        w
+                                        w,
                                     );
                                 }}
                                 onDragEnd={() => {

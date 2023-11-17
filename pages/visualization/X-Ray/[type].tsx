@@ -30,7 +30,7 @@ import {
 // ==========
 // Model
 import { Board_Configure } from "../../../components/models";
-import { CustomYBotIK } from "../../../components/models/Custom_Ybot_IK";
+import { CustomYBotIK } from "../../../components/models/Player";
 import { HandIKPivotControls } from "../../../components/models/controls";
 
 // ==========
@@ -338,10 +338,10 @@ function VisualizationXRay({ ...props }: PageProps) {
                                                 new THREE.Euler(
                                                     0,
                                                     -Math.PI / 2,
-                                                    0
-                                                )
+                                                    0,
+                                                ),
                                             ),
-                                            new THREE.Vector3(1, 1, 1)
+                                            new THREE.Vector3(1, 1, 1),
                                         )}
                                         scale={70}
                                         fixed={true}
@@ -353,10 +353,10 @@ function VisualizationXRay({ ...props }: PageProps) {
                                         }
                                         onDrag={(l, deltaL, w, deltaW) => {
                                             yBotRef.current.position.setFromMatrixPosition(
-                                                w
+                                                w,
                                             );
                                             yBotRef.current.rotation.setFromRotationMatrix(
-                                                w
+                                                w,
                                             );
                                         }}
                                         onDragEnd={() => {
@@ -427,14 +427,14 @@ function VisualizationXRay({ ...props }: PageProps) {
                                                 new THREE.Vector3(
                                                     2.5,
                                                     1.25,
-                                                    -0.5
+                                                    -0.5,
                                                 )
                                             }
                                             rotation={
                                                 new THREE.Euler(
                                                     0,
                                                     Math.PI / 2,
-                                                    0
+                                                    0,
                                                 )
                                             }
                                             planeSize={Board_Configure.size.y}
@@ -459,7 +459,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                                                 <meshBasicMaterial
                                                     color={
                                                         new THREE.Color(
-                                                            0xb39a7b
+                                                            0xb39a7b,
                                                         )
                                                     }
                                                 />

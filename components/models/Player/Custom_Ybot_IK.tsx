@@ -23,8 +23,8 @@ type GLTFResult = GLTF & {
 type ActionName = "T-Pose";
 type GLTFActions = Record<ActionName, THREE.AnimationAction>;
 
-import { useStore } from "../store";
-import { applyBasePath } from "../../utils";
+import { useStore } from "../../store";
+import { applyBasePath } from "../../../utils";
 const modelURL = applyBasePath(`/models/glb/Custom_Y-Bot.glb`);
 
 type customYBotIKProps = {
@@ -40,7 +40,7 @@ export function CustomYBotIK({
 
     const group = useRef<THREE.Group>(null!);
     const { nodes, materials, animations } = useGLTF(
-        modelURL
+        modelURL,
     ) as unknown as GLTFResult;
 
     const [ccdIkSolver, ccdIkHelper] = useMemo(() => {
@@ -59,7 +59,7 @@ export function CustomYBotIK({
                         rotationMin: new THREE.Vector3(
                             shoulderUp ? 0.0 : 1.4,
                             rollUp ? -1.5 : -0.1,
-                            0.0
+                            0.0,
                         ),
                         rotationMax: new THREE.Vector3(1.5, 0.8, 1.7),
                     },
@@ -79,12 +79,12 @@ export function CustomYBotIK({
                         rotationMin: new THREE.Vector3(
                             shoulderUp ? 0 : 1.4,
                             -0.8,
-                            -1.7
+                            -1.7,
                         ),
                         rotationMax: new THREE.Vector3(
                             1.5,
                             rollUp ? 1.5 : 0.1,
-                            0.0
+                            0.0,
                         ),
                     },
                 ],

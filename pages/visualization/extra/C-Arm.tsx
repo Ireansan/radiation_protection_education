@@ -28,7 +28,7 @@ import {
 // Model
 import * as MODELS from "../../../components/models";
 import { Board_Configure } from "../../../components/models";
-import { CustomYBotIK } from "../../../components/models/Custom_Ybot_IK";
+import { CustomYBotIK } from "../../../components/models/Player";
 import { HandIKPivotControls } from "../../../components/models/controls";
 
 // ==========
@@ -133,17 +133,17 @@ function CArmExtra() {
                                     config.model.rotation,
                                     config.model.roll,
                                     config.model.pitch,
-                                    config.model.height
+                                    config.model.height,
                                 );
                                 if (patientRef.current) {
                                     patientRef.current.position.set(
-                                        ...config.patient.position
+                                        ...config.patient.position,
                                     );
                                     patientRef.current.rotation.set(
-                                        ...config.patient.rotation
+                                        ...config.patient.rotation,
                                     );
                                     patientRef.current.scale.setScalar(
-                                        config.patient.scale
+                                        config.patient.scale,
                                     );
                                 }
                             }
@@ -358,9 +358,9 @@ function CArmExtra() {
                                 matrix={new THREE.Matrix4().compose(
                                     new THREE.Vector3(1.5, 0, 0),
                                     new THREE.Quaternion().setFromEuler(
-                                        new THREE.Euler(0, -Math.PI / 2, 0)
+                                        new THREE.Euler(0, -Math.PI / 2, 0),
                                     ),
-                                    new THREE.Vector3(1, 1, 1)
+                                    new THREE.Vector3(1, 1, 1),
                                 )}
                                 scale={70}
                                 fixed={true}
@@ -368,10 +368,10 @@ function CArmExtra() {
                                 visible={!viewing}
                                 onDrag={(l, deltaL, w, deltaW) => {
                                     yBotRef.current.position.setFromMatrixPosition(
-                                        w
+                                        w,
                                     );
                                     yBotRef.current.rotation.setFromRotationMatrix(
-                                        w
+                                        w,
                                     );
                                 }}
                                 onDragEnd={() => {

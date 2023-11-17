@@ -34,8 +34,10 @@ import {
 // ==========
 // Model
 import { Board_Configure } from "../../../components/models";
-import { CustomYBotIK } from "../../../components/models/Custom_Ybot_IK";
-import { HandIKPivotControls } from "../../../components/models/controls";
+import {
+    CustomYBotIK,
+    VRCustomYBotIK,
+} from "../../../components/models/Player";
 
 // ==========
 // Volume
@@ -313,6 +315,10 @@ function XRayVR() {
                                     <sphereBufferGeometry args={[0.25]} />
                                 </mesh>
 
+                                {/* Player */}
+                                <VRCustomYBotIK />
+                                <VRHandIKControls object={yBotRef} />
+
                                 {/* -------------------------------------------------- */}
                                 {/* Physics */}
                                 <Physics gravity={[0, -30, 0]}>
@@ -355,14 +361,6 @@ function XRayVR() {
                                     </DoseBoardControls>
                                 </Physics>
                             </group>
-
-                            {/* Player */}
-                            <VRPlayer>
-                                <group ref={yBotRef} visible={false}>
-                                    <CustomYBotIK />
-                                </group>
-                            </VRPlayer>
-                            <VRHandIKControls object={yBotRef} />
 
                             {/* -------------------------------------------------- */}
                             {/* Enviroment */}
