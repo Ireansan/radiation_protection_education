@@ -23,18 +23,14 @@ export function VRDosimeterUI({ ...props }: JSX.IntrinsicElements["group"]) {
         return dosimeterUIMesh;
     }, [group]);
 
-    React.useEffect(() => {
-        dosimeterUIMesh.position.set(-0.4, -0.3, -2);
-        dosimeterUIMesh.scale.setScalar(3);
-        dosimeterUIMesh.lookAt(0, 0, 0);
-
-        camera.add(dosimeterUIMesh);
-    }, [camera, dosimeterUIMesh]);
-
     useFrame(() => {
         // @ts-ignore
         dosimeterUIMesh.material.map.update();
     });
 
-    return <></>;
+    return (
+        <>
+            <primitive object={group} {...props} />
+        </>
+    );
 }

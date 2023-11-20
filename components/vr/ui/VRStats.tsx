@@ -28,14 +28,6 @@ export function VRStats({ ...props }: JSX.IntrinsicElements["group"]) {
         return [stats, statsMesh];
     }, [group]);
 
-    React.useEffect(() => {
-        statsMesh.position.set(-0.4, 0.25, -2);
-        statsMesh.scale.setScalar(3);
-        statsMesh.lookAt(0, 0, 0);
-
-        camera.add(statsMesh);
-    }, [camera, statsMesh]);
-
     useFrame(() => {
         stats.update();
 
@@ -49,5 +41,10 @@ export function VRStats({ ...props }: JSX.IntrinsicElements["group"]) {
         statsMesh.material.map.update();
     });
 
-    return <>{/* <primitive object={group} {...props} /> */}</>;
+    return (
+        <>
+            {/*  */}
+            <primitive object={group} {...props} />
+        </>
+    );
 }
