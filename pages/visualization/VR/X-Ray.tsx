@@ -75,10 +75,6 @@ import {
     VRPlayer,
     VRHandIKControls,
     VRUI,
-    VRUpperLeft,
-    VRUpperRight,
-    VRLowerLeft,
-    VRLowerRight,
 } from "../../../components/vr";
 
 import { VRPanle, VRStats } from "components/vr";
@@ -169,7 +165,11 @@ function XRayVR() {
 
                         {/* -------------------------------------------------- */}
                         {/* VR Canvas */}
-                        <XR>
+                        <XR
+                            onSessionStart={(event) => {
+                                console.log(event);
+                            }}
+                        >
                             <TeleportationPlane
                                 leftHand={true}
                                 rightHand={true}
@@ -314,13 +314,19 @@ function XRayVR() {
                                 >
                                     <sphereBufferGeometry args={[0.25]} />
                                 </mesh>
+                            </group>
 
-                                {/* Player */}
-                                <VRCustomYBotIK />
-                                <VRHandIKControls object={yBotRef} />
+                            {/* Player */}
+                            <VRPlayer>
+                                <group ref={yBotRef} visible={false}>
+                                    <CustomYBotIK />
+                                </group>
+                            </VRPlayer>
+                            <VRHandIKControls object={yBotRef} />
 
-                                {/* -------------------------------------------------- */}
-                                {/* Physics */}
+                            {/* -------------------------------------------------- */}
+                            {/* Physics */}
+                            <group position={[0, 0, -10]}>
                                 <Physics gravity={[0, -30, 0]}>
                                     <ToggledDebug />
 
@@ -427,8 +433,18 @@ function XRayVR() {
                                 </group>
                             </group>
 
-                            <VRDosimeterUI />
-                            <VRStats />
+                            <VRUI>
+                                <VRStats
+                                    position={[-0.4, 0.25, -2]}
+                                    rotation={[0.124, 0.196, -0.024]}
+                                    scale={3}
+                                />
+                                <VRDosimeterUI
+                                    position={[-0.4, -0.3, -2]}
+                                    rotation={[-0.149, 0.195, 0.0291]}
+                                    scale={3}
+                                />
+                            </VRUI>
                         </XR>
                     </Canvas>
                 </div>

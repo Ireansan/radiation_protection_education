@@ -22,7 +22,6 @@ export function VRPlayer({ children }: playerProps) {
         if (!gl.xr.enabled) {
             return;
         }
-
         gl.xr.updateCamera(state.camera as THREE.PerspectiveCamera);
 
         position.copy(state.camera.position);
