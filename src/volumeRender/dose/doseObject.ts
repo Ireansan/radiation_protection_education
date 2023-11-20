@@ -20,6 +20,7 @@ class DoseObject extends DoseBase {
     constructor(
         volume = new Volume(),
         isPerspective = false,
+        resolution = new THREE.Vector2(1, 1),
         coefficient = 1.0,
         offset = 0.0,
         boardCoefficient = 0.01,
@@ -32,7 +33,7 @@ class DoseObject extends DoseBase {
         isothreshold = 0.1,
         clipping = false,
         clippingPlanes = [],
-        clipIntersection = false
+        clipIntersection = false,
     ) {
         // Init
         super(isPerspective);
@@ -41,6 +42,8 @@ class DoseObject extends DoseBase {
         this.width = this.volume.xLength;
         this.height = this.volume.yLength;
         this.depth = this.volume.zLength;
+
+        this._resolution = resolution;
 
         this._coefficient = coefficient;
         this._offset = offset;
@@ -67,7 +70,7 @@ class DoseObject extends DoseBase {
             this.volume.data,
             this.width,
             this.height,
-            this.depth
+            this.depth,
         );
         texture.format = THREE.RedFormat;
         texture.type = THREE.FloatType;
@@ -78,9 +81,9 @@ class DoseObject extends DoseBase {
         // Material
         const shader = this.isPerspective ? doseShaderPerspective : doseShader;
         const uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+        uniforms.u_resolution.value.copy(this._resolution);
         uniforms.u_data.value = texture;
         uniforms.u_size.value.set(this.width, this.height, this.depth);
-        uniforms.u_projectionMatrix.value.set(new THREE.Matrix4());
 
         uniforms.u_coefficient.value = this._coefficient;
         uniforms.u_offset.value = this._offset;
@@ -117,12 +120,12 @@ class DoseObject extends DoseBase {
         this.geometry = new THREE.BoxGeometry(
             this.width,
             this.height,
-            this.depth
+            this.depth,
         );
         this.geometry.translate(
             this.width / 2 - 0.5,
             this.height / 2 - 0.5,
-            this.depth / 2 - 0.5
+            this.depth / 2 - 0.5,
         );
     }
 
@@ -136,6 +139,7 @@ class DoseObject extends DoseBase {
         // ----------
         // update this
         // ----------
+        this.material.uniforms.u_resolution.value.copy(this._resolution);
         this.material.uniforms.u_coefficient.value = this._coefficient;
         this.material.uniforms.u_offset.value = this._offset;
         this.material.uniforms.u_boardCoefficient.value =
@@ -154,6 +158,9 @@ class DoseObject extends DoseBase {
         const parent = this.parent;
         if (parent !== null && this.volumeParamAutoUpdate) {
             if (parent instanceof DoseBase) {
+                this.material.uniforms.u_resolution.value.copy(
+                    parent._resolution,
+                );
                 this.material.uniforms.u_coefficient.value =
                     parent._coefficient;
                 this.material.uniforms.u_offset.value = parent._offset;
@@ -164,7 +171,7 @@ class DoseObject extends DoseBase {
                 this.material.uniforms.u_opacity.value = parent._opacity;
                 this.material.uniforms.u_clim.value.set(
                     parent._clim1,
-                    parent._clim2
+                    parent._clim2,
                 );
                 this.material.uniforms.u_cmdata.value =
                     cmtextures[parent._colormap];
@@ -225,18 +232,10 @@ class DoseObject extends DoseBase {
         let volumeData = this.volume.getData(
             Math.trunc(localPosition.x),
             Math.trunc(localPosition.y),
-            Math.trunc(localPosition.z)
+            Math.trunc(localPosition.z),
         );
 
         return volumeData;
-    }
-
-    updateProjectionMatrix(updateParents: boolean, updateChildren: boolean) {
-        super.updateProjectionMatrix(updateParents, updateChildren);
-
-        this.material.uniforms.u_projectionMatrix.value.copy(
-            this.projectionMatrix
-        );
     }
 }
 

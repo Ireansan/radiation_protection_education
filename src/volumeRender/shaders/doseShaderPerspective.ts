@@ -16,8 +16,6 @@ varying vec3 v_position;
 // https://github.com/mrdoob/three.js/blob/dev/src/renderers/shaders/ShaderChunk/clipping_planes_pars_vertex.glsl.js
 varying mat4 viewtransformf;
 
-uniform mat4 u_projectionMatrix;
-
 void main(){
     // Prepare transforms to map to "camera view". See also:
     // https://threejs.org/docs/#api/renderers/webgl/WebGLProgram
@@ -29,7 +27,6 @@ void main(){
     // the same for the far clipping plane. This gives us all the information we
     // need to calculate the ray and truncate it to the viewing cone.
     vec4 position4=vec4(position,1.);
-    // vec4 position4=u_projectionMatrix*vec4(position,1.);
     vec4 pos_in_cam=viewtransformf*position4;
     
     // Intersection of ray and near clipping plane (z = -1 in clip coords)
@@ -42,7 +39,6 @@ void main(){
     
     // Set varyings and output pos
     v_position=position;
-    // gl_Position=u_projectionMatrix*viewMatrix*modelMatrix*position4;
     gl_Position=projectionMatrix*viewMatrix*modelMatrix*position4;
 }
 `;
@@ -50,6 +46,8 @@ void main(){
 const fragmentShader = /*glsl*/ `
 precision highp float;
 precision mediump sampler3D;
+
+uniform vec2 u_resolution;
 
 uniform vec3 u_size;
 uniform int u_renderstyle;
@@ -105,13 +103,21 @@ vec4 apply_colormap(float val);
 vec4 add_lighting(float val,vec3 loc,vec3 step,vec3 view_ray,float coefficient,float offset);
 
 void main(){
+    // FIXME:
     // Normalize clipping plane info
     vec3 farpos=v_farpos.xyz/v_farpos.w;
     vec3 nearpos=v_nearpos.xyz/v_nearpos.w;
-    
+
     // Calculate unit vector pointing in the view direction through this fragment.
-    vec3 view_ray=normalize(nearpos.xyz-farpos.xyz);
+    vec2 uv=(gl_FragCoord.xy-.5*u_resolution.xy)/u_resolution.xy;
+    vec4 direction=vec4(uv,0.,1.);
+    direction=viewMatrix*direction;
+    direction.z=-direction.w;
+    mat4 viewtransformi=inverse(viewMatrix);
+    direction=viewtransformi*direction;
+    vec3 view_ray=normalize(direction.xyz);
     
+    // FIXME:
     // Compute the (negative) distance to the front surface or near clipping plane.
     // v_position is the back face of the cuboid, so the initial distance calculated in the dot
     // product below is the distance from near clip plane to the back of the cuboid
@@ -433,7 +439,7 @@ vec4 add_lighting(float val,vec3 loc,vec3 step,vec3 view_ray,float coefficient,f
 
 const doseShaderPerspective = {
     uniforms: {
-        u_projectionMatrix: { value: new THREE.Matrix4() },
+        u_resolution: { value: new THREE.Vector2(1, 1) },
         u_size: { value: new THREE.Vector3(1, 1, 1) },
         u_renderstyle: { value: 0 },
         u_renderthreshold: { value: 0.5 },
