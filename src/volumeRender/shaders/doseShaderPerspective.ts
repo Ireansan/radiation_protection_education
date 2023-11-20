@@ -103,21 +103,13 @@ vec4 apply_colormap(float val);
 vec4 add_lighting(float val,vec3 loc,vec3 step,vec3 view_ray,float coefficient,float offset);
 
 void main(){
-    // FIXME:
     // Normalize clipping plane info
     vec3 farpos=v_farpos.xyz/v_farpos.w;
     vec3 nearpos=v_nearpos.xyz/v_nearpos.w;
 
     // Calculate unit vector pointing in the view direction through this fragment.
-    vec2 uv=(gl_FragCoord.xy-.5*u_resolution.xy)/u_resolution.xy;
-    vec4 direction=vec4(uv,0.,1.);
-    direction=viewMatrix*direction;
-    direction.z=-direction.w;
-    mat4 viewtransformi=inverse(viewMatrix);
-    direction=viewtransformi*direction;
-    vec3 view_ray=normalize(direction.xyz);
+    vec3 view_ray=normalize(nearpos.xyz-farpos.xyz);
     
-    // FIXME:
     // Compute the (negative) distance to the front surface or near clipping plane.
     // v_position is the back face of the cuboid, so the initial distance calculated in the dot
     // product below is the distance from near clip plane to the back of the cuboid
