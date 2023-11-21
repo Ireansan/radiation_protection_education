@@ -23,7 +23,7 @@ export function DosePerspectiveToOrthographic({
     const orthographicCamera = new THREE.OrthographicCamera();
 
     const [center, setCenter] = React.useState<THREE.Vector3>(
-        new THREE.Vector3()
+        new THREE.Vector3(),
     );
 
     React.useEffect(() => {
@@ -79,9 +79,9 @@ export function DosePerspectiveToOrthographic({
                     0,
                     Math.abs(positionView.y / positionView.z),
                     0,
-                    0
+                    0,
                 );
-                object.current.projectionMatrix = shearMatrix;
+                // object.current.projectionMatrix = shearMatrix;
                 // console.log(
                 //     positionView.toArray()
                 //     // camera.matrixWorldInverse.toArray()

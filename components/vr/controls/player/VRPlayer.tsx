@@ -46,7 +46,7 @@ export function VRPlayer({ children }: playerProps) {
             <group ref={ref}>
                 {children}
 
-                <mesh position={(0, 0, 0.5)} visible={debug}>
+                <mesh position={[0, 0, 0.5]} visible={debug}>
                     <boxBufferGeometry args={[0.1, 0.1, 0.1]} />
                     <meshBasicMaterial color={"blue"} />
                 </mesh>

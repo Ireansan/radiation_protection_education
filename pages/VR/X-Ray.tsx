@@ -82,7 +82,7 @@ import { useStore } from "../../components/store";
 
 // ==========
 // Styles
-import styles from "../../../styles/threejs.module.css";
+import styles from "../../styles/threejs.module.css";
 
 function XRayVR() {
     const [set, debug, viewing] = useStore((state) => [
