@@ -29,25 +29,22 @@ import {
     // ----------
     // hook
     useToggle,
-} from "../../../components/game";
+} from "../../components/game";
 
 // ==========
 // Model
-import { Board_Configure } from "../../../components/models";
-import {
-    CustomYBotIK,
-    VRCustomYBotIK,
-} from "../../../components/models/Player";
+import { Board_Configure } from "../../components/models";
+import { CustomYBotIK, VRCustomYBotIK } from "../../components/models/Player";
 
 // ==========
 // Volume
 // ----------
 // object
-import { Dosimeter, DoseGroup, DoseAnimationObject } from "../../../src";
+import { Dosimeter, DoseGroup, DoseAnimationObject } from "../../src";
 // ----------
 // data
-import * as ENVIROMENT from "../../../components/models/Environment";
-import * as VOLUMEDATA from "../../../components/models/VolumeData";
+import * as ENVIROMENT from "../../components/models/Environment";
+import * as VOLUMEDATA from "../../components/models/VolumeData";
 // ----------
 // controls
 import {
@@ -59,11 +56,11 @@ import {
     DosimeterUI,
     VolumeParameterControls,
     VolumeXYZClippingControls,
-} from "../../../components/volumeRender";
+} from "../../components/volumeRender";
 
 // ==========
 // UI
-import { ExperimentCheckList, SceneConfigPanel } from "../../../components/ui";
+import { ExperimentCheckList, SceneConfigPanel } from "../../components/ui";
 
 // ==========
 // VR
@@ -75,13 +72,13 @@ import {
     VRPlayer,
     VRHandIKControls,
     VRUI,
-} from "../../../components/vr";
+} from "../../components/vr";
 
 import { VRPanle, VRStats } from "components/vr";
 
 // ==========
 // Store
-import { useStore } from "../../../components/store";
+import { useStore } from "../../components/store";
 
 // ==========
 // Styles
