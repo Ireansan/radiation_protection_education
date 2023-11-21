@@ -60,7 +60,7 @@ import { CustomOrbitControls } from "../../../components/controls";
 
 // ==========
 // UI
-import { ExperimentCheckList, SceneConfigPanel } from "../../../components/ui";
+import { CoordHTML, ExperimentCheckList, SceneConfigPanel } from "../../../components/ui";
 
 // ==========
 // Store
@@ -88,9 +88,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     };
 };
 
-export const getStaticProps: GetStaticProps = async ({
-    params,
-}: GetStaticPropsContext) => {
+export const getStaticProps: GetStaticProps = async ({ params }: GetStaticPropsContext) => {
     const pageType = params!.type;
 
     const isBasic = pageType === "basic";
@@ -117,6 +115,39 @@ function VisualizationXRay({ ...props }: PageProps) {
         state.sceneProperties.objectVisibles,
     ]);
 
+    const names = [
+        {
+            name: "mixamorigNeck",
+            displayName: "Neck",
+            category: "neck",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigLeftEye",
+            displayName: "Left Eye",
+            category: "goggle",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigRightEye",
+            displayName: "Right Eye",
+            category: "goggle",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigLeftHand",
+            displayName: "Left Hand",
+            category: "glove",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigRightHand",
+            displayName: "Right Hand",
+            category: "glove",
+            coefficient: 0.1,
+        },
+    ];
+
     const ref = useRef<DoseGroup>(null!);
 
     const timelapseRef = useRef<DoseGroup>(null);
@@ -140,22 +171,14 @@ function VisualizationXRay({ ...props }: PageProps) {
                 curtain: {
                     value: false,
                     onChange: (e) => {
-                        nocurtainRef.current
-                            ? (nocurtainRef.current.visible = !e)
-                            : null;
+                        nocurtainRef.current ? (nocurtainRef.current.visible = !e) : null;
                         nocurtainAccumuRef.current
                             ? (nocurtainAccumuRef.current.visible = !e)
                             : null;
 
-                        curtainRef.current
-                            ? (curtainRef.current.visible = e)
-                            : null;
-                        curtainAccumuRef.current
-                            ? (curtainAccumuRef.current.visible = e)
-                            : null;
-                        curtainObjRef.current
-                            ? (curtainObjRef.current.visible = e)
-                            : null;
+                        curtainRef.current ? (curtainRef.current.visible = e) : null;
+                        curtainAccumuRef.current ? (curtainAccumuRef.current.visible = e) : null;
+                        curtainObjRef.current ? (curtainObjRef.current.visible = e) : null;
                     },
                 },
             }),
@@ -184,18 +207,9 @@ function VisualizationXRay({ ...props }: PageProps) {
                             <doseGroup
                                 ref={ref}
                                 visible={objectVisibles.dose}
-                                position={
-                                    VOLUMEDATA.XRay_nocurtain_Configure.volume
-                                        .position
-                                }
-                                rotation={
-                                    VOLUMEDATA.XRay_nocurtain_Configure.volume
-                                        .rotation
-                                }
-                                scale={
-                                    VOLUMEDATA.XRay_nocurtain_Configure.volume
-                                        .scale
-                                }
+                                position={VOLUMEDATA.XRay_nocurtain_Configure.volume.position}
+                                rotation={VOLUMEDATA.XRay_nocurtain_Configure.volume.rotation}
+                                scale={VOLUMEDATA.XRay_nocurtain_Configure.volume.scale}
                             >
                                 {/* Time Lapse */}
                                 <doseGroup ref={timelapseRef}>
@@ -217,7 +231,10 @@ function VisualizationXRay({ ...props }: PageProps) {
                                 </doseGroup>
 
                                 {/* Accumulate */}
-                                <doseGroup ref={accumulateRef} visible={false}>
+                                <doseGroup
+                                    ref={accumulateRef}
+                                    visible={false}
+                                >
                                     {/* X-Ray Dose, no curtain, Accumulate */}
                                     <doseGroup
                                         ref={nocurtainAccumuRef}
@@ -253,10 +270,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                             <VolumeXYZClippingControls
                                 object={ref}
                                 planeSize={2}
-                                areaSize={
-                                    VOLUMEDATA.XRay_curtain_Configure.volume
-                                        .areaSize
-                                }
+                                areaSize={VOLUMEDATA.XRay_curtain_Configure.volume.areaSize}
                                 areaScale={1.1}
                                 lineColor={new THREE.Color(0x6e0010)}
                             />
@@ -267,42 +281,8 @@ function VisualizationXRay({ ...props }: PageProps) {
                                     <DosimeterControls
                                         ref={dosimeterRef}
                                         object={yBotRef}
-                                        names={[
-                                            {
-                                                name: "mixamorigNeck",
-                                                displayName: "Neck",
-                                                category: "neck",
-                                                coefficient: 0.1,
-                                            },
-                                            {
-                                                name: "mixamorigLeftEye",
-                                                displayName: "Left Eye",
-                                                category: "goggle",
-                                                coefficient: 0.1,
-                                            },
-                                            {
-                                                name: "mixamorigRightEye",
-                                                displayName: "Right Eye",
-                                                category: "goggle",
-                                                coefficient: 0.1,
-                                            },
-                                            {
-                                                name: "mixamorigLeftHand",
-                                                displayName: "Left Hand",
-                                                category: "glove",
-                                                coefficient: 0.1,
-                                            },
-                                            {
-                                                name: "mixamorigRightHand",
-                                                displayName: "Right Hand",
-                                                category: "glove",
-                                                coefficient: 0.1,
-                                            },
-                                        ]}
-                                        targets={[
-                                            nocurtainAccumuRef,
-                                            curtainAccumuRef,
-                                        ]}
+                                        names={names}
+                                        targets={[nocurtainAccumuRef, curtainAccumuRef]}
                                     />
                                 </>
                             ) : null}
@@ -311,12 +291,8 @@ function VisualizationXRay({ ...props }: PageProps) {
                             {/* Three.js Object */}
                             <group
                                 visible={objectVisibles.object3d}
-                                position={
-                                    ENVIROMENT.XRay_Configure.object3d.position
-                                }
-                                rotation={
-                                    ENVIROMENT.XRay_Configure.object3d.rotation
-                                }
+                                position={ENVIROMENT.XRay_Configure.object3d.position}
+                                rotation={ENVIROMENT.XRay_Configure.object3d.rotation}
                                 scale={ENVIROMENT.XRay_Configure.object3d.scale}
                             >
                                 <ENVIROMENT.XRay_Bed />
@@ -324,11 +300,17 @@ function VisualizationXRay({ ...props }: PageProps) {
                                 <ENVIROMENT.XRay_Patient />
 
                                 {/* Curtain (Three.js Object) */}
-                                <group ref={curtainObjRef} visible={false}>
+                                <group
+                                    ref={curtainObjRef}
+                                    visible={false}
+                                >
                                     <ENVIROMENT.XRay_Curtain />
                                 </group>
                             </group>
-                            <mesh position={[0, 1, 0]} visible={debug}>
+                            <mesh
+                                position={[0, 1, 0]}
+                                visible={debug}
+                            >
                                 <sphereBufferGeometry args={[0.25]} />
                             </mesh>
 
@@ -339,13 +321,9 @@ function VisualizationXRay({ ...props }: PageProps) {
                                         matrix={new THREE.Matrix4().compose(
                                             new THREE.Vector3(2, 0, 0),
                                             new THREE.Quaternion().setFromEuler(
-                                                new THREE.Euler(
-                                                    0,
-                                                    -Math.PI / 2,
-                                                    0,
-                                                ),
+                                                new THREE.Euler(0, -Math.PI / 2, 0)
                                             ),
-                                            new THREE.Vector3(1, 1, 1),
+                                            new THREE.Vector3(1, 1, 1)
                                         )}
                                         scale={70}
                                         fixed={true}
@@ -356,12 +334,8 @@ function VisualizationXRay({ ...props }: PageProps) {
                                             objectVisibles.playerPivot
                                         }
                                         onDrag={(l, deltaL, w, deltaW) => {
-                                            yBotRef.current.position.setFromMatrixPosition(
-                                                w,
-                                            );
-                                            yBotRef.current.rotation.setFromRotationMatrix(
-                                                w,
-                                            );
+                                            yBotRef.current.position.setFromMatrixPosition(w);
+                                            yBotRef.current.rotation.setFromRotationMatrix(w);
                                         }}
                                         onDragEnd={() => {
                                             if (dosimeterRef.current) {
@@ -372,12 +346,9 @@ function VisualizationXRay({ ...props }: PageProps) {
                                                 sceneProperties: {
                                                     ...state.sceneProperties,
                                                     executeLog: {
-                                                        ...state.sceneProperties
-                                                            .executeLog,
+                                                        ...state.sceneProperties.executeLog,
                                                         avatar: {
-                                                            ...state
-                                                                .sceneProperties
-                                                                .executeLog
+                                                            ...state.sceneProperties.executeLog
                                                                 .avatar,
                                                             translate: true,
                                                         },
@@ -391,16 +362,16 @@ function VisualizationXRay({ ...props }: PageProps) {
                                         visible={objectVisibles.player}
                                         position={[2, 0, 0]}
                                         rotation={[0, -Math.PI / 2, 0]}
+                                        onPointerOver={(e) => console.log("Player", e)}
                                     >
                                         <CustomYBotIK />
                                         <HandIKPivotControls
                                             object={yBotRef}
                                             scale={35}
                                             fixed={true}
-                                            visible={
-                                                objectVisibles.playerHandPivot
-                                            }
+                                            visible={objectVisibles.playerHandPivot}
                                         />
+                                        {/* <CoordHTML /> */}
                                     </group>
                                 </>
                             ) : null}
@@ -421,53 +392,36 @@ function VisualizationXRay({ ...props }: PageProps) {
                                             object={ref}
                                             origin={new THREE.Vector3(0, 1, 0)}
                                             areaSize={
-                                                VOLUMEDATA
-                                                    .XRay_curtain_Configure
-                                                    .volume.areaSize
+                                                VOLUMEDATA.XRay_curtain_Configure.volume.areaSize
                                             }
                                             width={Board_Configure.size.x}
                                             height={Board_Configure.size.y}
-                                            position={
-                                                new THREE.Vector3(
-                                                    2.5,
-                                                    1.25,
-                                                    -0.5,
-                                                )
-                                            }
-                                            rotation={
-                                                new THREE.Euler(
-                                                    0,
-                                                    Math.PI / 2,
-                                                    0,
-                                                )
-                                            }
+                                            position={new THREE.Vector3(2.5, 1.25, -0.5)}
+                                            rotation={new THREE.Euler(0, Math.PI / 2, 0)}
                                             planeSize={Board_Configure.size.y}
                                             scale={50}
                                             fixed={true}
                                             offset={[0, 0, 0.1]}
                                             opacity={0.75}
                                             visible={
-                                                objectVisibles.shield &&
-                                                objectVisibles.shieldPivot
+                                                objectVisibles.shield && objectVisibles.shieldPivot
                                             }
                                         >
-                                            <mesh
-                                                visible={objectVisibles.shield}
-                                                position={[0, 0, 0]}
-                                            >
-                                                <boxBufferGeometry
-                                                    args={[
-                                                        ...Board_Configure.size.toArray(),
-                                                    ]}
-                                                />
-                                                <meshBasicMaterial
-                                                    color={
-                                                        new THREE.Color(
-                                                            0xb39a7b,
-                                                        )
-                                                    }
-                                                />
-                                            </mesh>
+                                            <group>
+                                                <mesh
+                                                    visible={objectVisibles.shield}
+                                                    position={[0, 0, 0]}
+                                                    onPointerOver={(e) => console.log("Board", e)}
+                                                >
+                                                    <boxBufferGeometry
+                                                        args={[...Board_Configure.size.toArray()]}
+                                                    />
+                                                    <meshBasicMaterial
+                                                        color={new THREE.Color(0xb39a7b)}
+                                                    />
+                                                </mesh>
+                                                <CoordHTML />
+                                            </group>
                                         </DoseBoardControls>
                                     </>
                                 ) : null}
@@ -500,11 +454,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                                 renderPriority={1}
                             >
                                 <GizmoViewport
-                                    axisColors={[
-                                        "hotpink",
-                                        "aquamarine",
-                                        "#3498DB",
-                                    ]}
+                                    axisColors={["hotpink", "aquamarine", "#3498DB"]}
                                     labelColor="black"
                                 />
                             </GizmoHelper>
@@ -512,15 +462,13 @@ function VisualizationXRay({ ...props }: PageProps) {
                     </Canvas>
                     <Loader />
                     <SceneConfigPanel activateStats={false} />
-                    {objectVisibles.dosimeterUI &&
-                    props.availables.dosimeter ? (
+                    {objectVisibles.dosimeterUI && props.availables.dosimeter ? (
                         <>
                             <DoseEquipmentsUI />
                             <DosimeterUI />
                         </>
                     ) : null}
-                    {objectVisibles.experimentUI &&
-                    props.availables.experimentUI ? (
+                    {objectVisibles.experimentUI && props.availables.experimentUI ? (
                         <>
                             <ExperimentCheckList />
                         </>
