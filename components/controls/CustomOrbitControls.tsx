@@ -12,20 +12,6 @@ export function CustomOrbitControls({ ...props }) {
         Scene: folder({
             Config: folder({
                 "Camera Controls": folder({
-                    enableDamping: {
-                        value: false,
-                        onChange: (e) => {
-                            ref.current.enableDamping = e;
-                        },
-                    },
-                    dampingFactor: {
-                        value: 0.05,
-                        step: 0.01,
-                        onChange: (e) => {
-                            ref.current.dampingFactor = e;
-                        },
-                        render: () => ref.current.enableDamping,
-                    },
                     panSpeed: {
                         value: 1,
                         onChange: (e) => {
@@ -51,7 +37,7 @@ export function CustomOrbitControls({ ...props }) {
 
     return (
         <>
-            <OrbitControls ref={ref} makeDefault />
+            <OrbitControls ref={ref} makeDefault enableDamping={false} />
         </>
     );
 }
