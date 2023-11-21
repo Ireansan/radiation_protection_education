@@ -56,6 +56,10 @@ import {
 
 // ==========
 // UI
+import { CustomOrbitControls } from "../../../components/controls";
+
+// ==========
+// UI
 import { ExperimentCheckList, SceneConfigPanel } from "../../../components/ui";
 
 // ==========
@@ -403,7 +407,7 @@ function VisualizationXRay({ ...props }: PageProps) {
 
                             {/* -------------------------------------------------- */}
                             {/* Three.js Controls */}
-                            <OrbitControls makeDefault />
+                            <CustomOrbitControls />
 
                             {/* -------------------------------------------------- */}
                             {/* Physics */}
