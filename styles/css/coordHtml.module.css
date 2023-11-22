@@ -1,9 +1,18 @@
-.content {
+.foundation {
+  width: 0px;
+  height: 0px;
+}
+.foundation .content {
+  width: 175px;
   padding-top: 10px;
-  transform: translate3d(calc(50% + 20px), 0, 0);
+  transform: translate3d(50%, 0, 0);
+  font-size: 0.8rem;
   text-align: left;
   background: #202035;
   color: white;
   padding: 10px 15px;
   border-radius: 5px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }/*# sourceMappingURL=coordHtml.module.css.map */

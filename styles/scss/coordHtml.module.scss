@@ -1,11 +1,20 @@
 // https://codesandbox.io/s/zu2wo?file=/src/styles.css
 
-.content {
-    padding-top: 10px;
-    transform: translate3d(calc(50% + 20px), 0, 0);
-    text-align: left;
-    background: #202035;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 5px;
+.foundation {
+    width: 0px;
+    height: 0px;
+
+    .content {
+        width: 175px;
+        padding-top: 10px;
+        // transform: translate3d(calc(50% + 20px), 0, 0);
+        transform: translate3d(calc(50%), 0, 0);
+        font-size: 0.8rem;
+        text-align: left;
+        background: #202035;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 5px;
+        user-select: none;
+    }
 }
