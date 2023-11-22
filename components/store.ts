@@ -230,7 +230,7 @@ const useStoreImpl = create<IState>(
             menu: true,
             ready: false,
             viewing: false,
-            annotations: true,
+            annotations: false,
             session: null,
             set,
             shadows,
