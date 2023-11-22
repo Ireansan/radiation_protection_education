@@ -44,8 +44,7 @@ export const stats = false as const;
  * @link https://qiita.com/nemutas/items/6202b3f8458376ab79b6#paramsts
  */
 export const matcapList = [
-    92, 45, 20, 21, 25, 28, 26, 39, 58, 540, 544, 546, 550, 580, 586, 613, 635,
-    639,
+    92, 45, 20, 21, 25, 28, 26, 39, 58, 540, 544, 546, 550, 580, 586, 613, 635, 639,
 ] as const;
 export type MatcapList = (typeof matcapList)[number];
 
@@ -180,6 +179,7 @@ const booleans = [
     "play",
     "ready",
     "viewing",
+    "annotations",
     "shadows",
     "sound",
     "stats",
@@ -230,6 +230,7 @@ const useStoreImpl = create<IState>(
             menu: true,
             ready: false,
             viewing: false,
+            annotations: true,
             session: null,
             set,
             shadows,

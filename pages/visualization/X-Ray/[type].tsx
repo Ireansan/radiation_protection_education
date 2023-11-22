@@ -158,6 +158,7 @@ function VisualizationXRay({ ...props }: PageProps) {
     const nocurtainAccumuRef = useRef<DoseGroup>(null);
     const curtainAccumuRef = useRef<DoseGroup>(null);
 
+    const originObjRef = useRef<THREE.Mesh>(null);
     const curtainObjRef = useRef<THREE.Group>(null);
 
     const dosimeterRef = useRef<Dosimeter>(null);
@@ -203,7 +204,6 @@ function VisualizationXRay({ ...props }: PageProps) {
                         <Suspense fallback={null}>
                             {/* -------------------------------------------------- */}
                             {/* Volume Object */}
-
                             <doseGroup
                                 ref={ref}
                                 visible={objectVisibles.dose}
@@ -308,6 +308,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                                 </group>
                             </group>
                             <mesh
+                                ref={originObjRef}
                                 position={[0, 1, 0]}
                                 visible={debug}
                             >
@@ -371,7 +372,11 @@ function VisualizationXRay({ ...props }: PageProps) {
                                             fixed={true}
                                             visible={objectVisibles.playerHandPivot}
                                         />
-                                        {/* <CoordHTML /> */}
+                                        <CoordHTML
+                                            origin={originObjRef}
+                                            enableRotation={false}
+                                            xzPlane={true}
+                                        />
                                     </group>
                                 </>
                             ) : null}
@@ -420,7 +425,10 @@ function VisualizationXRay({ ...props }: PageProps) {
                                                         color={new THREE.Color(0xb39a7b)}
                                                     />
                                                 </mesh>
-                                                <CoordHTML />
+                                                <CoordHTML
+                                                    origin={originObjRef}
+                                                    enableDistance={false}
+                                                />
                                             </group>
                                         </DoseBoardControls>
                                     </>
