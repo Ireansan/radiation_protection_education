@@ -17,6 +17,16 @@ a {
 
 #leva__root > * {
     width: 335px;
+
+    .leva-c-dKMqBT {
+        /* Default */
+        /* color: #8c92a4; */
+        /* Custom */
+        /* v: 70, 75 <-- best?, 80 */
+        /* color: #989FB3; */
+        color: #A3AABF;
+        /* color: #ADB6CC; */
+    }
 }
 
 @media (prefers-color-scheme: dark) {
