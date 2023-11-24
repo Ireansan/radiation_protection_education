@@ -3,8 +3,14 @@ import * as THREE from "three";
 import { styled, Box, Paper, Stack, Slider, Typography } from "@mui/material";
 import { PlayArrow, Pause } from "@mui/icons-material";
 
-import { VolumeBase, DoseAnimationObject, VolumeAnimationObject } from "../../../../src";
+import {
+    VolumeBase,
+    DoseAnimationObject,
+    VolumeAnimationObject,
+} from "../../../../src";
 import { useStore } from "../../../store";
+
+import style from "../../../../styles/css/volumeAnimationControls.module.css";
 
 /**
  * @link https://www.youtube.com/watch?v=CH2FmLzWKr4
@@ -12,8 +18,6 @@ import { useStore } from "../../../store";
  */
 const CustomPaper = styled(Paper)(({ theme }) => ({
     backgroundColor: "#4c4c4c",
-    marginLeft: theme.spacing(6),
-    marginRight: theme.spacing(6),
     padding: theme.spacing(2),
 }));
 const CustomSlider = styled(Slider)(({ theme, ...props }) => ({
@@ -70,7 +74,9 @@ export function PrototypeAnimationControls({
     function formatDuration(value: number) {
         const minute = Math.floor(value / 60);
         const seconds = value - minute * 60;
-        return `${minute < 10 ? `0${minute}` : minute}:${seconds < 10 ? `0${seconds}` : seconds}`;
+        return `${minute < 10 ? `0${minute}` : minute}:${
+            seconds < 10 ? `0${seconds}` : seconds
+        }`;
     }
 
     const togglePlay = () => {
@@ -83,20 +89,14 @@ export function PrototypeAnimationControls({
     };
 
     return (
-        <div>
+        <div className={`${style.foundation}`}>
             <audio
                 src={audioSrc}
                 ref={audioPlayer}
                 muted={true}
             />
             <CustomPaper>
-                <Box
-                    // @ts-ignore
-                    sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                    }}
-                >
+                <Box>
                     <Stack
                         direction="row"
                         spacing={1}
@@ -109,42 +109,46 @@ export function PrototypeAnimationControls({
                         {!isPlaying ? (
                             <PlayArrow
                                 fontSize={"large"}
-                                sx={{ color: "lime", "&:hover": { color: "white" } }}
+                                sx={{
+                                    color: "lime",
+                                    "&:hover": { color: "white" },
+                                }}
                                 onClick={togglePlay}
                             />
                         ) : (
                             <Pause
                                 fontSize={"large"}
-                                sx={{ color: "lime", "&:hover": { color: "white" } }}
+                                sx={{
+                                    color: "lime",
+                                    "&:hover": { color: "white" },
+                                }}
                                 onClick={togglePlay}
                             />
                         )}
                     </Stack>
 
                     <Stack
+                        spacing={1}
+                        direction="row"
                         sx={{
                             display: "flex",
-                            justifyContent: "flex-end",
+                            justifyContent: "flex-start",
+                            alignItems: "center",
                         }}
-                    />
+                    >
+                        <Typography sx={{ color: "lime" }}>
+                            {formatDuration(elapsed)}
+                        </Typography>
+                        <CustomSlider
+                            value={elapsed}
+                            max={duration}
+                            onChange={(event, value) => {}}
+                        />
+                        <Typography sx={{ color: "lime" }}>
+                            {formatDuration(duration - elapsed)}
+                        </Typography>
+                    </Stack>
                 </Box>
-                <Stack
-                    spacing={1}
-                    direction="row"
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                    }}
-                >
-                    <Typography sx={{ color: "lime" }}>{formatDuration(elapsed)}</Typography>
-                    <CustomSlider
-                        value={elapsed}
-                        max={duration}
-                    />
-                    <Typography sx={{ color: "lime" }}>
-                        {formatDuration(duration - elapsed)}
-                    </Typography>
-                </Stack>
             </CustomPaper>
         </div>
     );
