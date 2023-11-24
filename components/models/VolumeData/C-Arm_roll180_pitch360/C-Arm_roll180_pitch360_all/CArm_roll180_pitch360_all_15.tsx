@@ -5,6 +5,7 @@ import {
     useThree,
     useLoader,
 } from "@react-three/fiber";
+import * as THREE from "three";
 import { Volume, NRRDLoader } from "three-stdlib";
 
 import { applyBasePath } from "../../../../../utils";
@@ -15,15 +16,19 @@ const modelURL = applyBasePath(
 export function CArm_roll180_pitch360_all_15({
     ...props
 }: JSX.IntrinsicElements["doseObject"]) {
-    const { gl } = useThree();
+    const { gl, camera } = useThree();
     gl.localClippingEnabled = true;
+    const isPerspective = React.useMemo(
+        () => camera instanceof THREE.PerspectiveCamera,
+        [camera]
+    );
 
     // @ts-ignore
     const volume: Volume = useLoader(NRRDLoader, modelURL);
 
     return (
         <>
-            <doseObject args={[volume]} {...props} />
+            <doseObject args={[volume, isPerspective]} {...props} />
         </>
     );
 }
