@@ -2,6 +2,7 @@ import os
 import natsort
 
 from nrrd2tsx import nrrd2tsx
+from generate_silence_mp3 import generate_silence_mp3
 from nrrd2accumulate import nrrd2accumulate
 from vtk2nrrd import vtk2nrrd
 
@@ -45,6 +46,12 @@ def vtk2tsx(
             name_component=tsx_name,
             out_dir_depth=out_dir_depth,
         )
+
+    # Generate Silence MP3 file
+    mp3_path = os.path.join(out_dir_public, "{}.mp3".format(name_nrrd))
+    mp3_out_path = os.path.join("../../public", mp3_path)
+    duration = len(sorted_files)
+    generate_silence_mp3(mp3_out_path, duration)
 
     # Generate accumulate nrrd and tsx
     nrrd_input_dir = os.path.join("../../public", out_dir_public)
