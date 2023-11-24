@@ -9,17 +9,20 @@ import { useStore } from "../store";
 type SceneConfigPanelProps = {
     activateDebug?: boolean;
     activateViewing?: boolean;
+    activateAnnotations?: boolean;
     activateStats?: boolean;
 };
 export function SceneConfigPanel({
     activateDebug = true,
     activateViewing = true,
+    activateAnnotations = true,
     activateStats = true,
 }: SceneConfigPanelProps) {
-    const [set, debug, viewing, stats, objectVisibles] = useStore((state) => [
+    const [set, debug, viewing, annotations, stats, objectVisibles] = useStore((state) => [
         state.set,
         state.debug,
         state.viewing,
+        state.annotations,
         state.stats,
         state.sceneProperties.objectVisibles,
     ]);
@@ -34,169 +37,171 @@ export function SceneConfigPanel({
                         return activateViewing;
                     },
                 },
+                annotations: {
+                    value: annotations,
+                    onChange: (annotations) => set({ annotations }),
+                    render: () => {
+                        return activateAnnotations;
+                    },
+                },
             }),
-            // FIXME: change folder name, "Config" to "Debug"
             Config: folder(
                 {
-                    debug: {
-                        value: debug,
-                        onChange: (debug) => set({ debug }),
-                        render: () => {
-                            return activateDebug;
+                    Debug: folder({
+                        debug: {
+                            value: debug,
+                            onChange: (debug) => set({ debug }),
+                            render: () => {
+                                return activateDebug;
+                            },
                         },
-                    },
-                    stats: {
-                        value: stats,
-                        onChange: (stats) => set({ stats }),
-                        render: () => {
-                            return activateStats;
+                        stats: {
+                            value: stats,
+                            onChange: (stats) => set({ stats }),
+                            render: () => {
+                                return activateStats;
+                            },
                         },
-                    },
-                    Visibles: folder({
-                        dose: {
-                            value: objectVisibles.dose,
-                            onChange: (e) => {
-                                set((state) => ({
-                                    sceneProperties: {
-                                        ...state.sceneProperties,
-                                        objectVisibles: {
-                                            ...state.sceneProperties
-                                                .objectVisibles,
-                                            dose: e,
+                        Visibles: folder(
+                            {
+                                dose: {
+                                    value: objectVisibles.dose,
+                                    onChange: (e) => {
+                                        set((state) => ({
+                                            sceneProperties: {
+                                                ...state.sceneProperties,
+                                                objectVisibles: {
+                                                    ...state.sceneProperties.objectVisibles,
+                                                    dose: e,
+                                                },
+                                            },
+                                        }));
+                                    },
+                                },
+                                object3d: {
+                                    value: objectVisibles.object3d,
+                                    onChange: (e) => {
+                                        set((state) => ({
+                                            sceneProperties: {
+                                                ...state.sceneProperties,
+                                                objectVisibles: {
+                                                    ...state.sceneProperties.objectVisibles,
+                                                    object3d: e,
+                                                },
+                                            },
+                                        }));
+                                    },
+                                },
+                                Player: folder({
+                                    player: {
+                                        value: objectVisibles.player,
+                                        onChange: (e) => {
+                                            set((state) => ({
+                                                sceneProperties: {
+                                                    ...state.sceneProperties,
+                                                    objectVisibles: {
+                                                        ...state.sceneProperties.objectVisibles,
+                                                        player: e,
+                                                    },
+                                                },
+                                            }));
                                         },
                                     },
-                                }));
-                            },
-                        },
-                        object3d: {
-                            value: objectVisibles.object3d,
-                            onChange: (e) => {
-                                set((state) => ({
-                                    sceneProperties: {
-                                        ...state.sceneProperties,
-                                        objectVisibles: {
-                                            ...state.sceneProperties
-                                                .objectVisibles,
-                                            object3d: e,
+                                    playerPivot: {
+                                        value: objectVisibles.playerPivot,
+                                        label: "Pivot",
+                                        onChange: (e) => {
+                                            set((state) => ({
+                                                sceneProperties: {
+                                                    ...state.sceneProperties,
+                                                    objectVisibles: {
+                                                        ...state.sceneProperties.objectVisibles,
+                                                        playerPivot: e,
+                                                    },
+                                                },
+                                            }));
                                         },
                                     },
-                                }));
-                            },
-                        },
-                        Player: folder({
-                            player: {
-                                value: objectVisibles.player,
-                                onChange: (e) => {
-                                    set((state) => ({
-                                        sceneProperties: {
-                                            ...state.sceneProperties,
-                                            objectVisibles: {
-                                                ...state.sceneProperties
-                                                    .objectVisibles,
-                                                player: e,
-                                            },
+                                    playerHandPivot: {
+                                        value: objectVisibles.playerHandPivot,
+                                        label: "HandIK",
+                                        onChange: (e) => {
+                                            set((state) => ({
+                                                sceneProperties: {
+                                                    ...state.sceneProperties,
+                                                    objectVisibles: {
+                                                        ...state.sceneProperties.objectVisibles,
+                                                        playerHandPivot: e,
+                                                    },
+                                                },
+                                            }));
                                         },
-                                    }));
-                                },
-                            },
-                            playerPivot: {
-                                value: objectVisibles.playerPivot,
-                                label: "Pivot",
-                                onChange: (e) => {
-                                    set((state) => ({
-                                        sceneProperties: {
-                                            ...state.sceneProperties,
-                                            objectVisibles: {
-                                                ...state.sceneProperties
-                                                    .objectVisibles,
-                                                playerPivot: e,
-                                            },
+                                    },
+                                }),
+                                Shield: folder({
+                                    shield: {
+                                        value: objectVisibles.shield,
+                                        onChange: (e) => {
+                                            set((state) => ({
+                                                sceneProperties: {
+                                                    ...state.sceneProperties,
+                                                    objectVisibles: {
+                                                        ...state.sceneProperties.objectVisibles,
+                                                        shield: e,
+                                                    },
+                                                },
+                                            }));
                                         },
-                                    }));
-                                },
-                            },
-                            playerHandPivot: {
-                                value: objectVisibles.playerHandPivot,
-                                label: "HandIK",
-                                onChange: (e) => {
-                                    set((state) => ({
-                                        sceneProperties: {
-                                            ...state.sceneProperties,
-                                            objectVisibles: {
-                                                ...state.sceneProperties
-                                                    .objectVisibles,
-                                                playerHandPivot: e,
-                                            },
+                                    },
+                                    shieldPivot: {
+                                        value: objectVisibles.shieldPivot,
+                                        label: "Pivot",
+                                        onChange: (e) => {
+                                            set((state) => ({
+                                                sceneProperties: {
+                                                    ...state.sceneProperties,
+                                                    objectVisibles: {
+                                                        ...state.sceneProperties.objectVisibles,
+                                                        shieldPivot: e,
+                                                    },
+                                                },
+                                            }));
                                         },
-                                    }));
-                                },
-                            },
-                        }),
-                        Shield: folder({
-                            shield: {
-                                value: objectVisibles.shield,
-                                onChange: (e) => {
-                                    set((state) => ({
-                                        sceneProperties: {
-                                            ...state.sceneProperties,
-                                            objectVisibles: {
-                                                ...state.sceneProperties
-                                                    .objectVisibles,
-                                                shield: e,
-                                            },
+                                    },
+                                }),
+                                UI: folder({
+                                    dosimeterUI: {
+                                        value: objectVisibles.dosimeterUI,
+                                        onChange: (e) => {
+                                            set((state) => ({
+                                                sceneProperties: {
+                                                    ...state.sceneProperties,
+                                                    objectVisibles: {
+                                                        ...state.sceneProperties.objectVisibles,
+                                                        dosimeterUI: e,
+                                                    },
+                                                },
+                                            }));
                                         },
-                                    }));
-                                },
-                            },
-                            shieldPivot: {
-                                value: objectVisibles.shieldPivot,
-                                label: "Pivot",
-                                onChange: (e) => {
-                                    set((state) => ({
-                                        sceneProperties: {
-                                            ...state.sceneProperties,
-                                            objectVisibles: {
-                                                ...state.sceneProperties
-                                                    .objectVisibles,
-                                                shieldPivot: e,
-                                            },
+                                    },
+                                    experimentUI: {
+                                        value: objectVisibles.experimentUI,
+                                        onChange: (e) => {
+                                            set((state) => ({
+                                                sceneProperties: {
+                                                    ...state.sceneProperties,
+                                                    objectVisibles: {
+                                                        ...state.sceneProperties.objectVisibles,
+                                                        experimentUI: e,
+                                                    },
+                                                },
+                                            }));
                                         },
-                                    }));
-                                },
+                                    },
+                                }),
                             },
-                        }),
-                        UI: folder({
-                            dosimeterUI: {
-                                value: objectVisibles.dosimeterUI,
-                                onChange: (e) => {
-                                    set((state) => ({
-                                        sceneProperties: {
-                                            ...state.sceneProperties,
-                                            objectVisibles: {
-                                                ...state.sceneProperties
-                                                    .objectVisibles,
-                                                dosimeterUI: e,
-                                            },
-                                        },
-                                    }));
-                                },
-                            },
-                            experimentUI: {
-                                value: objectVisibles.experimentUI,
-                                onChange: (e) => {
-                                    set((state) => ({
-                                        sceneProperties: {
-                                            ...state.sceneProperties,
-                                            objectVisibles: {
-                                                ...state.sceneProperties
-                                                    .objectVisibles,
-                                                experimentUI: e,
-                                            },
-                                        },
-                                    }));
-                                },
-                            },
-                        }),
+                            { collapsed: true }
+                        ),
                     }),
                 },
                 { collapsed: true }

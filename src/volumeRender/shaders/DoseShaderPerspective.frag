@@ -1,6 +1,8 @@
 precision highp float;
 precision mediump sampler3D;
 
+uniform vec2 u_resolution;
+
 uniform vec3 u_size;
 uniform int u_renderstyle;
 uniform float u_renderthreshold;
@@ -22,8 +24,7 @@ varying vec4 v_farpos;
 varying mat4 viewtransformf;
 
 // The maximum distance through our rendering volume is sqrt(3).
-// const int MAX_STEPS=887;// 887 for 512^3, 1774 for 1024^3
-const int MAX_STEPS=221;// 128 * sqrt(3) = 221, 256 * sqrt(3) = 443
+const int MAX_STEPS=887;// 887 for 512^3, 1774 for 1024^3
 const int REFINEMENT_STEPS=4;
 const float relative_step_size=1.;
 const vec4 ambient_color=vec4(.2,.4,.2,1.);

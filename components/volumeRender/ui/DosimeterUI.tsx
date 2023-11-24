@@ -28,7 +28,7 @@ import style from "../../../styles/css/dosimeter.module.css";
  * @link https://codesandbox.io/s/i2160?file=/src/Hud.js
  */
 
-type ResultIconProps = {
+export type ResultIconProps = {
     state: string[];
     color?: string;
 };
@@ -39,27 +39,42 @@ function ResultIcon({
 }: ResultIconProps) {
     return (
         <>
-            {state.includes("shield") ? (
+            <div
+                className={`${style.icon}
+                    ${state.includes("shield") && `${style.active}`}`}
+            >
                 <HealthAndSafety sx={{ color: color, fontSize: "1rem" }} />
-            ) : null}
-            {state.includes("goggle") ? (
+            </div>
+            <div
+                className={`${style.icon}
+                    ${state.includes("goggle") && `${style.active}`}`}
+            >
                 <Visibility sx={{ color: color, fontSize: "1rem" }} />
-            ) : null}
-            {state.includes("neck") ? (
+            </div>
+            <div
+                className={`${style.icon}
+                    ${state.includes("neck") && `${style.active}`}`}
+            >
                 <PersonAddAlt1 sx={{ color: color, fontSize: "1rem" }} />
-            ) : null}
-            {state.includes("apron") ? (
+            </div>
+            <div
+                className={`${style.icon}
+                    ${state.includes("apron") && `${style.active}`}`}
+            >
                 <Person sx={{ color: color, fontSize: "1rem" }} />
-            ) : null}
-            {state.includes("glove") ? (
+            </div>
+            <div
+                className={`${style.icon}
+                    ${state.includes("glove") && `${style.active}`}`}
+            >
                 <SignLanguage sx={{ color: color, fontSize: "1rem" }} />
-            ) : null}
+            </div>
         </>
     );
 }
 const MemoResultIcon = memo(ResultIcon);
 
-type ResultDataProps = {
+export type ResultDataProps = {
     children: React.ReactNode;
     value: number;
     coefficient: number;
@@ -121,7 +136,7 @@ function ResultData({
 }
 const MemoResultData = memo(ResultData);
 
-type DosimeterResultProps = {
+export type DosimeterResultProps = {
     result: ResultsByName;
     equipments: Equipments;
     coefficient: number;
@@ -143,7 +158,7 @@ function DosimeterResult({
                 ? result.dose.reduce((acculator, currentValue) =>
                       acculator.data > currentValue.data
                           ? acculator
-                          : currentValue
+                          : currentValue,
                   )
                 : { data: NaN, state: undefined };
         let value = !Number.isNaN(doseValue.data) ? doseValue.data : 0;
@@ -152,7 +167,7 @@ function DosimeterResult({
         // check equipment
         if (result.category) {
             let categoryIndex: number = Object.keys(equipments).indexOf(
-                result.category
+                result.category,
             );
             let isEquipped: boolean | undefined =
                 Object.values(equipments)[categoryIndex];
@@ -175,7 +190,7 @@ function DosimeterResult({
                     <div className={`${style.identifier}`}>
                         {result.displayName ? result.displayName : result.name}
                     </div>
-                    <div className={`${style.icon}`}>
+                    <div className={`${style.icons}`}>
                         <MemoResultIcon state={state} />
                     </div>
                 </div>
@@ -206,7 +221,7 @@ function DosimeterResult({
 }
 const MemoDosimeterResult = memo(DosimeterResult);
 
-type dosimeterUIProps = {
+export type DosimeterUIProps = {
     nPerPatient?: number;
     nPerYear?: number;
     limitOnce?: number;
@@ -216,7 +231,7 @@ export function DosimeterUI({
     nPerYear = 500,
     limitOnce = 100,
     ...props
-}: dosimeterUIProps) {
+}: DosimeterUIProps) {
     const [set, playerProperties, sceneProperties] = useStore((state) => [
         state.set,
         state.playerProperties,
@@ -251,7 +266,7 @@ export function DosimeterUI({
                         label: "Limit (/once)",
                     },
                 },
-                { collapsed: true }
+                { collapsed: true },
             ),
         }),
     }));

@@ -34,7 +34,7 @@ import {
 // Model
 import * as MODELS from "../../../components/models";
 import { Board_Configure } from "../../../components/models";
-import { CustomYBotIK } from "../../../components/models/Custom_Ybot_IK";
+import { CustomYBotIK } from "../../../components/models/Player";
 import { HandIKPivotControls } from "../../../components/models/controls";
 
 // ==========
@@ -179,17 +179,17 @@ function VisualizationCArm({ ...props }: PageProps) {
                                     config.model.rotation,
                                     config.model.roll,
                                     config.model.pitch,
-                                    config.model.height
+                                    config.model.height,
                                 );
                                 if (patientRef.current) {
                                     patientRef.current.position.set(
-                                        ...config.patient.position
+                                        ...config.patient.position,
                                     );
                                     patientRef.current.rotation.set(
-                                        ...config.patient.rotation
+                                        ...config.patient.rotation,
                                     );
                                     patientRef.current.scale.setScalar(
-                                        config.patient.scale
+                                        config.patient.scale,
                                     );
                                 }
                             }
@@ -416,10 +416,10 @@ function VisualizationCArm({ ...props }: PageProps) {
                                                 new THREE.Euler(
                                                     0,
                                                     -Math.PI / 2,
-                                                    0
-                                                )
+                                                    0,
+                                                ),
                                             ),
-                                            new THREE.Vector3(1, 1, 1)
+                                            new THREE.Vector3(1, 1, 1),
                                         )}
                                         scale={70}
                                         fixed={true}
@@ -431,10 +431,10 @@ function VisualizationCArm({ ...props }: PageProps) {
                                         }
                                         onDrag={(l, deltaL, w, deltaW) => {
                                             yBotRef.current.position.setFromMatrixPosition(
-                                                w
+                                                w,
                                             );
                                             yBotRef.current.rotation.setFromRotationMatrix(
-                                                w
+                                                w,
                                             );
                                         }}
                                         onDragEnd={() => {
@@ -504,14 +504,14 @@ function VisualizationCArm({ ...props }: PageProps) {
                                                 new THREE.Vector3(
                                                     2.5,
                                                     1.25,
-                                                    -0.5
+                                                    -0.5,
                                                 )
                                             }
                                             rotation={
                                                 new THREE.Euler(
                                                     0,
                                                     Math.PI / 2,
-                                                    0
+                                                    0,
                                                 )
                                             }
                                             planeSize={Board_Configure.size.y}
@@ -536,7 +536,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                                                 <meshBasicMaterial
                                                     color={
                                                         new THREE.Color(
-                                                            0xb39a7b
+                                                            0xb39a7b,
                                                         )
                                                     }
                                                 />

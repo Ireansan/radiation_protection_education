@@ -14,7 +14,7 @@ export class ClippingPlanesObject {
         enabled: boolean,
         intersection: boolean,
         invert: boolean,
-        isType?: string
+        isType?: string,
     ) {
         this.id = id;
         this.planes = planes;
@@ -32,6 +32,8 @@ export class ClippingPlanesObject {
  * @abstract Volume Base
  */
 class VolumeBase extends THREE.Object3D {
+    _resolution: THREE.Vector2; // Canvas size
+
     _coefficient: number; // multiply coefficient and volume.data
     _offset: number; // add offset and volume.data
 
@@ -51,8 +53,6 @@ class VolumeBase extends THREE.Object3D {
     _clippedInvert: boolean[];
     _clippingPlanesObject: ClippingPlanesObject | undefined;
     // -> [...parent.ClippingPlanesObject[], ...this.ClippingPlanesObject[]]
-
-    _projectionMatrix: THREE.Matrix4;
 
     parentId: string | undefined;
     parentRegionOffset: number;
@@ -76,11 +76,11 @@ class VolumeBase extends THREE.Object3D {
     volumeClippingWorldAutoUpdate: boolean;
 
     isPerspective: boolean;
-    projectionMatrixAutoUpdate: boolean;
-    projectionMatrixWorldAutoUpdate: boolean;
 
     constructor(isPerspective = false) {
         super();
+
+        this._resolution = new THREE.Vector2(1, 1);
 
         this._coefficient = 1.0;
         this._offset = 0.0;
@@ -99,8 +99,6 @@ class VolumeBase extends THREE.Object3D {
         this._clippedInitValue = [];
         this._clippingPlanesRegion = [];
         this._clippedInvert = [];
-
-        this._projectionMatrix = new THREE.Matrix4();
 
         this.parentRegionOffset = 0;
         this.planesLength = 0;
@@ -123,8 +121,14 @@ class VolumeBase extends THREE.Object3D {
         this.volumeClippingWorldAutoUpdate = true;
 
         this.isPerspective = isPerspective;
-        this.projectionMatrixAutoUpdate = true;
-        this.projectionMatrixWorldAutoUpdate = true;
+    }
+
+    get resolution() {
+        return this._resolution;
+    }
+    set resolution(size: THREE.Vector2) {
+        this._resolution = size;
+        this.updateVolumeParam(false, true);
     }
 
     get coefficient() {
@@ -219,14 +223,6 @@ class VolumeBase extends THREE.Object3D {
         this.updateVolumeClipping(false, true);
     }
 
-    get projectionMatrix() {
-        return this._projectionMatrix;
-    }
-    set projectionMatrix(matrix: THREE.Matrix4) {
-        this._projectionMatrix = matrix;
-        this.updateProjectionMatrix(false, true);
-    }
-
     pushClippingPlanesObjects(clippingPlanesObject: ClippingPlanesObject) {
         let index = this.clippingPlanesObjects.length;
         clippingPlanesObject.id = index;
@@ -256,6 +252,7 @@ class VolumeBase extends THREE.Object3D {
         // ----------
         if (parent !== null && this.volumeParamAutoUpdate) {
             if (parent instanceof VolumeBase) {
+                this._resolution.copy(parent._resolution);
                 this.coefficientAutoUpdate
                     ? (this._coefficient = parent._coefficient)
                     : null;
@@ -358,7 +355,7 @@ class VolumeBase extends THREE.Object3D {
             this.parentRegionOffset = parent._clipping
                 ? parent._clippingPlanesRegion.reduce(
                       (a, b) => Math.max(a, b),
-                      -1
+                      -1,
                   ) + 1
                 : 0;
         }
@@ -376,7 +373,7 @@ class VolumeBase extends THREE.Object3D {
             if (element.enabled) {
                 // Planes
                 this._clippingPlanes = this._clippingPlanes.concat(
-                    element.planes
+                    element.planes,
                 );
                 this.planesLength += element.planes.length;
 
@@ -386,7 +383,7 @@ class VolumeBase extends THREE.Object3D {
 
                 // Region
                 let regionArray = new Array(element.planes.length).fill(
-                    i + this.parentRegionOffset
+                    i + this.parentRegionOffset,
                 );
                 this._clippingPlanesRegion =
                     this._clippingPlanesRegion.concat(regionArray);
@@ -434,49 +431,6 @@ class VolumeBase extends THREE.Object3D {
                     child.volumeClippingWorldAutoUpdate
                 ) {
                     child.updateVolumeClipping(false, true);
-                }
-            }
-        }
-    }
-
-    updateProjectionMatrix(updateParents: boolean, updateChildren: boolean) {
-        // ----------
-        // update parent
-        // ----------
-        const parent = this.parent;
-        if (
-            updateParents === true &&
-            parent !== null &&
-            this.projectionMatrixWorldAutoUpdate
-        ) {
-            if (parent instanceof VolumeBase) {
-                parent.updateProjectionMatrix(true, false);
-            }
-        }
-
-        // ----------
-        // update this by parent
-        // ----------
-        if (parent !== null && this.projectionMatrixAutoUpdate) {
-            if (parent instanceof VolumeBase) {
-                this._projectionMatrix = parent._projectionMatrix;
-            }
-        }
-
-        // ----------
-        // update children
-        // ----------
-        if (updateChildren === true) {
-            const children = this.children;
-
-            for (let i = 0, l = children.length; i < l; i++) {
-                const child = children[i];
-
-                if (
-                    child instanceof VolumeBase &&
-                    child.projectionMatrixWorldAutoUpdate === true
-                ) {
-                    child.updateProjectionMatrix(false, true);
                 }
             }
         }

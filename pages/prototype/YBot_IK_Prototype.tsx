@@ -12,7 +12,7 @@ import * as THREE from "three";
 import { useControls, folder } from "leva";
 
 import styles from "../../styles/threejs.module.css";
-import { CustomYBotIK } from "../../components/models/Custom_Ybot_IK";
+import { CustomYBotIK } from "../../components/models/Player";
 
 import {
     HandIKLevaControls,

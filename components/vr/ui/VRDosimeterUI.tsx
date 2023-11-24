@@ -9,11 +9,11 @@ export function VRDosimeterUI({ ...props }: JSX.IntrinsicElements["group"]) {
     const { gl, camera } = useThree();
     const group = React.useMemo(
         () => new InteractiveGroup(gl, camera),
-        [gl, camera]
+        [gl, camera],
     );
     const dosimeterUIMesh = React.useMemo(() => {
         const dosimeterUI = document.getElementById(
-            "DosimeterUI"
+            "DosimeterUI",
         ) as HTMLElement;
         dosimeterUI.style.height = `${5 * 60 + 30}px`;
 

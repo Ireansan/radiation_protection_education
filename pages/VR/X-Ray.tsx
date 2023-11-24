@@ -29,23 +29,22 @@ import {
     // ----------
     // hook
     useToggle,
-} from "../../../components/game";
+} from "../../components/game";
 
 // ==========
 // Model
-import { Board_Configure } from "../../../components/models";
-import { CustomYBotIK } from "../../../components/models/Custom_Ybot_IK";
-import { HandIKPivotControls } from "../../../components/models/controls";
+import { Board_Configure } from "../../components/models";
+import { CustomYBotIK, VRCustomYBotIK } from "../../components/models/Player";
 
 // ==========
 // Volume
 // ----------
 // object
-import { Dosimeter, DoseGroup, DoseAnimationObject } from "../../../src";
+import { Dosimeter, DoseGroup, DoseAnimationObject } from "../../src";
 // ----------
 // data
-import * as ENVIROMENT from "../../../components/models/Environment";
-import * as VOLUMEDATA from "../../../components/models/VolumeData";
+import * as ENVIROMENT from "../../components/models/Environment";
+import * as VOLUMEDATA from "../../components/models/VolumeData";
 // ----------
 // controls
 import {
@@ -57,36 +56,33 @@ import {
     DosimeterUI,
     VolumeParameterControls,
     VolumeXYZClippingControls,
-} from "../../../components/volumeRender";
+} from "../../components/volumeRender";
 
 // ==========
 // UI
-import { ExperimentCheckList, SceneConfigPanel } from "../../../components/ui";
+import { ExperimentCheckList, SceneConfigPanel } from "../../components/ui";
+
+// ==========
+// VR
+import {
+    VRDoseAnimationControls,
+    VRVolumeParameterControls,
+    VRDoseEquipmentsUI,
+    VRDosimeterUI,
+    VRPlayer,
+    VRHandIKControls,
+    VRUI,
+} from "../../components/vr";
 
 import { VRPanle, VRStats } from "components/vr";
 
 // ==========
 // Store
-import { useStore } from "../../../components/store";
+import { useStore } from "../../components/store";
 
 // ==========
 // Styles
-import styles from "../../../styles/threejs.module.css";
-import { VRDosimeterUI } from "components/vr/ui/VRDosimeterUI";
-
-function XRInit() {
-    const { isPresenting, player } = useXR();
-
-    useEffect(() => {
-        if (isPresenting) {
-            player.position.x = 4;
-            player.position.y = 1;
-            player.position.z = 4;
-        }
-    }, [isPresenting]);
-
-    return <></>;
-}
+import styles from "../../styles/threejs.module.css";
 
 function XRayVR() {
     const [set, debug, viewing] = useStore((state) => [
@@ -119,17 +115,17 @@ function XRayVR() {
                     value: false,
                     onChange: (e) => {
                         nocurtainRef.current
-                            ? (nocurtainRef.current.visible = e)
+                            ? (nocurtainRef.current.visible = !e)
                             : null;
                         nocurtainAccumuRef.current
-                            ? (nocurtainAccumuRef.current.visible = e)
+                            ? (nocurtainAccumuRef.current.visible = !e)
                             : null;
 
                         curtainRef.current
-                            ? (curtainRef.current.visible = !e)
+                            ? (curtainRef.current.visible = e)
                             : null;
                         curtainAccumuRef.current
-                            ? (curtainAccumuRef.current.visible = !e)
+                            ? (curtainAccumuRef.current.visible = e)
                             : null;
                         curtainObjRef.current
                             ? (curtainObjRef.current.visible = e)
@@ -160,12 +156,22 @@ function XRayVR() {
                             // zoom: 50
                         }}
                     >
-                        <XR>
+                        {/* -------------------------------------------------- */}
+                        {/* Three.js Controls */}
+                        <OrbitControls />
+
+                        {/* -------------------------------------------------- */}
+                        {/* VR Canvas */}
+                        <XR
+                            onSessionStart={(event) => {
+                                console.log(event);
+                            }}
+                        >
                             <TeleportationPlane
                                 leftHand={true}
                                 rightHand={true}
                             />
-                            <Controllers />
+                            <Controllers rayMaterial={{ color: "#B30900" }} />
 
                             <DosePerspectiveToOrthographic
                                 object={ref}
@@ -174,7 +180,6 @@ function XRayVR() {
 
                             {/* -------------------------------------------------- */}
                             {/* Volume Object */}
-
                             <doseGroup ref={ref} position={[0, 0, -10]}>
                                 <doseGroup
                                     position={
@@ -196,7 +201,6 @@ function XRayVR() {
                                         <doseAnimationObject
                                             ref={nocurtainRef}
                                             name={"x-ray_animation_nocurtain"}
-                                            visible={false}
                                         >
                                             <VOLUMEDATA.XRay_nocurtain_all_Animation />
                                         </doseAnimationObject>
@@ -204,6 +208,7 @@ function XRayVR() {
                                         <doseAnimationObject
                                             ref={curtainRef}
                                             name={"x-ray_animation_curtain"}
+                                            visible={false}
                                         >
                                             <VOLUMEDATA.XRay_curtain_all_Animation />
                                         </doseAnimationObject>
@@ -218,7 +223,6 @@ function XRayVR() {
                                         <doseGroup
                                             ref={nocurtainAccumuRef}
                                             name={"x-ray_accumulate_nocurtain"}
-                                            visible={false}
                                         >
                                             <VOLUMEDATA.XRay_nocurtain_all_accumulate />
                                         </doseGroup>
@@ -226,6 +230,7 @@ function XRayVR() {
                                         <doseGroup
                                             ref={curtainAccumuRef}
                                             name={"x-ray_accumulate_curtain"}
+                                            visible={false}
                                         >
                                             <VOLUMEDATA.XRay_curtain_all_accumulate />
                                         </doseGroup>
@@ -233,70 +238,49 @@ function XRayVR() {
                                 </doseGroup>
                             </doseGroup>
 
+                            {/* -------------------------------------------------- */}
+                            {/* Volume Controls */}
+
+                            {/* Dosimeter */}
+                            <DosimeterControls
+                                ref={dosimeterRef}
+                                object={yBotRef}
+                                names={[
+                                    {
+                                        name: "mixamorigNeck",
+                                        displayName: "Neck",
+                                        category: "neck",
+                                        coefficient: 0.1,
+                                    },
+                                    {
+                                        name: "mixamorigLeftEye",
+                                        displayName: "Left Eye",
+                                        category: "goggle",
+                                        coefficient: 0.1,
+                                    },
+                                    {
+                                        name: "mixamorigRightEye",
+                                        displayName: "Right Eye",
+                                        category: "goggle",
+                                        coefficient: 0.1,
+                                    },
+                                    {
+                                        name: "mixamorigLeftHand",
+                                        displayName: "Left Hand",
+                                        category: "glove",
+                                        coefficient: 0.1,
+                                    },
+                                    {
+                                        name: "mixamorigRightHand",
+                                        displayName: "Right Hand",
+                                        category: "glove",
+                                        coefficient: 0.1,
+                                    },
+                                ]}
+                                targets={[nocurtainAccumuRef, curtainAccumuRef]}
+                            />
+
                             <group position={[0, 0, -10]}>
-                                {/* -------------------------------------------------- */}
-                                {/* Volume Controls */}
-                                <DoseAnimationControls
-                                    objects={[nocurtainRef, curtainRef]}
-                                    mainGroup={timelapseRef}
-                                    subGroup={accumulateRef}
-                                    duration={16}
-                                    customSpeed={[8.0, 16.0]}
-                                />
-                                <VolumeParameterControls object={ref} />
-                                <VolumeXYZClippingControls
-                                    object={ref}
-                                    planeSize={2}
-                                    areaSize={
-                                        VOLUMEDATA.XRay_curtain_Configure.volume
-                                            .areaSize
-                                    }
-                                    areaScale={1.1}
-                                    lineColor={new THREE.Color(0x6e0010)}
-                                />
-
-                                {/* Dosimeter */}
-                                <DosimeterControls
-                                    ref={dosimeterRef}
-                                    object={yBotRef}
-                                    names={[
-                                        {
-                                            name: "mixamorigNeck",
-                                            displayName: "Neck",
-                                            category: "neck",
-                                            coefficient: 0.1,
-                                        },
-                                        {
-                                            name: "mixamorigLeftEye",
-                                            displayName: "Left Eye",
-                                            category: "goggle",
-                                            coefficient: 0.1,
-                                        },
-                                        {
-                                            name: "mixamorigRightEye",
-                                            displayName: "Right Eye",
-                                            category: "goggle",
-                                            coefficient: 0.1,
-                                        },
-                                        {
-                                            name: "mixamorigLeftHand",
-                                            displayName: "Left Hand",
-                                            category: "glove",
-                                            coefficient: 0.1,
-                                        },
-                                        {
-                                            name: "mixamorigRightHand",
-                                            displayName: "Right Hand",
-                                            category: "glove",
-                                            coefficient: 0.1,
-                                        },
-                                    ]}
-                                    targets={[
-                                        nocurtainAccumuRef,
-                                        curtainAccumuRef,
-                                    ]}
-                                />
-
                                 {/* -------------------------------------------------- */}
                                 {/* Three.js Object */}
                                 <group
@@ -321,67 +305,25 @@ function XRayVR() {
                                         <ENVIROMENT.XRay_Curtain />
                                     </group>
                                 </group>
-                                <mesh position={[0, 1, 0]} visible={debug}>
+                                <mesh
+                                    position={[0, 1, 0]}
+                                    // visible={debug}
+                                >
                                     <sphereBufferGeometry args={[0.25]} />
                                 </mesh>
+                            </group>
 
-                                {/* Avatar */}
-                                <PivotControls
-                                    matrix={new THREE.Matrix4().compose(
-                                        new THREE.Vector3(2, 0, 0),
-                                        new THREE.Quaternion().setFromEuler(
-                                            new THREE.Euler(0, -Math.PI / 2, 0)
-                                        ),
-                                        new THREE.Vector3(1, 1, 1)
-                                    )}
-                                    scale={70}
-                                    fixed={true}
-                                    activeAxes={[true, false, true]}
-                                    visible={!viewing}
-                                    onDrag={(l, deltaL, w, deltaW) => {
-                                        yBotRef.current.position.setFromMatrixPosition(
-                                            w
-                                        );
-                                        yBotRef.current.rotation.setFromRotationMatrix(
-                                            w
-                                        );
-                                    }}
-                                    onDragEnd={() => {
-                                        if (dosimeterRef.current) {
-                                            dosimeterRef.current.updateResults();
-                                        }
-
-                                        set((state) => ({
-                                            sceneProperties: {
-                                                ...state.sceneProperties,
-                                                executeLog: {
-                                                    ...state.sceneProperties
-                                                        .executeLog,
-                                                    avatar: {
-                                                        ...state.sceneProperties
-                                                            .executeLog.avatar,
-                                                        translate: true,
-                                                    },
-                                                },
-                                            },
-                                        }));
-                                    }}
-                                />
-                                <group
-                                    ref={yBotRef}
-                                    position={[2, 0, 0]}
-                                    rotation={[0, -Math.PI / 2, 0]}
-                                >
+                            {/* Player */}
+                            <VRPlayer>
+                                <group ref={yBotRef} visible={false}>
                                     <CustomYBotIK />
-                                    {/* <HandIKPivotControls object={yBotRef} scale={35} fixed={true}/> */}
                                 </group>
+                            </VRPlayer>
+                            <VRHandIKControls object={yBotRef} />
 
-                                {/* -------------------------------------------------- */}
-                                {/* Three.js Controls */}
-                                <OrbitControls makeDefault />
-
-                                {/* -------------------------------------------------- */}
-                                {/* Physics */}
+                            {/* -------------------------------------------------- */}
+                            {/* Physics */}
+                            <group position={[0, 0, -10]}>
                                 <Physics gravity={[0, -30, 0]}>
                                     <ToggledDebug />
 
@@ -460,28 +402,50 @@ function XRayVR() {
                             </GizmoHelper>
 
                             {/* VR UI */}
-                            <VRStats
-                                position={[-0.75, 2, -0.6]}
-                                rotation={[0, Math.PI / 4, 0]}
-                                scale={2.5}
-                            />
-                            <VRPanle
-                                position={[-0.75, 1.5, -0.5]}
-                                rotation={[0, Math.PI / 4, 0]}
-                                scale={2}
-                            />
-                            <VRDosimeterUI
-                                position={[-0.75, 2, 0.25]}
-                                rotation={[0, Math.PI / 2, 0]}
-                                scale={2}
-                            />
+
+                            <group
+                                position={[2, 0, -9]}
+                                rotation={[0, Math.PI, 0]}
+                            >
+                                <group position={[0, 1.5, 0]} scale={3}>
+                                    <VRDoseAnimationControls
+                                        // position={[-0.325, 0, 0.1]}
+                                        // rotation={[0, Math.PI / 6, 0]}
+                                        position={[-0.325, 0, 0]}
+                                        objects={[nocurtainRef, curtainRef]}
+                                        mainGroup={timelapseRef}
+                                        subGroup={accumulateRef}
+                                        duration={16}
+                                        customSpeed={[8.0, 16.0]}
+                                    />
+                                    <VRVolumeParameterControls
+                                        position={[0, 0, 0]}
+                                        object={ref}
+                                    />
+                                </group>
+                                <group position={[-3, 1.5, 0]} scale={3}>
+                                    <VRDoseEquipmentsUI
+                                        position={[0.325, 0, 0]}
+                                    />
+                                </group>
+                            </group>
+
+                            <VRUI>
+                                <VRStats
+                                    position={[-0.4, 0.25, -2]}
+                                    rotation={[0.124, 0.196, -0.024]}
+                                    scale={3}
+                                />
+                                <VRDosimeterUI
+                                    position={[-0.4, -0.3, -2]}
+                                    rotation={[-0.149, 0.195, 0.0291]}
+                                    scale={3}
+                                />
+                            </VRUI>
                         </XR>
                     </Canvas>
-                    {/* <SceneConfigPanel activateStats={false} /> */}
-                    {/* <DoseEquipmentsUI /> */}
-                    <DosimeterUI />
-                    {/* <ExperimentCheckList /> */}
                 </div>
+                <DosimeterUI />
             </div>
         </>
     );

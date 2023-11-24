@@ -5,8 +5,6 @@ varying vec3 v_position;
 // https://github.com/mrdoob/three.js/blob/dev/src/renderers/shaders/ShaderChunk/clipping_planes_pars_vertex.glsl.js
 varying mat4 viewtransformf;
 
-uniform mat4 u_projectionMatrix;
-
 void main(){
     // Prepare transforms to map to "camera view". See also:
     // https://threejs.org/docs/#api/renderers/webgl/WebGLProgram
