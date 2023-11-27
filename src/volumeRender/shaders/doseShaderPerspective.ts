@@ -70,7 +70,8 @@ varying vec4 v_farpos;
 varying mat4 viewtransformf;
 
 // The maximum distance through our rendering volume is sqrt(3).
-const int MAX_STEPS=887;// 887 for 512^3, 1774 for 1024^3
+// const int MAX_STEPS=887;// 887 for 512^3, 1774 for 1024^3
+const int MAX_STEPS=221;// 128 * sqrt(3) = 221, 256 * sqrt(3) = 443
 const int REFINEMENT_STEPS=4;
 const float relative_step_size=1.;
 const vec4 ambient_color=vec4(.2,.4,.2,1.);
@@ -106,7 +107,7 @@ void main(){
     // Normalize clipping plane info
     vec3 farpos=v_farpos.xyz/v_farpos.w;
     vec3 nearpos=v_nearpos.xyz/v_nearpos.w;
-
+    
     // Calculate unit vector pointing in the view direction through this fragment.
     vec3 view_ray=normalize(nearpos.xyz-farpos.xyz);
     
