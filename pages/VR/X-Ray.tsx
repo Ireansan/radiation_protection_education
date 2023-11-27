@@ -60,7 +60,7 @@ import {
 
 // ==========
 // UI
-import { ExperimentCheckList, SceneConfigPanel } from "../../components/ui";
+import { ExperimentCheckList, SceneOptionsPanel } from "../../components/ui";
 
 // ==========
 // VR
@@ -180,7 +180,10 @@ function XRayVR() {
 
                             {/* -------------------------------------------------- */}
                             {/* Volume Object */}
-                            <doseGroup ref={ref} position={[0, 0, -10]}>
+                            <doseGroup
+                                ref={ref}
+                                position={[0, 0, -10]}
+                            >
                                 <doseGroup
                                     position={
                                         VOLUMEDATA.XRay_nocurtain_Configure
@@ -301,7 +304,10 @@ function XRayVR() {
                                     <ENVIROMENT.XRay_Patient />
 
                                     {/* Curtain (Three.js Object) */}
-                                    <group ref={curtainObjRef} visible={false}>
+                                    <group
+                                        ref={curtainObjRef}
+                                        visible={false}
+                                    >
                                         <ENVIROMENT.XRay_Curtain />
                                     </group>
                                 </group>
@@ -315,7 +321,10 @@ function XRayVR() {
 
                             {/* Player */}
                             <VRPlayer>
-                                <group ref={yBotRef} visible={false}>
+                                <group
+                                    ref={yBotRef}
+                                    visible={false}
+                                >
                                     <CustomYBotIK />
                                 </group>
                             </VRPlayer>
@@ -407,7 +416,10 @@ function XRayVR() {
                                 position={[2, 0, -9]}
                                 rotation={[0, Math.PI, 0]}
                             >
-                                <group position={[0, 1.5, 0]} scale={3}>
+                                <group
+                                    position={[0, 1.5, 0]}
+                                    scale={3}
+                                >
                                     <VRDoseAnimationControls
                                         // position={[-0.325, 0, 0.1]}
                                         // rotation={[0, Math.PI / 6, 0]}
@@ -423,7 +435,10 @@ function XRayVR() {
                                         object={ref}
                                     />
                                 </group>
-                                <group position={[-3, 1.5, 0]} scale={3}>
+                                <group
+                                    position={[-3, 1.5, 0]}
+                                    scale={3}
+                                >
                                     <VRDoseEquipmentsUI
                                         position={[0.325, 0, 0]}
                                     />

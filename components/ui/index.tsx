@@ -1,3 +1,3 @@
 export * from "./CoordHTML";
 export * from "./ExperimentCheckList";
-export * from "./SceneConfigPanel";
+export * from "./SceneOptionsPanel";

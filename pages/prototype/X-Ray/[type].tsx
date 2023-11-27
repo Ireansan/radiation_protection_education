@@ -67,7 +67,7 @@ import { CustomOrbitControls } from "../../../components/controls";
 import {
     CoordHTML,
     ExperimentCheckList,
-    SceneConfigPanel,
+    SceneOptionsPanel,
 } from "../../../components/ui";
 
 // ==========
@@ -562,7 +562,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                         </Suspense>
                     </Canvas>
                     <Loader />
-                    <SceneConfigPanel activateStats={false} />
+                    <SceneOptionsPanel activateStats={false} />
                     {/* <PrototypeAnimationControls
                         objects={[nocurtainRef, curtainRef]}
                         mainGroup={timelapseRef}

@@ -40,7 +40,7 @@ import {
 
 // ==========
 // UI
-import { SceneConfigPanel } from "../../../components/ui";
+import { SceneOptionsPanel } from "../../../components/ui";
 
 // ==========
 // Store
@@ -153,7 +153,10 @@ function XRayBasic() {
                                 </doseGroup>
 
                                 {/* Accumulate */}
-                                <doseGroup ref={accumulateRef} visible={false}>
+                                <doseGroup
+                                    ref={accumulateRef}
+                                    visible={false}
+                                >
                                     {/* X-Ray Dose, no curtain, Accumulate */}
                                     <doseGroup
                                         ref={nocurtainAccumuRef}
@@ -209,11 +212,17 @@ function XRayBasic() {
                                 <ENVIROMENT.XRay_Patient />
 
                                 {/* Curtain (Three.js Object) */}
-                                <group ref={curtainObjRef} visible={false}>
+                                <group
+                                    ref={curtainObjRef}
+                                    visible={false}
+                                >
                                     <ENVIROMENT.XRay_Curtain />
                                 </group>
                             </group>
-                            <mesh position={[0, 1, 0]} visible={debug}>
+                            <mesh
+                                position={[0, 1, 0]}
+                                visible={debug}
+                            >
                                 <sphereBufferGeometry args={[0.25]} />
                             </mesh>
 
@@ -265,7 +274,7 @@ function XRayBasic() {
                         </Suspense>
                     </Canvas>
                     <Loader />
-                    <SceneConfigPanel activateStats={false} />
+                    <SceneOptionsPanel activateStats={false} />
                 </div>
             </div>
         </>

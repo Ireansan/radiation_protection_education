@@ -6,26 +6,28 @@ import { folder, useControls } from "leva";
 
 import { useStore } from "../store";
 
-type SceneConfigPanelProps = {
+type SceneOptionsPanelProps = {
     activateDebug?: boolean;
     activateViewing?: boolean;
     activateAnnotations?: boolean;
     activateStats?: boolean;
 };
-export function SceneConfigPanel({
+export function SceneOptionsPanel({
     activateDebug = true,
     activateViewing = true,
     activateAnnotations = true,
     activateStats = true,
-}: SceneConfigPanelProps) {
-    const [set, debug, viewing, annotations, stats, objectVisibles] = useStore((state) => [
-        state.set,
-        state.debug,
-        state.viewing,
-        state.annotations,
-        state.stats,
-        state.sceneProperties.objectVisibles,
-    ]);
+}: SceneOptionsPanelProps) {
+    const [set, debug, viewing, annotations, stats, objectVisibles] = useStore(
+        (state) => [
+            state.set,
+            state.debug,
+            state.viewing,
+            state.annotations,
+            state.stats,
+            state.sceneProperties.objectVisibles,
+        ]
+    );
 
     const [, setDebug] = useControls(() => ({
         Scene: folder({
@@ -45,7 +47,7 @@ export function SceneConfigPanel({
                     },
                 },
             }),
-            Config: folder(
+            Options: folder(
                 {
                     Debug: folder({
                         debug: {
@@ -71,7 +73,8 @@ export function SceneConfigPanel({
                                             sceneProperties: {
                                                 ...state.sceneProperties,
                                                 objectVisibles: {
-                                                    ...state.sceneProperties.objectVisibles,
+                                                    ...state.sceneProperties
+                                                        .objectVisibles,
                                                     dose: e,
                                                 },
                                             },
@@ -85,7 +88,8 @@ export function SceneConfigPanel({
                                             sceneProperties: {
                                                 ...state.sceneProperties,
                                                 objectVisibles: {
-                                                    ...state.sceneProperties.objectVisibles,
+                                                    ...state.sceneProperties
+                                                        .objectVisibles,
                                                     object3d: e,
                                                 },
                                             },
@@ -100,7 +104,8 @@ export function SceneConfigPanel({
                                                 sceneProperties: {
                                                     ...state.sceneProperties,
                                                     objectVisibles: {
-                                                        ...state.sceneProperties.objectVisibles,
+                                                        ...state.sceneProperties
+                                                            .objectVisibles,
                                                         player: e,
                                                     },
                                                 },
@@ -115,7 +120,8 @@ export function SceneConfigPanel({
                                                 sceneProperties: {
                                                     ...state.sceneProperties,
                                                     objectVisibles: {
-                                                        ...state.sceneProperties.objectVisibles,
+                                                        ...state.sceneProperties
+                                                            .objectVisibles,
                                                         playerPivot: e,
                                                     },
                                                 },
@@ -130,7 +136,8 @@ export function SceneConfigPanel({
                                                 sceneProperties: {
                                                     ...state.sceneProperties,
                                                     objectVisibles: {
-                                                        ...state.sceneProperties.objectVisibles,
+                                                        ...state.sceneProperties
+                                                            .objectVisibles,
                                                         playerHandPivot: e,
                                                     },
                                                 },
@@ -146,7 +153,8 @@ export function SceneConfigPanel({
                                                 sceneProperties: {
                                                     ...state.sceneProperties,
                                                     objectVisibles: {
-                                                        ...state.sceneProperties.objectVisibles,
+                                                        ...state.sceneProperties
+                                                            .objectVisibles,
                                                         shield: e,
                                                     },
                                                 },
@@ -161,7 +169,8 @@ export function SceneConfigPanel({
                                                 sceneProperties: {
                                                     ...state.sceneProperties,
                                                     objectVisibles: {
-                                                        ...state.sceneProperties.objectVisibles,
+                                                        ...state.sceneProperties
+                                                            .objectVisibles,
                                                         shieldPivot: e,
                                                     },
                                                 },
@@ -177,7 +186,8 @@ export function SceneConfigPanel({
                                                 sceneProperties: {
                                                     ...state.sceneProperties,
                                                     objectVisibles: {
-                                                        ...state.sceneProperties.objectVisibles,
+                                                        ...state.sceneProperties
+                                                            .objectVisibles,
                                                         dosimeterUI: e,
                                                     },
                                                 },
@@ -191,7 +201,8 @@ export function SceneConfigPanel({
                                                 sceneProperties: {
                                                     ...state.sceneProperties,
                                                     objectVisibles: {
-                                                        ...state.sceneProperties.objectVisibles,
+                                                        ...state.sceneProperties
+                                                            .objectVisibles,
                                                         experimentUI: e,
                                                     },
                                                 },

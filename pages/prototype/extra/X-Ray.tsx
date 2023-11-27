@@ -50,7 +50,7 @@ import {
 
 // ==========
 // UI
-import { ExperimentCheckList, SceneConfigPanel } from "../../../components/ui";
+import { ExperimentCheckList, SceneOptionsPanel } from "../../../components/ui";
 
 // ==========
 // Store
@@ -166,7 +166,10 @@ function XRayExtra() {
                                 </doseGroup>
 
                                 {/* Accumulate */}
-                                <doseGroup ref={accumulateRef} visible={false}>
+                                <doseGroup
+                                    ref={accumulateRef}
+                                    visible={false}
+                                >
                                     {/* X-Ray Dose, no curtain, Accumulate */}
                                     <doseGroup
                                         ref={nocurtainAccumuRef}
@@ -261,11 +264,17 @@ function XRayExtra() {
                                 <ENVIROMENT.XRay_Patient />
 
                                 {/* Curtain (Three.js Object) */}
-                                <group ref={curtainObjRef} visible={false}>
+                                <group
+                                    ref={curtainObjRef}
+                                    visible={false}
+                                >
                                     <ENVIROMENT.XRay_Curtain />
                                 </group>
                             </group>
-                            <mesh position={[0, 1, 0]} visible={debug}>
+                            <mesh
+                                position={[0, 1, 0]}
+                                visible={debug}
+                            >
                                 <sphereBufferGeometry args={[0.25]} />
                             </mesh>
 
@@ -274,9 +283,9 @@ function XRayExtra() {
                                 matrix={new THREE.Matrix4().compose(
                                     new THREE.Vector3(2, 0, 0),
                                     new THREE.Quaternion().setFromEuler(
-                                        new THREE.Euler(0, -Math.PI / 2, 0),
+                                        new THREE.Euler(0, -Math.PI / 2, 0)
                                     ),
-                                    new THREE.Vector3(1, 1, 1),
+                                    new THREE.Vector3(1, 1, 1)
                                 )}
                                 scale={70}
                                 fixed={true}
@@ -284,10 +293,10 @@ function XRayExtra() {
                                 visible={!viewing}
                                 onDrag={(l, deltaL, w, deltaW) => {
                                     yBotRef.current.position.setFromMatrixPosition(
-                                        w,
+                                        w
                                     );
                                     yBotRef.current.rotation.setFromRotationMatrix(
-                                        w,
+                                        w
                                     );
                                 }}
                                 onDragEnd={() => {
@@ -406,7 +415,7 @@ function XRayExtra() {
                         </Suspense>
                     </Canvas>
                     <Loader />
-                    <SceneConfigPanel activateStats={false} />
+                    <SceneOptionsPanel activateStats={false} />
                     <DoseEquipmentsUI />
                     <DosimeterUI />
                     <ExperimentCheckList />

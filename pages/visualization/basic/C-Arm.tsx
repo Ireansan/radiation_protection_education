@@ -47,7 +47,7 @@ import {
 
 // ==========
 // UI
-import { SceneConfigPanel } from "../../../components/ui";
+import { SceneOptionsPanel } from "../../../components/ui";
 
 // ==========
 // Store
@@ -293,7 +293,10 @@ function CArmBasic() {
                                 />
                             </group>
 
-                            <mesh position={[0, 1, 0]} visible={debug}>
+                            <mesh
+                                position={[0, 1, 0]}
+                                visible={debug}
+                            >
                                 <sphereBufferGeometry args={[0.25]} />
                             </mesh>
 
@@ -345,7 +348,7 @@ function CArmBasic() {
                         </Suspense>
                     </Canvas>
                     <Loader />
-                    <SceneConfigPanel activateStats={false} />
+                    <SceneOptionsPanel activateStats={false} />
                 </div>
             </div>
         </>
