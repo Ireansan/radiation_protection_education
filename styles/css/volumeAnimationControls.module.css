@@ -2,7 +2,8 @@
   width: 30%;
   min-width: 300px;
   position: absolute;
-  align-items: center;
+  left: 50%;
+  transform: translateX(-50%);
   bottom: 25px;
   background-color: aqua;
 }/*# sourceMappingURL=volumeAnimationControls.module.css.map */

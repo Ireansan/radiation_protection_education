@@ -1,7 +1,9 @@
 import React from "react";
 import * as THREE from "three";
+import { useFrame } from "@react-three/fiber";
 import { styled, Box, Paper, Stack, Slider, Typography } from "@mui/material";
 import { PlayArrow, Pause } from "@mui/icons-material";
+import { useControls, folder } from "leva";
 
 import {
     VolumeBase,
@@ -10,146 +12,184 @@ import {
 } from "../../../../src";
 import { useStore } from "../../../store";
 
-import style from "../../../../styles/css/volumeAnimationControls.module.css";
-
-/**
- * @link https://www.youtube.com/watch?v=CH2FmLzWKr4
- * @link https://github.com/mathieumedia/audio-player/blob/master/src/Player.jsx
- */
-const CustomPaper = styled(Paper)(({ theme }) => ({
-    backgroundColor: "#4c4c4c",
-    padding: theme.spacing(2),
-}));
-const CustomSlider = styled(Slider)(({ theme, ...props }) => ({
-    color: "lime",
-    height: 2,
-    "&:hover": {
-        cursor: "auto",
-    },
-    "& .MuiSlider-thumb": {
-        width: "13px",
-        height: "13px",
-        display: "none",
-    },
-}));
-
 export type PrototypeAnimationControlsProps = {
-    audioSrc: string;
+    audioRef: React.RefObject<HTMLAudioElement>;
     objects: React.RefObject<VolumeAnimationObject | DoseAnimationObject>[];
     mainGroup: React.RefObject<VolumeBase>;
     subGroup?: React.RefObject<VolumeBase>;
     mode?: string;
-    speed?: number;
-    customSpeed?: number[];
 };
 export function PrototypeAnimationControls({
-    audioSrc,
+    audioRef,
     objects,
     mainGroup,
     subGroup,
     mode = "time lapse",
-    speed = 1.0,
-    customSpeed,
     ...props
 }: PrototypeAnimationControlsProps) {
+    const [set] = useStore((state) => [state.set]);
+
+    /**
+     * @link https://github.com/pmndrs/drei/blob/cce70ae77b5151601089114259fbffab8747c8fa/src/core/useAnimations.tsx
+     */
+    const [mixer] = React.useState<THREE.AnimationMixer[]>(
+        objects.map(
+            (object, i) =>
+                new THREE.AnimationMixer(undefined as unknown as THREE.Object3D)
+        )
+    );
+    const [actions, setActions] = React.useState(() => {
+        const actions = objects.map((object, i) => {
+            return {};
+        }) as {
+            [key in THREE.AnimationClip["name"]]: THREE.AnimationAction | null;
+        }[];
+
+        return actions;
+    });
+    const lazyActions = React.useRef<
+        {
+            [key: string]: THREE.AnimationAction | null;
+        }[]
+    >(
+        objects.map((object, i) => {
+            return {};
+        })
+    );
+
     const audioPlayer = React.useRef<HTMLAudioElement>(null!);
 
-    const [isPlaying, setIsPlaying] = React.useState(false);
+    const [isEditing, setIsEditing] = React.useState<boolean>(false);
 
-    const [elapsed, setElapsed] = React.useState<number>(0);
-    const [duration, setDuration] = React.useState<number>(0);
+    const [,] = useControls(() => ({
+        Data: folder({
+            mode: {
+                value: mode,
+                options: ["time lapse", "accumulate"],
+                onChange: (e) => {
+                    if (e === "time lapse") {
+                        mainGroup.current
+                            ? (mainGroup.current.visible = true)
+                            : null;
+
+                        if (subGroup) {
+                            subGroup.current
+                                ? (subGroup.current.visible = false)
+                                : null;
+                        }
+                    } else if (e === "accumulate") {
+                        mainGroup.current
+                            ? (mainGroup.current.visible = false)
+                            : null;
+
+                        if (subGroup) {
+                            subGroup.current
+                                ? (subGroup.current.visible = true)
+                                : null;
+                        }
+                    } else {
+                        console.log("test");
+                    }
+
+                    // set execute log for experiment
+                    switch (e) {
+                        case "time lapse":
+                            set((state) => ({
+                                sceneProperties: {
+                                    ...state.sceneProperties,
+                                    executeLog: {
+                                        ...state.sceneProperties.executeLog,
+                                        animation: {
+                                            ...state.sceneProperties.executeLog
+                                                .animation,
+                                            timeLapse: true,
+                                        },
+                                    },
+                                },
+                            }));
+                            break;
+                        case "accumulate":
+                            set((state) => ({
+                                sceneProperties: {
+                                    ...state.sceneProperties,
+                                    executeLog: {
+                                        ...state.sceneProperties.executeLog,
+                                        animation: {
+                                            ...state.sceneProperties.executeLog
+                                                .animation,
+                                            accumulate: true,
+                                        },
+                                    },
+                                },
+                            }));
+                            break;
+                    }
+                },
+            },
+        }),
+    }));
 
     React.useEffect(() => {
-        if (isPlaying) {
-            setInterval(() => {
-                const _duration = Math.floor(audioPlayer?.current?.duration);
-                const _elapsed = Math.floor(audioPlayer?.current?.currentTime);
+        objects.forEach((object, i) => {
+            if (object.current) {
+                object.current.animations.forEach((clip) => {
+                    lazyActions.current[i][clip.name] = mixer[i].clipAction(
+                        clip,
+                        object.current!
+                    );
+                });
+            }
+        });
+        setActions(lazyActions.current);
 
-                setDuration(_duration);
-                setElapsed(_elapsed);
-            }, 100);
+        actions.forEach(
+            (actions) => actions["volumeAnimation"]?.reset().play()
+        );
+    }, [objects]);
+
+    React.useEffect(() => {
+        actions.forEach(
+            (actions) => actions["volumeAnimation"]?.reset().play()
+        );
+    }, [actions]);
+
+    useFrame((state, delta) => {
+        if (!audioRef.current) {
+            return;
         }
-    }, [isPlaying]);
 
-    function formatDuration(value: number) {
-        const minute = Math.floor(value / 60);
-        const seconds = value - minute * 60;
-        return `${minute < 10 ? `0${minute}` : minute}:${
-            seconds < 10 ? `0${seconds}` : seconds
-        }`;
-    }
+        if (mainGroup.current?.visible) {
+            if (audioRef.current.paused) {
+                actions.forEach((actions, i) => {
+                    actions["volumeAnimation"] && audioRef.current
+                        ? (actions["volumeAnimation"].time =
+                              audioRef.current.currentTime)
+                        : null;
+                });
+                mixer.forEach((mixer, i) => {
+                    mixer.update(0);
+                });
+            } else {
+                mixer.forEach((mixer) => {
+                    const speed = audioRef.current
+                        ? audioRef.current.playbackRate
+                        : 1.0;
+                    mixer.update(delta * speed);
+                });
+            }
 
-    const togglePlay = () => {
-        if (!isPlaying) {
-            audioPlayer.current.play();
+            if (objects) {
+                objects.forEach((object) => {
+                    if (object.current && audioRef.current) {
+                        object.current.index = Math.floor(
+                            audioRef.current.currentTime
+                        );
+                    }
+                });
+            }
         } else {
-            audioPlayer.current.pause();
         }
-        setIsPlaying((prev) => !prev);
-    };
+    });
 
-    return (
-        <div className={`${style.foundation}`}>
-            <audio
-                src={audioSrc}
-                ref={audioPlayer}
-                muted={true}
-            />
-            <CustomPaper>
-                <Box>
-                    <Stack
-                        direction="row"
-                        spacing={1}
-                        sx={{
-                            display: "flex",
-                            width: "40%",
-                            alignItems: "center",
-                        }}
-                    >
-                        {!isPlaying ? (
-                            <PlayArrow
-                                fontSize={"large"}
-                                sx={{
-                                    color: "lime",
-                                    "&:hover": { color: "white" },
-                                }}
-                                onClick={togglePlay}
-                            />
-                        ) : (
-                            <Pause
-                                fontSize={"large"}
-                                sx={{
-                                    color: "lime",
-                                    "&:hover": { color: "white" },
-                                }}
-                                onClick={togglePlay}
-                            />
-                        )}
-                    </Stack>
-
-                    <Stack
-                        spacing={1}
-                        direction="row"
-                        sx={{
-                            display: "flex",
-                            justifyContent: "flex-start",
-                            alignItems: "center",
-                        }}
-                    >
-                        <Typography sx={{ color: "lime" }}>
-                            {formatDuration(elapsed)}
-                        </Typography>
-                        <CustomSlider
-                            value={elapsed}
-                            max={duration}
-                            onChange={(event, value) => {}}
-                        />
-                        <Typography sx={{ color: "lime" }}>
-                            {formatDuration(duration - elapsed)}
-                        </Typography>
-                    </Stack>
-                </Box>
-            </CustomPaper>
-        </div>
-    );
+    return <></>;
 }
