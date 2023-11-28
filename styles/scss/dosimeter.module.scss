@@ -15,7 +15,7 @@
 
         .unit {
             padding: 0px 10px;
-            font-size: 0.6rem;
+            font-size: 0.7rem;
             color: #8c93a3;
         }
     }
@@ -35,14 +35,14 @@
             font-weight: bold;
 
             .identifier {
-                width: 50%;
+                width: 65%;
                 height: 100%;
                 font-size: 0.8rem;
                 float: left;
             }
 
             .icons {
-                width: 50%;
+                width: 35%;
                 height: 100%;
                 float: right;
                 text-align: right;
@@ -104,11 +104,18 @@
                     .damage {
                         width: 100%;
                         height: 100%;
+                        background-color: #dead29;
 
-                        .hp {
-                            height: 100%;
-                            background-color: #56b35d;
+                        &.danger {
+                            background-color: #b83100;
                         }
+
+                    }
+
+                    .hp {
+                        width: 100%;
+                        height: 100%;
+                        background-color: #56b35d;
                     }
                 }
             }

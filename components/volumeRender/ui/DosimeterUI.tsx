@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, memo, useMemo } from "react";
+import React, { useEffect, useRef, memo, useMemo, useState } from "react";
 import { addEffect } from "@react-three/fiber";
 import { useControls, folder, button } from "leva";
 import {
@@ -79,28 +79,32 @@ export type ResultDataProps = {
     value: number;
     coefficient: number;
     maxHp: number;
-    damageColor?: string;
-    dangerColor?: string;
+    typeBar: string;
 };
 function ResultData({
     children,
     value,
     coefficient,
     maxHp,
-    damageColor = "#DEAD29", // Orange
-    dangerColor = "#B83100", // Red
+    typeBar,
     ...props
 }: ResultDataProps) {
-    const [color, length] = useMemo(() => {
+    const [isDanger, length, isHP] = useMemo(() => {
+        const isHP = typeBar === "HP/MP" ? true : false;
+
         const dose = 120 * coefficient * value;
+        const dosePercent = dose / maxHp;
+        const doseLength = dosePercent > 1.0 ? 100 : 100 * dosePercent;
+
         const hp = maxHp - dose;
-        const percent = hp / maxHp;
+        const hpPercent = hp / maxHp;
+        const hpLength = hp < 0 ? 0 : hpPercent > 1.0 ? 100 : 100 * hpPercent;
 
-        const color = hp < 0 ? dangerColor : damageColor;
-        const length = hp < 0 ? 0 : percent > 1.0 ? 100 : 100 * percent;
+        const isDanger = hp < 0;
+        const length = isHP ? hpLength : doseLength;
 
-        return [color, length];
-    }, [value, coefficient, maxHp, damageColor, dangerColor]);
+        return [isDanger, length, isHP];
+    }, [value, coefficient, maxHp, typeBar]);
 
     return (
         <>
@@ -109,26 +113,59 @@ function ResultData({
                 <div className={`${style.bar}`}>
                     {/* back ground */}
                     <div className={`${style.bg}`}>
-                        {/* Damage Bar */}
-                        <div
-                            className={`${style.damage}`}
-                            style={{ backgroundColor: color }}
-                        >
-                            {/* HP Bar */}
-                            <div
-                                className={`${style.hp}`}
-                                style={{ width: `${length}%` }}
-                            />
-                        </div>
+                        {isHP ? (
+                            <>
+                                {/* Damage Bar */}
+                                <div
+                                    className={`${style.damage} ${
+                                        isDanger && `${style.danger}`
+                                    }`}
+                                >
+                                    {/* HP Bar */}
+                                    <div
+                                        className={`${style.hp}`}
+                                        style={{ width: `${length}%` }}
+                                    />
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                {/* HP Bar */}
+                                <div className={`${style.hp}`}>
+                                    {/* Damage Bar */}
+                                    <div
+                                        className={`${style.damage} ${
+                                            isDanger && `${style.danger}`
+                                        }`}
+                                        style={{ width: `${length}%` }}
+                                    />
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
                 {/* Value */}
                 <div className={`${style.numerical}`}>
                     <div className={`${style.category}`}>{children}</div>
-                    <div className={`${style.value}`}>
-                        {Math.round(maxHp - 120 * coefficient * value)}
-                        <span className={`${style.maxHp}`}>/{maxHp}</span>
-                    </div>
+                    {isHP ? (
+                        <>
+                            <div className={`${style.value}`}>
+                                {Math.round(maxHp - 120 * coefficient * value)}
+                                <span className={`${style.maxHp}`}>
+                                    /{maxHp}
+                                </span>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className={`${style.value}`}>
+                                {Math.round(120 * coefficient * value)}
+                                {/* <span className={`${style.maxHp}`}>
+                                    /{maxHp}
+                                </span> */}
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         </>
@@ -142,6 +179,8 @@ export type DosimeterResultProps = {
     coefficient: number;
     yearN: number;
     onceMaxHp: number;
+    typeOrder: string;
+    typeBar: string;
 };
 function DosimeterResult({
     result,
@@ -149,6 +188,8 @@ function DosimeterResult({
     coefficient,
     yearN,
     onceMaxHp,
+    typeOrder,
+    typeBar,
     ...props
 }: DosimeterResultProps) {
     const [value, state] = useMemo(() => {
@@ -158,7 +199,7 @@ function DosimeterResult({
                 ? result.dose.reduce((acculator, currentValue) =>
                       acculator.data > currentValue.data
                           ? acculator
-                          : currentValue,
+                          : currentValue
                   )
                 : { data: NaN, state: undefined };
         let value = !Number.isNaN(doseValue.data) ? doseValue.data : 0;
@@ -167,7 +208,7 @@ function DosimeterResult({
         // check equipment
         if (result.category) {
             let categoryIndex: number = Object.keys(equipments).indexOf(
-                result.category,
+                result.category
             );
             let isEquipped: boolean | undefined =
                 Object.values(equipments)[categoryIndex];
@@ -181,6 +222,10 @@ function DosimeterResult({
 
         return [value, state];
     }, [result, equipments]);
+
+    const isYearOnceOrder = useMemo(() => {
+        return typeOrder === "year-once" ? true : false;
+    }, [typeOrder]);
 
     return (
         <>
@@ -196,24 +241,53 @@ function DosimeterResult({
                 </div>
                 {/* Datas */}
                 <div className={`${style.result}`}>
-                    <div className={`${style.year}`}>
-                        <MemoResultData
-                            value={value}
-                            coefficient={yearN * coefficient}
-                            maxHp={20000}
-                        >
-                            Year
-                        </MemoResultData>
-                    </div>
-                    <div className={`${style.once}`}>
-                        <MemoResultData
-                            value={value}
-                            coefficient={coefficient}
-                            maxHp={onceMaxHp}
-                        >
-                            Once
-                        </MemoResultData>
-                    </div>
+                    {isYearOnceOrder ? (
+                        <>
+                            <div className={`${style.year}`}>
+                                <MemoResultData
+                                    value={value}
+                                    coefficient={yearN * coefficient}
+                                    maxHp={20000}
+                                    typeBar={typeBar}
+                                >
+                                    Year
+                                </MemoResultData>
+                            </div>
+                            <div className={`${style.once}`}>
+                                <MemoResultData
+                                    value={value}
+                                    coefficient={coefficient}
+                                    maxHp={onceMaxHp}
+                                    typeBar={typeBar}
+                                >
+                                    Once
+                                </MemoResultData>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className={`${style.once}`}>
+                                <MemoResultData
+                                    value={value}
+                                    coefficient={coefficient}
+                                    maxHp={onceMaxHp}
+                                    typeBar={typeBar}
+                                >
+                                    Once
+                                </MemoResultData>
+                            </div>
+                            <div className={`${style.year}`}>
+                                <MemoResultData
+                                    value={value}
+                                    coefficient={yearN * coefficient}
+                                    maxHp={20000}
+                                    typeBar={typeBar}
+                                >
+                                    Year
+                                </MemoResultData>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         </>
@@ -225,11 +299,15 @@ export type DosimeterUIProps = {
     nPerPatient?: number;
     nPerYear?: number;
     limitOnce?: number;
+    typeOrder?: string;
+    typeBar?: string;
 };
 export function DosimeterUI({
     nPerPatient = 1,
     nPerYear = 500,
     limitOnce = 100,
+    typeOrder = "year-once",
+    typeBar = "HP/MP",
     ...props
 }: DosimeterUIProps) {
     const [set, playerProperties, sceneProperties] = useStore((state) => [
@@ -245,37 +323,57 @@ export function DosimeterUI({
      */
     // Volume
     const [dosimeterConfig, setVolume] = useControls(() => ({
-        Player: folder({
-            "Dosimeter Config": folder(
-                {
-                    N_perPatient: {
-                        value: nPerPatient,
-                        min: 1,
-                        step: 1,
-                        label: "N (/patient)",
+        Scene: folder({
+            Options: folder({
+                "Dosimeter Settings": folder(
+                    {
+                        N_perPatient: {
+                            value: nPerPatient,
+                            min: 1,
+                            step: 1,
+                            label: "N (/patient)",
+                        },
+                        N_perYear: {
+                            value: nPerYear,
+                            min: 1,
+                            step: 1,
+                            label: "N (/year)",
+                        },
+                        Limit_once: {
+                            value: limitOnce,
+                            min: 1,
+                            label: "Limit (/once)",
+                        },
+                        Layout: folder(
+                            {
+                                type_order: {
+                                    value: typeOrder,
+                                    options: ["year-once", "once-year"],
+                                    label: "order",
+                                },
+                                type_bar: {
+                                    value: typeBar,
+                                    options: ["HP/MP", "gauge"],
+                                    label: "bar",
+                                },
+                            },
+                            { collapsed: true }
+                        ),
                     },
-                    N_perYear: {
-                        value: nPerYear,
-                        min: 1,
-                        step: 1,
-                        label: "N (/year)",
-                    },
-                    Limit_once: {
-                        value: limitOnce,
-                        min: 1,
-                        label: "Limit (/once)",
-                    },
-                },
-                { collapsed: true },
-            ),
+                    { collapsed: true }
+                ),
+            }),
         }),
     }));
 
     return (
         <>
-            <div id="DosimeterUI" className={`${style.dose_list}`}>
+            <div
+                id="DosimeterUI"
+                className={`${style.dose_list}`}
+            >
                 <div className={`${style.label}`}>
-                    Dose
+                    Dosimeter
                     <span className={`${style.unit}`}>[&micro;Sv]</span>
                 </div>
                 {dosimeterResults.map((result, index) => (
@@ -286,6 +384,8 @@ export function DosimeterUI({
                         coefficient={dosimeterConfig.N_perPatient}
                         yearN={dosimeterConfig.N_perYear}
                         onceMaxHp={dosimeterConfig.Limit_once}
+                        typeOrder={dosimeterConfig.type_order}
+                        typeBar={dosimeterConfig.type_bar}
                     />
                 ))}
             </div>
