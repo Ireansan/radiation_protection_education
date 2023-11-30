@@ -136,6 +136,10 @@
                     text-align: right;
                     color: #bcc2d2;
 
+                    &.danger {
+                        color: #b83100;
+                    }
+
                     .maxHp {
                         font-size: 0.6rem;
                         color: #8c93a3;

@@ -80,6 +80,7 @@ export type ResultDataProps = {
     coefficient: number;
     maxHp: number;
     typeBar: string;
+    typeValue: string;
 };
 function ResultData({
     children,
@@ -87,10 +88,11 @@ function ResultData({
     coefficient,
     maxHp,
     typeBar,
+    typeValue,
     ...props
 }: ResultDataProps) {
     const [isDanger, length, isHP] = useMemo(() => {
-        const isHP = typeBar === "HP/MP" ? true : false;
+        const isHP = typeBar === "subtraction" ? true : false;
 
         const dose = 120 * coefficient * value;
         const dosePercent = dose / maxHp;
@@ -105,6 +107,12 @@ function ResultData({
 
         return [isDanger, length, isHP];
     }, [value, coefficient, maxHp, typeBar]);
+
+    const [isSub] = useMemo(() => {
+        const isSub = typeValue === "subtraction" ? true : false;
+
+        return [isSub];
+    }, [typeValue]);
 
     return (
         <>
@@ -147,7 +155,7 @@ function ResultData({
                 {/* Value */}
                 <div className={`${style.numerical}`}>
                     <div className={`${style.category}`}>{children}</div>
-                    {isHP ? (
+                    {isSub ? (
                         <>
                             <div className={`${style.value}`}>
                                 {Math.round(maxHp - 120 * coefficient * value)}
@@ -158,11 +166,15 @@ function ResultData({
                         </>
                     ) : (
                         <>
-                            <div className={`${style.value}`}>
+                            <div
+                                className={`${style.value} ${
+                                    isDanger && `${style.danger}`
+                                }`}
+                            >
                                 {Math.round(120 * coefficient * value)}
-                                {/* <span className={`${style.maxHp}`}>
+                                <span className={`${style.maxHp}`}>
                                     /{maxHp}
-                                </span> */}
+                                </span>
                             </div>
                         </>
                     )}
@@ -181,6 +193,7 @@ export type DosimeterResultProps = {
     onceMaxHp: number;
     typeOrder: string;
     typeBar: string;
+    typeValue: string;
 };
 function DosimeterResult({
     result,
@@ -190,6 +203,7 @@ function DosimeterResult({
     onceMaxHp,
     typeOrder,
     typeBar,
+    typeValue,
     ...props
 }: DosimeterResultProps) {
     const [value, state] = useMemo(() => {
@@ -249,6 +263,7 @@ function DosimeterResult({
                                     coefficient={yearN * coefficient}
                                     maxHp={20000}
                                     typeBar={typeBar}
+                                    typeValue={typeValue}
                                 >
                                     Year
                                 </MemoResultData>
@@ -259,6 +274,7 @@ function DosimeterResult({
                                     coefficient={coefficient}
                                     maxHp={onceMaxHp}
                                     typeBar={typeBar}
+                                    typeValue={typeValue}
                                 >
                                     Once
                                 </MemoResultData>
@@ -272,6 +288,7 @@ function DosimeterResult({
                                     coefficient={coefficient}
                                     maxHp={onceMaxHp}
                                     typeBar={typeBar}
+                                    typeValue={typeValue}
                                 >
                                     Once
                                 </MemoResultData>
@@ -282,6 +299,7 @@ function DosimeterResult({
                                     coefficient={yearN * coefficient}
                                     maxHp={20000}
                                     typeBar={typeBar}
+                                    typeValue={typeValue}
                                 >
                                     Year
                                 </MemoResultData>
@@ -301,13 +319,15 @@ export type DosimeterUIProps = {
     limitOnce?: number;
     typeOrder?: string;
     typeBar?: string;
+    typeValue?: string;
 };
 export function DosimeterUI({
     nPerPatient = 1,
     nPerYear = 500,
     limitOnce = 100,
     typeOrder = "year-once",
-    typeBar = "HP/MP",
+    typeBar = "subtraction",
+    typeValue = "subtraction",
     ...props
 }: DosimeterUIProps) {
     const [set, playerProperties, sceneProperties] = useStore((state) => [
@@ -353,8 +373,13 @@ export function DosimeterUI({
                                 },
                                 type_bar: {
                                     value: typeBar,
-                                    options: ["HP/MP", "gauge"],
+                                    options: ["subtraction", "addition"],
                                     label: "bar",
+                                },
+                                type_value: {
+                                    value: typeValue,
+                                    options: ["subtraction", "addition"],
+                                    label: "value",
                                 },
                             },
                             { collapsed: true }
@@ -386,6 +411,7 @@ export function DosimeterUI({
                         onceMaxHp={dosimeterConfig.Limit_once}
                         typeOrder={dosimeterConfig.type_order}
                         typeBar={dosimeterConfig.type_bar}
+                        typeValue={dosimeterConfig.type_value}
                     />
                 ))}
             </div>

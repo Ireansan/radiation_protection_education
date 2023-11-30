@@ -116,6 +116,9 @@
   text-align: right;
   color: #bcc2d2;
 }
+.dose_list .dose .data .numerical .value.danger {
+  color: #b83100;
+}
 .dose_list .dose .data .numerical .value .maxHp {
   font-size: 0.6rem;
   color: #8c93a3;
