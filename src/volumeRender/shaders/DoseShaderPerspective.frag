@@ -243,7 +243,18 @@ void cast_mip(vec3 start_loc,vec3 step,int nsteps,vec3 view_ray){
     vec3 iloc=start_loc+step*(float(max_i)-.5);
     vec3 istep=step/float(REFINEMENT_STEPS);
     for(int i=0;i<REFINEMENT_STEPS;i++){
-        max_val=max(max_val,sample1(iloc));
+        vec3 uv_position=u_size*iloc;
+        vec3 vClipPosition=clip_position(uv_position);
+        ClippedResult clippedResult=within_boundaries(vClipPosition);
+        bool clipped=clippedResult.clipped;
+        bool guarded=clippedResult.guarded;
+        
+        float val=sample1(iloc);
+        if(guarded){
+            val=u_boardCoefficient*val+u_boardOffset;
+        }
+
+        max_val=max(max_val,val);
         iloc+=istep;
     }
     
