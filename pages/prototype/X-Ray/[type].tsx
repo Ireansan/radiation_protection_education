@@ -95,6 +95,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
             {
                 params: { type: "experiment" },
             },
+            {
+                params: { type: "perspective" },
+            },
         ],
         fallback: false,
     };
@@ -108,13 +111,15 @@ export const getStaticProps: GetStaticProps = async ({
     const isBasic = pageType === "basic";
     const isExtra = pageType === "extra";
     const isExperiment = pageType === "experiment";
+    const isPerspective = pageType === "perspective";
 
     return {
         props: {
             availables: {
-                player: isExtra || isExperiment,
-                shield: isExtra || isExperiment,
-                dosimeter: isExtra || isExperiment,
+                orthographic: !isPerspective,
+                player: isExtra || isExperiment || isPerspective,
+                shield: isExtra || isExperiment || isPerspective,
+                dosimeter: isExtra || isExperiment || isPerspective,
                 experimentUI: isExperiment,
             },
         },
@@ -222,8 +227,11 @@ function VisualizationXRay({ ...props }: PageProps) {
                     {/* ================================================== */}
                     {/* Three.js Canvas */}
                     <Canvas
-                        orthographic
-                        camera={{ position: [4, 8, 4], zoom: 75 }}
+                        orthographic={props.availables.orthographic}
+                        camera={{
+                            position: [4, 8, 4],
+                            zoom: props.availables.orthographic ? 75 : 1.0,
+                        }}
                     >
                         <Suspense fallback={null}>
                             {/* -------------------------------------------------- */}
