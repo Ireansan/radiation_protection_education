@@ -17,13 +17,17 @@ void main(){
     // need to calculate the ray and truncate it to the viewing cone.
     vec4 position4=vec4(position,1.);
     vec4 pos_in_cam=viewtransformf*position4;
+    vec4 pos_in_cam_div_z=pos_in_cam/pos_in_cam.z;
     
     // Intersection of ray and near clipping plane (z = -1 in clip coords)
-    pos_in_cam.z=-pos_in_cam.w;
+    // pos_in_cam=-pos_in_cam_div_z;
+    pos_in_cam=vec4(0.);
+    pos_in_cam.w=1.;
     v_nearpos=viewtransformi*pos_in_cam;
     
     // Intersection of ray and far clipping plane (z = +1 in clip coords)
-    pos_in_cam.z=pos_in_cam.w;
+    pos_in_cam=pos_in_cam_div_z;
+    pos_in_cam.w=1.;
     v_farpos=viewtransformi*pos_in_cam;
     
     // Set varyings and output pos
