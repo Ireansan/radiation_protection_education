@@ -69,6 +69,7 @@ import {
     ExperimentCheckList,
     SceneOptionsPanel,
 } from "../../../components/ui";
+import { Tips } from "../../../components/ui/tips";
 
 // ==========
 // Store
@@ -602,6 +603,8 @@ function VisualizationXRay({ ...props }: PageProps) {
                             <ExperimentCheckList />
                         </>
                     ) : null}
+
+                    <Tips />
                 </div>
             </div>
         </>
