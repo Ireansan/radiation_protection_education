@@ -2,6 +2,8 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Mousewheel, Keyboard } from "swiper/modules";
 
+import { useStore } from "../../../components/store";
+
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
@@ -13,6 +15,8 @@ import style from "../../../styles/css/tips.module.css";
  * @link https://swiperjs.com/demos#css-mode
  */
 export function Tips() {
+    const [tips] = useStore((state) => [state.tips]);
+
     const test = [
         "Slide 1",
         "Slide 2",
@@ -27,7 +31,7 @@ export function Tips() {
 
     return (
         <>
-            <div className={style.fullscreen}>
+            <div className={`${tips ? `${style.fullscreen}` : ``}`}>
                 <div className={style.foundation}>
                     <Swiper
                         cssMode={true}
