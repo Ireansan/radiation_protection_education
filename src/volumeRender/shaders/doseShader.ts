@@ -441,7 +441,6 @@ vec4 add_lighting(float val,vec3 loc,vec3 step,vec3 view_ray,float coefficient,f
 
 const doseShader = {
     uniforms: {
-        u_resolution: { value: new THREE.Vector2(1, 1) },
         u_size: { value: new THREE.Vector3(1, 1, 1) },
         u_renderstyle: { value: 0 },
         u_renderthreshold: { value: 0.5 },

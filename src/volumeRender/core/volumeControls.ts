@@ -14,8 +14,8 @@ class VolumeControls extends VolumeBase {
 
     isVolumeControls: boolean;
 
-    constructor() {
-        super();
+    constructor(isDose = false) {
+        super(isDose);
 
         this.object = undefined;
         this.visible = false;
@@ -55,6 +55,8 @@ class VolumeControls extends VolumeBase {
             this.object.colormap = this._colormap;
             this.object.renderstyle = this._renderstyle;
             this.object.isothreshold = this._isothreshold;
+
+            this.object.updateVolumeParam(false, true);
         }
     }
 
@@ -77,11 +79,13 @@ class VolumeControls extends VolumeBase {
                     this._clippingPlanesObject
                 );
             }
-        }
 
-        this.object instanceof VolumeBase
-            ? this.object.updateVolumeClipping(false, true)
-            : null;
+            if (this.isDose) {
+                this.object.boardEffect = this._boardEffect;
+            }
+
+            this.object.updateVolumeClipping(false, true);
+        }
     }
 
     // Set current object

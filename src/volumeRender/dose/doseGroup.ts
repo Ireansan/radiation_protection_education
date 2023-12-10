@@ -1,7 +1,6 @@
 import * as THREE from "three";
 
-import { DoseBase } from "./doseBase";
-import { DoseObject } from "./doseObject";
+import { VolumeGroup } from "../core";
 import type { DoseValue } from "./doseBase";
 
 /**
@@ -9,73 +8,9 @@ import type { DoseValue } from "./doseBase";
  *
  * @abstract Volume Group
  */
-class DoseGroup extends DoseBase {
-    isGroup: boolean;
-    type: string;
-
+class DoseGroup extends VolumeGroup {
     constructor() {
-        super();
-
-        this.isGroup = true;
-        this.type = "Group";
-    }
-
-    updateVolumeClipping(updateParents: boolean, updateChildren: boolean) {
-        // ----------
-        // update parent, children
-        // ----------
-        super.updateVolumeClipping(updateParents, updateChildren);
-
-        // ----------
-        // update children that is THREE.Mesh
-        // ----------
-        if (updateChildren === true) {
-            const children = this.children;
-
-            for (let i = 0, l = children.length; i < l; i++) {
-                const child = children[i];
-
-                if (child instanceof THREE.Mesh) {
-                    child.material.clipping = this._clipping;
-                    child.material.clippingPlanes = this._clipping
-                        ? this._clippingPlanes
-                        : null;
-                    child.material.clipIntersection = this._clipIntersection;
-                }
-            }
-        }
-    }
-
-    /**
-     *
-     * @param position world position
-     * @returns value in the data array
-     */
-    getVolumeValue(position: THREE.Vector3): number {
-        let results = this.children.map((child, i) =>
-            child instanceof DoseObject
-                ? child.getVolumeValue(position.clone())
-                : -6
-        );
-
-        let tmpData = results.reduce(
-            (acculator, currentValue) => acculator + currentValue,
-            0
-        );
-
-        // https://stackoverflow.com/questions/44436041/how-to-sum-value-of-two-json-object-key
-        return tmpData;
-    }
-
-    /**
-     *
-     * @param position world position
-     * @returns value in the data array
-     */
-    getVolumeValues(position: THREE.Vector3): number[] {
-        return this.children.map((child, i) =>
-            child instanceof DoseObject ? child.getVolumeValue(position) : NaN
-        );
+        super(true);
     }
 }
 
