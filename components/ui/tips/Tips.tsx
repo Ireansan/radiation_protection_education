@@ -1,6 +1,7 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Mousewheel, Keyboard } from "swiper/modules";
+import { QuestionMark, Close } from "@mui/icons-material";
 
 import { useStore } from "../../../components/store";
 
@@ -15,7 +16,7 @@ import style from "../../../styles/css/tips.module.css";
  * @link https://swiperjs.com/demos#css-mode
  */
 export function Tips() {
-    const [tips] = useStore((state) => [state.tips]);
+    const [set, tips] = useStore((state) => [state.set, state.tips]);
 
     const test = [
         "Slide 1",
@@ -31,14 +32,24 @@ export function Tips() {
 
     return (
         <>
-            <div className={`${tips ? `${style.fullscreen}` : ``}`}>
+            <button
+                className={`${style.tips}`}
+                onClick={() => set({ tips: true })}
+            >
+                <QuestionMark />
+            </button>
+            <div className={`${style.fullscreen} ${!tips && `${style.close}`}`}>
                 <div className={style.foundation}>
+                    <button onClick={() => set({ tips: false })}>
+                        <Close />
+                    </button>
                     <Swiper
                         cssMode={true}
                         navigation={true}
                         pagination={true}
                         mousewheel={true}
                         keyboard={true}
+                        rewind={true}
                         modules={[Navigation, Pagination, Mousewheel, Keyboard]}
                         className={style.swiper}
                     >

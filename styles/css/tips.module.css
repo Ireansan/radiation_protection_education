@@ -1,3 +1,9 @@
+.tips {
+  position: absolute;
+  top: 60px;
+  left: 5px;
+}
+
 .fullscreen {
   position: absolute;
   top: 0;
@@ -7,12 +13,16 @@
   display: flex;
   z-index: 9999;
 }
+.fullscreen.close {
+  pointer-events: none;
+  opacity: 0;
+}
 .fullscreen .foundation {
-  width: 50%;
-  height: 50%;
   position: absolute;
   top: 50%;
   left: 50%;
+  width: 50%;
+  height: 50%;
   transform: translate(-50%, -50%);
 }
 .fullscreen .foundation .swiper {
