@@ -557,6 +557,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                     />
                     <PrototypeAnimationControlsUI
                         audioRef={audioRef}
+                        duration={16}
                         speed={8.0}
                         customSpeed={[8.0, 16.0]}
                     />
