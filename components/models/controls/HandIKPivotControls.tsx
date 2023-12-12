@@ -75,10 +75,16 @@ export const HandIKPivotControls = React.forwardRef<
 
     return (
         <>
-            <primitive ref={ref} object={controls} />
+            <primitive
+                ref={ref}
+                object={controls}
+            />
             <group ref={group}>{children}</group>
 
-            <group ref={pivotGroupRef} visible={!viewing && visible}>
+            <group
+                ref={pivotGroupRef}
+                visible={!viewing && visible}
+            >
                 {/* Left Hand IK */}
                 <PivotControls
                     scale={scale}
@@ -97,13 +103,12 @@ export const HandIKPivotControls = React.forwardRef<
                     onDragEnd={() => {
                         // set execute log for experiment
                         set((state) => ({
-                            sceneProperties: {
-                                ...state.sceneProperties,
+                            sceneStates: {
+                                ...state.sceneStates,
                                 executeLog: {
-                                    ...state.sceneProperties.executeLog,
+                                    ...state.sceneStates.executeLog,
                                     avatar: {
-                                        ...state.sceneProperties.executeLog
-                                            .avatar,
+                                        ...state.sceneStates.executeLog.avatar,
                                         leftHand: true,
                                     },
                                 },
@@ -134,13 +139,12 @@ export const HandIKPivotControls = React.forwardRef<
                     }}
                     onDragEnd={() => {
                         set((state) => ({
-                            sceneProperties: {
-                                ...state.sceneProperties,
+                            sceneStates: {
+                                ...state.sceneStates,
                                 executeLog: {
-                                    ...state.sceneProperties.executeLog,
+                                    ...state.sceneStates.executeLog,
                                     avatar: {
-                                        ...state.sceneProperties.executeLog
-                                            .avatar,
+                                        ...state.sceneStates.executeLog.avatar,
                                         rightHand: true,
                                     },
                                 },

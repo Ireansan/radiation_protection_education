@@ -18,13 +18,13 @@ export function ExperimentCheckList({ ...props }: experimentCheckListProps) {
         Shield,
         Dosimeter,
     ] = useStore((state) => [
-        state.sceneProperties.executeLog.animation,
-        state.sceneProperties.executeLog.parameter.colormap,
-        state.sceneProperties.executeLog.parameter.renderStyle,
-        state.sceneProperties.executeLog.clipping,
-        state.sceneProperties.executeLog.avatar,
-        state.sceneProperties.executeLog.shield,
-        state.sceneProperties.executeLog.dosimeter,
+        state.sceneStates.executeLog.animation,
+        state.sceneStates.executeLog.parameter.colormap,
+        state.sceneStates.executeLog.parameter.renderStyle,
+        state.sceneStates.executeLog.clipping,
+        state.sceneStates.executeLog.avatar,
+        state.sceneStates.executeLog.shield,
+        state.sceneStates.executeLog.dosimeter,
     ]);
 
     const color = "#65BF74";

@@ -203,6 +203,16 @@ export const DoseBoardControls = React.forwardRef<
             rigidBodyRef.current.setRotation(worldRotation);
             rigidBodyRef.current.setTranslation(worldPosition);
         }
+
+        set((state) => ({
+            sceneStates: {
+                ...state.sceneStates,
+                boardState: {
+                    position: new THREE.Vector3().setFromMatrixPosition(w),
+                    quaternion: new THREE.Quaternion().setFromRotationMatrix(w),
+                },
+            },
+        }));
     }
 
     /**
@@ -243,12 +253,12 @@ export const DoseBoardControls = React.forwardRef<
         // set execute log for experiment
         if (clipping) {
             set((state) => ({
-                sceneProperties: {
-                    ...state.sceneProperties,
+                sceneStates: {
+                    ...state.sceneStates,
                     executeLog: {
-                        ...state.sceneProperties.executeLog,
+                        ...state.sceneStates.executeLog,
                         shield: {
-                            ...state.sceneProperties.executeLog.shield,
+                            ...state.sceneStates.executeLog.shield,
                             enabled: true,
                         },
                     },
@@ -391,12 +401,12 @@ export const DoseBoardControls = React.forwardRef<
                 onDragEnd={() => {
                     // set execute log for experiment
                     set((state) => ({
-                        sceneProperties: {
-                            ...state.sceneProperties,
+                        sceneStates: {
+                            ...state.sceneStates,
                             executeLog: {
-                                ...state.sceneProperties.executeLog,
+                                ...state.sceneStates.executeLog,
                                 shield: {
-                                    ...state.sceneProperties.executeLog.shield,
+                                    ...state.sceneStates.executeLog.shield,
                                     translate: true,
                                 },
                             },

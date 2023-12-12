@@ -49,10 +49,8 @@ export function VRDoseAnimationControls({
     const [mixer] = React.useState<THREE.AnimationMixer[]>(
         objects.map(
             (object, i) =>
-                new THREE.AnimationMixer(
-                    undefined as unknown as THREE.Object3D,
-                ),
-        ),
+                new THREE.AnimationMixer(undefined as unknown as THREE.Object3D)
+        )
     );
     const [actions, setActions] = React.useState(() => {
         const actions = objects.map((object, i) => {
@@ -70,7 +68,7 @@ export function VRDoseAnimationControls({
     >(
         objects.map((object, i) => {
             return {};
-        }),
+        })
     );
 
     React.useEffect(() => {
@@ -79,7 +77,7 @@ export function VRDoseAnimationControls({
                 object.current.animations.forEach((clip) => {
                     lazyActions.current[i][clip.name] = mixer[i].clipAction(
                         clip,
-                        object.current!,
+                        object.current!
                     );
 
                     if (childMaxLength.current.length <= clip.duration) {
@@ -94,13 +92,13 @@ export function VRDoseAnimationControls({
         setActions(lazyActions.current);
 
         actions.forEach(
-            (actions) => actions["volumeAnimation"]?.reset().play(),
+            (actions) => actions["volumeAnimation"]?.reset().play()
         );
     }, [objects]);
 
     React.useEffect(() => {
         actions.forEach(
-            (actions) => actions["volumeAnimation"]?.reset().play(),
+            (actions) => actions["volumeAnimation"]?.reset().play()
         );
     }, [actions]);
 
@@ -111,7 +109,7 @@ export function VRDoseAnimationControls({
     const { gl, camera } = useThree();
     const group = React.useMemo(
         () => new InteractiveGroup(gl, camera),
-        [gl, camera],
+        [gl, camera]
     );
 
     /**
@@ -156,12 +154,12 @@ export function VRDoseAnimationControls({
                     switch (e) {
                         case "time lapse":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         animation: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .animation,
                                             timeLapse: true,
                                         },
@@ -171,12 +169,12 @@ export function VRDoseAnimationControls({
                             break;
                         case "accumulate":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         animation: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .animation,
                                             accumulate: true,
                                         },
@@ -264,7 +262,7 @@ export function VRDoseAnimationControls({
                     timeRef.current.time &&
                 actionsMaxLength["volumeAnimation"].time < duration
                     ? (timeRef.current.time = Math.floor(
-                          actionsMaxLength["volumeAnimation"].time,
+                          actionsMaxLength["volumeAnimation"].time
                       ))
                     : null;
             }
@@ -284,7 +282,10 @@ export function VRDoseAnimationControls({
         <>
             {/* {console.log("animation rendering")} */}
             {/* {console.log("animation", childMaxLength, mixer)} */}
-            <primitive object={group} {...props} />
+            <primitive
+                object={group}
+                {...props}
+            />
         </>
     );
 }

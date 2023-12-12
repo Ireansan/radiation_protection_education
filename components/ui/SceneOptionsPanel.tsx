@@ -25,7 +25,7 @@ export function SceneOptionsPanel({
             state.viewing,
             state.annotations,
             state.stats,
-            state.sceneProperties.objectVisibles,
+            state.sceneStates.objectVisibles,
         ]
     );
 
@@ -70,10 +70,10 @@ export function SceneOptionsPanel({
                                     value: objectVisibles.dose,
                                     onChange: (e) => {
                                         set((state) => ({
-                                            sceneProperties: {
-                                                ...state.sceneProperties,
+                                            sceneStates: {
+                                                ...state.sceneStates,
                                                 objectVisibles: {
-                                                    ...state.sceneProperties
+                                                    ...state.sceneStates
                                                         .objectVisibles,
                                                     dose: e,
                                                 },
@@ -85,10 +85,10 @@ export function SceneOptionsPanel({
                                     value: objectVisibles.object3d,
                                     onChange: (e) => {
                                         set((state) => ({
-                                            sceneProperties: {
-                                                ...state.sceneProperties,
+                                            sceneStates: {
+                                                ...state.sceneStates,
                                                 objectVisibles: {
-                                                    ...state.sceneProperties
+                                                    ...state.sceneStates
                                                         .objectVisibles,
                                                     object3d: e,
                                                 },
@@ -101,10 +101,10 @@ export function SceneOptionsPanel({
                                         value: objectVisibles.player,
                                         onChange: (e) => {
                                             set((state) => ({
-                                                sceneProperties: {
-                                                    ...state.sceneProperties,
+                                                sceneStates: {
+                                                    ...state.sceneStates,
                                                     objectVisibles: {
-                                                        ...state.sceneProperties
+                                                        ...state.sceneStates
                                                             .objectVisibles,
                                                         player: e,
                                                     },
@@ -117,10 +117,10 @@ export function SceneOptionsPanel({
                                         label: "Pivot",
                                         onChange: (e) => {
                                             set((state) => ({
-                                                sceneProperties: {
-                                                    ...state.sceneProperties,
+                                                sceneStates: {
+                                                    ...state.sceneStates,
                                                     objectVisibles: {
-                                                        ...state.sceneProperties
+                                                        ...state.sceneStates
                                                             .objectVisibles,
                                                         playerPivot: e,
                                                     },
@@ -133,10 +133,10 @@ export function SceneOptionsPanel({
                                         label: "HandIK",
                                         onChange: (e) => {
                                             set((state) => ({
-                                                sceneProperties: {
-                                                    ...state.sceneProperties,
+                                                sceneStates: {
+                                                    ...state.sceneStates,
                                                     objectVisibles: {
-                                                        ...state.sceneProperties
+                                                        ...state.sceneStates
                                                             .objectVisibles,
                                                         playerHandPivot: e,
                                                     },
@@ -150,10 +150,10 @@ export function SceneOptionsPanel({
                                         value: objectVisibles.shield,
                                         onChange: (e) => {
                                             set((state) => ({
-                                                sceneProperties: {
-                                                    ...state.sceneProperties,
+                                                sceneStates: {
+                                                    ...state.sceneStates,
                                                     objectVisibles: {
-                                                        ...state.sceneProperties
+                                                        ...state.sceneStates
                                                             .objectVisibles,
                                                         shield: e,
                                                     },
@@ -166,10 +166,10 @@ export function SceneOptionsPanel({
                                         label: "Pivot",
                                         onChange: (e) => {
                                             set((state) => ({
-                                                sceneProperties: {
-                                                    ...state.sceneProperties,
+                                                sceneStates: {
+                                                    ...state.sceneStates,
                                                     objectVisibles: {
-                                                        ...state.sceneProperties
+                                                        ...state.sceneStates
                                                             .objectVisibles,
                                                         shieldPivot: e,
                                                     },
@@ -183,10 +183,10 @@ export function SceneOptionsPanel({
                                         value: objectVisibles.dosimeterUI,
                                         onChange: (e) => {
                                             set((state) => ({
-                                                sceneProperties: {
-                                                    ...state.sceneProperties,
+                                                sceneStates: {
+                                                    ...state.sceneStates,
                                                     objectVisibles: {
-                                                        ...state.sceneProperties
+                                                        ...state.sceneStates
                                                             .objectVisibles,
                                                         dosimeterUI: e,
                                                     },
@@ -198,10 +198,10 @@ export function SceneOptionsPanel({
                                         value: objectVisibles.experimentUI,
                                         onChange: (e) => {
                                             set((state) => ({
-                                                sceneProperties: {
-                                                    ...state.sceneProperties,
+                                                sceneStates: {
+                                                    ...state.sceneStates,
                                                     objectVisibles: {
-                                                        ...state.sceneProperties
+                                                        ...state.sceneStates
                                                             .objectVisibles,
                                                         experimentUI: e,
                                                     },

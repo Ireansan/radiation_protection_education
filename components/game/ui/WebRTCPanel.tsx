@@ -31,9 +31,9 @@ export function WebRTCPanel({ ...props }): JSX.Element {
 
     const inputRef = useRef<HTMLInputElement>(null!);
 
-    const [set, playerProperties, onlinePlayers] = useStore((state) => [
+    const [set, playerState, onlinePlayers] = useStore((state) => [
         state.set,
-        state.playerProperties,
+        state.sceneStates.playerState,
         state.onlinePlayers,
     ]);
 
@@ -54,8 +54,8 @@ export function WebRTCPanel({ ...props }): JSX.Element {
             let data = {
                 type: "properties",
                 data: {
-                    position: playerProperties.position.toArray(),
-                    quaternion: playerProperties.quaternion.toArray(),
+                    position: playerState.position.toArray(),
+                    quaternion: playerState.quaternion.toArray(),
                 },
             };
 

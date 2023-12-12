@@ -364,13 +364,13 @@ function CArmExtra() {
                                 }
 
                                 set((state) => ({
-                                    sceneProperties: {
-                                        ...state.sceneProperties,
+                                    sceneStates: {
+                                        ...state.sceneStates,
                                         executeLog: {
-                                            ...state.sceneProperties.executeLog,
+                                            ...state.sceneStates.executeLog,
                                             avatar: {
-                                                ...state.sceneProperties
-                                                    .executeLog.avatar,
+                                                ...state.sceneStates.executeLog
+                                                    .avatar,
                                                 translate: true,
                                             },
                                         },

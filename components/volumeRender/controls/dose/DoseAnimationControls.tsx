@@ -3,7 +3,11 @@ import * as THREE from "three";
 import { extend, useFrame } from "@react-three/fiber";
 import { useControls, folder, button, Leva } from "leva";
 
-import { VolumeBase, DoseAnimationObject, VolumeAnimationObject } from "../../../../src";
+import {
+    VolumeBase,
+    DoseAnimationObject,
+    VolumeAnimationObject,
+} from "../../../../src";
 import { useStore } from "../../../store";
 
 export type DoseAnimationControlsProps = {
@@ -39,7 +43,10 @@ export function DoseAnimationControls({
      * @link https://github.com/pmndrs/drei/blob/cce70ae77b5151601089114259fbffab8747c8fa/src/core/useAnimations.tsx
      */
     const [mixer] = React.useState<THREE.AnimationMixer[]>(
-        objects.map((object, i) => new THREE.AnimationMixer(undefined as unknown as THREE.Object3D))
+        objects.map(
+            (object, i) =>
+                new THREE.AnimationMixer(undefined as unknown as THREE.Object3D)
+        )
     );
     const [actions, setActions] = React.useState(() => {
         const actions = objects.map((object, i) => {
@@ -61,13 +68,18 @@ export function DoseAnimationControls({
     );
 
     let speedListTmp = [0.25, 0.5, 1.0, 1.5, 2.0];
-    const speedList = customSpeed ? speedListTmp.concat(customSpeed) : speedListTmp;
+    const speedList = customSpeed
+        ? speedListTmp.concat(customSpeed)
+        : speedListTmp;
 
     React.useEffect(() => {
         objects.forEach((object, i) => {
             if (object.current) {
                 object.current.animations.forEach((clip) => {
-                    lazyActions.current[i][clip.name] = mixer[i].clipAction(clip, object.current!);
+                    lazyActions.current[i][clip.name] = mixer[i].clipAction(
+                        clip,
+                        object.current!
+                    );
 
                     if (childMaxLength.current.length <= clip.duration) {
                         childMaxLength.current = {
@@ -80,11 +92,15 @@ export function DoseAnimationControls({
         });
         setActions(lazyActions.current);
 
-        actions.forEach((actions) => actions["volumeAnimation"]?.reset().play());
+        actions.forEach(
+            (actions) => actions["volumeAnimation"]?.reset().play()
+        );
     }, [objects]);
 
     React.useEffect(() => {
-        actions.forEach((actions) => actions["volumeAnimation"]?.reset().play());
+        actions.forEach(
+            (actions) => actions["volumeAnimation"]?.reset().play()
+        );
     }, [actions]);
 
     /**
@@ -101,16 +117,24 @@ export function DoseAnimationControls({
                 options: ["time lapse", "accumulate"],
                 onChange: (e) => {
                     if (e === "time lapse") {
-                        mainGroup.current ? (mainGroup.current.visible = true) : null;
+                        mainGroup.current
+                            ? (mainGroup.current.visible = true)
+                            : null;
 
                         if (subGroup) {
-                            subGroup.current ? (subGroup.current.visible = false) : null;
+                            subGroup.current
+                                ? (subGroup.current.visible = false)
+                                : null;
                         }
                     } else if (e === "accumulate") {
-                        mainGroup.current ? (mainGroup.current.visible = false) : null;
+                        mainGroup.current
+                            ? (mainGroup.current.visible = false)
+                            : null;
 
                         if (subGroup) {
-                            subGroup.current ? (subGroup.current.visible = true) : null;
+                            subGroup.current
+                                ? (subGroup.current.visible = true)
+                                : null;
                         }
                     } else {
                         console.log("test");
@@ -120,12 +144,13 @@ export function DoseAnimationControls({
                     switch (e) {
                         case "time lapse":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         animation: {
-                                            ...state.sceneProperties.executeLog.animation,
+                                            ...state.sceneStates.executeLog
+                                                .animation,
                                             timeLapse: true,
                                         },
                                     },
@@ -134,12 +159,13 @@ export function DoseAnimationControls({
                             break;
                         case "accumulate":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         animation: {
-                                            ...state.sceneProperties.executeLog.animation,
+                                            ...state.sceneStates.executeLog
+                                                .animation,
                                             accumulate: true,
                                         },
                                     },
@@ -185,7 +211,8 @@ export function DoseAnimationControls({
             if (edit) {
                 actions.forEach((actions, i) => {
                     actions["volumeAnimation"]
-                        ? (actions["volumeAnimation"].time = animationConfig.time)
+                        ? (actions["volumeAnimation"].time =
+                              animationConfig.time)
                         : null;
                 });
                 mixer.forEach((mixer, i) => {
@@ -199,7 +226,8 @@ export function DoseAnimationControls({
 
             let actionsMaxLength = actions[childMaxLength.current.index];
             if (actionsMaxLength["volumeAnimation"]) {
-                actionsMaxLength["volumeAnimation"].time !== animationConfig.time &&
+                actionsMaxLength["volumeAnimation"].time !==
+                    animationConfig.time &&
                 actionsMaxLength["volumeAnimation"].time < duration
                     ? setAnimationConfig({
                           time: actionsMaxLength["volumeAnimation"].time,

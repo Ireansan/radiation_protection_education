@@ -330,13 +330,13 @@ export function DosimeterUI({
     typeValue = "subtraction",
     ...props
 }: DosimeterUIProps) {
-    const [set, playerProperties, sceneProperties] = useStore((state) => [
+    const [set, playerState, sceneStates] = useStore((state) => [
         state.set,
-        state.playerProperties,
-        state.sceneProperties,
+        state.sceneStates.playerState,
+        state.sceneStates,
     ]);
-    const { equipments } = playerProperties;
-    const { dosimeterResults } = sceneProperties;
+    const { equipments } = playerState;
+    const { dosimeterResults } = sceneStates;
 
     /**
      * leva panels

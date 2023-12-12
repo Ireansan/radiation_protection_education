@@ -95,12 +95,12 @@ export function PrototypeAnimationControls({
                     switch (e) {
                         case "time lapse":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         animation: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .animation,
                                             timeLapse: true,
                                         },
@@ -110,12 +110,12 @@ export function PrototypeAnimationControls({
                             break;
                         case "accumulate":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         animation: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .animation,
                                             accumulate: true,
                                         },

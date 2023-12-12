@@ -69,10 +69,22 @@ const equipments = {
 };
 export type Equipments = typeof equipments;
 
-const playerProperties = {
+export type ObjectState = {
+    position: THREE.Vector3;
+    quaternion: THREE.Quaternion;
+};
+
+export type PlayerState = { equipments: Equipments } & ObjectState;
+const playerState: PlayerState = {
     position: new THREE.Vector3(),
     quaternion: new THREE.Quaternion(),
     equipments: equipments as Equipments,
+};
+
+export type BoardState = ObjectState;
+const boardState: BoardState = {
+    position: new THREE.Vector3(),
+    quaternion: new THREE.Quaternion(),
 };
 
 const onlinePlayers = {
@@ -143,9 +155,11 @@ const executeLog = {
 };
 export type ExecuteLog = typeof executeLog;
 
-const sceneProperties = {
+const sceneStates = {
     dosimeterResults: [] as ResultsByName[],
     objectVisibles: objectVisibles as ObjectVisibles,
+    playerState: playerState as PlayerState,
+    boardState: boardState as BoardState,
     executeLog: executeLog as ExecuteLog,
 };
 
@@ -164,11 +178,10 @@ type Getter = StoreApi<IState>["getState"];
 export type Setter = StoreApi<IState>["setState"];
 
 export type PlayerConfig = typeof playerConfig;
-export type PlayerProperties = typeof playerProperties;
 export type OnlinePlayers = {
     player1: RTCPlayer | undefined;
 };
-export type SceneProperties = typeof sceneProperties;
+export type SceneStates = typeof sceneStates;
 
 const booleans = [
     "debug",
@@ -200,9 +213,8 @@ export interface IState extends BaseState {
     get: Getter;
     set: Setter;
     playerConfig: PlayerConfig;
-    playerProperties: PlayerProperties;
     onlinePlayers: OnlinePlayers;
-    sceneProperties: SceneProperties;
+    sceneStates: SceneStates;
 }
 
 const useStoreImpl = create<IState>(
@@ -241,9 +253,9 @@ const useStoreImpl = create<IState>(
             stats,
             tips: false,
             playerConfig,
-            playerProperties,
+            playerState,
             onlinePlayers,
-            sceneProperties,
+            sceneStates,
         };
     }
 );
