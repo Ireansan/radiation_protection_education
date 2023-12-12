@@ -31,7 +31,10 @@ import {
 // Model
 import { Board_Configure } from "../../../components/models";
 import { CustomYBotIK } from "../../../components/models/Player";
-import { HandIKPivotControls } from "../../../components/models/controls";
+import {
+    HandIKPivotControls,
+    PlayerPivotControls,
+} from "../../../components/models/controls";
 
 // ==========
 // Volume
@@ -132,7 +135,7 @@ function VisualizationXRay({ ...props }: PageProps) {
         state.set,
         state.debug,
         state.viewing,
-        state.sceneProperties.objectVisibles,
+        state.sceneStates.objectVisibles,
     ]);
 
     const audioPath = `/models/nrrd/x-ray/nocurtain_animation/x-ray_nocurtain.mp3`;
@@ -376,7 +379,9 @@ function VisualizationXRay({ ...props }: PageProps) {
                             {/* Avatar */}
                             {props.availables.player ? (
                                 <>
-                                    <PivotControls
+                                    <PlayerPivotControls
+                                        playerRef={yBotRef}
+                                        dosimeterRef={dosimeterRef}
                                         matrix={new THREE.Matrix4().compose(
                                             new THREE.Vector3(2, 0, 0),
                                             new THREE.Quaternion().setFromEuler(
@@ -391,41 +396,6 @@ function VisualizationXRay({ ...props }: PageProps) {
                                         scale={70}
                                         fixed={true}
                                         activeAxes={[true, false, true]}
-                                        visible={
-                                            !viewing &&
-                                            objectVisibles.player &&
-                                            objectVisibles.playerPivot
-                                        }
-                                        onDrag={(l, deltaL, w, deltaW) => {
-                                            yBotRef.current.position.setFromMatrixPosition(
-                                                w
-                                            );
-                                            yBotRef.current.rotation.setFromRotationMatrix(
-                                                w
-                                            );
-                                        }}
-                                        onDragEnd={() => {
-                                            if (dosimeterRef.current) {
-                                                dosimeterRef.current.updateResults();
-                                            }
-
-                                            set((state) => ({
-                                                sceneProperties: {
-                                                    ...state.sceneProperties,
-                                                    executeLog: {
-                                                        ...state.sceneProperties
-                                                            .executeLog,
-                                                        avatar: {
-                                                            ...state
-                                                                .sceneProperties
-                                                                .executeLog
-                                                                .avatar,
-                                                            translate: true,
-                                                        },
-                                                    },
-                                                },
-                                            }));
-                                        }}
                                     />
                                     <group
                                         ref={yBotRef}
