@@ -13,6 +13,9 @@ const XRay_nocurtain_Configure = {
         rotation: [0, 0, Math.PI] as THREE.Vector3Tuple,
         scale: 1 / 5, // local scale
     },
+    doseOrigin: {
+        position: [-0.182, 1.15, -0.18] as THREE.Vector3Tuple, // world position
+    },
 };
 
 export { XRay_nocurtain_Configure };

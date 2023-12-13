@@ -162,6 +162,7 @@ const sceneStates = {
     boardState: boardState as BoardState,
     executeLog: executeLog as ExecuteLog,
     isTimeLapse: false,
+    doseOrigin: new THREE.Vector3(),
 };
 
 const actionNames = ["reset"] as const;

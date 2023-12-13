@@ -62,7 +62,7 @@ import { PrototypeAnimationControls } from "../../../components/volumeRender/con
 import { PrototypeAnimationControlsUI } from "../../../components/volumeRender/ui/PrototypeAnimationControlsUI";
 
 // ==========
-// UI
+// Controls
 import { CustomOrbitControls } from "../../../components/controls";
 
 // ==========
@@ -73,6 +73,7 @@ import {
     SceneOptionsPanel,
 } from "../../../components/ui";
 import { Tips } from "../../../components/ui/tips";
+import { Exercise } from "../../../components/ui/exercise";
 
 // ==========
 // Store
@@ -138,6 +139,10 @@ function VisualizationXRay({ ...props }: PageProps) {
         state.sceneStates.objectVisibles,
     ]);
 
+    const doseOriginPosition = new THREE.Vector3(-0.182, 1.15, -0.18);
+    set((state) => ({
+        sceneStates: { ...state.sceneStates, doseOrigin: doseOriginPosition },
+    }));
     const audioPath = `/models/nrrd/x-ray/nocurtain_animation/x-ray_nocurtain.mp3`;
     const names = [
         {
@@ -370,7 +375,8 @@ function VisualizationXRay({ ...props }: PageProps) {
                             </group>
                             <mesh
                                 ref={originObjRef}
-                                position={[0, 1, 0]}
+                                position={doseOriginPosition}
+                                scale={0.2}
                                 visible={debug}
                             >
                                 <sphereBufferGeometry args={[0.25]} />
@@ -570,10 +576,9 @@ function VisualizationXRay({ ...props }: PageProps) {
                     ) : null}
                     {objectVisibles.experimentUI &&
                     props.availables.experimentUI ? (
-                        <>
-                            <ExperimentCheckList />
-                        </>
+                        <>{/* <ExperimentCheckList /> */}</>
                     ) : null}
+                    <Exercise />
 
                     <Tips />
                 </div>
