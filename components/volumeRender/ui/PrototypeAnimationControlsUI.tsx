@@ -29,8 +29,10 @@ export function PrototypeAnimationControlsUI({
         return customSpeed ? speedListTmp.concat(customSpeed) : speedListTmp;
     }, [customSpeed]);
 
+    const isPlayRef = React.useRef<boolean>(true);
+
     const animationStore = useCreateStore();
-    const [animation, setElapsed] = useControls(
+    const [animation, setAnimation] = useControls(
         () => ({
             play: {
                 value: true,
@@ -44,6 +46,8 @@ export function PrototypeAnimationControlsUI({
                     } else {
                         audioRef.current.pause();
                     }
+
+                    isPlayRef.current = e;
                 },
             },
             speed: {
@@ -69,7 +73,9 @@ export function PrototypeAnimationControlsUI({
                     audioRef.current ? audioRef.current.pause() : null;
                 },
                 onEditEnd: () => {
-                    audioRef.current ? audioRef.current.play() : null;
+                    if (isPlayRef.current) {
+                        audioRef.current ? audioRef.current.play() : null;
+                    }
                 },
             },
         }),
@@ -83,7 +89,7 @@ export function PrototypeAnimationControlsUI({
 
         const _elapsed = audioRef.current.currentTime;
 
-        setElapsed({ elapsed: _elapsed });
+        setAnimation({ elapsed: _elapsed });
     };
 
     React.useEffect(() => {

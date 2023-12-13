@@ -173,24 +173,15 @@ export function PrototypeAnimationControls({
         }
 
         if (mainGroup.current?.visible) {
-            if (audioRef.current.paused) {
-                actions.forEach((actions, i) => {
-                    actions["volumeAnimation"] && audioRef.current
-                        ? (actions["volumeAnimation"].time =
-                              audioRef.current.currentTime)
-                        : null;
-                });
-                mixer.forEach((mixer, i) => {
-                    mixer.update(0);
-                });
-            } else {
-                mixer.forEach((mixer) => {
-                    const speed = audioRef.current
-                        ? audioRef.current.playbackRate
-                        : 1.0;
-                    mixer.update(delta * speed);
-                });
-            }
+            actions.forEach((actions, i) => {
+                actions["volumeAnimation"] && audioRef.current
+                    ? (actions["volumeAnimation"].time =
+                          audioRef.current.currentTime)
+                    : null;
+            });
+            mixer.forEach((mixer, i) => {
+                mixer.update(0);
+            });
 
             if (objects) {
                 objects.forEach((object) => {
