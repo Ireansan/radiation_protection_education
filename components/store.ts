@@ -87,6 +87,13 @@ const boardState: BoardState = {
     quaternion: new THREE.Quaternion(),
 };
 
+const dosimeterSettingsState = {
+    N_perPatient: 1,
+    N_perYear: 500,
+    Limit_once: 100,
+};
+export type DosimeterSettingsState = typeof dosimeterSettingsState;
+
 const onlinePlayers = {
     player1: undefined,
 };
@@ -160,9 +167,10 @@ const sceneStates = {
     objectVisibles: objectVisibles as ObjectVisibles,
     playerState: playerState as PlayerState,
     boardState: boardState as BoardState,
-    executeLog: executeLog as ExecuteLog,
     isTimeLapse: false,
     doseOrigin: new THREE.Vector3(),
+    dosimeterSettingsState: dosimeterSettingsState as DosimeterSettingsState,
+    executeLog: executeLog as ExecuteLog,
 };
 
 const actionNames = ["reset"] as const;
