@@ -161,6 +161,7 @@ const sceneStates = {
     playerState: playerState as PlayerState,
     boardState: boardState as BoardState,
     executeLog: executeLog as ExecuteLog,
+    isTimeLapse: false,
 };
 
 const actionNames = ["reset"] as const;

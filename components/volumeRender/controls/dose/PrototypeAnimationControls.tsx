@@ -77,6 +77,13 @@ export function PrototypeAnimationControls({
                                 ? (subGroup.current.visible = false)
                                 : null;
                         }
+
+                        set((state) => ({
+                            sceneStates: {
+                                ...state.sceneStates,
+                                isTimeLapse: true,
+                            },
+                        }));
                     } else if (e === "accumulate") {
                         mainGroup.current
                             ? (mainGroup.current.visible = false)
@@ -87,6 +94,13 @@ export function PrototypeAnimationControls({
                                 ? (subGroup.current.visible = true)
                                 : null;
                         }
+
+                        set((state) => ({
+                            sceneStates: {
+                                ...state.sceneStates,
+                                isTimeLapse: false,
+                            },
+                        }));
                     } else {
                         console.log("test");
                     }

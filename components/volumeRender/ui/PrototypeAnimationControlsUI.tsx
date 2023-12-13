@@ -2,6 +2,8 @@ import React from "react";
 import * as THREE from "three";
 import { LevaPanel, useControls, useCreateStore } from "leva";
 
+import { useStore } from "../../../components/store";
+
 import style from "../../../styles/css/volumeAnimationControls.module.css";
 
 export type PrototypeAnimationControlsUIProps = {
@@ -19,6 +21,8 @@ export function PrototypeAnimationControlsUI({
     customSpeed,
     ...props
 }: PrototypeAnimationControlsUIProps) {
+    const [isTimeLapse] = useStore((state) => [state.sceneStates.isTimeLapse]);
+
     const speedList = React.useMemo(() => {
         const speedListTmp = [0.25, 0.5, 1.0, 1.5, 2.0];
 
@@ -29,7 +33,7 @@ export function PrototypeAnimationControlsUI({
     const [animation, setElapsed] = useControls(
         () => ({
             play: {
-                value: false,
+                value: true,
                 onChange: (e) => {
                     if (!audioRef.current) {
                         return;
@@ -96,15 +100,21 @@ export function PrototypeAnimationControlsUI({
         audioRef.current.loop = true;
         // audioRef.current.play();
         /**
-         * FIXME:
          * Need User Interact!, when will play auto.
          * by Google's autoplay-policy
          */
-        console.log(audioRef.current.played);
     }, [audioRef]);
 
+    React.useEffect(() => {
+        audioRef.current ? audioRef.current.play() : null;
+    }, [isTimeLapse]);
+
     return (
-        <div className={`${style.foundation}`}>
+        <div
+            className={`${style.foundation} ${
+                isTimeLapse && `${style.active}`
+            }`}
+        >
             <LevaPanel
                 fill
                 flat
