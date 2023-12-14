@@ -1,12 +1,37 @@
-import { memo, useMemo } from "react";
+import React, { memo, useEffect, useMemo } from "react";
 import { CheckBox, CheckBoxOutlineBlank } from "@mui/icons-material";
+import { useSwiper } from "swiper/react";
 
 import { useStore } from "../../../store";
+import type { Equipments } from "../../../store";
+import type { DoseValue } from "src";
 
 import style from "../../../../styles/css/exercise.module.css";
 
-function calcDose(coefficient: number, value: number) {
-    return 120 * coefficient * value;
+function calcDose(
+    coefficient: number,
+    value: {
+        dose: DoseValue;
+        category: string | undefined;
+        coefficient: number | undefined;
+    },
+    equipments: Equipments
+) {
+    let guardCoefficient = 1;
+    if (value.category) {
+        let categoryIndex: number = Object.keys(equipments).indexOf(
+            value.category
+        );
+        let isEquipped: boolean | undefined =
+            Object.values(equipments)[categoryIndex];
+        let coefficient = value.coefficient ? value.coefficient : 1;
+
+        if (isEquipped) {
+            guardCoefficient *= coefficient;
+        }
+    }
+
+    return 120 * coefficient * (guardCoefficient * value.dose.data);
 }
 
 export type ItemProps = {
@@ -39,62 +64,104 @@ export function Item({ children, isDone, color = "#65BF74" }: ItemProps) {
 const MemoItem = memo(Item);
 
 export function Exercise1() {
-    const [sceneStates] = useStore((state) => [state.sceneStates]);
+    const [set, sceneStates] = useStore((state) => [
+        state.set,
+        state.sceneStates,
+    ]);
     const {
         dosimeterResults,
         playerState,
         doseOrigin,
         dosimeterSettingsState,
     } = sceneStates;
+    const { equipments } = playerState;
 
-    const areaLenght = 0.5; // [m]
+    const swiper = useSwiper();
 
-    const distance = useMemo(() => {
+    const RangeRadius = 60; // [cm]
+
+    const [distance, inRange] = useMemo(() => {
         const playerPosition = playerState.position.clone().setY(0);
         const origin = doseOrigin.clone().setY(0);
 
-        const distance = origin.distanceTo(playerPosition);
-        return distance;
+        const distance = origin.distanceTo(playerPosition) * 100;
+        return [distance, distance < RangeRadius];
     }, [playerState, doseOrigin]);
 
-    const allUnder = useMemo(() => {
-        const yearResult = dosimeterResults.map((value) => {
+    const [yearWithin, onceWithin, allWithin] = useMemo(() => {
+        const resultLength = dosimeterResults.length;
+        const { N_perYear, N_perPatient, Limit_once } = dosimeterSettingsState;
+
+        const doseValues = dosimeterResults.map((value) => {
             const doseValue = value.dose.reduce((acculator, currentValue) =>
                 acculator.data > currentValue.data ? acculator : currentValue
             );
-            return calcDose(
-                dosimeterSettingsState.N_perYear *
-                    dosimeterSettingsState.N_perPatient,
-                doseValue.data
-            );
+
+            return {
+                dose: doseValue,
+                category: value.category,
+                coefficient: value.coefficient,
+            };
         });
 
-        const onceResult = dosimeterResults.map((value) => {
-            const doseValue = value.dose.reduce((acculator, currentValue) =>
-                acculator.data > currentValue.data ? acculator : currentValue
-            );
-            return calcDose(
-                dosimeterSettingsState.N_perPatient,
-                doseValue.data
-            );
-        });
-    }, [dosimeterResults, dosimeterSettingsState]);
+        const yearResult = doseValues
+            .map((value) => {
+                return (
+                    calcDose(N_perYear * N_perPatient, value, equipments) <
+                    20000
+                );
+            })
+            .filter((value) => value === true).length;
+
+        const onceResult = doseValues
+            .map((value) => {
+                return calcDose(N_perPatient, value, equipments) < Limit_once;
+            })
+            .filter((value) => value === true).length;
+
+        return [
+            yearResult,
+            onceResult,
+            yearResult === resultLength && onceResult === resultLength,
+        ];
+    }, [dosimeterResults, dosimeterSettingsState, equipments]);
+
+    useEffect(() => {
+        set((state) => ({
+            sceneStates: {
+                ...state.sceneStates,
+                exerciseProgress: {
+                    ...state.sceneStates.exerciseProgress,
+                    execise1: inRange && allWithin,
+                },
+            },
+        }));
+    }, [inRange, allWithin]);
 
     return (
         <>
             <div className={`${style.content}`}>
-                <h2>Exercise - 1</h2>
+                <h3>Exercise - 1</h3>
                 <div className={`${style.items}`}>
                     {/* distance < 0.5 */}
-                    <MemoItem isDone={distance < areaLenght}>
-                        distance in {(distance * 100).toFixed(2)} /{" "}
-                        {areaLenght * 100} [cm]
+                    <MemoItem isDone={inRange}>
+                        distance in {distance.toFixed(2)} / {RangeRadius} [cm]
                     </MemoItem>
-                    <MemoItem isDone={distance < areaLenght}>
-                        distance in {(distance * 100).toFixed(2)} /{" "}
-                        {areaLenght * 100} [cm]
+                    <MemoItem isDone={allWithin}>
+                        All within regulatory limits.
+                        <br />
+                        Year: {yearWithin} / {dosimeterResults.length}
+                        <br />
+                        Once: {onceWithin} / {dosimeterResults.length}
                     </MemoItem>
                 </div>
+                <button
+                    onClick={() => {
+                        swiper.slideNext();
+                    }}
+                >
+                    Next &rarr;
+                </button>
             </div>
         </>
     );

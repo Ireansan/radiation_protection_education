@@ -111,6 +111,12 @@ const objectVisibles = {
 };
 export type ObjectVisibles = typeof objectVisibles;
 
+const exerciseProgress = {
+    tutorial: false,
+    execise1: false,
+};
+export type ExerciseProgress = typeof exerciseProgress;
+
 const executeLog = {
     animation: {
         timeLapse: false,
@@ -170,6 +176,7 @@ const sceneStates = {
     isTimeLapse: false,
     doseOrigin: new THREE.Vector3(),
     dosimeterSettingsState: dosimeterSettingsState as DosimeterSettingsState,
+    exerciseProgress: exerciseProgress as ExerciseProgress,
     executeLog: executeLog as ExecuteLog,
 };
 
