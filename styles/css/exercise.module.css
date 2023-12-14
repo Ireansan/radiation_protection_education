@@ -28,9 +28,17 @@
      object-fit: cover;
 }
 
+.content h3 {
+  margin: 6px;
+  text-align: left;
+}
+.content .items {
+  text-align: left;
+  margin: 0 6px;
+}
 .content .items .item {
   font-size: 0.8rem;
-  margin: 2px 6px 2px 6px;
+  margin: 6px 0;
   display: flex;
 }
 .content .items .item .check {
