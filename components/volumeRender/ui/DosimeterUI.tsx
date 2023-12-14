@@ -228,7 +228,7 @@ function DosimeterResult({
 
             if (isEquipped) {
                 value *= coefficient;
-                state.push(result.category);
+                !state.includes(result.category) && state.push(result.category);
             }
         }
 
