@@ -1,8 +1,6 @@
 precision highp float;
 precision mediump sampler3D;
 
-uniform vec2 u_resolution;
-
 uniform vec3 u_size;
 uniform int u_renderstyle;
 uniform float u_renderthreshold;

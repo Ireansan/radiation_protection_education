@@ -177,14 +177,17 @@ export function Player({
             }
 
             set((state) => ({
-                playerProperties: {
-                    ...state.playerProperties,
-                    position: ref.current
-                        ? ref.current.position
-                        : new THREE.Vector3(),
-                    quaternion: ref.current
-                        ? ref.current.quaternion
-                        : new THREE.Quaternion(),
+                sceneStates: {
+                    ...state.sceneStates,
+                    playerState: {
+                        ...state.sceneStates.playerState,
+                        position: ref.current
+                            ? ref.current.position
+                            : new THREE.Vector3(),
+                        quaternion: ref.current
+                            ? ref.current.quaternion
+                            : new THREE.Quaternion(),
+                    },
                 },
             }));
 
@@ -285,7 +288,10 @@ export function Player({
             {/* @ts-ignore */}
             <group ref={ref}>{children}</group>
 
-            <OrbitControls ref={orbitControlsRef} makeDefault />
+            <OrbitControls
+                ref={orbitControlsRef}
+                makeDefault
+            />
         </>
     );
 }

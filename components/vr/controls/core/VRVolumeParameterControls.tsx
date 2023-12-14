@@ -32,7 +32,7 @@ export const VRVolumeParameterControls = React.forwardRef<
         activeClim = false,
         ...props
     },
-    ref,
+    ref
 ) {
     const colormapList = [
         "parula",
@@ -67,7 +67,7 @@ export const VRVolumeParameterControls = React.forwardRef<
     const { gl, camera } = useThree();
     const group = React.useMemo(
         () => new InteractiveGroup(gl, camera),
-        [gl, camera],
+        [gl, camera]
     );
 
     /**
@@ -117,17 +117,16 @@ export const VRVolumeParameterControls = React.forwardRef<
                     switch (e) {
                         case "parula":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         parameter: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .parameter,
                                             colormap: {
-                                                ...state.sceneProperties
-                                                    .executeLog.parameter
-                                                    .colormap,
+                                                ...state.sceneStates.executeLog
+                                                    .parameter.colormap,
                                                 parula: true,
                                             },
                                         },
@@ -137,17 +136,16 @@ export const VRVolumeParameterControls = React.forwardRef<
                             break;
                         case "heat":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         parameter: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .parameter,
                                             colormap: {
-                                                ...state.sceneProperties
-                                                    .executeLog.parameter
-                                                    .colormap,
+                                                ...state.sceneStates.executeLog
+                                                    .parameter.colormap,
                                                 heat: true,
                                             },
                                         },
@@ -157,17 +155,16 @@ export const VRVolumeParameterControls = React.forwardRef<
                             break;
                         case "jet":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         parameter: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .parameter,
                                             colormap: {
-                                                ...state.sceneProperties
-                                                    .executeLog.parameter
-                                                    .colormap,
+                                                ...state.sceneStates.executeLog
+                                                    .parameter.colormap,
                                                 jet: true,
                                             },
                                         },
@@ -177,17 +174,16 @@ export const VRVolumeParameterControls = React.forwardRef<
                             break;
                         case "turbo":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         parameter: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .parameter,
                                             colormap: {
-                                                ...state.sceneProperties
-                                                    .executeLog.parameter
-                                                    .colormap,
+                                                ...state.sceneStates.executeLog
+                                                    .parameter.colormap,
                                                 turbo: true,
                                             },
                                         },
@@ -197,17 +193,16 @@ export const VRVolumeParameterControls = React.forwardRef<
                             break;
                         case "hot":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         parameter: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .parameter,
                                             colormap: {
-                                                ...state.sceneProperties
-                                                    .executeLog.parameter
-                                                    .colormap,
+                                                ...state.sceneStates.executeLog
+                                                    .parameter.colormap,
                                                 hot: true,
                                             },
                                         },
@@ -217,17 +212,16 @@ export const VRVolumeParameterControls = React.forwardRef<
                             break;
                         case "gray":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         parameter: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .parameter,
                                             colormap: {
-                                                ...state.sceneProperties
-                                                    .executeLog.parameter
-                                                    .colormap,
+                                                ...state.sceneStates.executeLog
+                                                    .parameter.colormap,
                                                 gray: true,
                                             },
                                         },
@@ -237,17 +231,16 @@ export const VRVolumeParameterControls = React.forwardRef<
                             break;
                         case "magma":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         parameter: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .parameter,
                                             colormap: {
-                                                ...state.sceneProperties
-                                                    .executeLog.parameter
-                                                    .colormap,
+                                                ...state.sceneStates.executeLog
+                                                    .parameter.colormap,
                                                 magma: true,
                                             },
                                         },
@@ -257,17 +250,16 @@ export const VRVolumeParameterControls = React.forwardRef<
                             break;
                         case "inferno":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         parameter: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .parameter,
                                             colormap: {
-                                                ...state.sceneProperties
-                                                    .executeLog.parameter
-                                                    .colormap,
+                                                ...state.sceneStates.executeLog
+                                                    .parameter.colormap,
                                                 inferno: true,
                                             },
                                         },
@@ -277,17 +269,16 @@ export const VRVolumeParameterControls = React.forwardRef<
                             break;
                         case "plasma":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         parameter: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .parameter,
                                             colormap: {
-                                                ...state.sceneProperties
-                                                    .executeLog.parameter
-                                                    .colormap,
+                                                ...state.sceneStates.executeLog
+                                                    .parameter.colormap,
                                                 plasma: true,
                                             },
                                         },
@@ -297,17 +288,16 @@ export const VRVolumeParameterControls = React.forwardRef<
                             break;
                         case "viridis":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         parameter: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .parameter,
                                             colormap: {
-                                                ...state.sceneProperties
-                                                    .executeLog.parameter
-                                                    .colormap,
+                                                ...state.sceneStates.executeLog
+                                                    .parameter.colormap,
                                                 viridis: true,
                                             },
                                         },
@@ -317,17 +307,16 @@ export const VRVolumeParameterControls = React.forwardRef<
                             break;
                         case "cividis":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         parameter: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .parameter,
                                             colormap: {
-                                                ...state.sceneProperties
-                                                    .executeLog.parameter
-                                                    .colormap,
+                                                ...state.sceneStates.executeLog
+                                                    .parameter.colormap,
                                                 cividis: true,
                                             },
                                         },
@@ -337,17 +326,16 @@ export const VRVolumeParameterControls = React.forwardRef<
                             break;
                         case "github":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         parameter: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .parameter,
                                             colormap: {
-                                                ...state.sceneProperties
-                                                    .executeLog.parameter
-                                                    .colormap,
+                                                ...state.sceneStates.executeLog
+                                                    .parameter.colormap,
                                                 github: true,
                                             },
                                         },
@@ -357,17 +345,16 @@ export const VRVolumeParameterControls = React.forwardRef<
                             break;
                         case "cubehelix":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         parameter: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .parameter,
                                             colormap: {
-                                                ...state.sceneProperties
-                                                    .executeLog.parameter
-                                                    .colormap,
+                                                ...state.sceneStates.executeLog
+                                                    .parameter.colormap,
                                                 cubehelix: true,
                                             },
                                         },
@@ -391,17 +378,16 @@ export const VRVolumeParameterControls = React.forwardRef<
                     switch (e) {
                         case "mip":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         parameter: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .parameter,
                                             renderStyle: {
-                                                ...state.sceneProperties
-                                                    .executeLog.parameter
-                                                    .renderStyle,
+                                                ...state.sceneStates.executeLog
+                                                    .parameter.renderStyle,
                                                 mip: true,
                                             },
                                         },
@@ -411,17 +397,16 @@ export const VRVolumeParameterControls = React.forwardRef<
                             break;
                         case "iso":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         parameter: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .parameter,
                                             renderStyle: {
-                                                ...state.sceneProperties
-                                                    .executeLog.parameter
-                                                    .renderStyle,
+                                                ...state.sceneStates.executeLog
+                                                    .parameter.renderStyle,
                                                 iso: true,
                                             },
                                         },
@@ -486,8 +471,14 @@ export const VRVolumeParameterControls = React.forwardRef<
 
     return controls ? (
         <>
-            <primitive ref={ref} object={controls} />
-            <primitive object={group} {...props} />
+            <primitive
+                ref={ref}
+                object={controls}
+            />
+            <primitive
+                object={group}
+                {...props}
+            />
             {/* FIXME: Only supported by VolumeGroup */}
             <volumeGroup ref={groupRef}>{children}</volumeGroup>
         </>

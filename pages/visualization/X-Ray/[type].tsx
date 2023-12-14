@@ -118,7 +118,7 @@ function VisualizationXRay({ ...props }: PageProps) {
         state.set,
         state.debug,
         state.viewing,
-        state.sceneProperties.objectVisibles,
+        state.sceneStates.objectVisibles,
     ]);
 
     const names = [
@@ -385,14 +385,13 @@ function VisualizationXRay({ ...props }: PageProps) {
                                             }
 
                                             set((state) => ({
-                                                sceneProperties: {
-                                                    ...state.sceneProperties,
+                                                sceneStates: {
+                                                    ...state.sceneStates,
                                                     executeLog: {
-                                                        ...state.sceneProperties
+                                                        ...state.sceneStates
                                                             .executeLog,
                                                         avatar: {
-                                                            ...state
-                                                                .sceneProperties
+                                                            ...state.sceneStates
                                                                 .executeLog
                                                                 .avatar,
                                                             translate: true,

@@ -14,7 +14,7 @@ export class ClippingPlanesObject {
         enabled: boolean,
         intersection: boolean,
         invert: boolean,
-        isType?: string,
+        isType?: string
     ) {
         this.id = id;
         this.planes = planes;
@@ -32,11 +32,15 @@ export class ClippingPlanesObject {
  * @abstract Volume Base
  */
 class VolumeBase extends THREE.Object3D {
-    _resolution: THREE.Vector2; // Canvas size
+    isDose: boolean;
+    isPerspective: boolean;
 
     _coefficient: number; // multiply coefficient and volume.data
     _offset: number; // add offset and volume.data
 
+    // ----------
+    // Volume Parameter
+    // ----------
     _opacity: number;
     _clim1: number;
     _clim2: number;
@@ -44,6 +48,9 @@ class VolumeBase extends THREE.Object3D {
     _renderstyle: string;
     _isothreshold: number;
 
+    // ----------
+    // Clipping
+    // ----------
     _clipping: boolean;
     _clippingPlanes: THREE.Plane[];
     _clipIntersection: boolean;
@@ -60,6 +67,17 @@ class VolumeBase extends THREE.Object3D {
     clippingPlanesObjects: ClippingPlanesObject[];
     totalClippingPlanesObjects: ClippingPlanesObject[];
 
+    // ----------
+    // Board (use only then isDose is true)
+    // ----------
+    _boardEffect: boolean;
+    _boardCoefficient: number;
+    _boardOffset: number;
+    _clippingPlanesIsBoard: boolean[];
+
+    // ----------
+    // Auto update
+    // ----------
     volumeParamAutoUpdate: boolean;
     volumeClippingAutoUpdate: boolean;
 
@@ -72,15 +90,17 @@ class VolumeBase extends THREE.Object3D {
     renderstyleAutoUpdate: boolean;
     isothresholdAutoUpdate: boolean;
 
+    boardCoefficientAutoUpdate: boolean;
+    boardOffsetAutoUpdate: boolean;
+
     volumeParamWorldAutoUpdate: boolean;
     volumeClippingWorldAutoUpdate: boolean;
 
-    isPerspective: boolean;
-
-    constructor(isPerspective = false) {
+    constructor(isDose = false, isPerspective = false) {
         super();
 
-        this._resolution = new THREE.Vector2(1, 1);
+        this.isDose = isDose;
+        this.isPerspective = isPerspective;
 
         this._coefficient = 1.0;
         this._offset = 0.0;
@@ -105,6 +125,11 @@ class VolumeBase extends THREE.Object3D {
         this.clippingPlanesObjects = [];
         this.totalClippingPlanesObjects = [];
 
+        this._boardEffect = false;
+        this._boardCoefficient = 0.01;
+        this._boardOffset = 0.0;
+        this._clippingPlanesIsBoard = [];
+
         this.volumeParamAutoUpdate = true;
         this.volumeClippingAutoUpdate = true;
 
@@ -117,18 +142,11 @@ class VolumeBase extends THREE.Object3D {
         this.renderstyleAutoUpdate = true;
         this.isothresholdAutoUpdate = true;
 
+        this.boardCoefficientAutoUpdate = true;
+        this.boardOffsetAutoUpdate = true;
+
         this.volumeParamWorldAutoUpdate = true;
         this.volumeClippingWorldAutoUpdate = true;
-
-        this.isPerspective = isPerspective;
-    }
-
-    get resolution() {
-        return this._resolution;
-    }
-    set resolution(size: THREE.Vector2) {
-        this._resolution = size;
-        this.updateVolumeParam(false, true);
     }
 
     get coefficient() {
@@ -223,6 +241,29 @@ class VolumeBase extends THREE.Object3D {
         this.updateVolumeClipping(false, true);
     }
 
+    get boardEffect() {
+        return this._boardEffect;
+    }
+    set boardEffect(boardEffect: boolean) {
+        this._boardEffect = boardEffect;
+        console.log(boardEffect);
+        this.updateVolumeClipping(false, true);
+    }
+    get boardCoefficient() {
+        return this._boardCoefficient;
+    }
+    set boardCoefficient(coefficient: number) {
+        this._boardCoefficient = coefficient;
+        this.updateVolumeParam(false, true);
+    }
+    get boardOffset() {
+        return this._boardOffset;
+    }
+    set boardOffset(offset: number) {
+        this._boardOffset = offset;
+        this.updateVolumeParam(false, true);
+    }
+
     pushClippingPlanesObjects(clippingPlanesObject: ClippingPlanesObject) {
         let index = this.clippingPlanesObjects.length;
         clippingPlanesObject.id = index;
@@ -252,7 +293,6 @@ class VolumeBase extends THREE.Object3D {
         // ----------
         if (parent !== null && this.volumeParamAutoUpdate) {
             if (parent instanceof VolumeBase) {
-                this._resolution.copy(parent._resolution);
                 this.coefficientAutoUpdate
                     ? (this._coefficient = parent._coefficient)
                     : null;
@@ -271,6 +311,15 @@ class VolumeBase extends THREE.Object3D {
                 this.isothresholdAutoUpdate
                     ? (this._isothreshold = parent._isothreshold)
                     : null;
+
+                if (parent.isDose) {
+                    this.boardCoefficientAutoUpdate
+                        ? (this._boardCoefficient = parent._boardCoefficient)
+                        : null;
+                    this.boardOffsetAutoUpdate
+                        ? (this._boardOffset = parent._boardOffset)
+                        : null;
+                }
             }
         }
 
@@ -321,6 +370,7 @@ class VolumeBase extends THREE.Object3D {
         this._clippedInitValue = [];
         this._clippingPlanesRegion = [];
         this._clippedInvert = [];
+        this._clippingPlanesIsBoard = [];
 
         this.totalClippingPlanesObjects = [];
 
@@ -355,9 +405,17 @@ class VolumeBase extends THREE.Object3D {
             this.parentRegionOffset = parent._clipping
                 ? parent._clippingPlanesRegion.reduce(
                       (a, b) => Math.max(a, b),
-                      -1,
+                      -1
                   ) + 1
                 : 0;
+
+            this._boardEffect = parent._boardEffect;
+
+            this._clippingPlanesIsBoard = parent.clipping
+                ? parent._clippingPlanesIsBoard.concat()
+                : [];
+            if (parent.isDose) {
+            }
         }
 
         // ----------
@@ -373,7 +431,7 @@ class VolumeBase extends THREE.Object3D {
             if (element.enabled) {
                 // Planes
                 this._clippingPlanes = this._clippingPlanes.concat(
-                    element.planes,
+                    element.planes
                 );
                 this.planesLength += element.planes.length;
 
@@ -383,7 +441,7 @@ class VolumeBase extends THREE.Object3D {
 
                 // Region
                 let regionArray = new Array(element.planes.length).fill(
-                    i + this.parentRegionOffset,
+                    i + this.parentRegionOffset
                 );
                 this._clippingPlanesRegion =
                     this._clippingPlanesRegion.concat(regionArray);
@@ -404,6 +462,11 @@ class VolumeBase extends THREE.Object3D {
         let invertArray = new Array(this.planesLength).fill(false);
         this._clippedInvert = this._clippedInvert.concat(invertArray);
 
+        // isBoard
+        let isBoardArray = new Array(this.planesLength).fill(false);
+        this._clippingPlanesIsBoard =
+            this._clippingPlanesIsBoard.concat(isBoardArray);
+
         // set Init Value, Invert
         for (let i = 0; i < this.clippingPlanesObjects.length; i++) {
             let element = this.clippingPlanesObjects[i];
@@ -411,6 +474,8 @@ class VolumeBase extends THREE.Object3D {
             this._clippedInitValue[i + this.parentRegionOffset] =
                 this._clipIntersection && element.enabled;
             this._clippedInvert[i + this.parentRegionOffset] = element.invert;
+            this._clippingPlanesIsBoard[i + this.parentRegionOffset] =
+                element.isType === "board";
         }
 
         // update totalClippingPlanesObjects
@@ -434,6 +499,10 @@ class VolumeBase extends THREE.Object3D {
                 }
             }
         }
+    }
+
+    getVolumeValue(position: THREE.Vector3): number {
+        return NaN;
     }
 }
 

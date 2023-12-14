@@ -188,9 +188,6 @@ const MemoResultData = memo(ResultData);
 export type DosimeterResultProps = {
     result: ResultsByName;
     equipments: Equipments;
-    coefficient: number;
-    yearN: number;
-    onceMaxHp: number;
     typeOrder: string;
     typeBar: string;
     typeValue: string;
@@ -198,14 +195,15 @@ export type DosimeterResultProps = {
 function DosimeterResult({
     result,
     equipments,
-    coefficient,
-    yearN,
-    onceMaxHp,
     typeOrder,
     typeBar,
     typeValue,
     ...props
 }: DosimeterResultProps) {
+    const [sceneStates] = useStore((state) => [state.sceneStates]);
+    const { dosimeterSettingsState } = sceneStates;
+    const { N_perPatient, N_perYear, Limit_once } = dosimeterSettingsState;
+
     const [value, state] = useMemo(() => {
         // calc vale, state
         let doseValue =
@@ -260,7 +258,7 @@ function DosimeterResult({
                             <div className={`${style.year}`}>
                                 <MemoResultData
                                     value={value}
-                                    coefficient={yearN * coefficient}
+                                    coefficient={N_perYear * N_perPatient}
                                     maxHp={20000}
                                     typeBar={typeBar}
                                     typeValue={typeValue}
@@ -271,8 +269,8 @@ function DosimeterResult({
                             <div className={`${style.once}`}>
                                 <MemoResultData
                                     value={value}
-                                    coefficient={coefficient}
-                                    maxHp={onceMaxHp}
+                                    coefficient={N_perPatient}
+                                    maxHp={Limit_once}
                                     typeBar={typeBar}
                                     typeValue={typeValue}
                                 >
@@ -285,8 +283,8 @@ function DosimeterResult({
                             <div className={`${style.once}`}>
                                 <MemoResultData
                                     value={value}
-                                    coefficient={coefficient}
-                                    maxHp={onceMaxHp}
+                                    coefficient={N_perPatient}
+                                    maxHp={Limit_once}
                                     typeBar={typeBar}
                                     typeValue={typeValue}
                                 >
@@ -296,7 +294,7 @@ function DosimeterResult({
                             <div className={`${style.year}`}>
                                 <MemoResultData
                                     value={value}
-                                    coefficient={yearN * coefficient}
+                                    coefficient={N_perYear * N_perPatient}
                                     maxHp={20000}
                                     typeBar={typeBar}
                                     typeValue={typeValue}
@@ -330,13 +328,13 @@ export function DosimeterUI({
     typeValue = "subtraction",
     ...props
 }: DosimeterUIProps) {
-    const [set, playerProperties, sceneProperties] = useStore((state) => [
+    const [set, playerState, sceneStates] = useStore((state) => [
         state.set,
-        state.playerProperties,
-        state.sceneProperties,
+        state.sceneStates.playerState,
+        state.sceneStates,
     ]);
-    const { equipments } = playerProperties;
-    const { dosimeterResults } = sceneProperties;
+    const { equipments } = playerState;
+    const { dosimeterResults } = sceneStates;
 
     /**
      * leva panels
@@ -391,6 +389,19 @@ export function DosimeterUI({
         }),
     }));
 
+    React.useEffect(() => {
+        set((state) => ({
+            sceneStates: {
+                ...state.sceneStates,
+                dosimeterSettingsState: {
+                    N_perPatient: dosimeterConfig.N_perPatient,
+                    N_perYear: dosimeterConfig.N_perYear,
+                    Limit_once: dosimeterConfig.Limit_once,
+                },
+            },
+        }));
+    }, [dosimeterConfig]);
+
     return (
         <>
             <div
@@ -406,9 +417,6 @@ export function DosimeterUI({
                         key={index}
                         result={result}
                         equipments={equipments}
-                        coefficient={dosimeterConfig.N_perPatient}
-                        yearN={dosimeterConfig.N_perYear}
-                        onceMaxHp={dosimeterConfig.Limit_once}
                         typeOrder={dosimeterConfig.type_order}
                         typeBar={dosimeterConfig.type_bar}
                         typeValue={dosimeterConfig.type_value}

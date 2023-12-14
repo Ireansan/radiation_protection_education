@@ -169,13 +169,12 @@ function IntersectLineHelper({
                                 // set execute log for experiment
                                 if (e) {
                                     set((state) => ({
-                                        sceneProperties: {
-                                            ...state.sceneProperties,
+                                        sceneStates: {
+                                            ...state.sceneStates,
                                             executeLog: {
-                                                ...state.sceneProperties
-                                                    .executeLog,
+                                                ...state.sceneStates.executeLog,
                                                 clipping: {
-                                                    ...state.sceneProperties
+                                                    ...state.sceneStates
                                                         .executeLog.clipping,
                                                     invert: true,
                                                 },
@@ -238,7 +237,10 @@ function IntersectLineHelper({
                 renderOrder={renderOrder}
                 visible={clipping ? !viewing : false}
             >
-                <bufferGeometry ref={geometryRef} attach="geometry" />
+                <bufferGeometry
+                    ref={geometryRef}
+                    attach="geometry"
+                />
                 <lineBasicMaterial
                     attach="material"
                     color={color}
@@ -333,7 +335,7 @@ export const VolumeXYZClippingControls = React.forwardRef<
         areaSize.map((value) => value * 2 * areaScale) as [
             number,
             number,
-            number
+            number,
         ]
     );
     const [lineBasePlanes, setLineBasePlanes] = React.useState<THREE.Plane[]>(
@@ -367,13 +369,12 @@ export const VolumeXYZClippingControls = React.forwardRef<
                                 if (e) {
                                     // set execute log for experiment
                                     set((state) => ({
-                                        sceneProperties: {
-                                            ...state.sceneProperties,
+                                        sceneStates: {
+                                            ...state.sceneStates,
                                             executeLog: {
-                                                ...state.sceneProperties
-                                                    .executeLog,
+                                                ...state.sceneStates.executeLog,
                                                 clipping: {
-                                                    ...state.sceneProperties
+                                                    ...state.sceneStates
                                                         .executeLog.clipping,
                                                     x: true,
                                                 },
@@ -400,13 +401,12 @@ export const VolumeXYZClippingControls = React.forwardRef<
                                 if (e) {
                                     // set execute log for experiment
                                     set((state) => ({
-                                        sceneProperties: {
-                                            ...state.sceneProperties,
+                                        sceneStates: {
+                                            ...state.sceneStates,
                                             executeLog: {
-                                                ...state.sceneProperties
-                                                    .executeLog,
+                                                ...state.sceneStates.executeLog,
                                                 clipping: {
-                                                    ...state.sceneProperties
+                                                    ...state.sceneStates
                                                         .executeLog.clipping,
                                                     y: true,
                                                 },
@@ -433,13 +433,12 @@ export const VolumeXYZClippingControls = React.forwardRef<
                                 if (e) {
                                     // set execute log for experiment
                                     set((state) => ({
-                                        sceneProperties: {
-                                            ...state.sceneProperties,
+                                        sceneStates: {
+                                            ...state.sceneStates,
                                             executeLog: {
-                                                ...state.sceneProperties
-                                                    .executeLog,
+                                                ...state.sceneStates.executeLog,
                                                 clipping: {
-                                                    ...state.sceneProperties
+                                                    ...state.sceneStates
                                                         .executeLog.clipping,
                                                     z: true,
                                                 },
@@ -467,13 +466,12 @@ export const VolumeXYZClippingControls = React.forwardRef<
                                 if (e) {
                                     // set execute log for experiment
                                     set((state) => ({
-                                        sceneProperties: {
-                                            ...state.sceneProperties,
+                                        sceneStates: {
+                                            ...state.sceneStates,
                                             executeLog: {
-                                                ...state.sceneProperties
-                                                    .executeLog,
+                                                ...state.sceneStates.executeLog,
                                                 clipping: {
-                                                    ...state.sceneProperties
+                                                    ...state.sceneStates
                                                         .executeLog.clipping,
                                                     free: true,
                                                 },
@@ -610,7 +608,10 @@ export const VolumeXYZClippingControls = React.forwardRef<
 
     return controls ? (
         <>
-            <primitive ref={ref} object={controls} />
+            <primitive
+                ref={ref}
+                object={controls}
+            />
 
             {/* -------------------------------------------------- */}
             {/* Planes */}
@@ -641,12 +642,12 @@ export const VolumeXYZClippingControls = React.forwardRef<
                     onDragEnd={() => {
                         // set execute log for experiment
                         set((state) => ({
-                            sceneProperties: {
-                                ...state.sceneProperties,
+                            sceneStates: {
+                                ...state.sceneStates,
                                 executeLog: {
-                                    ...state.sceneProperties.executeLog,
+                                    ...state.sceneStates.executeLog,
                                     clipping: {
-                                        ...state.sceneProperties.executeLog
+                                        ...state.sceneStates.executeLog
                                             .clipping,
                                         x: true,
                                     },
@@ -671,12 +672,12 @@ export const VolumeXYZClippingControls = React.forwardRef<
                     onDragEnd={() => {
                         // set execute log for experiment
                         set((state) => ({
-                            sceneProperties: {
-                                ...state.sceneProperties,
+                            sceneStates: {
+                                ...state.sceneStates,
                                 executeLog: {
-                                    ...state.sceneProperties.executeLog,
+                                    ...state.sceneStates.executeLog,
                                     clipping: {
-                                        ...state.sceneProperties.executeLog
+                                        ...state.sceneStates.executeLog
                                             .clipping,
                                     },
                                     y: true,
@@ -701,12 +702,12 @@ export const VolumeXYZClippingControls = React.forwardRef<
                     onDragEnd={() => {
                         // set execute log for experiment
                         set((state) => ({
-                            sceneProperties: {
-                                ...state.sceneProperties,
+                            sceneStates: {
+                                ...state.sceneStates,
                                 executeLog: {
-                                    ...state.sceneProperties.executeLog,
+                                    ...state.sceneStates.executeLog,
                                     clipping: {
-                                        ...state.sceneProperties.executeLog
+                                        ...state.sceneStates.executeLog
                                             .clipping,
                                     },
                                     z: true,
@@ -730,12 +731,12 @@ export const VolumeXYZClippingControls = React.forwardRef<
                     onDragEnd={() => {
                         // set execute log for experiment
                         set((state) => ({
-                            sceneProperties: {
-                                ...state.sceneProperties,
+                            sceneStates: {
+                                ...state.sceneStates,
                                 executeLog: {
-                                    ...state.sceneProperties.executeLog,
+                                    ...state.sceneStates.executeLog,
                                     clipping: {
-                                        ...state.sceneProperties.executeLog
+                                        ...state.sceneStates.executeLog
                                             .clipping,
                                     },
                                     free: true,

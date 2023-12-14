@@ -21,8 +21,8 @@ class VolumeAnimationObject extends VolumeGroup {
     // animation index
     index: number;
 
-    constructor() {
-        super();
+    constructor(isDose = false) {
+        super(isDose);
 
         this.volumeAnimationParamAutoUpdate = true;
         this.childrenLength = 0;
@@ -65,8 +65,8 @@ class VolumeAnimationObject extends VolumeGroup {
         ];
     }
 
-    getVolumeValue(position: THREE.Vector3): number {
-        let values = this.getVolumeValues(position.clone());
+    getVolumeValueByIndex(position: THREE.Vector3): number {
+        let values = this.getVolumeValues(position);
 
         return values[this.index];
     }

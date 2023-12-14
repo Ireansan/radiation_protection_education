@@ -5,5 +5,14 @@
     left: 50%;
     transform: translateX(-50%);
     bottom: 25px;
-    background-color: aqua;
+    transition: all 0.25s;
+    opacity: 0;
+
+    * {
+        border-radius: 5px;
+    }
+
+    &.active {
+        opacity: 1;
+    }
 }

@@ -22,7 +22,7 @@ export function VRDoseEquipmentsUI({
     const { gl, camera } = useThree();
     const group = React.useMemo(
         () => new InteractiveGroup(gl, camera),
-        [gl, camera],
+        [gl, camera]
     );
 
     /**
@@ -42,11 +42,14 @@ export function VRDoseEquipmentsUI({
                     const e: boolean = n ? true : false;
 
                     set((state) => ({
-                        playerProperties: {
-                            ...state.playerProperties,
-                            equipments: {
-                                ...state.playerProperties.equipments,
-                                goggle: e,
+                        sceneStates: {
+                            ...state.sceneStates,
+                            playerState: {
+                                ...state.sceneStates.playerState,
+                                equipments: {
+                                    ...state.sceneStates.playerState.equipments,
+                                    goggle: e,
+                                },
                             },
                         },
                     }));
@@ -54,12 +57,12 @@ export function VRDoseEquipmentsUI({
                     // set execute log for experiment
                     if (e) {
                         set((state) => ({
-                            sceneProperties: {
-                                ...state.sceneProperties,
+                            sceneStates: {
+                                ...state.sceneStates,
                                 executeLog: {
-                                    ...state.sceneProperties.executeLog,
+                                    ...state.sceneStates.executeLog,
                                     dosimeter: {
-                                        ...state.sceneProperties.executeLog
+                                        ...state.sceneStates.executeLog
                                             .dosimeter,
                                         goggle: true,
                                     },
@@ -78,11 +81,14 @@ export function VRDoseEquipmentsUI({
                     const e: boolean = n ? true : false;
 
                     set((state) => ({
-                        playerProperties: {
-                            ...state.playerProperties,
-                            equipments: {
-                                ...state.playerProperties.equipments,
-                                neck: e,
+                        sceneStates: {
+                            ...state.sceneStates,
+                            playerState: {
+                                ...state.sceneStates.playerState,
+                                equipments: {
+                                    ...state.sceneStates.playerState.equipments,
+                                    neck: e,
+                                },
                             },
                         },
                     }));
@@ -90,12 +96,12 @@ export function VRDoseEquipmentsUI({
                     // set execute log for experiment
                     if (e) {
                         set((state) => ({
-                            sceneProperties: {
-                                ...state.sceneProperties,
+                            sceneStates: {
+                                ...state.sceneStates,
                                 executeLog: {
-                                    ...state.sceneProperties.executeLog,
+                                    ...state.sceneStates.executeLog,
                                     dosimeter: {
-                                        ...state.sceneProperties.executeLog
+                                        ...state.sceneStates.executeLog
                                             .dosimeter,
                                         neckGuard: true,
                                     },
@@ -114,11 +120,14 @@ export function VRDoseEquipmentsUI({
                     const e: boolean = n ? true : false;
 
                     set((state) => ({
-                        playerProperties: {
-                            ...state.playerProperties,
-                            equipments: {
-                                ...state.playerProperties.equipments,
-                                apron: e,
+                        sceneStates: {
+                            ...state.sceneStates,
+                            playerState: {
+                                ...state.sceneStates.playerState,
+                                equipments: {
+                                    ...state.sceneStates.playerState.equipments,
+                                    apron: e,
+                                },
                             },
                         },
                     }));
@@ -126,12 +135,12 @@ export function VRDoseEquipmentsUI({
                     // set execute log for experiment
                     if (e) {
                         set((state) => ({
-                            sceneProperties: {
-                                ...state.sceneProperties,
+                            sceneStates: {
+                                ...state.sceneStates,
                                 executeLog: {
-                                    ...state.sceneProperties.executeLog,
+                                    ...state.sceneStates.executeLog,
                                     dosimeter: {
-                                        ...state.sceneProperties.executeLog
+                                        ...state.sceneStates.executeLog
                                             .dosimeter,
                                         apron: true,
                                     },
@@ -150,11 +159,14 @@ export function VRDoseEquipmentsUI({
                     const e: boolean = n ? true : false;
 
                     set((state) => ({
-                        playerProperties: {
-                            ...state.playerProperties,
-                            equipments: {
-                                ...state.playerProperties.equipments,
-                                glove: e,
+                        sceneStates: {
+                            ...state.sceneStates,
+                            playerState: {
+                                ...state.sceneStates.playerState,
+                                equipments: {
+                                    ...state.sceneStates.playerState.equipments,
+                                    glove: e,
+                                },
                             },
                         },
                     }));
@@ -162,12 +174,12 @@ export function VRDoseEquipmentsUI({
                     // set execute log for experiment
                     if (e) {
                         set((state) => ({
-                            sceneProperties: {
-                                ...state.sceneProperties,
+                            sceneStates: {
+                                ...state.sceneStates,
                                 executeLog: {
-                                    ...state.sceneProperties.executeLog,
+                                    ...state.sceneStates.executeLog,
                                     dosimeter: {
-                                        ...state.sceneProperties.executeLog
+                                        ...state.sceneStates.executeLog
                                             .dosimeter,
                                         glove: true,
                                     },
@@ -189,7 +201,10 @@ export function VRDoseEquipmentsUI({
 
     return (
         <>
-            <primitive object={group} {...props} />
+            <primitive
+                object={group}
+                {...props}
+            />
         </>
     );
 }

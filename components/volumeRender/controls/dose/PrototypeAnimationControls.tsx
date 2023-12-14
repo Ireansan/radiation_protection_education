@@ -77,6 +77,13 @@ export function PrototypeAnimationControls({
                                 ? (subGroup.current.visible = false)
                                 : null;
                         }
+
+                        set((state) => ({
+                            sceneStates: {
+                                ...state.sceneStates,
+                                isTimeLapse: true,
+                            },
+                        }));
                     } else if (e === "accumulate") {
                         mainGroup.current
                             ? (mainGroup.current.visible = false)
@@ -87,6 +94,13 @@ export function PrototypeAnimationControls({
                                 ? (subGroup.current.visible = true)
                                 : null;
                         }
+
+                        set((state) => ({
+                            sceneStates: {
+                                ...state.sceneStates,
+                                isTimeLapse: false,
+                            },
+                        }));
                     } else {
                         console.log("test");
                     }
@@ -95,12 +109,12 @@ export function PrototypeAnimationControls({
                     switch (e) {
                         case "time lapse":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         animation: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .animation,
                                             timeLapse: true,
                                         },
@@ -110,12 +124,12 @@ export function PrototypeAnimationControls({
                             break;
                         case "accumulate":
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         animation: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .animation,
                                             accumulate: true,
                                         },
@@ -159,24 +173,15 @@ export function PrototypeAnimationControls({
         }
 
         if (mainGroup.current?.visible) {
-            if (audioRef.current.paused) {
-                actions.forEach((actions, i) => {
-                    actions["volumeAnimation"] && audioRef.current
-                        ? (actions["volumeAnimation"].time =
-                              audioRef.current.currentTime)
-                        : null;
-                });
-                mixer.forEach((mixer, i) => {
-                    mixer.update(0);
-                });
-            } else {
-                mixer.forEach((mixer) => {
-                    const speed = audioRef.current
-                        ? audioRef.current.playbackRate
-                        : 1.0;
-                    mixer.update(delta * speed);
-                });
-            }
+            actions.forEach((actions, i) => {
+                actions["volumeAnimation"] && audioRef.current
+                    ? (actions["volumeAnimation"].time =
+                          audioRef.current.currentTime)
+                    : null;
+            });
+            mixer.forEach((mixer, i) => {
+                mixer.update(0);
+            });
 
             if (objects) {
                 objects.forEach((object) => {

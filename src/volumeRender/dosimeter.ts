@@ -1,4 +1,5 @@
 import * as THREE from "three";
+
 import { VolumeBase } from "./core";
 import { DoseBase } from "./dose";
 import type { DoseValue } from "./dose";
@@ -77,8 +78,8 @@ class Dosimeter extends DoseBase {
 
     updateObjectsByName() {
         if (this._namesData) {
-            this.objectsByName = this._namesData.map((data) =>
-                this.object?.getObjectByName(data.name)
+            this.objectsByName = this._namesData.map(
+                (data) => this.object?.getObjectByName(data.name)
             );
         }
     }
@@ -96,7 +97,7 @@ class Dosimeter extends DoseBase {
             // ----------
             // within boundaries
             // ----------
-            const within_boundaries = (target: DoseBase) => {
+            const within_boundaries = (target: VolumeBase) => {
                 let boards = target.totalClippingPlanesObjects.filter(
                     (element) => element.isType === "board"
                 );
@@ -126,7 +127,7 @@ class Dosimeter extends DoseBase {
                 return guarded;
             };
 
-            const getResult = (target: DoseBase): DoseValue => {
+            const getResult = (target: VolumeBase): DoseValue => {
                 let coefficient = target.boardCoefficient;
                 let offset = target.boardOffset;
                 let volumeValue = target.getVolumeValue(position);
@@ -147,7 +148,7 @@ class Dosimeter extends DoseBase {
                 .filter((value) => value?.visible === true)
                 .map((target) => {
                     return target
-                        ? target instanceof DoseBase
+                        ? target instanceof VolumeBase
                             ? getResult(target)
                             : { data: NaN, state: undefined } // NaN
                         : { data: NaN, state: undefined }; // NaN

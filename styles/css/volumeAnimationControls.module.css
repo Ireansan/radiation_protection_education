@@ -5,5 +5,12 @@
   left: 50%;
   transform: translateX(-50%);
   bottom: 25px;
-  background-color: aqua;
+  transition: all 0.25s;
+  opacity: 0;
+}
+.foundation * {
+  border-radius: 5px;
+}
+.foundation.active {
+  opacity: 1;
 }/*# sourceMappingURL=volumeAnimationControls.module.css.map */

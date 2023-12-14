@@ -31,7 +31,10 @@ import {
 // Model
 import { Board_Configure } from "../../../components/models";
 import { CustomYBotIK } from "../../../components/models/Player";
-import { HandIKPivotControls } from "../../../components/models/controls";
+import {
+    HandIKPivotControls,
+    PlayerPivotControls,
+} from "../../../components/models/controls";
 
 // ==========
 // Volume
@@ -59,7 +62,7 @@ import { PrototypeAnimationControls } from "../../../components/volumeRender/con
 import { PrototypeAnimationControlsUI } from "../../../components/volumeRender/ui/PrototypeAnimationControlsUI";
 
 // ==========
-// UI
+// Controls
 import { CustomOrbitControls } from "../../../components/controls";
 
 // ==========
@@ -70,6 +73,7 @@ import {
     SceneOptionsPanel,
 } from "../../../components/ui";
 import { Tips } from "../../../components/ui/tips";
+import { Exercise } from "../../../components/ui/exercise";
 
 // ==========
 // Store
@@ -132,9 +136,13 @@ function VisualizationXRay({ ...props }: PageProps) {
         state.set,
         state.debug,
         state.viewing,
-        state.sceneProperties.objectVisibles,
+        state.sceneStates.objectVisibles,
     ]);
 
+    const doseOriginPosition = new THREE.Vector3(-0.182, 1.15, -0.18);
+    set((state) => ({
+        sceneStates: { ...state.sceneStates, doseOrigin: doseOriginPosition },
+    }));
     const audioPath = `/models/nrrd/x-ray/nocurtain_animation/x-ray_nocurtain.mp3`;
     const names = [
         {
@@ -367,7 +375,8 @@ function VisualizationXRay({ ...props }: PageProps) {
                             </group>
                             <mesh
                                 ref={originObjRef}
-                                position={[0, 1, 0]}
+                                position={doseOriginPosition}
+                                scale={0.2}
                                 visible={debug}
                             >
                                 <sphereBufferGeometry args={[0.25]} />
@@ -376,7 +385,9 @@ function VisualizationXRay({ ...props }: PageProps) {
                             {/* Avatar */}
                             {props.availables.player ? (
                                 <>
-                                    <PivotControls
+                                    <PlayerPivotControls
+                                        playerRef={yBotRef}
+                                        dosimeterRef={dosimeterRef}
                                         matrix={new THREE.Matrix4().compose(
                                             new THREE.Vector3(2, 0, 0),
                                             new THREE.Quaternion().setFromEuler(
@@ -391,41 +402,6 @@ function VisualizationXRay({ ...props }: PageProps) {
                                         scale={70}
                                         fixed={true}
                                         activeAxes={[true, false, true]}
-                                        visible={
-                                            !viewing &&
-                                            objectVisibles.player &&
-                                            objectVisibles.playerPivot
-                                        }
-                                        onDrag={(l, deltaL, w, deltaW) => {
-                                            yBotRef.current.position.setFromMatrixPosition(
-                                                w
-                                            );
-                                            yBotRef.current.rotation.setFromRotationMatrix(
-                                                w
-                                            );
-                                        }}
-                                        onDragEnd={() => {
-                                            if (dosimeterRef.current) {
-                                                dosimeterRef.current.updateResults();
-                                            }
-
-                                            set((state) => ({
-                                                sceneProperties: {
-                                                    ...state.sceneProperties,
-                                                    executeLog: {
-                                                        ...state.sceneProperties
-                                                            .executeLog,
-                                                        avatar: {
-                                                            ...state
-                                                                .sceneProperties
-                                                                .executeLog
-                                                                .avatar,
-                                                            translate: true,
-                                                        },
-                                                    },
-                                                },
-                                            }));
-                                        }}
                                     />
                                     <group
                                         ref={yBotRef}
@@ -587,6 +563,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                     />
                     <PrototypeAnimationControlsUI
                         audioRef={audioRef}
+                        duration={16}
                         speed={8.0}
                         customSpeed={[8.0, 16.0]}
                     />
@@ -599,10 +576,9 @@ function VisualizationXRay({ ...props }: PageProps) {
                     ) : null}
                     {objectVisibles.experimentUI &&
                     props.availables.experimentUI ? (
-                        <>
-                            <ExperimentCheckList />
-                        </>
+                        <>{/* <ExperimentCheckList /> */}</>
                     ) : null}
+                    <Exercise />
 
                     <Tips />
                 </div>

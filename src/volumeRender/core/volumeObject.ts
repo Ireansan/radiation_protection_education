@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { Volume } from "three-stdlib";
 
+import doseShader from "../shaders/doseShader"; // FIXME: tmp
+import doseShaderPerspective from "../shaders/doseShaderPerspective"; // FIXME: tmp
 import volumeShader from "../shaders/volumeShader";
 import { cmtextures } from "../textures";
 import { VolumeBase } from "./volumeBase";
@@ -30,8 +32,12 @@ class VolumeObject extends VolumeBase {
     material: THREE.ShaderMaterial;
 
     constructor(
+        isDose = false,
         volume = new Volume(),
+        isPerspective = false,
         coefficient = 1.0,
+        boardCoefficient = 0.01,
+        boardOffset = 0.0,
         offset = 0.0,
         opacity = 1.0,
         clim1 = 0,
@@ -44,7 +50,7 @@ class VolumeObject extends VolumeBase {
         clipIntersection = false
     ) {
         // Init
-        super();
+        super(isDose, isPerspective);
 
         this.volume = volume;
         this.width = this.volume.xLength;
@@ -65,6 +71,10 @@ class VolumeObject extends VolumeBase {
         this._clippingPlanes = clippingPlanes;
         this._clipIntersection = clipIntersection;
 
+        this._boardCoefficient = boardCoefficient;
+        this._boardOffset = boardOffset;
+        this._clippingPlanesIsBoard = [];
+
         this.isMesh = true;
 
         // Texture
@@ -82,29 +92,33 @@ class VolumeObject extends VolumeBase {
         texture.needsUpdate = true;
 
         // Material
-        const uniforms = THREE.UniformsUtils.clone(volumeShader.uniforms);
+        const shader = this.isPerspective ? doseShaderPerspective : doseShader;
+        const uniforms = THREE.UniformsUtils.clone(shader.uniforms);
         uniforms.u_data.value = texture;
         uniforms.u_size.value.set(this.width, this.height, this.depth);
 
         uniforms.u_coefficient.value = this._coefficient;
         uniforms.u_offset.value = this._offset;
+        uniforms.u_boardCoefficient.value = this._boardCoefficient;
+        uniforms.u_boardOffset.value = this._boardOffset;
 
         uniforms.u_opacity.value = opacity;
-        uniforms.u_clim.value.set(this.clim1, this.clim2);
-        uniforms.u_renderstyle.value = this.renderstyle == "mip" ? 0 : 1; // 0: MIP, 1: ISO
-        uniforms.u_renderthreshold.value = this.isothreshold; // For ISO renderstyle
-        uniforms.u_cmdata.value = cmtextures[this.colormap];
+        uniforms.u_clim.value.set(this._clim1, this._clim2);
+        uniforms.u_renderstyle.value = this._renderstyle == "mip" ? 0 : 1; // 0: MIP, 1: ISO
+        uniforms.u_renderthreshold.value = this._isothreshold; // For ISO renderstyle
+        uniforms.u_cmdata.value = cmtextures[this._colormap];
         this.updateMatrixWorld();
         uniforms.u_modelMatrix.value = this.matrixWorld;
 
         uniforms.u_clippedInitValue.value = this._clippedInitValue;
         uniforms.u_clippingPlanesRegion.value = this._clippingPlanesRegion;
+        uniforms.u_clippingPlanesIsBoard.value = this._clippingPlanesIsBoard;
         uniforms.u_clippedInvert.value = this._clippedInvert;
 
         this.material = new THREE.ShaderMaterial({
             uniforms: uniforms,
-            vertexShader: volumeShader.vertexShader,
-            fragmentShader: volumeShader.fragmentShader,
+            vertexShader: shader.vertexShader,
+            fragmentShader: shader.fragmentShader,
             side: THREE.BackSide, // The volume shader uses the backface as its "reference point"
             transparent: true,
             depthTest: false,
@@ -139,6 +153,9 @@ class VolumeObject extends VolumeBase {
         // ----------
         this.material.uniforms.u_coefficient.value = this._coefficient;
         this.material.uniforms.u_offset.value = this._offset;
+        this.material.uniforms.u_boardCoefficient.value =
+            this._boardCoefficient;
+        this.material.uniforms.u_boardOffset.value = this._boardOffset;
         this.material.uniforms.u_opacity.value = this._opacity;
         this.material.uniforms.u_clim.value.set(this._clim1, this._clim2);
         this.material.uniforms.u_cmdata.value = cmtextures[this._colormap];
@@ -155,6 +172,10 @@ class VolumeObject extends VolumeBase {
                 this.material.uniforms.u_coefficient.value =
                     parent._coefficient;
                 this.material.uniforms.u_offset.value = parent._offset;
+                this.material.uniforms.u_boardCoefficient.value =
+                    parent._boardCoefficient;
+                this.material.uniforms.u_boardOffset.value =
+                    parent._boardOffset;
                 this.material.uniforms.u_opacity.value = parent._opacity;
                 this.material.uniforms.u_clim.value.set(
                     parent._clim1,
@@ -192,6 +213,10 @@ class VolumeObject extends VolumeBase {
             .clipping
             ? this._clippingPlanesRegion
             : null;
+        this.material.uniforms.u_clippingPlanesIsBoard.value = this.material
+            .clipping
+            ? this._clippingPlanesIsBoard
+            : null;
         this.material.uniforms.u_clippedInvert.value = this.material.clipping
             ? this._clippedInvert
             : null;
@@ -213,7 +238,7 @@ class VolumeObject extends VolumeBase {
             localPosition.z < 0 ||
             this.volume.zLength <= localPosition.z
         ) {
-            return -1; // NaN
+            return NaN; // NaN
         }
 
         // https://github.com/mrdoob/three.js/blob/cba85c5c6318e7ca53dd99f9f3c25eb3b79d9693/examples/jsm/misc/Volume.js#L211
@@ -222,7 +247,8 @@ class VolumeObject extends VolumeBase {
             Math.trunc(localPosition.y),
             Math.trunc(localPosition.z)
         );
-        return this._coefficient * volumeData + this._offset;
+
+        return volumeData;
     }
 }
 

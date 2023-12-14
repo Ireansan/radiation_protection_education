@@ -75,8 +75,8 @@ export const DosimeterControls = React.forwardRef<
     useFrame(() => {
         controls.updateResults();
         set((state) => ({
-            sceneProperties: {
-                ...state.sceneProperties,
+            sceneStates: {
+                ...state.sceneStates,
                 dosimeterResults: controls.results,
             },
         }));
@@ -84,7 +84,10 @@ export const DosimeterControls = React.forwardRef<
 
     return (
         <>
-            <primitive ref={ref} object={controls} />
+            <primitive
+                ref={ref}
+                object={controls}
+            />
             <group ref={group}>{children}</group>
         </>
     );

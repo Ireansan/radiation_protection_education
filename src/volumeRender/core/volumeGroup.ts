@@ -12,8 +12,8 @@ class VolumeGroup extends VolumeBase {
     isGroup: boolean;
     type: string;
 
-    constructor() {
-        super();
+    constructor(isDose = false) {
+        super(isDose);
 
         this.isGroup = true;
         this.type = "Group";
@@ -50,12 +50,30 @@ class VolumeGroup extends VolumeBase {
      * @param position world position
      * @returns value in the data array
      */
+    getVolumeValue(position: THREE.Vector3): number {
+        let results = this.children.map((child, i) =>
+            child instanceof VolumeObject
+                ? child.getVolumeValue(position.clone())
+                : -6
+        );
+
+        let tmpData = results.reduce(
+            (acculator, currentValue) => acculator + currentValue,
+            0
+        );
+
+        // https://stackoverflow.com/questions/44436041/how-to-sum-value-of-two-json-object-key
+        return tmpData;
+    }
+
+    /**
+     *
+     * @param position world position
+     * @returns value in the data array
+     */
     getVolumeValues(position: THREE.Vector3): number[] {
-        return this.children.map(
-            (child, i) =>
-                child instanceof VolumeObject
-                    ? child.getVolumeValue(position.clone())
-                    : -1 // NaN
+        return this.children.map((child, i) =>
+            child instanceof VolumeObject ? child.getVolumeValue(position) : NaN
         );
     }
 }

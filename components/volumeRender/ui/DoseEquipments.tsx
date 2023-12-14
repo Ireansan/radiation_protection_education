@@ -28,11 +28,15 @@ export function DoseEquipmentsUI({ ...props }) {
                     value: false,
                     onChange: (e) => {
                         set((state) => ({
-                            playerProperties: {
-                                ...state.playerProperties,
-                                equipments: {
-                                    ...state.playerProperties.equipments,
-                                    goggle: e,
+                            sceneStates: {
+                                ...state.sceneStates,
+                                playerState: {
+                                    ...state.sceneStates.playerState,
+                                    equipments: {
+                                        ...state.sceneStates.playerState
+                                            .equipments,
+                                        goggle: e,
+                                    },
                                 },
                             },
                         }));
@@ -40,12 +44,12 @@ export function DoseEquipmentsUI({ ...props }) {
                         // set execute log for experiment
                         if (e) {
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         dosimeter: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .dosimeter,
                                             goggle: true,
                                         },
@@ -60,11 +64,15 @@ export function DoseEquipmentsUI({ ...props }) {
                     label: "Neck Guard",
                     onChange: (e) => {
                         set((state) => ({
-                            playerProperties: {
-                                ...state.playerProperties,
-                                equipments: {
-                                    ...state.playerProperties.equipments,
-                                    neck: e,
+                            sceneStates: {
+                                ...state.sceneStates,
+                                playerState: {
+                                    ...state.sceneStates.playerState,
+                                    equipments: {
+                                        ...state.sceneStates.playerState
+                                            .equipments,
+                                        neck: e,
+                                    },
                                 },
                             },
                         }));
@@ -72,12 +80,12 @@ export function DoseEquipmentsUI({ ...props }) {
                         // set execute log for experiment
                         if (e) {
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         dosimeter: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .dosimeter,
                                             neckGuard: true,
                                         },
@@ -91,11 +99,15 @@ export function DoseEquipmentsUI({ ...props }) {
                     value: false,
                     onChange: (e) => {
                         set((state) => ({
-                            playerProperties: {
-                                ...state.playerProperties,
-                                equipments: {
-                                    ...state.playerProperties.equipments,
-                                    apron: e,
+                            sceneStates: {
+                                ...state.sceneStates,
+                                playerState: {
+                                    ...state.sceneStates.playerState,
+                                    equipments: {
+                                        ...state.sceneStates.playerState
+                                            .equipments,
+                                        apron: e,
+                                    },
                                 },
                             },
                         }));
@@ -103,12 +115,12 @@ export function DoseEquipmentsUI({ ...props }) {
                         // set execute log for experiment
                         if (e) {
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         dosimeter: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .dosimeter,
                                             apron: true,
                                         },
@@ -122,11 +134,15 @@ export function DoseEquipmentsUI({ ...props }) {
                     value: false,
                     onChange: (e) => {
                         set((state) => ({
-                            playerProperties: {
-                                ...state.playerProperties,
-                                equipments: {
-                                    ...state.playerProperties.equipments,
-                                    glove: e,
+                            sceneStates: {
+                                ...state.sceneStates,
+                                playerState: {
+                                    ...state.sceneStates.playerState,
+                                    equipments: {
+                                        ...state.sceneStates.playerState
+                                            .equipments,
+                                        glove: e,
+                                    },
                                 },
                             },
                         }));
@@ -134,12 +150,12 @@ export function DoseEquipmentsUI({ ...props }) {
                         // set execute log for experiment
                         if (e) {
                             set((state) => ({
-                                sceneProperties: {
-                                    ...state.sceneProperties,
+                                sceneStates: {
+                                    ...state.sceneStates,
                                     executeLog: {
-                                        ...state.sceneProperties.executeLog,
+                                        ...state.sceneStates.executeLog,
                                         dosimeter: {
-                                            ...state.sceneProperties.executeLog
+                                            ...state.sceneStates.executeLog
                                                 .dosimeter,
                                             glove: true,
                                         },
