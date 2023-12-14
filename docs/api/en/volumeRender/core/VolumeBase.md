@@ -1,10 +1,10 @@
-Object3D &rarr;
+[Object3D](https://threejs.org/docs/#api/en/core/Object3D) &rarr;
 
 # VolumeBase
 
 ## Constructor
 ### VolumeBase(isDose: boolean, isPerspective: Boolean)
-isDose — (optional) a flag for processing done only with dose data. Default is `false`.
+isDose — (optional) a flag for processing done only with dose data. Default is `false`.<br/>
 isPerspective — (optional) a flag to specify shaders to use. Default is `false`.
 
 ## Properties
