@@ -34,6 +34,110 @@ function calcDose(
     return 120 * coefficient * (guardCoefficient * value.dose.data);
 }
 
+interface ScenearioConfig {
+    distanceMin?: number; // [m]
+    distanceMax?: number; // [m]
+}
+function useScenario(scenearioConfig: ScenearioConfig) {
+    const [set, sceneStates] = useStore((state) => [
+        state.set,
+        state.sceneStates,
+    ]);
+    const {
+        dosimeterResults,
+        playerState,
+        doseOrigin,
+        dosimeterSettingsState,
+    } = sceneStates;
+    const { equipments } = playerState;
+
+    const { distanceMin, distanceMax } = scenearioConfig;
+
+    // Distance
+    const [distance, inRange] = useMemo(() => {
+        const playerPosition = playerState.position.clone().setY(0);
+        const origin = doseOrigin.clone().setY(0);
+
+        const distance = origin.distanceTo(playerPosition);
+        const inRangeMin = distanceMin ? distanceMin <= distance : true;
+        const inRangeMax = distanceMax ? distance <= distanceMax : true;
+        return [distance, inRangeMin && inRangeMax];
+    }, [playerState, doseOrigin, distanceMin, distanceMax]);
+
+    // Dose values
+    const [doseValues, dosimeterResultsLength] = useMemo(() => {
+        const doseValues = dosimeterResults.map((value) => {
+            const doseValue = value.dose.reduce((acculator, currentValue) =>
+                acculator.data > currentValue.data ? acculator : currentValue
+            );
+
+            return {
+                dose: doseValue,
+                state: doseValue.state,
+                category: value.category,
+                coefficient: value.coefficient,
+            };
+        });
+
+        return [doseValues, doseValues.length];
+    }, [dosimeterResults]);
+
+    // Dose within
+    const [yearWithin, onceWithin, allWithin] = useMemo(() => {
+        const { N_perYear, N_perPatient, Limit_once } = dosimeterSettingsState;
+
+        const yearWithin: number = doseValues
+            .map((value) => {
+                return (
+                    calcDose(N_perYear * N_perPatient, value, equipments) <
+                    20000
+                );
+            })
+            .filter((value) => value === true).length;
+
+        const onceWithin: number = doseValues
+            .map((value) => {
+                return calcDose(N_perPatient, value, equipments) < Limit_once;
+            })
+            .filter((value) => value === true).length;
+
+        return [
+            yearWithin,
+            onceWithin,
+            yearWithin === dosimeterResultsLength &&
+                onceWithin === dosimeterResultsLength,
+        ];
+    }, [
+        dosimeterSettingsState,
+        doseValues,
+        dosimeterResultsLength,
+        equipments,
+    ]);
+
+    // Shield
+    const [withinShield, allWithinShield] = useMemo(() => {
+        const withinShield: number = doseValues.filter(
+            (value) => value.state?.includes("shield")
+        ).length;
+
+        return [withinShield, withinShield === doseValues.length];
+    }, [doseValues]);
+
+    return {
+        distance: distance,
+        inRange: inRange,
+        dosimeterResultsLength: dosimeterResultsLength,
+        yearWithin: yearWithin,
+        onceWithin: onceWithin,
+        allWithin: allWithin,
+        withinShield: withinShield,
+        allWithinShield: allWithinShield,
+    };
+}
+
+/**
+ *
+ */
 export type ItemProps = {
     children: React.ReactNode;
     isDone: boolean;
@@ -63,68 +167,28 @@ export function Item({ children, isDone, color = "#65BF74" }: ItemProps) {
 }
 const MemoItem = memo(Item);
 
+/**
+ *
+ */
 export function Exercise1() {
     const [set, sceneStates] = useStore((state) => [
         state.set,
         state.sceneStates,
     ]);
-    const {
-        dosimeterResults,
-        playerState,
-        doseOrigin,
-        dosimeterSettingsState,
-    } = sceneStates;
-    const { equipments } = playerState;
+    const { exerciseProgress } = sceneStates;
 
     const swiper = useSwiper();
 
-    const RangeRadius = 60; // [cm]
-
-    const [distance, inRange] = useMemo(() => {
-        const playerPosition = playerState.position.clone().setY(0);
-        const origin = doseOrigin.clone().setY(0);
-
-        const distance = origin.distanceTo(playerPosition) * 100;
-        return [distance, distance < RangeRadius];
-    }, [playerState, doseOrigin]);
-
-    const [yearWithin, onceWithin, allWithin] = useMemo(() => {
-        const resultLength = dosimeterResults.length;
-        const { N_perYear, N_perPatient, Limit_once } = dosimeterSettingsState;
-
-        const doseValues = dosimeterResults.map((value) => {
-            const doseValue = value.dose.reduce((acculator, currentValue) =>
-                acculator.data > currentValue.data ? acculator : currentValue
-            );
-
-            return {
-                dose: doseValue,
-                category: value.category,
-                coefficient: value.coefficient,
-            };
-        });
-
-        const yearResult = doseValues
-            .map((value) => {
-                return (
-                    calcDose(N_perYear * N_perPatient, value, equipments) <
-                    20000
-                );
-            })
-            .filter((value) => value === true).length;
-
-        const onceResult = doseValues
-            .map((value) => {
-                return calcDose(N_perPatient, value, equipments) < Limit_once;
-            })
-            .filter((value) => value === true).length;
-
-        return [
-            yearResult,
-            onceResult,
-            yearResult === resultLength && onceResult === resultLength,
-        ];
-    }, [dosimeterResults, dosimeterSettingsState, equipments]);
+    const RangeRadius = 0.6; // [m]
+    const {
+        distance,
+        inRange,
+        dosimeterResultsLength,
+        yearWithin,
+        onceWithin,
+        allWithin,
+        withinShield,
+    } = useScenario({ distanceMax: RangeRadius });
 
     useEffect(() => {
         set((state) => ({
@@ -145,17 +209,25 @@ export function Exercise1() {
                 <div className={`${style.items}`}>
                     {/* distance < 0.5 */}
                     <MemoItem isDone={inRange}>
-                        distance in {distance.toFixed(2)} / {RangeRadius} [cm]
+                        distance in {(distance * 100).toFixed(2)} /{" "}
+                        {RangeRadius * 100} [cm]
                     </MemoItem>
                     <MemoItem isDone={allWithin}>
                         All within regulatory limits.
                         <br />
-                        Year: {yearWithin} / {dosimeterResults.length}
+                        Year: {yearWithin} / {dosimeterResultsLength}
                         <br />
-                        Once: {onceWithin} / {dosimeterResults.length}
+                        Once: {onceWithin} / {dosimeterResultsLength}
+                    </MemoItem>
+                    <MemoItem isDone={withinShield === 0}>
+                        (Optional) No Shield
+                        <br />
+                        Shield: {withinShield} / {dosimeterResultsLength}
                     </MemoItem>
                 </div>
                 <button
+                    className={`${style.slideNext}`}
+                    disabled={!exerciseProgress.execise1}
                     onClick={() => {
                         swiper.slideNext();
                     }}
