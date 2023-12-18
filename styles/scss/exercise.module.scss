@@ -2,8 +2,8 @@
     position: absolute;
     top: 55px;
     left: 5px;
-    width: 200px;
-    height: 200px;
+    width: 325px;
+    height: 250px;
     border-radius: 2px;
 
     .swiper {
@@ -31,11 +31,16 @@
     }
 }
 
-
 .content {
+    width: 95%;
+    height: 95%;
+    margin: 6px 0;
+    display: block;
+    align-items: end;
+    position: relative;
 
     h3 {
-        margin: 6px;
+        margin: 8px 4px;
         text-align: left;
     }
 
@@ -62,6 +67,24 @@
                     color: #858b8e;
                 }
             }
+        }
+    }
+
+    .slideNext {
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        transform: translate(-50%, 0);
+        margin: 8px 0;
+        border: 0;
+        border-radius: 5px;
+        padding: 4px 8px;
+        font-size: 0.8rem;
+        // background-color: #0066dc;
+        background-color: #007aff;
+
+        &:disabled {
+            background-color: #858b8e;
         }
     }
 }
