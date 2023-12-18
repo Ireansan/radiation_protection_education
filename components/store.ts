@@ -114,6 +114,9 @@ export type ObjectVisibles = typeof objectVisibles;
 const exerciseProgress = {
     tutorial: false,
     execise1: false,
+    execise2Preparation: false,
+    execise2: false,
+    execise3: false,
 };
 export type ExerciseProgress = typeof exerciseProgress;
 

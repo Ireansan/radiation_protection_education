@@ -1,5 +1,6 @@
 import React from "react";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
+import { Navigation, Pagination, Mousewheel, Keyboard } from "swiper/modules";
 
 import * as SCENARIOS from "./scenarios";
 
@@ -27,11 +28,21 @@ export function Exercise({ ...props }) {
         <>
             <div className={style.foundation}>
                 <Swiper
-                    cssMode={true}
+                    navigation={true}
+                    modules={[Navigation]}
                     className={style.swiper}
                 >
                     <SwiperSlide className={style.swiperSlide}>
                         <SCENARIOS.Exercise1 />
+                    </SwiperSlide>
+                    <SwiperSlide className={style.swiperSlide}>
+                        <SCENARIOS.Exercise2Preparation />
+                    </SwiperSlide>
+                    <SwiperSlide className={style.swiperSlide}>
+                        <SCENARIOS.Exercise2 />
+                    </SwiperSlide>
+                    <SwiperSlide className={style.swiperSlide}>
+                        <SCENARIOS.Exercise3 />
                     </SwiperSlide>
                     {test.map((value, index) => (
                         <SwiperSlide
