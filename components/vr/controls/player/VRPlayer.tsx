@@ -11,10 +11,10 @@ export function VRPlayer({ children }: playerProps) {
     const { gl } = useThree();
 
     const [position, setPosition] = React.useState<THREE.Vector3>(
-        new THREE.Vector3(),
+        new THREE.Vector3()
     );
     const [direction, setDirection] = React.useState<THREE.Vector3>(
-        new THREE.Vector3(),
+        new THREE.Vector3()
     );
     const ref = React.useRef<THREE.Group>(null!);
 
@@ -23,6 +23,10 @@ export function VRPlayer({ children }: playerProps) {
             return;
         }
         gl.xr.updateCamera(state.camera as THREE.PerspectiveCamera);
+
+        if (!gl.xr.isPresenting) {
+            return;
+        }
 
         position.copy(state.camera.position);
         position.setY(0);
@@ -46,7 +50,10 @@ export function VRPlayer({ children }: playerProps) {
             <group ref={ref}>
                 {children}
 
-                <mesh position={[0, 0, 0.5]} visible={debug}>
+                <mesh
+                    position={[0, 0, 0.5]}
+                    visible={debug}
+                >
                     <boxBufferGeometry args={[0.1, 0.1, 0.1]} />
                     <meshBasicMaterial color={"blue"} />
                 </mesh>
