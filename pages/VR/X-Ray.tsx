@@ -91,6 +91,39 @@ function XRayVR() {
         state.viewing,
     ]);
 
+    const names = [
+        {
+            name: "mixamorigNeck",
+            displayName: "Neck",
+            category: "neck",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigLeftEye",
+            displayName: "Left Eye",
+            category: "goggle",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigRightEye",
+            displayName: "Right Eye",
+            category: "goggle",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigLeftHand",
+            displayName: "Left Hand",
+            category: "glove",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigRightHand",
+            displayName: "Right Hand",
+            category: "glove",
+            coefficient: 0.1,
+        },
+    ];
+
     const ref = useRef<DoseGroup>(null!);
 
     const timelapseRef = useRef<DoseGroup>(null);
@@ -248,38 +281,7 @@ function XRayVR() {
                             <DosimeterControls
                                 ref={dosimeterRef}
                                 object={yBotRef}
-                                names={[
-                                    {
-                                        name: "mixamorigNeck",
-                                        displayName: "Neck",
-                                        category: "neck",
-                                        coefficient: 0.1,
-                                    },
-                                    {
-                                        name: "mixamorigLeftEye",
-                                        displayName: "Left Eye",
-                                        category: "goggle",
-                                        coefficient: 0.1,
-                                    },
-                                    {
-                                        name: "mixamorigRightEye",
-                                        displayName: "Right Eye",
-                                        category: "goggle",
-                                        coefficient: 0.1,
-                                    },
-                                    {
-                                        name: "mixamorigLeftHand",
-                                        displayName: "Left Hand",
-                                        category: "glove",
-                                        coefficient: 0.1,
-                                    },
-                                    {
-                                        name: "mixamorigRightHand",
-                                        displayName: "Right Hand",
-                                        category: "glove",
-                                        coefficient: 0.1,
-                                    },
-                                ]}
+                                names={names}
                                 targets={[nocurtainAccumuRef, curtainAccumuRef]}
                             />
 
@@ -411,7 +413,6 @@ function XRayVR() {
                             </GizmoHelper>
 
                             {/* VR UI */}
-
                             <group
                                 position={[2, 0, -9]}
                                 rotation={[0, Math.PI, 0]}
@@ -454,13 +455,17 @@ function XRayVR() {
                                 <VRDosimeterUI
                                     position={[-0.4, -0.3, -2]}
                                     rotation={[-0.149, 0.195, 0.0291]}
-                                    scale={3}
+                                    scale={6}
                                 />
                             </VRUI>
                         </XR>
                     </Canvas>
                 </div>
                 <DosimeterUI />
+                <DosimeterUI
+                    isXR
+                    activeNames={["mixamorigLeftHand", "mixamorigRightHand"]}
+                />
             </div>
         </>
     );
