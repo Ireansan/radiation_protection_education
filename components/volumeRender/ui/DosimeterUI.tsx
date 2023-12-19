@@ -81,6 +81,7 @@ export type ResultDataProps = {
     maxHp: number;
     typeBar: string;
     typeValue: string;
+    isXR: boolean;
 };
 function ResultData({
     children,
@@ -89,6 +90,7 @@ function ResultData({
     maxHp,
     typeBar,
     typeValue,
+    isXR,
     ...props
 }: ResultDataProps) {
     const [isDanger, length, isHP] = useMemo(() => {
@@ -116,9 +118,9 @@ function ResultData({
 
     return (
         <>
-            <div className={`${style.data}`}>
+            <div className={`${style.data} ${isXR && `${style.isXR}`}`}>
                 {/* Bar */}
-                <div className={`${style.bar}`}>
+                <div className={`${style.bar} ${isXR && `${style.isXR}`}`}>
                     {/* back ground */}
                     <div className={`${style.bg}`}>
                         {isHP ? (
@@ -153,13 +155,19 @@ function ResultData({
                     </div>
                 </div>
                 {/* Value */}
-                <div className={`${style.numerical}`}>
+                <div
+                    className={`${style.numerical} ${isXR && `${style.isXR}`}`}
+                >
                     <div className={`${style.category}`}>{children}</div>
                     {isSub ? (
                         <>
                             <div className={`${style.value}`}>
                                 {Math.round(maxHp - 120 * coefficient * value)}
-                                <span className={`${style.maxHp}`}>
+                                <span
+                                    className={`${style.maxHp} ${
+                                        isXR && `${style.isXR}`
+                                    }`}
+                                >
                                     /{maxHp}
                                 </span>
                             </div>
@@ -172,7 +180,11 @@ function ResultData({
                                 }`}
                             >
                                 {Math.round(120 * coefficient * value)}
-                                <span className={`${style.maxHp}`}>
+                                <span
+                                    className={`${style.maxHp} ${
+                                        isXR && `${style.isXR}`
+                                    }`}
+                                >
                                     /{maxHp}
                                 </span>
                             </div>
@@ -191,6 +203,7 @@ export type DosimeterResultProps = {
     typeOrder: string;
     typeBar: string;
     typeValue: string;
+    isXR: boolean;
 };
 function DosimeterResult({
     result,
@@ -198,6 +211,7 @@ function DosimeterResult({
     typeOrder,
     typeBar,
     typeValue,
+    isXR,
     ...props
 }: DosimeterResultProps) {
     const [sceneStates] = useStore((state) => [state.sceneStates]);
@@ -241,10 +255,14 @@ function DosimeterResult({
 
     return (
         <>
-            <div className={`${style.dose}`}>
+            <div className={`${style.dose} ${isXR && `${style.isXR}`}`}>
                 {/* Name */}
-                <div className={`${style.name}`}>
-                    <div className={`${style.identifier}`}>
+                <div className={`${style.name} ${isXR && `${style.isXR}`}`}>
+                    <div
+                        className={`${style.identifier} ${
+                            isXR && `${style.isXR}`
+                        }`}
+                    >
                         {result.displayName ? result.displayName : result.name}
                     </div>
                     <div className={`${style.icons}`}>
@@ -252,7 +270,7 @@ function DosimeterResult({
                     </div>
                 </div>
                 {/* Datas */}
-                <div className={`${style.result}`}>
+                <div className={`${style.result} ${isXR && `${style.isXR}`}`}>
                     {isYearOnceOrder ? (
                         <>
                             <div className={`${style.year}`}>
@@ -262,6 +280,7 @@ function DosimeterResult({
                                     maxHp={20000}
                                     typeBar={typeBar}
                                     typeValue={typeValue}
+                                    isXR={isXR}
                                 >
                                     Year
                                 </MemoResultData>
@@ -273,6 +292,7 @@ function DosimeterResult({
                                     maxHp={Limit_once}
                                     typeBar={typeBar}
                                     typeValue={typeValue}
+                                    isXR={isXR}
                                 >
                                     Once
                                 </MemoResultData>
@@ -287,6 +307,7 @@ function DosimeterResult({
                                     maxHp={Limit_once}
                                     typeBar={typeBar}
                                     typeValue={typeValue}
+                                    isXR={isXR}
                                 >
                                     Once
                                 </MemoResultData>
@@ -298,6 +319,7 @@ function DosimeterResult({
                                     maxHp={20000}
                                     typeBar={typeBar}
                                     typeValue={typeValue}
+                                    isXR={isXR}
                                 >
                                     Year
                                 </MemoResultData>
@@ -318,6 +340,8 @@ export type DosimeterUIProps = {
     typeOrder?: string;
     typeBar?: string;
     typeValue?: string;
+    isXR?: boolean;
+    activeNames?: string[];
 };
 export function DosimeterUI({
     nPerPatient = 1,
@@ -326,6 +350,8 @@ export function DosimeterUI({
     typeOrder = "year-once",
     typeBar = "subtraction",
     typeValue = "subtraction",
+    isXR = false,
+    activeNames = undefined,
     ...props
 }: DosimeterUIProps) {
     const [set, playerState, sceneStates] = useStore((state) => [
@@ -335,6 +361,20 @@ export function DosimeterUI({
     ]);
     const { equipments } = playerState;
     const { dosimeterResults } = sceneStates;
+
+    const results = React.useMemo(() => {
+        if (!activeNames) {
+            return dosimeterResults;
+        }
+
+        const results = dosimeterResults.filter((value) => {
+            return activeNames.some((name) => {
+                return value.name === name;
+            });
+        });
+
+        return results;
+    }, [activeNames, dosimeterResults]);
 
     /**
      * leva panels
@@ -405,14 +445,18 @@ export function DosimeterUI({
     return (
         <>
             <div
-                id="DosimeterUI"
-                className={`${style.dose_list}`}
+                id={!isXR ? "DosimeterUI" : "XRDosimeterUI"}
+                className={`${style.dose_list} ${isXR && `${style.isXR}`}`}
             >
-                <div className={`${style.label}`}>
+                <div className={`${style.label} ${isXR && `${style.isXR}`}`}>
                     Dosimeter
-                    <span className={`${style.unit}`}>[&micro;Sv]</span>
+                    <span
+                        className={`${style.unit} ${isXR && `${style.isXR}`}`}
+                    >
+                        [&micro;Sv]
+                    </span>
                 </div>
-                {dosimeterResults.map((result, index) => (
+                {results.map((result, index) => (
                     <MemoDosimeterResult
                         key={index}
                         result={result}
@@ -420,6 +464,7 @@ export function DosimeterUI({
                         typeOrder={dosimeterConfig.type_order}
                         typeBar={dosimeterConfig.type_bar}
                         typeValue={dosimeterConfig.type_value}
+                        isXR={isXR}
                     />
                 ))}
             </div>

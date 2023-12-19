@@ -9,13 +9,13 @@ export function VRDosimeterUI({ ...props }: JSX.IntrinsicElements["group"]) {
     const { gl, camera } = useThree();
     const group = React.useMemo(
         () => new InteractiveGroup(gl, camera),
-        [gl, camera],
+        [gl, camera]
     );
     const dosimeterUIMesh = React.useMemo(() => {
         const dosimeterUI = document.getElementById(
-            "DosimeterUI",
+            "XRDosimeterUI"
         ) as HTMLElement;
-        dosimeterUI.style.height = `${5 * 60 + 30}px`;
+        dosimeterUI.style.height = `${2 * 30 + 15}px`;
 
         const dosimeterUIMesh = new HTMLMesh(dosimeterUI);
         group.add(dosimeterUIMesh);
@@ -30,7 +30,10 @@ export function VRDosimeterUI({ ...props }: JSX.IntrinsicElements["group"]) {
 
     return (
         <>
-            <primitive object={group} {...props} />
+            <primitive
+                object={group}
+                {...props}
+            />
         </>
     );
 }

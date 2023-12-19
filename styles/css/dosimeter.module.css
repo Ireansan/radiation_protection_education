@@ -6,6 +6,11 @@
   background-color: #181c20;
   border-radius: 5px;
 }
+.dose_list.isXR {
+  width: 140px;
+  border-radius: 2.5px;
+  z-index: -1;
+}
 .dose_list .label {
   padding: 5px;
   margin: 0;
@@ -13,10 +18,18 @@
   font-weight: bold;
   color: #bcc2d2;
 }
+.dose_list .label.isXR {
+  padding: 2.5px;
+  font-size: 0.25rem;
+}
 .dose_list .label .unit {
   padding: 0px 10px;
   font-size: 0.7rem;
   color: #8c93a3;
+}
+.dose_list .label .unit.isXR {
+  padding: 0px 5px;
+  font-size: 0.35rem;
 }
 .dose_list .dose {
   width: 100%;
@@ -28,15 +41,25 @@
   align-items: left;
   color: #8c93a3;
 }
+.dose_list .dose.isXR {
+  height: 30px;
+  padding: 2.5px;
+}
 .dose_list .dose .name {
   height: 15px;
   font-weight: bold;
+}
+.dose_list .dose .name.isXR {
+  height: 7.5px;
 }
 .dose_list .dose .name .identifier {
   width: 65%;
   height: 100%;
   font-size: 0.8rem;
   float: left;
+}
+.dose_list .dose .name .identifier.isXR {
+  font-size: 0.4rem;
 }
 .dose_list .dose .name .icons {
   width: 35%;
@@ -63,6 +86,9 @@
   height: 30px;
   display: flex;
 }
+.dose_list .dose .result.isXR {
+  height: 15px;
+}
 .dose_list .dose .result .year {
   width: 60%;
 }
@@ -78,9 +104,15 @@
 .dose_list .dose .data {
   padding: 2px;
 }
+.dose_list .dose .data.isXR {
+  padding: 1px;
+}
 .dose_list .dose .data .bar {
   height: 15px;
   display: flex;
+}
+.dose_list .dose .data .bar.isXR {
+  height: 7.5px;
 }
 .dose_list .dose .data .bar .bg {
   width: 95%;
@@ -105,6 +137,10 @@
   height: 15px;
   font-size: 0.8rem;
 }
+.dose_list .dose .data .numerical.isXR {
+  height: 7.5px;
+  font-size: 0.4rem;
+}
 .dose_list .dose .data .numerical .category {
   height: 100%;
   padding-left: 5px;
@@ -122,4 +158,7 @@
 .dose_list .dose .data .numerical .value .maxHp {
   font-size: 0.6rem;
   color: #8c93a3;
+}
+.dose_list .dose .data .numerical .value .maxHp.isXR {
+  font-size: 0.3rem;
 }/*# sourceMappingURL=dosimeter.module.css.map */

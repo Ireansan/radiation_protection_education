@@ -6,6 +6,12 @@
     background-color: #181c20;
     border-radius: 5px;
 
+    &.isXR {
+        width: 140px;
+        border-radius: 2.5px;
+        z-index: -1;
+    }
+
     .label {
         padding: 5px;
         margin: 0;
@@ -13,10 +19,20 @@
         font-weight: bold;
         color: #bcc2d2;
 
+        &.isXR {
+            padding: 2.5px;
+            font-size: 0.25rem;
+        }
+
         .unit {
             padding: 0px 10px;
             font-size: 0.7rem;
             color: #8c93a3;
+
+            &.isXR {
+                padding: 0px 5px;
+                font-size: 0.35rem;
+            }
         }
     }
 
@@ -30,15 +46,29 @@
         align-items: left;
         color: #8c93a3;
 
+        &.isXR {
+            height: 30px;
+            padding: 2.5px;
+
+        }
+
         .name {
             height: 15px;
             font-weight: bold;
+
+            &.isXR {
+                height: 7.5px;
+            }
 
             .identifier {
                 width: 65%;
                 height: 100%;
                 font-size: 0.8rem;
                 float: left;
+
+                &.isXR {
+                    font-size: 0.4rem;
+                }
             }
 
             .icons {
@@ -71,6 +101,10 @@
             height: 30px;
             display: flex;
 
+            &.isXR {
+                height: 15px;
+            }
+
             .year {
                 width: 60%;
 
@@ -91,9 +125,17 @@
         .data {
             padding: 2px;
 
+            &.isXR {
+                padding: 1px;
+            }
+
             .bar {
                 height: 15px;
                 display: flex;
+
+                &.isXR {
+                    height: 7.5px;
+                }
 
                 .bg {
                     width: 95%;
@@ -124,6 +166,11 @@
                 height: 15px;
                 font-size: 0.8rem;
 
+                &.isXR {
+                    height: 7.5px;
+                    font-size: 0.4rem;
+                }
+
                 .category {
                     height: 100%;
                     padding-left: 5px;
@@ -143,6 +190,10 @@
                     .maxHp {
                         font-size: 0.6rem;
                         color: #8c93a3;
+
+                        &.isXR {
+                            font-size: 0.3rem;
+                        }
                     }
                 }
             }
