@@ -2,6 +2,7 @@ import React from "react";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { Navigation, Pagination, Mousewheel, Keyboard } from "swiper/modules";
 
+import { useStore } from "../../store";
 import * as SCENARIOS from "./scenarios";
 
 // Import Swiper styles
@@ -12,6 +13,8 @@ import "swiper/css/pagination";
 import style from "../../../styles/css/exercise.module.css";
 
 export function Exercise({ ...props }) {
+    const [debug] = useStore((state) => [state.debug]);
+
     const test = [
         "Slide 1",
         "Slide 2",
@@ -28,8 +31,9 @@ export function Exercise({ ...props }) {
         <>
             <div className={style.foundation}>
                 <Swiper
-                    navigation={true}
-                    modules={[Navigation]}
+                    navigation={false}
+                    mousewheel={true}
+                    modules={[Navigation, Mousewheel]}
                     className={style.swiper}
                 >
                     <SwiperSlide className={style.swiperSlide}>
