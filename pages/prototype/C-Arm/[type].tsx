@@ -36,6 +36,7 @@ import * as MODELS from "../../../components/models";
 import { Board_Configure } from "../../../components/models";
 import { CustomYBotIK } from "../../../components/models/Player";
 import {
+    HandIKLevaControls,
     HandIKPivotControls,
     PlayerPivotControls,
 } from "../../../components/models/controls";
@@ -496,14 +497,15 @@ function VisualizationCArm({ ...props }: PageProps) {
                                         rotation={[0, -Math.PI / 2, 0]}
                                     >
                                         <CustomYBotIK />
-                                        <HandIKPivotControls
+                                        {/* <HandIKPivotControls
                                             object={yBotRef}
                                             scale={35}
                                             fixed={true}
                                             visible={
                                                 objectVisibles.playerHandPivot
                                             }
-                                        />
+                                        /> */}
+                                        <HandIKLevaControls object={yBotRef} />
                                         <CoordHTML
                                             origin={originObjRef}
                                             enableRotation={false}

@@ -32,6 +32,7 @@ import {
 import { Board_Configure } from "../../../components/models";
 import { CustomYBotIK } from "../../../components/models/Player";
 import {
+    HandIKLevaControls,
     HandIKPivotControls,
     PlayerPivotControls,
 } from "../../../components/models/controls";
@@ -410,14 +411,15 @@ function VisualizationXRay({ ...props }: PageProps) {
                                         }
                                     >
                                         <CustomYBotIK />
-                                        <HandIKPivotControls
+                                        {/* <HandIKPivotControls
                                             object={yBotRef}
                                             scale={35}
                                             fixed={true}
                                             visible={
                                                 objectVisibles.playerHandPivot
                                             }
-                                        />
+                                        /> */}
+                                        <HandIKLevaControls object={yBotRef} />
                                         <CoordHTML
                                             origin={originObjRef}
                                             enableRotation={false}
