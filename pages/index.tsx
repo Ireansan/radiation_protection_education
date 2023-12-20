@@ -163,6 +163,24 @@ const Home: NextPage = () => {
                         </Link>
                     </div>
                     <div className={styles.card}>
+                        <Link href={"/prototype/C-Arm/basic"}>
+                            <h2>C-Arm (Basic)&rarr;</h2>
+                            <p>prototype, Static Path</p>
+                        </Link>
+                    </div>
+                    <div className={styles.card}>
+                        <Link href={"/prototype/C-Arm/extra"}>
+                            <h2>C-Arm (Extra)&rarr;</h2>
+                            <p>prototype, Static Path</p>
+                        </Link>
+                    </div>
+                    <div className={styles.card}>
+                        <Link href={"/prototype/C-Arm/perspective"}>
+                            <h2>C-Arm (Perspective)&rarr;</h2>
+                            <p>prototype, Static Path</p>
+                        </Link>
+                    </div>
+                    {/* <div className={styles.card}>
                         <Link href={"/visualization/X-Ray/basic"}>
                             <h2>X-ray (Basic)&rarr;</h2>
                             <p>Static Path</p>
@@ -197,7 +215,7 @@ const Home: NextPage = () => {
                             <h2>C-Arm (Exepriment)&rarr;</h2>
                             <p>Static Path</p>
                         </Link>
-                    </div>
+                    </div> */}
                 </div>
 
                 <h3>Material</h3>
