@@ -62,85 +62,89 @@ export function PrototypeAnimationControls({
     const [isEditing, setIsEditing] = React.useState<boolean>(false);
 
     const [,] = useControls(() => ({
-        Data: folder({
-            mode: {
-                value: mode,
-                options: ["time lapse", "accumulate"],
-                onChange: (e) => {
-                    if (e === "time lapse") {
-                        mainGroup.current
-                            ? (mainGroup.current.visible = true)
-                            : null;
-
-                        if (subGroup) {
-                            subGroup.current
-                                ? (subGroup.current.visible = false)
+        Data: folder(
+            {
+                mode: {
+                    value: mode,
+                    options: ["time lapse", "accumulate"],
+                    order: -2,
+                    onChange: (e) => {
+                        if (e === "time lapse") {
+                            mainGroup.current
+                                ? (mainGroup.current.visible = true)
                                 : null;
-                        }
 
-                        set((state) => ({
-                            sceneStates: {
-                                ...state.sceneStates,
-                                isTimeLapse: true,
-                            },
-                        }));
-                    } else if (e === "accumulate") {
-                        mainGroup.current
-                            ? (mainGroup.current.visible = false)
-                            : null;
+                            if (subGroup) {
+                                subGroup.current
+                                    ? (subGroup.current.visible = false)
+                                    : null;
+                            }
 
-                        if (subGroup) {
-                            subGroup.current
-                                ? (subGroup.current.visible = true)
-                                : null;
-                        }
-
-                        set((state) => ({
-                            sceneStates: {
-                                ...state.sceneStates,
-                                isTimeLapse: false,
-                            },
-                        }));
-                    } else {
-                        console.log("test");
-                    }
-
-                    // set execute log for experiment
-                    switch (e) {
-                        case "time lapse":
                             set((state) => ({
                                 sceneStates: {
                                     ...state.sceneStates,
-                                    executeLog: {
-                                        ...state.sceneStates.executeLog,
-                                        animation: {
-                                            ...state.sceneStates.executeLog
-                                                .animation,
-                                            timeLapse: true,
-                                        },
-                                    },
+                                    isTimeLapse: true,
                                 },
                             }));
-                            break;
-                        case "accumulate":
+                        } else if (e === "accumulate") {
+                            mainGroup.current
+                                ? (mainGroup.current.visible = false)
+                                : null;
+
+                            if (subGroup) {
+                                subGroup.current
+                                    ? (subGroup.current.visible = true)
+                                    : null;
+                            }
+
                             set((state) => ({
                                 sceneStates: {
                                     ...state.sceneStates,
-                                    executeLog: {
-                                        ...state.sceneStates.executeLog,
-                                        animation: {
-                                            ...state.sceneStates.executeLog
-                                                .animation,
-                                            accumulate: true,
-                                        },
-                                    },
+                                    isTimeLapse: false,
                                 },
                             }));
-                            break;
-                    }
+                        } else {
+                            console.log("test");
+                        }
+
+                        // set execute log for experiment
+                        switch (e) {
+                            case "time lapse":
+                                set((state) => ({
+                                    sceneStates: {
+                                        ...state.sceneStates,
+                                        executeLog: {
+                                            ...state.sceneStates.executeLog,
+                                            animation: {
+                                                ...state.sceneStates.executeLog
+                                                    .animation,
+                                                timeLapse: true,
+                                            },
+                                        },
+                                    },
+                                }));
+                                break;
+                            case "accumulate":
+                                set((state) => ({
+                                    sceneStates: {
+                                        ...state.sceneStates,
+                                        executeLog: {
+                                            ...state.sceneStates.executeLog,
+                                            animation: {
+                                                ...state.sceneStates.executeLog
+                                                    .animation,
+                                                accumulate: true,
+                                            },
+                                        },
+                                    },
+                                }));
+                                break;
+                        }
+                    },
                 },
             },
-        }),
+            { order: 1 }
+        ),
     }));
 
     React.useEffect(() => {

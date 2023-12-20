@@ -111,99 +111,103 @@ export function DoseAnimationControls({
      */
     const [edit, setEdit] = React.useState<boolean>(false);
     const [animationConfig, setAnimationConfig] = useControls(() => ({
-        Data: folder({
-            mode: {
-                value: mode,
-                options: ["time lapse", "accumulate"],
-                onChange: (e) => {
-                    if (e === "time lapse") {
-                        mainGroup.current
-                            ? (mainGroup.current.visible = true)
-                            : null;
-
-                        if (subGroup) {
-                            subGroup.current
-                                ? (subGroup.current.visible = false)
-                                : null;
-                        }
-                    } else if (e === "accumulate") {
-                        mainGroup.current
-                            ? (mainGroup.current.visible = false)
-                            : null;
-
-                        if (subGroup) {
-                            subGroup.current
-                                ? (subGroup.current.visible = true)
-                                : null;
-                        }
-                    } else {
-                        console.log("test");
-                    }
-
-                    // set execute log for experiment
-                    switch (e) {
-                        case "time lapse":
-                            set((state) => ({
-                                sceneStates: {
-                                    ...state.sceneStates,
-                                    executeLog: {
-                                        ...state.sceneStates.executeLog,
-                                        animation: {
-                                            ...state.sceneStates.executeLog
-                                                .animation,
-                                            timeLapse: true,
-                                        },
-                                    },
-                                },
-                            }));
-                            break;
-                        case "accumulate":
-                            set((state) => ({
-                                sceneStates: {
-                                    ...state.sceneStates,
-                                    executeLog: {
-                                        ...state.sceneStates.executeLog,
-                                        animation: {
-                                            ...state.sceneStates.executeLog
-                                                .animation,
-                                            accumulate: true,
-                                        },
-                                    },
-                                },
-                            }));
-                            break;
-                    }
-                },
-            },
-            Animation: folder({
-                play: {
-                    value: true,
+        Data: folder(
+            {
+                mode: {
+                    value: mode,
+                    options: ["time lapse", "accumulate"],
+                    order: -2,
                     onChange: (e) => {
-                        lazyActions.current.forEach((actions) => {
-                            actions["volumeAnimation"]
-                                ? (actions["volumeAnimation"].paused = !e)
+                        if (e === "time lapse") {
+                            mainGroup.current
+                                ? (mainGroup.current.visible = true)
                                 : null;
-                        });
+
+                            if (subGroup) {
+                                subGroup.current
+                                    ? (subGroup.current.visible = false)
+                                    : null;
+                            }
+                        } else if (e === "accumulate") {
+                            mainGroup.current
+                                ? (mainGroup.current.visible = false)
+                                : null;
+
+                            if (subGroup) {
+                                subGroup.current
+                                    ? (subGroup.current.visible = true)
+                                    : null;
+                            }
+                        } else {
+                            console.log("test");
+                        }
+
+                        // set execute log for experiment
+                        switch (e) {
+                            case "time lapse":
+                                set((state) => ({
+                                    sceneStates: {
+                                        ...state.sceneStates,
+                                        executeLog: {
+                                            ...state.sceneStates.executeLog,
+                                            animation: {
+                                                ...state.sceneStates.executeLog
+                                                    .animation,
+                                                timeLapse: true,
+                                            },
+                                        },
+                                    },
+                                }));
+                                break;
+                            case "accumulate":
+                                set((state) => ({
+                                    sceneStates: {
+                                        ...state.sceneStates,
+                                        executeLog: {
+                                            ...state.sceneStates.executeLog,
+                                            animation: {
+                                                ...state.sceneStates.executeLog
+                                                    .animation,
+                                                accumulate: true,
+                                            },
+                                        },
+                                    },
+                                }));
+                                break;
+                        }
                     },
                 },
-                speed: {
-                    value: speed,
-                    options: speedList,
-                },
-                time: {
-                    value: 0,
-                    min: 0,
-                    max: duration,
-                    step: 1,
-                    onEditStart: (value, path, context) => {
-                        setEdit(true);
+                Animation: folder({
+                    play: {
+                        value: true,
+                        onChange: (e) => {
+                            lazyActions.current.forEach((actions) => {
+                                actions["volumeAnimation"]
+                                    ? (actions["volumeAnimation"].paused = !e)
+                                    : null;
+                            });
+                        },
                     },
-                    onEditEnd: (value, path, context) => {
-                        setEdit(false);
+                    speed: {
+                        value: speed,
+                        options: speedList,
                     },
-                },
-            }),
-        }),
+                    time: {
+                        value: 0,
+                        min: 0,
+                        max: duration,
+                        step: 1,
+                        onEditStart: (value, path, context) => {
+                            setEdit(true);
+                        },
+                        onEditEnd: (value, path, context) => {
+                            setEdit(false);
+                        },
+                    },
+                }),
+            },
+            { order: 1 }
+        ),
     }));
 
     useFrame((state, delta) => {

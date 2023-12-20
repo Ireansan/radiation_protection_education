@@ -351,141 +351,155 @@ export const VolumeXYZClippingControls = React.forwardRef<
      */
     // Volume
     const [,] = useControls(() => ({
-        Data: folder({
-            Clip: folder({
-                X: folder(
+        Data: folder(
+            {
+                Clip: folder(
                     {
-                        "XOn/Off": {
-                            value: false,
-                            label: "on/off",
-                            onChange: (e) => {
-                                clippingFlagRef.current.x = e;
-                                setClippingFlag({
-                                    ...clippingFlagRef.current,
-                                });
+                        X: folder(
+                            {
+                                "XOn/Off": {
+                                    value: false,
+                                    label: "on/off",
+                                    onChange: (e) => {
+                                        clippingFlagRef.current.x = e;
+                                        setClippingFlag({
+                                            ...clippingFlagRef.current,
+                                        });
 
-                                // xPivotRef.current.visible = e;
+                                        // xPivotRef.current.visible = e;
 
-                                if (e) {
-                                    // set execute log for experiment
-                                    set((state) => ({
-                                        sceneStates: {
-                                            ...state.sceneStates,
-                                            executeLog: {
-                                                ...state.sceneStates.executeLog,
-                                                clipping: {
-                                                    ...state.sceneStates
-                                                        .executeLog.clipping,
-                                                    x: true,
+                                        if (e) {
+                                            // set execute log for experiment
+                                            set((state) => ({
+                                                sceneStates: {
+                                                    ...state.sceneStates,
+                                                    executeLog: {
+                                                        ...state.sceneStates
+                                                            .executeLog,
+                                                        clipping: {
+                                                            ...state.sceneStates
+                                                                .executeLog
+                                                                .clipping,
+                                                            x: true,
+                                                        },
+                                                    },
                                                 },
-                                            },
-                                        },
-                                    }));
-                                }
+                                            }));
+                                        }
+                                    },
+                                },
                             },
-                        },
-                    },
-                    { collapsed: true }
-                ),
-                Y: folder(
-                    {
-                        "YOn/Off": {
-                            value: false,
-                            label: "on/off",
-                            onChange: (e) => {
-                                clippingFlagRef.current.y = e;
-                                setClippingFlag({
-                                    ...clippingFlagRef.current,
-                                });
+                            { collapsed: true }
+                        ),
+                        Y: folder(
+                            {
+                                "YOn/Off": {
+                                    value: false,
+                                    label: "on/off",
+                                    onChange: (e) => {
+                                        clippingFlagRef.current.y = e;
+                                        setClippingFlag({
+                                            ...clippingFlagRef.current,
+                                        });
 
-                                if (e) {
-                                    // set execute log for experiment
-                                    set((state) => ({
-                                        sceneStates: {
-                                            ...state.sceneStates,
-                                            executeLog: {
-                                                ...state.sceneStates.executeLog,
-                                                clipping: {
-                                                    ...state.sceneStates
-                                                        .executeLog.clipping,
-                                                    y: true,
+                                        if (e) {
+                                            // set execute log for experiment
+                                            set((state) => ({
+                                                sceneStates: {
+                                                    ...state.sceneStates,
+                                                    executeLog: {
+                                                        ...state.sceneStates
+                                                            .executeLog,
+                                                        clipping: {
+                                                            ...state.sceneStates
+                                                                .executeLog
+                                                                .clipping,
+                                                            y: true,
+                                                        },
+                                                    },
                                                 },
-                                            },
-                                        },
-                                    }));
-                                }
+                                            }));
+                                        }
+                                    },
+                                },
                             },
-                        },
-                    },
-                    { collapsed: true }
-                ),
-                Z: folder(
-                    {
-                        "ZOn/Off": {
-                            value: false,
-                            label: "on/off",
-                            onChange: (e) => {
-                                clippingFlagRef.current.z = e;
-                                setClippingFlag({
-                                    ...clippingFlagRef.current,
-                                });
+                            { collapsed: true }
+                        ),
+                        Z: folder(
+                            {
+                                "ZOn/Off": {
+                                    value: false,
+                                    label: "on/off",
+                                    onChange: (e) => {
+                                        clippingFlagRef.current.z = e;
+                                        setClippingFlag({
+                                            ...clippingFlagRef.current,
+                                        });
 
-                                if (e) {
-                                    // set execute log for experiment
-                                    set((state) => ({
-                                        sceneStates: {
-                                            ...state.sceneStates,
-                                            executeLog: {
-                                                ...state.sceneStates.executeLog,
-                                                clipping: {
-                                                    ...state.sceneStates
-                                                        .executeLog.clipping,
-                                                    z: true,
+                                        if (e) {
+                                            // set execute log for experiment
+                                            set((state) => ({
+                                                sceneStates: {
+                                                    ...state.sceneStates,
+                                                    executeLog: {
+                                                        ...state.sceneStates
+                                                            .executeLog,
+                                                        clipping: {
+                                                            ...state.sceneStates
+                                                                .executeLog
+                                                                .clipping,
+                                                            z: true,
+                                                        },
+                                                    },
                                                 },
-                                            },
-                                        },
-                                    }));
-                                }
+                                            }));
+                                        }
+                                    },
+                                },
                             },
-                        },
-                    },
-                    { collapsed: true }
-                ),
-                "Free Axis": folder(
-                    {
-                        "FreeAxisOn/Off": {
-                            value: false,
-                            label: "on/off",
-                            onChange: (e) => {
-                                setClippingFlag({
-                                    ...clippingFlagRef.current,
-                                    free: e,
-                                });
-                                clippingFlagRef.current.free = e;
+                            { collapsed: true }
+                        ),
+                        "Free Axis": folder(
+                            {
+                                "FreeAxisOn/Off": {
+                                    value: false,
+                                    label: "on/off",
+                                    onChange: (e) => {
+                                        setClippingFlag({
+                                            ...clippingFlagRef.current,
+                                            free: e,
+                                        });
+                                        clippingFlagRef.current.free = e;
 
-                                if (e) {
-                                    // set execute log for experiment
-                                    set((state) => ({
-                                        sceneStates: {
-                                            ...state.sceneStates,
-                                            executeLog: {
-                                                ...state.sceneStates.executeLog,
-                                                clipping: {
-                                                    ...state.sceneStates
-                                                        .executeLog.clipping,
-                                                    free: true,
+                                        if (e) {
+                                            // set execute log for experiment
+                                            set((state) => ({
+                                                sceneStates: {
+                                                    ...state.sceneStates,
+                                                    executeLog: {
+                                                        ...state.sceneStates
+                                                            .executeLog,
+                                                        clipping: {
+                                                            ...state.sceneStates
+                                                                .executeLog
+                                                                .clipping,
+                                                            free: true,
+                                                        },
+                                                    },
                                                 },
-                                            },
-                                        },
-                                    }));
-                                }
+                                            }));
+                                        }
+                                    },
+                                },
                             },
-                        },
+                            { collapsed: true }
+                        ),
                     },
-                    { collapsed: true }
+                    { order: -1 }
                 ),
-            }),
-        }),
+            },
+            { order: 1 }
+        ),
     }));
 
     /**
