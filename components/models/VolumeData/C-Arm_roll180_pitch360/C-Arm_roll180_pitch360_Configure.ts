@@ -7,6 +7,7 @@ const CArm_roll180_pitch360_Configure = {
         rotation: [0, Math.PI / 2, Math.PI / 2] as THREE.Vector3Tuple,
         scale: 1 / 19,
         clim2: { timelapse: 1e-6, accumulate: 5e-6 },
+        climStep: 1e-7,
         areaSize: [1.8, 1.4, 2] as CuboidArgs,
     },
     object3d: {
