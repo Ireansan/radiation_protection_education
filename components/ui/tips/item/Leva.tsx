@@ -11,11 +11,12 @@ export function LevaDataClip({ ...props }) {
                 imgAlt={"img/leva/Data/Clip"}
             >
                 <p>
-                    You can enable or disable each of the four clipping planes:{" "}
-                    the three clipping planes perpendicular to the X, Y, and Z{" "}
-                    axes, and the clipping planes whose position and orientation{" "}
+                    You can enable or disable each of the four clipping planes:
+                    the three clipping planes perpendicular to the X, Y, and Z
+                    axes, and the clipping planes whose position and orientation
                     can be freely changed.
-                    <br />
+                </p>
+                <p>
                     The orientation of each clipping plane can also be reversed.
                 </p>
             </TipsItem>

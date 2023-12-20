@@ -19,12 +19,10 @@ export function TipsItem({
         <>
             <div className={`${style.tipsItem}`}>
                 <div className={`${style.text}`}>{children}</div>
-                <div className={`${style.img}`}>
-                    <img
-                        src={applyBasePath(imgSrc)}
-                        alt={imgAlt}
-                    />
-                </div>
+                <img
+                    src={applyBasePath(imgSrc)}
+                    alt={imgAlt}
+                />
             </div>
         </>
     );

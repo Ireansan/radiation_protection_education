@@ -61,18 +61,17 @@
                 height: 85%;
 
                 .text {
-                    width: 50%;
                     text-align: left;
                     padding: 8px;
+
+                    p {
+                        margin: 6px 0;
+                    }
                 }
 
-                .img {
-                    width: 50%;
+                img {
                     padding: 8px;
-
-                    img {
-                        object-fit: contain;
-                    }
+                    object-fit: contain;
                 }
             }
         }
