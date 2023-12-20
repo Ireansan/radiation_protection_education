@@ -1,7 +1,13 @@
 .tips {
+  width: 32px;
+  height: 32px;
   position: absolute;
-  top: 60px;
-  left: 5px;
+  top: 5px;
+  left: 85px;
+  padding: 2px;
+  background: #007aff;
+  border: 0;
+  border-radius: 2.5px;
 }
 
 .fullscreen {
@@ -45,4 +51,16 @@
   height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
+}
+.fullscreen .foundation .closeButton {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  padding: 2px;
+  left: calc(100% - 36px);
+  top: 4px;
+  background: #007aff;
+  border: 0;
+  border-radius: 2.5px;
+  z-index: 997;
 }/*# sourceMappingURL=tips.module.css.map */

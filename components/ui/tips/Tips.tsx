@@ -37,12 +37,15 @@ export function Tips() {
                 className={`${style.tips}`}
                 onClick={() => set({ tips: true })}
             >
-                <QuestionMark />
+                <QuestionMark sx={{ fontSize: 16 }} />
             </button>
             <div className={`${style.fullscreen} ${!tips && `${style.close}`}`}>
                 <div className={style.foundation}>
-                    <button onClick={() => set({ tips: false })}>
-                        <Close />
+                    <button
+                        className={style.closeButton}
+                        onClick={() => set({ tips: false })}
+                    >
+                        <Close sx={{ fontSize: 16 }} />
                     </button>
                     <Swiper
                         cssMode={true}
