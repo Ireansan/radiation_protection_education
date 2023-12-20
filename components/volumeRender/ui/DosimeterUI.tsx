@@ -93,8 +93,8 @@ function ResultData({
     isXR,
     ...props
 }: ResultDataProps) {
-    const [isDanger, length, isHP] = useMemo(() => {
-        const isHP = typeBar === "subtraction" ? true : false;
+    const [isDanger, length, isAddBar] = useMemo(() => {
+        const isAddBar = typeBar === "addition" ? true : false;
 
         const dose = 120 * coefficient * value;
         const dosePercent = dose / maxHp;
@@ -105,15 +105,15 @@ function ResultData({
         const hpLength = hp < 0 ? 0 : hpPercent > 1.0 ? 100 : 100 * hpPercent;
 
         const isDanger = hp < 0;
-        const length = isHP ? hpLength : doseLength;
+        const length = isAddBar ? doseLength : hpLength;
 
-        return [isDanger, length, isHP];
+        return [isDanger, length, isAddBar];
     }, [value, coefficient, maxHp, typeBar]);
 
-    const [isSub] = useMemo(() => {
-        const isSub = typeValue === "subtraction" ? true : false;
+    const [isAddValue] = useMemo(() => {
+        const isAddValue = typeValue === "addition" ? true : false;
 
-        return [isSub];
+        return [isAddValue];
     }, [typeValue]);
 
     return (
@@ -122,36 +122,29 @@ function ResultData({
                 {/* Bar */}
                 <div className={`${style.bar} ${isXR && `${style.isXR}`}`}>
                     {/* back ground */}
-                    <div className={`${style.bg}`}>
-                        {isHP ? (
-                            <>
-                                {/* Damage Bar */}
-                                <div
-                                    className={`${style.damage} ${
-                                        isDanger && `${style.danger}`
-                                    }`}
-                                >
-                                    {/* HP Bar */}
-                                    <div
-                                        className={`${style.hp}`}
-                                        style={{ width: `${length}%` }}
-                                    />
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                {/* HP Bar */}
-                                <div className={`${style.hp}`}>
-                                    {/* Damage Bar */}
-                                    <div
-                                        className={`${style.damage} ${
-                                            isDanger && `${style.danger}`
-                                        }`}
-                                        style={{ width: `${length}%` }}
-                                    />
-                                </div>
-                            </>
-                        )}
+                    <div
+                        className={`${style.bg} ${
+                            isAddBar && `${style.isAdd}`
+                        }`}
+                    >
+                        {/* Damage Bar */}
+                        <div
+                            className={`${style.damage} 
+                            ${isAddBar ? `${style.isAdd}` : `${style.isSub}`}
+                            ${isDanger && `${style.danger}`}`}
+                        >
+                            {/* HP Bar */}
+                            <div
+                                className={`${style.hp} 
+                                ${
+                                    isAddBar
+                                        ? `${style.isAdd}`
+                                        : `${style.isSub}`
+                                }
+                                ${isAddBar && isDanger && `${style.danger}`}`}
+                                style={{ width: `${length}%` }}
+                            />
+                        </div>
                     </div>
                 </div>
                 {/* Value */}
@@ -159,37 +152,22 @@ function ResultData({
                     className={`${style.numerical} ${isXR && `${style.isXR}`}`}
                 >
                     <div className={`${style.category}`}>{children}</div>
-                    {isSub ? (
-                        <>
-                            <div className={`${style.value}`}>
-                                {Math.round(maxHp - 120 * coefficient * value)}
-                                <span
-                                    className={`${style.maxHp} ${
-                                        isXR && `${style.isXR}`
-                                    }`}
-                                >
-                                    /{maxHp}
-                                </span>
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <div
-                                className={`${style.value} ${
-                                    isDanger && `${style.danger}`
-                                }`}
-                            >
-                                {Math.round(120 * coefficient * value)}
-                                <span
-                                    className={`${style.maxHp} ${
-                                        isXR && `${style.isXR}`
-                                    }`}
-                                >
-                                    /{maxHp}
-                                </span>
-                            </div>
-                        </>
-                    )}
+                    <div
+                        className={`${style.value} ${
+                            isDanger && `${style.danger}`
+                        }`}
+                    >
+                        {isAddValue
+                            ? Math.round(120 * coefficient * value)
+                            : Math.round(maxHp - 120 * coefficient * value)}
+                        <span
+                            className={`${style.maxHp} ${
+                                isXR && `${style.isXR}`
+                            }`}
+                        >
+                            /{maxHp}
+                        </span>
+                    </div>
                 </div>
             </div>
         </>
@@ -338,6 +316,7 @@ export type DosimeterUIProps = {
     nPerYear?: number;
     limitOnce?: number;
     typeOrder?: string;
+    typeData?: string;
     typeBar?: string;
     typeValue?: string;
     isXR?: boolean;
@@ -348,8 +327,9 @@ export function DosimeterUI({
     nPerYear = 500,
     limitOnce = 100,
     typeOrder = "year-once",
-    typeBar = "subtraction",
-    typeValue = "subtraction",
+    typeData = "addition",
+    typeBar = "addition",
+    typeValue = "addition",
     isXR = false,
     activeNames = undefined,
     ...props
@@ -380,7 +360,7 @@ export function DosimeterUI({
      * leva panels
      */
     // Volume
-    const [dosimeterConfig, setVolume] = useControls(() => ({
+    const [dosimeterConfig, setDosimeterConfig] = useControls(() => ({
         Scene: folder({
             Options: folder({
                 "Dosimeter Settings": folder(
@@ -409,14 +389,27 @@ export function DosimeterUI({
                                     options: ["year-once", "once-year"],
                                     label: "order",
                                 },
+                                type_data: {
+                                    value: typeData,
+                                    options: ["addition", "subtraction"],
+                                    label: "data",
+                                    onChange: (e) => {
+                                        setDosimeterConfig({
+                                            type_bar: e,
+                                        });
+                                        setDosimeterConfig({
+                                            type_value: e,
+                                        });
+                                    },
+                                },
                                 type_bar: {
                                     value: typeBar,
-                                    options: ["subtraction", "addition"],
+                                    options: ["addition", "subtraction"],
                                     label: "bar",
                                 },
                                 type_value: {
                                     value: typeValue,
-                                    options: ["subtraction", "addition"],
+                                    options: ["addition", "subtraction"],
                                     label: "value",
                                 },
                             },

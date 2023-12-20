@@ -146,19 +146,39 @@
                     .damage {
                         width: 100%;
                         height: 100%;
-                        background-color: #dead29;
+
+                        &.isAdd {
+                            background-color: #48566b;
+                        }
+
+                        &.isSub {
+                            background-color: #dead29;
+                        }
 
                         &.danger {
                             background-color: #b83100;
                         }
 
+                        .hp {
+                            width: 100%;
+                            height: 100%;
+
+                            &.isAdd {
+                                width: 92%;
+                                height: 92%;
+                                background-color: #c1c7cf;
+                            }
+
+                            &.isSub {
+                                background-color: #56b35d;
+                            }
+
+                            &.danger {
+                                background-color: #b83100;
+                            }
+                        }
                     }
 
-                    .hp {
-                        width: 100%;
-                        height: 100%;
-                        background-color: #56b35d;
-                    }
                 }
             }
 
@@ -184,7 +204,9 @@
                     color: #bcc2d2;
 
                     &.danger {
-                        color: #b83100;
+                        // color: #a12e2e;
+                        // color: #a81818;
+                        color: #eb3535;
                     }
 
                     .maxHp {

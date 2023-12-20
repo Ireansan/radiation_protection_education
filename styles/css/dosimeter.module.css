@@ -123,15 +123,30 @@
 .dose_list .dose .data .bar .bg .damage {
   width: 100%;
   height: 100%;
+}
+.dose_list .dose .data .bar .bg .damage.isAdd {
+  background-color: #48566b;
+}
+.dose_list .dose .data .bar .bg .damage.isSub {
   background-color: #dead29;
 }
 .dose_list .dose .data .bar .bg .damage.danger {
   background-color: #b83100;
 }
-.dose_list .dose .data .bar .bg .hp {
+.dose_list .dose .data .bar .bg .damage .hp {
   width: 100%;
   height: 100%;
+}
+.dose_list .dose .data .bar .bg .damage .hp.isAdd {
+  width: 92%;
+  height: 92%;
+  background-color: #c1c7cf;
+}
+.dose_list .dose .data .bar .bg .damage .hp.isSub {
   background-color: #56b35d;
+}
+.dose_list .dose .data .bar .bg .damage .hp.danger {
+  background-color: #b83100;
 }
 .dose_list .dose .data .numerical {
   height: 15px;
@@ -153,7 +168,7 @@
   color: #bcc2d2;
 }
 .dose_list .dose .data .numerical .value.danger {
-  color: #b83100;
+  color: #eb3535;
 }
 .dose_list .dose .data .numerical .value .maxHp {
   font-size: 0.6rem;
