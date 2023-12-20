@@ -25,17 +25,19 @@ export const HandIKLevaControls = React.forwardRef<
     });
 
     const [ikConfig, setIK] = useControls(() => ({
-        "Hand Position": folder(
+        Player: folder(
             {
-                Left: folder({
-                    LeftDepth: {
-                        value: 0,
+                Hand: folder({
+                    left: {
+                        value: { x: 0, y: 0 },
                         min: 0,
                         max: 1,
-                        label: "Depth",
+                        label: "left",
+                        joystick: "invertY",
                         onChange: (e) => {
                             let position = LeftIKPosition.data.clone();
-                            position.setZ(0.6 * e + LeftIKPosition.init.z);
+                            position.setZ(0.6 * e.x + LeftIKPosition.init.z);
+                            position.setY(0.7 * e.y + LeftIKPosition.init.y);
 
                             LeftIKPosition.data.copy(position);
                             controls.setLocalPosition(
@@ -44,48 +46,16 @@ export const HandIKLevaControls = React.forwardRef<
                             );
                         },
                     },
-                    LeftHeight: {
-                        value: 0,
+                    right: {
+                        value: { x: 0, y: 0 },
                         min: 0,
                         max: 1,
-                        label: "Height",
-                        onChange: (e) => {
-                            let position = LeftIKPosition.data.clone();
-                            position.setY(0.7 * e + LeftIKPosition.init.y);
-
-                            LeftIKPosition.data.copy(position);
-                            controls.setLocalPosition(
-                                "mixamorigLeftHandIK",
-                                position
-                            );
-                        },
-                    },
-                }),
-                Right: folder({
-                    RightDepth: {
-                        value: 0,
-                        min: 0,
-                        max: 1,
-                        label: "Depth",
+                        label: "right",
+                        joystick: "invertY",
                         onChange: (e) => {
                             let position = RightIKPosition.data.clone();
-                            position.setZ(0.6 * e + RightIKPosition.init.z);
-
-                            RightIKPosition.data.copy(position);
-                            controls.setLocalPosition(
-                                "mixamorigRightHandIK",
-                                position
-                            );
-                        },
-                    },
-                    RightHeight: {
-                        value: 0,
-                        min: 0,
-                        max: 1,
-                        label: "Height",
-                        onChange: (e) => {
-                            let position = RightIKPosition.data.clone();
-                            position.setY(0.7 * e + RightIKPosition.init.y);
+                            position.setZ(0.6 * e.x + RightIKPosition.init.z);
+                            position.setY(0.7 * e.y + RightIKPosition.init.y);
 
                             RightIKPosition.data.copy(position);
                             controls.setLocalPosition(
@@ -95,8 +65,8 @@ export const HandIKLevaControls = React.forwardRef<
                         },
                     },
                 }),
-            },
-            { collapsed: true }
+            }
+            // { collapsed: true }
         ),
     }));
 
@@ -115,7 +85,10 @@ export const HandIKLevaControls = React.forwardRef<
 
     return (
         <>
-            <primitive ref={ref} object={controls} />
+            <primitive
+                ref={ref}
+                object={controls}
+            />
             <group ref={group}>{children}</group>
         </>
     );
