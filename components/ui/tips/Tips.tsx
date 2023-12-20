@@ -5,6 +5,7 @@ import { QuestionMark, Close } from "@mui/icons-material";
 
 import { useStore } from "../../../components/store";
 import Test_1 from "./Test_1.mdx";
+import * as TipsItem from "./item";
 
 // Import Swiper styles
 import "swiper/css";
@@ -57,8 +58,11 @@ export function Tips() {
                         modules={[Navigation, Pagination, Mousewheel, Keyboard]}
                         className={style.swiper}
                     >
-                        <SwiperSlide>
+                        {/* <SwiperSlide>
                             <Test_1 />
+                        </SwiperSlide> */}
+                        <SwiperSlide className={style.swiperSlide}>
+                            <TipsItem.LevaDataClip />
                         </SwiperSlide>
                         {test.map((value, index) => (
                             <SwiperSlide

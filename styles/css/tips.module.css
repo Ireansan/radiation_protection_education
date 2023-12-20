@@ -39,7 +39,7 @@
 .fullscreen .foundation .swiperSlide {
   text-align: center;
   font-size: 18px;
-  background: #fff;
+  background: #292d39;
   /* Center slide text vertically */
   display: flex;
   justify-content: center;
@@ -51,6 +51,24 @@
   height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
+}
+.fullscreen .foundation .swiperSlide .tipsItem {
+  display: flex;
+  width: 85%;
+  height: 85%;
+}
+.fullscreen .foundation .swiperSlide .tipsItem .text {
+  width: 50%;
+  text-align: left;
+  padding: 8px;
+}
+.fullscreen .foundation .swiperSlide .tipsItem .img {
+  width: 50%;
+  padding: 8px;
+}
+.fullscreen .foundation .swiperSlide .tipsItem .img img {
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 .fullscreen .foundation .closeButton {
   position: absolute;
