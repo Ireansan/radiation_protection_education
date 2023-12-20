@@ -249,61 +249,38 @@ function DosimeterResult({
                 </div>
                 {/* Datas */}
                 <div className={`${style.result} ${isXR && `${style.isXR}`}`}>
-                    {isYearOnceOrder ? (
-                        <>
-                            <div className={`${style.year}`}>
-                                <MemoResultData
-                                    value={value}
-                                    coefficient={N_perYear * N_perPatient}
-                                    maxHp={20000}
-                                    typeBar={typeBar}
-                                    typeValue={typeValue}
-                                    isXR={isXR}
-                                >
-                                    Year
-                                </MemoResultData>
-                            </div>
-                            <div className={`${style.once}`}>
-                                <MemoResultData
-                                    value={value}
-                                    coefficient={N_perPatient}
-                                    maxHp={Limit_once}
-                                    typeBar={typeBar}
-                                    typeValue={typeValue}
-                                    isXR={isXR}
-                                >
-                                    Once
-                                </MemoResultData>
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <div className={`${style.once}`}>
-                                <MemoResultData
-                                    value={value}
-                                    coefficient={N_perPatient}
-                                    maxHp={Limit_once}
-                                    typeBar={typeBar}
-                                    typeValue={typeValue}
-                                    isXR={isXR}
-                                >
-                                    Once
-                                </MemoResultData>
-                            </div>
-                            <div className={`${style.year}`}>
-                                <MemoResultData
-                                    value={value}
-                                    coefficient={N_perYear * N_perPatient}
-                                    maxHp={20000}
-                                    typeBar={typeBar}
-                                    typeValue={typeValue}
-                                    isXR={isXR}
-                                >
-                                    Year
-                                </MemoResultData>
-                            </div>
-                        </>
-                    )}
+                    <div
+                        className={`${style.year} ${
+                            !isYearOnceOrder && style.isOnceYearOrder
+                        }`}
+                    >
+                        <MemoResultData
+                            value={value}
+                            coefficient={N_perYear * N_perPatient}
+                            maxHp={20000}
+                            typeBar={typeBar}
+                            typeValue={typeValue}
+                            isXR={isXR}
+                        >
+                            Year
+                        </MemoResultData>
+                    </div>
+                    <div
+                        className={`${style.once} ${
+                            !isYearOnceOrder && style.isOnceYearOrder
+                        }`}
+                    >
+                        <MemoResultData
+                            value={value}
+                            coefficient={N_perPatient}
+                            maxHp={Limit_once}
+                            typeBar={typeBar}
+                            typeValue={typeValue}
+                            isXR={isXR}
+                        >
+                            Once
+                        </MemoResultData>
+                    </div>
                 </div>
             </div>
         </>
@@ -406,11 +383,13 @@ export function DosimeterUI({
                                     value: typeBar,
                                     options: ["addition", "subtraction"],
                                     label: "bar",
+                                    render: () => false,
                                 },
                                 type_value: {
                                     value: typeValue,
                                     options: ["addition", "subtraction"],
                                     label: "value",
+                                    render: () => false,
                                 },
                             },
                             { collapsed: true }

@@ -108,6 +108,10 @@
             .year {
                 width: 60%;
 
+                &.isOnceYearOrder {
+                    order: 1;
+                }
+
                 .data .bar .bg {
                     height: 30%;
                 }
@@ -115,6 +119,11 @@
 
             .once {
                 width: 40%;
+                order: 1;
+
+                &.isOnceYearOrder {
+                    order: 0;
+                }
 
                 .data .bar .bg {
                     height: 20%;

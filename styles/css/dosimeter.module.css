@@ -92,11 +92,18 @@
 .dose_list .dose .result .year {
   width: 60%;
 }
+.dose_list .dose .result .year.isOnceYearOrder {
+  order: 1;
+}
 .dose_list .dose .result .year .data .bar .bg {
   height: 30%;
 }
 .dose_list .dose .result .once {
   width: 40%;
+  order: 1;
+}
+.dose_list .dose .result .once.isOnceYearOrder {
+  order: 0;
 }
 .dose_list .dose .result .once .data .bar .bg {
   height: 20%;
