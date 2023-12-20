@@ -319,10 +319,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                                 mainGroup={timelapseRef}
                                 subGroup={accumulateRef}
                             />
-                            <VolumeParameterControls
-                                object={ref}
-                                colormap="jet"
-                            />
+                            <VolumeParameterControls object={ref} />
                             <VolumeXYZClippingControls
                                 object={ref}
                                 planeSize={2}
@@ -548,14 +545,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                     </Canvas>
                     <Loader />
                     <SceneOptionsPanel activateStats={false} />
-                    {/* <PrototypeAnimationControls
-                        objects={[nocurtainRef, curtainRef]}
-                        mainGroup={timelapseRef}
-                        subGroup={accumulateRef}
-                        audioSrc={`/models/nrrd/x-ray/nocurtain_animation/x-ray_nocurtain.mp3`}
-                        speed={8.0}
-                        customSpeed={[8.0, 16.0]}
-                    /> */}
+
                     <audio
                         src={applyBasePath(audioPath)}
                         ref={audioRef}
@@ -567,6 +557,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                         speed={8.0}
                         customSpeed={[8.0, 16.0]}
                     />
+
                     {objectVisibles.dosimeterUI &&
                     props.availables.dosimeter ? (
                         <>
