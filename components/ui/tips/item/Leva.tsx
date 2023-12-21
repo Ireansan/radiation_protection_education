@@ -10,6 +10,7 @@ export function LevaDataClip({ ...props }) {
                 imgSrc={"/img/manual/experiment/01/png/leva/Data/Clip.png"}
                 imgAlt={"img/leva/Data/Clip"}
             >
+                <h3>Data/Clip</h3>
                 <p>
                     You can enable or disable each of the four clipping planes:
                     the three clipping planes perpendicular to the X, Y, and Z

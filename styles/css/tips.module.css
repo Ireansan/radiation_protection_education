@@ -17,7 +17,9 @@
   width: 100%;
   height: 100%;
   display: flex;
-  z-index: 9999;
+  z-index: 9998;
+  background-color: rgba(175, 176, 186, 0.2431372549);
+  transition: all 0.25s;
 }
 .fullscreen.close {
   pointer-events: none;
@@ -27,8 +29,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 800px;
-  height: 450px;
+  width: 960px;
+  height: 540px;
   transform: translate(-50%, -50%);
 }
 .fullscreen .foundation .swiper {
@@ -61,10 +63,18 @@
   text-align: left;
   padding: 8px;
 }
+.fullscreen .foundation .swiperSlide .tipsItem .text h3 {
+  margin: 12px 0;
+  font-size: 1.25em;
+  color: #fefefe;
+}
 .fullscreen .foundation .swiperSlide .tipsItem .text p {
-  margin: 6px 0;
+  margin: 8px 0 8px 16px;
+  color: #A3AABF;
 }
 .fullscreen .foundation .swiperSlide .tipsItem img {
+  max-width: 100%;
+  height: auto;
   padding: 8px;
   -o-object-fit: contain;
      object-fit: contain;
