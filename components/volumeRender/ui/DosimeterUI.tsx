@@ -342,23 +342,28 @@ export function DosimeterUI({
             Options: folder({
                 "Dosimeter Settings": folder(
                     {
-                        N_perPatient: {
-                            value: nPerPatient,
-                            min: 1,
-                            step: 1,
-                            label: "N (/patient)",
-                        },
-                        N_perYear: {
-                            value: nPerYear,
-                            min: 1,
-                            step: 1,
-                            label: "N (/year)",
-                        },
-                        Limit_once: {
-                            value: limitOnce,
-                            min: 1,
-                            label: "Limit (/once)",
-                        },
+                        Parameter: folder(
+                            {
+                                N_perPatient: {
+                                    value: nPerPatient,
+                                    min: 1,
+                                    step: 1,
+                                    label: "N (/patient)",
+                                },
+                                N_perYear: {
+                                    value: nPerYear,
+                                    min: 1,
+                                    step: 1,
+                                    label: "N (/year)",
+                                },
+                                Limit_once: {
+                                    value: limitOnce,
+                                    min: 1,
+                                    label: "Limit (/once)",
+                                },
+                            },
+                            { order: -1, collapsed: true }
+                        ),
                         Layout: folder(
                             {
                                 type_order: {
@@ -392,10 +397,10 @@ export function DosimeterUI({
                                     render: () => false,
                                 },
                             },
-                            { collapsed: true }
+                            { order: 1, collapsed: true }
                         ),
                     },
-                    { collapsed: true }
+                    { order: -1, collapsed: true }
                 ),
             }),
         }),

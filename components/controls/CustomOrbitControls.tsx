@@ -70,7 +70,7 @@ export function CustomOrbitControls({
                             },
                         },
                     },
-                    { collapsed: true }
+                    { order: -2, collapsed: true }
                 ),
             }),
         }),

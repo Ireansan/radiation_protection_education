@@ -14,7 +14,7 @@ export function DebugPanel() {
             {
                 debug: { value: debug, onChange: (debug) => set({ debug }) },
             },
-            { collapsed: true }
+            { order: 1, collapsed: true }
         ),
     }));
 
