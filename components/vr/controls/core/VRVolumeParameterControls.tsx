@@ -29,7 +29,6 @@ export const VRVolumeParameterControls = React.forwardRef<
         colormap = "viridis",
         renderstyle = "mip",
         isothreshold = 0.15,
-        activeClim = false,
         ...props
     },
     ref
@@ -85,24 +84,22 @@ export const VRVolumeParameterControls = React.forwardRef<
                 .onChange((e: number) => {
                     controls.opacity = e;
                 });
-            if (activeClim) {
-                folder
-                    .add(parameters, "clim1", clim1, 1)
-                    .min(0)
-                    .max(1)
-                    .step(1e-2)
-                    .onChange((e: number) => {
-                        controls.clim1 = e;
-                    });
-                folder
-                    .add(parameters, "clim2", clim2, 1)
-                    .min(0)
-                    .max(1)
-                    .step(1e-2)
-                    .onChange((e: number) => {
-                        controls.clim2 = e;
-                    });
-            }
+            folder
+                .add(parameters, "clim1", clim1, 1)
+                .min(0)
+                .max(1)
+                .step(1e-2)
+                .onChange((e: number) => {
+                    controls.clim1 = e;
+                });
+            folder
+                .add(parameters, "clim2", clim2, 1)
+                .min(0)
+                .max(1)
+                .step(1e-2)
+                .onChange((e: number) => {
+                    controls.clim2 = e;
+                });
             folder
                 .add(parameters, "colormap")
                 .min(0)

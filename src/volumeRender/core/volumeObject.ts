@@ -32,8 +32,8 @@ class VolumeObject extends VolumeBase {
     material: THREE.ShaderMaterial;
 
     constructor(
-        isDose = false,
         volume = new Volume(),
+        isDose = false,
         isPerspective = false,
         coefficient = 1.0,
         boardCoefficient = 0.01,

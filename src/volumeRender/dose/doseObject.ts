@@ -24,8 +24,8 @@ class DoseObject extends VolumeObject {
     ) {
         // Init
         super(
-            true,
             volume,
+            true,
             isPerspective,
             coefficient,
             offset,
