@@ -73,7 +73,7 @@
   color: #A3AABF;
 }
 .fullscreen .foundation .swiperSlide .tipsItem img {
-  max-width: 100%;
+  max-width: 50%;
   height: auto;
   padding: 8px;
   -o-object-fit: contain;

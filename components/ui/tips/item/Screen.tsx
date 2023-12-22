@@ -21,10 +21,7 @@ export function ScreenStructure({ ...props }) {
 export function Screen3DSpace({ ...props }) {
     return (
         <>
-            <TipsItem
-                imgSrc={"/img/manual/experiment/01/png/All/screen_all.png "}
-                imgAlt={"img/Screen"}
-            >
+            <TipsItem>
                 <h3>Screen - 3D Space</h3>
                 <p>
                     Dose distribution data, 3D objects as players, and{" "}
