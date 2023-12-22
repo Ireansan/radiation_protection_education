@@ -30,7 +30,10 @@ import {
 // ==========
 // Model
 import { Board_Configure } from "../../../components/models";
-import { CustomYBotIK } from "../../../components/models/Player";
+import {
+    CustomYBotIK,
+    SelfMadePlayer,
+} from "../../../components/models/Player";
 import {
     HandIKLevaControls,
     HandIKPivotControls,
@@ -147,31 +150,37 @@ function VisualizationXRay({ ...props }: PageProps) {
     const audioPath = `/models/nrrd/x-ray/nocurtain_animation/x-ray_nocurtain.mp3`;
     const names = [
         {
-            name: "mixamorigNeck",
-            displayName: "Neck",
-            category: "neck",
-            coefficient: 0.1,
-        },
-        {
-            name: "mixamorigLeftEye",
+            name: "mixamorigLeftEyeDosimeter",
             displayName: "Left Eye",
             category: "goggle",
             coefficient: 0.1,
         },
         {
-            name: "mixamorigRightEye",
+            name: "mixamorigRightEyeDosimeter",
             displayName: "Right Eye",
             category: "goggle",
             coefficient: 0.1,
         },
         {
-            name: "mixamorigLeftHand",
+            name: "mixamorigNeckDosimeter",
+            displayName: "Neck",
+            category: "neck",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigSpine1Dosimeter",
+            displayName: "Chest",
+            category: "apron",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigLeftHandDosimeter",
             displayName: "Left Hand",
             category: "glove",
             coefficient: 0.1,
         },
         {
-            name: "mixamorigRightHand",
+            name: "mixamorigRightHandDosimeter",
             displayName: "Right Hand",
             category: "glove",
             coefficient: 0.1,
@@ -410,7 +419,8 @@ function VisualizationXRay({ ...props }: PageProps) {
                                             console.log("Player", e)
                                         }
                                     >
-                                        <CustomYBotIK />
+                                        <SelfMadePlayer />
+                                        {/* <CustomYBotIK /> */}
                                         {/* <HandIKPivotControls
                                             object={yBotRef}
                                             scale={35}
@@ -571,7 +581,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                     props.availables.experimentUI ? (
                         <>{/* <ExperimentCheckList /> */}</>
                     ) : null}
-                    <Exercise />
+                    {/* <Exercise /> */}
 
                     <Tips />
                 </div>
