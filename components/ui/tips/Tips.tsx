@@ -47,38 +47,82 @@ export function Tips() {
                     >
                         {/* ================================================== */}
                         {/* Screen */}
-                        <ITEM.ScreenStructure />
-                        <ITEM.Screen3DSpace />
-                        <ITEM.ScreenOperationPanel />
-                        <ITEM.ScreenUIDosimeter1 />
-                        <ITEM.ScreenUIDosimeter2 />
-                        <ITEM.ScreenUIDosimeter3 />
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.ScreenStructure />
+                        </SwiperSlide>
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.Screen3DSpace />
+                        </SwiperSlide>
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.ScreenOperationPanel />
+                        </SwiperSlide>
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.ScreenUIDosimeter1 />
+                        </SwiperSlide>
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.ScreenUIDosimeter2 />
+                        </SwiperSlide>
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.ScreenUIDosimeter3 />
+                        </SwiperSlide>
                         {/* ================================================== */}
                         {/* Scene Object */}
-                        <ITEM.SceneObjectManual />
-                        <ITEM.SceneObjectPlayer />
-                        <ITEM.SceneObjectShield />
-                        <ITEM.SceneObjectClip1 />
-                        <ITEM.SceneObjectClip2 />
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.SceneObjectManual />
+                        </SwiperSlide>
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.SceneObjectPlayer />
+                        </SwiperSlide>
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.SceneObjectShield />
+                        </SwiperSlide>
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.SceneObjectClip1 />
+                        </SwiperSlide>
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.SceneObjectClip2 />
+                        </SwiperSlide>
                         {/* ================================================== */}
                         {/* Operation Panel */}
                         {/* -------------------------------------------------- */}
                         {/* Leva/Scene */}
-                        <ITEM.LevaSceneGimmickXRay />
-                        <ITEM.LevaSceneGimmickCArm />
-                        <ITEM.LevaSceneOptions />
-                        <ITEM.LevaSceneOptionsCameraControlsSettings />
-                        <ITEM.LevaSceneOptionsDosimeterSettings />
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.LevaSceneGimmickXRay />
+                        </SwiperSlide>
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.LevaSceneGimmickCArm />
+                        </SwiperSlide>
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.LevaSceneOptions />
+                        </SwiperSlide>
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.LevaSceneOptionsCameraControlsSettings />
+                        </SwiperSlide>
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.LevaSceneOptionsDosimeterSettings />
+                        </SwiperSlide>
                         {/* -------------------------------------------------- */}
                         {/* Leva/Player */}
-                        <ITEM.LevaPlayerEquipments />
-                        <ITEM.LevaPlayerHands />
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.LevaPlayerEquipments />
+                        </SwiperSlide>
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.LevaPlayerHands />
+                        </SwiperSlide>
                         {/* -------------------------------------------------- */}
                         {/* Leva/Data */}
-                        <ITEM.LevaDataMode />
-                        <ITEM.LevaDataAnimation />
-                        <ITEM.LevaDataClip />
-                        <ITEM.LevaDataDetail />
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.LevaDataMode />
+                        </SwiperSlide>
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.LevaDataAnimation />
+                        </SwiperSlide>
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.LevaDataClip />
+                        </SwiperSlide>
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.LevaDataDetail />
+                        </SwiperSlide>
                     </Swiper>
                 </div>
             </div>

@@ -19,17 +19,15 @@ export function TipsItem({
 }: TipsItemProps) {
     return (
         <>
-            <SwiperSlide className={style.swiperSlide}>
-                <div className={`${style.tipsItem}`}>
-                    <div className={`${style.text}`}>{children}</div>
-                    {imgSrc && (
-                        <img
-                            src={applyBasePath(imgSrc)}
-                            alt={imgAlt}
-                        />
-                    )}
-                </div>
-            </SwiperSlide>
+            <div className={`${style.tipsItem}`}>
+                <div className={`${style.text}`}>{children}</div>
+                {imgSrc && (
+                    <img
+                        src={applyBasePath(imgSrc)}
+                        alt={imgAlt}
+                    />
+                )}
+            </div>
         </>
     );
 }
