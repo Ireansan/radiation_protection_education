@@ -4,8 +4,7 @@ import { Navigation, Pagination, Mousewheel, Keyboard } from "swiper/modules";
 import { QuestionMark, Close } from "@mui/icons-material";
 
 import { useStore } from "../../../components/store";
-import Test_1 from "./Test_1.mdx";
-import * as TipsItem from "./item";
+import * as ITEM from "./item";
 
 // Import Swiper styles
 import "swiper/css";
@@ -19,18 +18,6 @@ import style from "../../../styles/css/tips.module.css";
  */
 export function Tips() {
     const [set, tips] = useStore((state) => [state.set, state.tips]);
-
-    const test = [
-        "Slide 1",
-        "Slide 2",
-        "Slide 3",
-        "Slide 4",
-        "Slide 5",
-        "Slide 6",
-        "Slide 7",
-        "Slide 8",
-        "Slide 9",
-    ];
 
     return (
         <>
@@ -58,20 +45,31 @@ export function Tips() {
                         modules={[Navigation, Pagination, Mousewheel, Keyboard]}
                         className={style.swiper}
                     >
-                        {/* <SwiperSlide>
-                            <Test_1 />
-                        </SwiperSlide> */}
-                        <SwiperSlide className={style.swiperSlide}>
-                            <TipsItem.LevaDataClip />
-                        </SwiperSlide>
-                        {test.map((value, index) => (
-                            <SwiperSlide
-                                key={index}
-                                className={style.swiperSlide}
-                            >
-                                {value}
-                            </SwiperSlide>
-                        ))}
+                        {/* ================================================== */}
+                        {/* Screen */}
+                        <ITEM.ScreenStructure />
+                        {/* ================================================== */}
+                        {/* Canvas */}
+                        <ITEM.CanvasPlayer />
+                        <ITEM.CanvasShield />
+                        {/* ================================================== */}
+                        {/* Operation Panel */}
+                        {/* -------------------------------------------------- */}
+                        {/* Leva/Scene */}
+                        <ITEM.LevaSceneGimmick />
+                        <ITEM.LevaSceneOptions />
+                        <ITEM.LevaSceneOptionsCameraControls />
+                        <ITEM.LevaSceneOptionsDosimeterConfig />
+                        {/* -------------------------------------------------- */}
+                        {/* Leva/Player */}
+                        <ITEM.LevaPlayerEquipments />
+                        <ITEM.LevaPlayerHands />
+                        {/* -------------------------------------------------- */}
+                        {/* Leva/Data */}
+                        <ITEM.LevaDataMode />
+                        <ITEM.LevaDataAnimation />
+                        <ITEM.LevaDataClip />
+                        <ITEM.LevaDataDetail />
                     </Swiper>
                 </div>
             </div>
