@@ -1,3 +1,3 @@
 export * from "./Leva";
-export * from "./CanvasItem";
+export * from "./SceneObjects";
 export * from "./Screen";

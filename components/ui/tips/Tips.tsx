@@ -48,18 +48,27 @@ export function Tips() {
                         {/* ================================================== */}
                         {/* Screen */}
                         <ITEM.ScreenStructure />
+                        <ITEM.Screen3DSpace />
+                        <ITEM.ScreenOperationPanel />
+                        <ITEM.ScreenUIDosimeter1 />
+                        <ITEM.ScreenUIDosimeter2 />
+                        <ITEM.ScreenUIDosimeter3 />
                         {/* ================================================== */}
-                        {/* Canvas */}
-                        <ITEM.CanvasPlayer />
-                        <ITEM.CanvasShield />
+                        {/* Scene Object */}
+                        <ITEM.SceneObjectManual />
+                        <ITEM.SceneObjectPlayer />
+                        <ITEM.SceneObjectShield />
+                        <ITEM.SceneObjectClip1 />
+                        <ITEM.SceneObjectClip2 />
                         {/* ================================================== */}
                         {/* Operation Panel */}
                         {/* -------------------------------------------------- */}
                         {/* Leva/Scene */}
-                        <ITEM.LevaSceneGimmick />
+                        <ITEM.LevaSceneGimmickXRay />
+                        <ITEM.LevaSceneGimmickCArm />
                         <ITEM.LevaSceneOptions />
-                        <ITEM.LevaSceneOptionsCameraControls />
-                        <ITEM.LevaSceneOptionsDosimeterConfig />
+                        <ITEM.LevaSceneOptionsCameraControlsSettings />
+                        <ITEM.LevaSceneOptionsDosimeterSettings />
                         {/* -------------------------------------------------- */}
                         {/* Leva/Player */}
                         <ITEM.LevaPlayerEquipments />
