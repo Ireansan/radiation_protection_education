@@ -61,6 +61,9 @@ import {
     VolumeParameterControls,
     VolumeXYZClippingControls,
 } from "../../components/volumeRender";
+// FIXME:
+import { PrototypeAnimationControls } from "../../components/volumeRender/controls/dose/PrototypeAnimationControls";
+import { PrototypeAnimationControlsUI } from "../../components/volumeRender/ui/PrototypeAnimationControlsUI";
 
 // ==========
 // UI
@@ -292,6 +295,18 @@ function XRayVR() {
 
                             {/* -------------------------------------------------- */}
                             {/* Volume Controls */}
+                            <DoseAnimationControls
+                                objects={[
+                                    nocurtainRef,
+                                    // nocurtain15x15Ref,
+                                    curtainRef,
+                                ]}
+                                mainGroup={timelapseRef}
+                                subGroup={accumulateRef}
+                                duration={16}
+                                speed={8.0}
+                                customSpeed={[8.0, 16.0]}
+                            />
 
                             {/* Dosimeter */}
                             <DosimeterControls
@@ -392,36 +407,25 @@ function XRayVR() {
 
                             <VRUI>
                                 <VRStats
-                                    position={[-0.4, 1.25, -2]}
+                                    position={[-0.7, 2.25, -1]}
                                     rotation={[0.124, 0.196, -0.024]}
                                     scale={3}
                                 />
                                 <VRDosimeterUI
-                                    position={[-0.4, 0.7, -2]}
-                                    rotation={[-0.149, 0.195, 0.0291]}
-                                    scale={6}
+                                    position={[-0.7, 1.75, -1]}
+                                    rotation={[0.124, 0.196, -0.024]}
+                                    scale={4}
                                 />
                                 <VRDoseEquipmentsUI
-                                    position={[-1.5, 1.25, 1.5]}
+                                    position={[-1.5, 1.25, -0.325]}
                                     rotation={[0, Math.PI / 2, 0]}
                                     scale={3}
-                                />
-                                <VRDoseAnimationControls
-                                    // position={[-0.325, 0, 0.1]}
-                                    // rotation={[0, Math.PI / 6, 0]}
-                                    position={[-1.5, 1.25, 0.325]}
-                                    rotation={[0, Math.PI / 2, 0]}
-                                    scale={3}
-                                    objects={[nocurtainRef, curtainRef]}
-                                    mainGroup={timelapseRef}
-                                    subGroup={accumulateRef}
-                                    duration={16}
-                                    customSpeed={[8.0, 16.0]}
                                 />
                             </VRUI>
                         </XR>
                     </Canvas>
                 </div>
+
                 <DosimeterUI />
                 <DosimeterUI
                     isXR

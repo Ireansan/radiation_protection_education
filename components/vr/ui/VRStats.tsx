@@ -12,7 +12,7 @@ export function VRStats({ ...props }: JSX.IntrinsicElements["group"]) {
     const { gl, camera } = useThree();
     const group = React.useMemo(
         () => new InteractiveGroup(gl, camera),
-        [gl, camera],
+        [gl, camera]
     );
     const [stats, statsMesh] = React.useMemo(() => {
         // Add stats.js
@@ -44,7 +44,10 @@ export function VRStats({ ...props }: JSX.IntrinsicElements["group"]) {
     return (
         <>
             {/*  */}
-            <primitive object={group} {...props} />
+            <primitive
+                object={group}
+                {...props}
+            />
         </>
     );
 }
