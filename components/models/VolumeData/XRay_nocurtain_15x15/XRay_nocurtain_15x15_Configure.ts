@@ -7,6 +7,10 @@ const XRay_nocurtain_15x15_Configure = {
         rotation: [0, Math.PI, -Math.PI / 2] as THREE.Vector3Tuple,
         scale: 1 / 19,
         areaSize: [2.2, 1.2, 3.1] as CuboidArgs,
+        local: {
+            position: [-13, 8, 10] as THREE.Vector3Tuple, // local position
+            scale: 0.8,
+        },
     },
     object3d: {
         position: [-0.195, 2.05, -0.19] as THREE.Vector3Tuple, // world position

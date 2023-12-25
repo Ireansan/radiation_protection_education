@@ -191,10 +191,12 @@ function VisualizationXRay({ ...props }: PageProps) {
 
     const timelapseRef = useRef<DoseGroup>(null);
     const nocurtainRef = useRef<DoseAnimationObject>(null);
+    const nocurtain15x15Ref = useRef<DoseAnimationObject>(null);
     const curtainRef = useRef<DoseAnimationObject>(null);
 
     const accumulateRef = useRef<DoseGroup>(null);
     const nocurtainAccumuRef = useRef<DoseGroup>(null);
+    const nocurtain15x15AccumuRef = useRef<DoseGroup>(null);
     const curtainAccumuRef = useRef<DoseGroup>(null);
 
     const originObjRef = useRef<THREE.Mesh>(null);
@@ -206,28 +208,30 @@ function VisualizationXRay({ ...props }: PageProps) {
 
     const ToggledDebug = useToggle(Debug, "debug");
 
+    const options = ["nocurtain", "nocurtain 15x15", "curtain"];
+    const refs = [
+        { time: nocurtainRef, accumu: nocurtainAccumuRef },
+        { time: nocurtain15x15Ref, accumu: nocurtain15x15AccumuRef },
+        { time: curtainRef, accumu: curtainAccumuRef, other: curtainObjRef },
+    ];
     const [,] = useControls(() => ({
         Scene: folder({
             Gimmick: folder({
                 curtain: {
-                    value: false,
+                    options: options,
+                    value: options[0],
                     onChange: (e) => {
-                        nocurtainRef.current
-                            ? (nocurtainRef.current.visible = !e)
-                            : null;
-                        nocurtainAccumuRef.current
-                            ? (nocurtainAccumuRef.current.visible = !e)
-                            : null;
+                        const visibles = options.map((value) => value === e);
+                        console.log(visibles);
 
-                        curtainRef.current
-                            ? (curtainRef.current.visible = e)
-                            : null;
-                        curtainAccumuRef.current
-                            ? (curtainAccumuRef.current.visible = e)
-                            : null;
-                        curtainObjRef.current
-                            ? (curtainObjRef.current.visible = e)
-                            : null;
+                        visibles.forEach((value, index) => {
+                            let refTime = refs[index].time.current;
+                            refTime ? (refTime.visible = value) : null;
+                            let refAccumu = refs[index].accumu.current;
+                            refAccumu ? (refAccumu.visible = value) : null;
+                            let refOther = refs[index].other?.current;
+                            refOther ? (refOther.visible = value) : null;
+                        });
                     },
                 },
             }),
@@ -280,6 +284,24 @@ function VisualizationXRay({ ...props }: PageProps) {
                                     >
                                         <VOLUMEDATA.XRay_nocurtain_all_Animation />
                                     </doseAnimationObject>
+                                    {/* X-Ray Dose, no curtain 15x15*/}
+                                    <doseAnimationObject
+                                        ref={nocurtain15x15Ref}
+                                        name={"x-ray_animation_nocurtain_15x15"}
+                                        position={
+                                            VOLUMEDATA
+                                                .XRay_nocurtain_15x15_Configure
+                                                .volume.local.position
+                                        }
+                                        scale={
+                                            VOLUMEDATA
+                                                .XRay_nocurtain_15x15_Configure
+                                                .volume.local.scale
+                                        }
+                                        visible={false}
+                                    >
+                                        <VOLUMEDATA.XRay_nocurtain_15x15_all_Animation />
+                                    </doseAnimationObject>
                                     {/* X-Ray Dose, curtain */}
                                     <doseAnimationObject
                                         ref={curtainRef}
@@ -301,6 +323,26 @@ function VisualizationXRay({ ...props }: PageProps) {
                                         name={"x-ray_accumulate_nocurtain"}
                                     >
                                         <VOLUMEDATA.XRay_nocurtain_all_accumulate />
+                                    </doseGroup>
+                                    {/* X-Ray Dose, no curtain 15x15, Accumulate */}
+                                    <doseGroup
+                                        ref={nocurtain15x15AccumuRef}
+                                        name={
+                                            "x-ray_accumulate_nocurtain_15x15"
+                                        }
+                                        position={
+                                            VOLUMEDATA
+                                                .XRay_nocurtain_15x15_Configure
+                                                .volume.local.position
+                                        }
+                                        scale={
+                                            VOLUMEDATA
+                                                .XRay_nocurtain_15x15_Configure
+                                                .volume.local.scale
+                                        }
+                                        visible={false}
+                                    >
+                                        <VOLUMEDATA.XRay_nocurtain_15x15_all_accumulate />
                                     </doseGroup>
                                     {/* X-Ray Dose, curtain, Accumulate */}
                                     <doseGroup
@@ -325,7 +367,11 @@ function VisualizationXRay({ ...props }: PageProps) {
                             /> */}
                             <PrototypeAnimationControls
                                 audioRef={audioRef}
-                                objects={[nocurtainRef, curtainRef]}
+                                objects={[
+                                    nocurtainRef,
+                                    nocurtain15x15Ref,
+                                    curtainRef,
+                                ]}
                                 mainGroup={timelapseRef}
                                 subGroup={accumulateRef}
                             />
@@ -350,6 +396,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                                         names={names}
                                         targets={[
                                             nocurtainAccumuRef,
+                                            nocurtain15x15AccumuRef,
                                             curtainAccumuRef,
                                         ]}
                                     />
