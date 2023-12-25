@@ -138,7 +138,7 @@ export function ScreenUIDosimeter3({ ...props }) {
                     <tr>
                         <td>Shield</td>
                         <td>
-                            <div align="center">
+                            <div style={{ alignItems: "center" }}>
                                 <img
                                     src={imgPath[0]}
                                     width="25%"
@@ -149,7 +149,7 @@ export function ScreenUIDosimeter3({ ...props }) {
                     <tr>
                         <td>Goggle</td>
                         <td>
-                            <div align="center">
+                            <div style={{ alignItems: "center" }}>
                                 <img
                                     src={imgPath[1]}
                                     width="25%"
@@ -160,7 +160,7 @@ export function ScreenUIDosimeter3({ ...props }) {
                     <tr>
                         <td>Neck Guard</td>
                         <td>
-                            <div align="center">
+                            <div style={{ alignItems: "center" }}>
                                 <img
                                     src={imgPath[2]}
                                     width="25%"
@@ -171,7 +171,7 @@ export function ScreenUIDosimeter3({ ...props }) {
                     <tr>
                         <td>Apron</td>
                         <td>
-                            <div align="center">
+                            <div style={{ alignItems: "center" }}>
                                 <img
                                     src={imgPath[3]}
                                     width="25%"
@@ -182,7 +182,7 @@ export function ScreenUIDosimeter3({ ...props }) {
                     <tr>
                         <td>Glove</td>
                         <td>
-                            <div align="center">
+                            <div style={{ alignItems: "center" }}>
                                 <img
                                     src={imgPath[4]}
                                     width="25%"
