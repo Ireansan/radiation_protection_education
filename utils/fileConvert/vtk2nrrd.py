@@ -11,6 +11,7 @@ def vtk2nrrd(input_path, out_path, cell_id=1):
 
     # cell name
     cell_name = grid.array_names[cell_id]
+    # print(grid.array_names)
     # size
     sizes = np.array(grid.extent[1::2]) - np.array(grid.extent[0::2])
     sizes = sizes.tolist()
