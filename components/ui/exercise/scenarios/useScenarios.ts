@@ -63,8 +63,12 @@ export function useScenario(scenearioConfig: ScenearioConfig) {
     // Dose values
     const [doseValues, dosimeterResultsLength] = useMemo(() => {
         const doseValues = dosimeterResults.map((value) => {
-            const doseValue = value.dose.reduce((acculator, currentValue) =>
-                acculator.data > currentValue.data ? acculator : currentValue
+            const doseValue = value.dose.reduce(
+                (acculator, currentValue) =>
+                    acculator.data > currentValue.data
+                        ? acculator
+                        : currentValue,
+                { data: 0, state: [] }
             );
 
             return {
