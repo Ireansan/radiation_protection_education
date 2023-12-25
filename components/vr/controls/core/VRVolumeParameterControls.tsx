@@ -66,6 +66,9 @@ export const VRVolumeParameterControls = React.forwardRef<
                             value: opacity,
                             min: 0.05,
                             max: 1,
+                            onChange: (e) => {
+                                controls.opacity = e;
+                            },
                         },
                         clim: {
                             value: [clim1, clim2],
@@ -523,9 +526,9 @@ export const VRVolumeParameterControls = React.forwardRef<
 
         const distance = origin.distanceTo(playerPosition);
         // const coefficient = distance < radius ? 1 / (distance - radius) : 1.0;
-        const coefficient = distance < radius ? distance / radius : 1.0;
+        const visible = distance > radius;
 
-        controls.opacity = coefficient * volumeConfig.opacity;
+        controls.object ? (controls.object.visible = visible) : null;
     });
 
     return controls ? (
