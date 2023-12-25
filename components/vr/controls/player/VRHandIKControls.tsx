@@ -1,9 +1,9 @@
 import React from "react";
-import { useThree } from "@react-three/fiber";
-import { useController } from "@react-three/xr";
+import { useThree, useFrame } from "@react-three/fiber";
+import { useController, useXREvent } from "@react-three/xr";
 
 import { IKControls as IKControlsImpl } from "../../../../src";
-import { useFrame } from "@react-three/fiber";
+import { useStore } from "../../../store";
 
 type VRHandIKControlsProps = {
     children?: React.ReactElement<THREE.Object3D>;
@@ -13,6 +13,12 @@ export const VRHandIKControls = React.forwardRef<
     IKControlsImpl,
     VRHandIKControlsProps
 >(function VRHandIKControls({ children, object }, ref) {
+    const [debug, follow, set] = useStore((state) => [
+        state.debug,
+        state.follow,
+        state.set,
+    ]);
+
     const { scene } = useThree();
     const leftController = useController("left");
     const rightController = useController("right");
@@ -37,31 +43,39 @@ export const VRHandIKControls = React.forwardRef<
         };
     }, [scene, controls]);
 
+    useXREvent("squeeze", (event) => {
+        console.log("Squeeze");
+        set((state) => ({ follow: !state.follow }));
+    });
+
     useFrame(() => {
         // Left Hand
-        if (leftController) {
+        if (leftController && follow) {
             const { grip: controller } = leftController;
 
             controls.setWorldPosition(
                 "mixamorigLeftHandIK",
-                controller.position,
+                controller.position
             );
         }
 
         // Right Hand
-        if (rightController) {
+        if (rightController && follow) {
             const { grip: controller } = rightController;
 
             controls.setWorldPosition(
                 "mixamorigRightHandIK",
-                controller.position,
+                controller.position
             );
         }
     });
 
     return (
         <>
-            <primitive ref={ref} object={controls} />
+            <primitive
+                ref={ref}
+                object={controls}
+            />
             <group ref={group}>{children}</group>
         </>
     );

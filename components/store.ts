@@ -206,6 +206,7 @@ export type SceneStates = typeof sceneStates;
 const booleans = [
     "debug",
     "editor",
+    "follow",
     "help",
     "leaderboard",
     "map",
@@ -255,6 +256,7 @@ const useStoreImpl = create<IState>(
             chassisBody: createRef<Object3D>(),
             controls,
             debug,
+            follow: true,
             editor: false,
             get,
             help: false,

@@ -8,7 +8,12 @@ type VRUIElement = {
 };
 
 export function VRUI({ children }: VRUIElement) {
-    const [debug, set] = useStore((state) => [state.debug, state.set]);
+    const [debug, set, sceneStates] = useStore((state) => [
+        state.debug,
+        state.set,
+        state.sceneStates,
+    ]);
+    const { doseOrigin } = sceneStates;
 
     const { gl } = useThree();
 
@@ -21,16 +26,22 @@ export function VRUI({ children }: VRUIElement) {
         }
         gl.xr.updateCamera(state.camera as THREE.PerspectiveCamera);
 
+        const position = state.camera.position.clone().setY(0);
+        const target = doseOrigin.clone().setY(0);
+
         if (ref.current) {
-            ref.current.position.copy(state.camera.position);
-            ref.current.quaternion.copy(state.camera.quaternion);
+            ref.current.position.copy(position);
+            ref.current.lookAt(target);
         }
     });
 
     return (
         <>
             <group ref={ref}>
-                <group ref={child} position={[0, 0, -1]}>
+                <group
+                    ref={child}
+                    rotation={[0, Math.PI, 0]}
+                >
                     {children}
 
                     <mesh visible={debug}>

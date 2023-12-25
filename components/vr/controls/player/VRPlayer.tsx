@@ -6,7 +6,11 @@ import type { playerProps } from "../../../game";
 import { useStore } from "../../../store";
 
 export function VRPlayer({ children }: playerProps) {
-    const [debug, set] = useStore((state) => [state.debug, state.set]);
+    const [debug, follow, set] = useStore((state) => [
+        state.debug,
+        state.follow,
+        state.set,
+    ]);
 
     const { gl } = useThree();
 
@@ -38,7 +42,7 @@ export function VRPlayer({ children }: playerProps) {
             .add(position)
             .setY(0);
 
-        if (ref.current) {
+        if (ref.current && follow) {
             ref.current.position.copy(position);
             ref.current.lookAt(direction);
         }
