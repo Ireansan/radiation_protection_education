@@ -10,6 +10,7 @@
 }
 .foundation * {
   border-radius: 5px;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 .foundation.active {
   opacity: 1;
