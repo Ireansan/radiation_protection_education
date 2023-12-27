@@ -33,7 +33,10 @@ export function VRDoseAnimationControls({
         speed: speedList.indexOf(speed),
     };
 
-    const [set] = useStore((state) => [state.set]);
+    const [set, sceneStates] = useStore((state) => [
+        state.set,
+        state.sceneStates,
+    ]);
 
     const childMaxLength = React.useRef<{
         index: number;
@@ -151,38 +154,18 @@ export function VRDoseAnimationControls({
                     }
 
                     // set execute log for experiment
-                    switch (e) {
-                        case "time lapse":
-                            set((state) => ({
-                                sceneStates: {
-                                    ...state.sceneStates,
-                                    executeLog: {
-                                        ...state.sceneStates.executeLog,
-                                        animation: {
-                                            ...state.sceneStates.executeLog
-                                                .animation,
-                                            timeLapse: true,
-                                        },
-                                    },
-                                },
-                            }));
-                            break;
-                        case "accumulate":
-                            set((state) => ({
-                                sceneStates: {
-                                    ...state.sceneStates,
-                                    executeLog: {
-                                        ...state.sceneStates.executeLog,
-                                        animation: {
-                                            ...state.sceneStates.executeLog
-                                                .animation,
-                                            accumulate: true,
-                                        },
-                                    },
-                                },
-                            }));
-                            break;
-                    }
+                    const _animation = sceneStates.executeLog.animation;
+                    _animation[e] = true;
+
+                    set((state) => ({
+                        sceneStates: {
+                            ...state.sceneStates,
+                            executeLog: {
+                                ...state.sceneStates.executeLog,
+                                animation: _animation,
+                            },
+                        },
+                    }));
                 });
 
             const folder = gui.addFolder("Animation");

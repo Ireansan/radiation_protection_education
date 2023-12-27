@@ -71,8 +71,8 @@ export function PlayerPivotControls({
                         ...state.sceneStates,
                         executeLog: {
                             ...state.sceneStates.executeLog,
-                            avatar: {
-                                ...state.sceneStates.executeLog.avatar,
+                            player: {
+                                ...state.sceneStates.executeLog.player,
                                 translate: true,
                             },
                         },

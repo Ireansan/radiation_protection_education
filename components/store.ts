@@ -120,11 +120,23 @@ const exerciseProgress = {
 };
 export type ExerciseProgress = typeof exerciseProgress;
 
+type StringKeyObject = { [key: string]: boolean };
 const executeLog = {
-    animation: {
-        timeLapse: false,
-        accumulate: false,
+    gimmick: {
+        xRay: {
+            nocurtain: false,
+            "nocurtain 15x15": false,
+            curtain: false,
+        } as StringKeyObject,
+        cArm: {
+            "type 1": false,
+            "type 2": false,
+        } as StringKeyObject,
     },
+    animation: {
+        "time lapse": false,
+        accumulate: false,
+    } as StringKeyObject,
     parameter: {
         colormap: {
             parula: false,
@@ -140,11 +152,11 @@ const executeLog = {
             cividis: false,
             github: false,
             cubehelix: false,
-        },
+        } as StringKeyObject,
         renderStyle: {
             iso: false,
             mip: false,
-        },
+        } as StringKeyObject,
     },
     clipping: {
         x: false,
@@ -153,7 +165,7 @@ const executeLog = {
         free: false,
         invert: false,
     },
-    avatar: {
+    player: {
         translate: false,
         leftHand: false,
         rightHand: false,

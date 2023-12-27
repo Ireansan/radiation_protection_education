@@ -626,9 +626,11 @@ function VisualizationXRay({ ...props }: PageProps) {
                     ) : null}
                     {objectVisibles.experimentUI &&
                     props.availables.experimentUI ? (
-                        <>{/* <ExperimentCheckList /> */}</>
+                        <>
+                            <ExperimentCheckList />
+                        </>
                     ) : null}
-                    <Exercise />
+                    {/* <Exercise /> */}
 
                     <Tips />
                 </div>

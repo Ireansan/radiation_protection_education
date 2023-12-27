@@ -368,9 +368,9 @@ function CArmExtra() {
                                         ...state.sceneStates,
                                         executeLog: {
                                             ...state.sceneStates.executeLog,
-                                            avatar: {
+                                            player: {
                                                 ...state.sceneStates.executeLog
-                                                    .avatar,
+                                                    .player,
                                                 translate: true,
                                             },
                                         },

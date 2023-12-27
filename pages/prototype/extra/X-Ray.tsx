@@ -309,9 +309,9 @@ function XRayExtra() {
                                             ...state.sceneStates,
                                             executeLog: {
                                                 ...state.sceneStates.executeLog,
-                                                avatar: {
+                                                player: {
                                                     ...state.sceneStates
-                                                        .executeLog.avatar,
+                                                        .executeLog.player,
                                                     translate: true,
                                                 },
                                             },
