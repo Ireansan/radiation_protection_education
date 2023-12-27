@@ -1,3 +1,18 @@
+import {
+    Shield,
+    HealthAndSafety,
+    SignLanguage,
+    HowToReg,
+    Person,
+    PersonAdd,
+    PersonAddAlt1,
+    Transcribe,
+    Visibility,
+    VisibilityOff,
+    Sick,
+    // BackHand
+} from "@mui/icons-material";
+
 import { TipsItem } from "./TipsItemTemplate";
 import { applyBasePath } from "../../../../utils";
 
@@ -114,16 +129,13 @@ export function ScreenUIDosimeter2({ ...props }) {
 }
 
 export function ScreenUIDosimeter3({ ...props }) {
-    const imgDir = "/img/manual/experiment/01/png/UI/DosimeterUI/";
-    const iconsImg = [
-        "Icon_Shield.png",
-        "Icon_Goggle.png",
-        "Icon_NeckGuard.png",
-        "Icon_Apron.png",
-        "Icon_Glove.png",
-    ];
-
-    const imgPath = iconsImg.map((value) => applyBasePath(`${imgDir}${value}`));
+    const color = "#D4875D"; // Orange
+    const fontSize = "2rem";
+    const iconStyle = {
+        display: "block",
+        marginLeft: "auto",
+        marginRight: "auto",
+    };
 
     return (
         <>
@@ -138,56 +150,39 @@ export function ScreenUIDosimeter3({ ...props }) {
                     <tr>
                         <td>Shield</td>
                         <td>
-                            <div style={{ alignItems: "center" }}>
-                                <img
-                                    src={imgPath[0]}
-                                    width="25%"
-                                />
-                            </div>
+                            <HealthAndSafety
+                                sx={{ color: color, fontSize: fontSize }}
+                            />
                         </td>
                     </tr>
                     <tr>
                         <td>Goggle</td>
                         <td>
-                            <div style={{ alignItems: "center" }}>
-                                <img
-                                    src={imgPath[1]}
-                                    width="25%"
-                                />
-                            </div>
+                            <Visibility
+                                sx={{ color: color, fontSize: fontSize }}
+                            />
                         </td>
                     </tr>
                     <tr>
                         <td>Neck Guard</td>
                         <td>
-                            <div style={{ alignItems: "center" }}>
-                                <img
-                                    src={imgPath[2]}
-                                    width="25%"
-                                />
-                            </div>
+                            <PersonAddAlt1
+                                sx={{ color: color, fontSize: fontSize }}
+                            />
                         </td>
                     </tr>
                     <tr>
                         <td>Apron</td>
                         <td>
-                            <div style={{ alignItems: "center" }}>
-                                <img
-                                    src={imgPath[3]}
-                                    width="25%"
-                                />
-                            </div>
+                            <Person sx={{ color: color, fontSize: fontSize }} />
                         </td>
                     </tr>
                     <tr>
                         <td>Glove</td>
                         <td>
-                            <div style={{ alignItems: "center" }}>
-                                <img
-                                    src={imgPath[4]}
-                                    width="25%"
-                                />
-                            </div>
+                            <SignLanguage
+                                sx={{ color: color, fontSize: fontSize }}
+                            />
                         </td>
                     </tr>
                 </table>

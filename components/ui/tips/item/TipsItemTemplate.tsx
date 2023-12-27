@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { SwiperSlide } from "swiper/react";
 
 import { applyBasePath } from "../../../../utils";
@@ -22,9 +23,11 @@ export function TipsItem({
             <div className={`${style.tipsItem}`}>
                 <div className={`${style.text}`}>{children}</div>
                 {imgSrc && (
-                    <img
+                    <Image
+                        className={`${style.image}`}
                         src={applyBasePath(imgSrc)}
-                        alt={imgAlt}
+                        alt={imgAlt ? imgAlt : ""}
+                        fill={true}
                     />
                 )}
             </div>
