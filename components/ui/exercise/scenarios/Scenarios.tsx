@@ -1,62 +1,11 @@
-import React, { memo, useEffect, useMemo } from "react";
-import { CheckBox, CheckBoxOutlineBlank } from "@mui/icons-material";
-import { useSwiper } from "swiper/react";
+import React, { memo, useEffect } from "react";
 
 import { useStore } from "../../../store";
-import { useScenario } from "./useScenarios";
+import { Item, NextButton, useScenario } from "../utils";
 
 import style from "../../../../styles/css/exercise.module.css";
 
-/**
- *
- */
-export type ItemProps = {
-    children: React.ReactNode;
-    isDone: boolean;
-    color?: string;
-};
-export function Item({ children, isDone, color = "#65BF74" }: ItemProps) {
-    return (
-        <>
-            <div className={`${style.item}`}>
-                <div className={`${style.check}`}>
-                    {isDone ? (
-                        <CheckBox sx={{ color: color, fontSize: "0.8rem" }} />
-                    ) : (
-                        <CheckBoxOutlineBlank sx={{ fontSize: "0.8rem" }} />
-                    )}
-                </div>
-                <div
-                    className={`${style.objective} ${
-                        isDone && `${style.done}`
-                    }`}
-                >
-                    {children}
-                </div>
-            </div>
-        </>
-    );
-}
 const MemoItem = memo(Item);
-
-type NextButtonProps = { disabled: boolean };
-function NextButton({ disabled }: NextButtonProps) {
-    const swiper = useSwiper();
-
-    return (
-        <>
-            <button
-                className={`${style.slideNext}`}
-                disabled={disabled}
-                onClick={() => {
-                    swiper.slideNext();
-                }}
-            >
-                Next &rarr;
-            </button>
-        </>
-    );
-}
 
 /**
  *

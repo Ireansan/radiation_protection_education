@@ -15,23 +15,11 @@ import style from "../../../styles/css/exercise.module.css";
 export function Exercise({ ...props }) {
     const [debug] = useStore((state) => [state.debug]);
 
-    const test = [
-        "Slide 1",
-        "Slide 2",
-        "Slide 3",
-        "Slide 4",
-        "Slide 5",
-        "Slide 6",
-        "Slide 7",
-        "Slide 8",
-        "Slide 9",
-    ];
-
     return (
         <>
             <div className={style.foundation}>
                 <Swiper
-                    navigation={false}
+                    navigation={debug}
                     mousewheel={true}
                     modules={[Navigation, Mousewheel]}
                     className={style.swiper}
@@ -48,14 +36,6 @@ export function Exercise({ ...props }) {
                     <SwiperSlide className={style.swiperSlide}>
                         <SCENARIOS.Exercise3 />
                     </SwiperSlide>
-                    {test.map((value, index) => (
-                        <SwiperSlide
-                            key={index}
-                            className={style.swiperSlide}
-                        >
-                            {value}
-                        </SwiperSlide>
-                    ))}
                 </Swiper>
             </div>
         </>
