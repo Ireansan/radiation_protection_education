@@ -142,6 +142,7 @@ function XRayVR() {
             coefficient: 0.1,
         },
     ];
+    const floorColor = "#8F8F96";
 
     const ref = useRef<DoseGroup>(null!);
 
@@ -367,6 +368,16 @@ function XRayVR() {
                             {/* Enviroment */}
                             <Sky sunPosition={[0, 1, 0]} />
                             <ambientLight intensity={0.5} />
+
+                            {/* Floor */}
+                            <mesh
+                                name={"VRFloor"}
+                                position={[0, -0.2, 0]}
+                                rotation={[-Math.PI / 2, 0, 0]}
+                            >
+                                <planeGeometry args={[200, 200]} />
+                                <meshStandardMaterial color={floorColor} />
+                            </mesh>
 
                             <Grid
                                 position={[0, -0.01, 0]}
