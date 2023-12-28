@@ -112,7 +112,10 @@ const objectVisibles = {
 export type ObjectVisibles = typeof objectVisibles;
 
 const exerciseProgress = {
-    tutorial: false,
+    tutorial1: false,
+    tutorial2: false,
+    tutorial3: false,
+    tutorial4: false,
     execise1: false,
     execise2Preparation: false,
     execise2: false,
@@ -122,6 +125,10 @@ export type ExerciseProgress = typeof exerciseProgress;
 
 type StringKeyObject = { [key: string]: boolean };
 const executeLog = {
+    tips: {
+        open: false,
+        close: false,
+    },
     gimmick: {
         xRay: {
             nocurtain: false,

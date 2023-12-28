@@ -23,7 +23,22 @@ export function Tips() {
         <>
             <button
                 className={`${style.tips}`}
-                onClick={() => set({ tips: true })}
+                onClick={() => {
+                    set({ tips: true });
+
+                    set((state) => ({
+                        sceneStates: {
+                            ...state.sceneStates,
+                            executeLog: {
+                                ...state.sceneStates.executeLog,
+                                tips: {
+                                    ...state.sceneStates.executeLog.tips,
+                                    open: true,
+                                },
+                            },
+                        },
+                    }));
+                }}
             >
                 <QuestionMark sx={{ fontSize: 16 }} />
             </button>
@@ -31,7 +46,23 @@ export function Tips() {
                 <div className={style.foundation}>
                     <button
                         className={style.closeButton}
-                        onClick={() => set({ tips: false })}
+                        onClick={() => {
+                            set({ tips: false });
+
+                            set((state) => ({
+                                sceneStates: {
+                                    ...state.sceneStates,
+                                    executeLog: {
+                                        ...state.sceneStates.executeLog,
+                                        tips: {
+                                            ...state.sceneStates.executeLog
+                                                .tips,
+                                            close: true,
+                                        },
+                                    },
+                                },
+                            }));
+                        }}
                     >
                         <Close sx={{ fontSize: 16 }} />
                     </button>
