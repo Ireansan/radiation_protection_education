@@ -11,7 +11,13 @@ export function LevaPlayerEquipments({ isEnglish = false }: TipsBaseProps) {
                 imgAlt={"img/leva/Player/Equipments"}
             >
                 {!isEnglish ? (
-                    <></>
+                    <>
+                        <h3>操作パネル - Player/Equipments</h3>
+                        <p>放射線防護具の装備の有無を選択できます。</p>
+                        <p>
+                            装備を有効にすることで，線量計UIに種類に応じたアイコンが表示され，被ばく量が変化します。
+                        </p>
+                    </>
                 ) : (
                     <>
                         <h3>Operation panel - Player/Equipments</h3>
@@ -42,7 +48,10 @@ export function LevaPlayerHands({ isEnglish = false }: TipsBaseProps) {
                 imgAlt={"img/leva/Player/Hands"}
             >
                 {!isEnglish ? (
-                    <></>
+                    <>
+                        <h3>操作パネル - Player/Hands</h3>
+                        <p></p>
+                    </>
                 ) : (
                     <>
                         <h3>Operation panel - Player/Hands</h3>

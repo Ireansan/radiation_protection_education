@@ -6,7 +6,27 @@ export function SceneObjectManual({ isEnglish = false }: TipsBaseProps) {
         <>
             <TipsItem>
                 {!isEnglish ? (
-                    <></>
+                    <>
+                        <h3>3D空間</h3>
+                        <p>
+                            3D空間内でのオブジェクトの操作には
+                            <a href="https://github.com/pmndrs/drei#pivotcontrols">
+                                PivotControls
+                            </a>{" "}
+                            というコントローラーを採用しています。
+                        </p>
+                        <ul>
+                            <li>
+                                矢印に対して左ボタンをドラッグ：選択した軸上を移動
+                            </li>
+                            <li>
+                                四角に対して左ボタンをドラッグ：選択した平面上を移動
+                            </li>
+                            <li>
+                                弧に対して左ボタンをドラッグ：選択した軸周りに回転
+                            </li>
+                        </ul>
+                    </>
                 ) : (
                     <>
                         <h3>3D Space</h3>
@@ -50,7 +70,12 @@ export function SceneObjectPlayer({ isEnglish = false }: TipsBaseProps) {
                 imgAlt={"gif/Player"}
             >
                 {!isEnglish ? (
-                    <></>
+                    <>
+                        <h3>3D空間 - Player</h3>
+                        <p>
+                            プレイヤーの位置，手の位置を移動させることで，被ばく量が変化します。
+                        </p>
+                    </>
                 ) : (
                     <>
                         <h3>3D Space - Player</h3>
@@ -73,7 +98,15 @@ export function SceneObjectShield({ isEnglish = false }: TipsBaseProps) {
                 imgAlt={"gif/Shield"}
             >
                 {!isEnglish ? (
-                    <></>
+                    <>
+                        <h3>3D空間 - Shield</h3>
+                        <p>
+                            防護板を線量分布内に移動させることで，線量分布に影響が反映されます。
+                        </p>
+                        <p>
+                            また，防護板とプレイヤーの位置関係を調整することで，線量計UIに防護板の影響を示すアイコンが表示され，被ばく量が変化します。
+                        </p>
+                    </>
                 ) : (
                     <>
                         <h3>3D Space - Shield</h3>
@@ -103,15 +136,27 @@ export function SceneObjectClip1({ isEnglish = false }: TipsBaseProps) {
                 imgAlt={"gif/Clip/FreeAxis"}
             >
                 {!isEnglish ? (
-                    <></>
+                    <>
+                        <h3>3D空間 - Clip (1/2)</h3>
+                        <p>
+                            操作パネル内の<code>Clip</code>
+                            で有効にしたクリッピング平面が3D空間内に表示され，操作が可能になります。
+                        </p>
+                        <p>
+                            クリッピングの断面となる部分には赤い枠が表示されます。
+                        </p>
+                    </>
                 ) : (
                     <>
                         <h3>3D Space - Clip (1/2)</h3>
                         <p>
                             The clipping plane activated by <code>Clip</code> in
                             the operation panel is displayed in 3D space and can
-                            be manipulated. A red frame is displayed around the
-                            section of the clipping plane.
+                            be manipulated.
+                        </p>
+                        <p>
+                            A red frame is displayed around the section of the
+                            clipping plane.
                         </p>
                     </>
                 )}
@@ -129,15 +174,26 @@ export function SceneObjectClip2({ isEnglish = false }: TipsBaseProps) {
                 imgAlt={"img/3D/Clip"}
             >
                 {!isEnglish ? (
-                    <></>
+                    <>
+                        <h3>3D空間 - Clip (2/2)</h3>
+                        <p>
+                            有効にした全ての平面に対してクリッピングが成り立つ部分がクリッピングされます。
+                        </p>
+                        <p>
+                            例えば，XとZを有効にした場合，下図のような結果になります。
+                            {/* FIXME: below --> right? */}
+                        </p>
+                    </>
                 ) : (
                     <>
                         <h3>3D Space - Clip (2/2)</h3>
                         <p>
                             For all enabled planes, the part of the image for
-                            which clipping is valid will be clipped. For
-                            example, if X and Z are enabled, the result will be
-                            as shown below.
+                            which clipping is valid will be clipped.
+                        </p>
+                        <p>
+                            For example, if X and Z are enabled, the result will
+                            be as shown below.
                             {/* FIXME: below --> right? */}
                         </p>
                     </>

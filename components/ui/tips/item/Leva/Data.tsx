@@ -9,7 +9,14 @@ export function LevaDataMode({ isEnglish = false }: TipsBaseProps) {
                 imgAlt={"img/leva/Data/mode"}
             >
                 {!isEnglish ? (
-                    <></>
+                    <>
+                        <h3>操作パネル - Data/mode</h3>
+                        <p>
+                            時間経過データ(<code>time lapse</code>)と累積データ(
+                            <code>accumulate</code>
+                            )の2つのデータ表示形式を設定できます。
+                        </p>
+                    </>
                 ) : (
                     <>
                         <h3>Operation panel - Data/mode</h3>
@@ -34,7 +41,29 @@ export function LevaDataAnimation({ isEnglish = false }: TipsBaseProps) {
                 imgAlt={"img/leva/Data/Animation"}
             >
                 {!isEnglish ? (
-                    <></>
+                    <>
+                        <h3>操作パネル - Data/Animation</h3>
+                        <p>
+                            {/* FIXME: */}
+                            データ表示形式が<code>time lapse</code>
+                            の時，アニメーションを操作できます。
+                        </p>
+                        <ul>
+                            <li>
+                                <code>play</code>：再生・停止
+                            </li>
+                            <li>
+                                <code>speed</code>：再生速度（
+                                <code>0.25</code>, <code>0.5</code>,{" "}
+                                <code>1</code>, <code>1.5</code>, <code>2</code>
+                                , <code>8</code>, <code>16</code>
+                                から選択できます）
+                            </li>
+                            <li>
+                                <code>time</code>：再生位置
+                            </li>
+                        </ul>
+                    </>
                 ) : (
                     <>
                         <h3>Operation panel - Data/Animation</h3>
@@ -74,7 +103,16 @@ export function LevaDataClip({ isEnglish = false }: TipsBaseProps) {
                 imgAlt={"img/leva/Data/Clip"}
             >
                 {!isEnglish ? (
-                    <></>
+                    <>
+                        <h3>操作パネル - Data/Clip</h3>
+                        <p>
+                            X, Y,
+                            Z軸に垂直なクリッピング平面3つと，自由に位置・向きを変更できるクリッピング平面の4つについて，それぞれ有効にするか操作ができます。
+                        </p>
+                        <p>
+                            また，それぞれのクリッピング平面の向きを反転させることもできます。
+                        </p>
+                    </>
                 ) : (
                     <>
                         <h3>Operation panel - Data/Clip</h3>
@@ -105,7 +143,41 @@ export function LevaDataDetail({ isEnglish = false }: TipsBaseProps) {
                 imgAlt={"img/leva/Data/Detail"}
             >
                 {!isEnglish ? (
-                    <></>
+                    <>
+                        <h3>操作パネル - Data/Detail</h3>
+                        <p>線量分布データの描画に関係する値を設定できます。</p>
+                        <ul>
+                            <li>
+                                <code>opacity</code>：不透明度
+                            </li>
+                            <li>
+                                {/* FIXME: */}
+                                <code>clim</code>: clim
+                            </li>
+                            <li>
+                                <code>colormap</code>
+                                ：データに適用されるカラーマップ
+                            </li>
+                            <li>
+                                <code>renderstyle</code>
+                                ：描画形式（<code>mip</code>（Maximuｍ Intensity
+                                Projection, 最大値投影），<code>iso</code>
+                                （Isosurface, 等値面）が選択できます）
+                            </li>
+                            <li>
+                                <code>isothreshold</code>
+                                ：描画される下限の閾値（<code>renderstyle</code>
+                                が<code>iso</code>の時のみ反映されます）
+                            </li>
+                        </ul>
+                        <p>
+                            カラーマップの種類は
+                            <a href="https://github.com/yuki-koyama/tinycolormap">
+                                こちらのリンク
+                            </a>
+                            を参照してください。
+                        </p>
+                    </>
                 ) : (
                     <>
                         <h3>Operation panel - Data/Detail</h3>
