@@ -77,7 +77,7 @@ import {
     SceneOptionsPanel,
 } from "../../../components/ui";
 import { Tips } from "../../../components/ui/tips";
-import { Exercise } from "../../../components/ui/exercise";
+import { Exercise, Tutorial } from "../../../components/ui/exercise";
 
 // ==========
 // Store
@@ -102,7 +102,16 @@ export const getStaticPaths: GetStaticPaths = async () => {
                 params: { type: "extra" },
             },
             {
+                params: { type: "tutorial" },
+            },
+            {
+                params: { type: "tutorial_en" },
+            },
+            {
                 params: { type: "experiment" },
+            },
+            {
+                params: { type: "experiment_en" },
             },
             {
                 params: { type: "perspective" },
@@ -119,29 +128,40 @@ export const getStaticProps: GetStaticProps = async ({
 
     const isBasic = pageType === "basic";
     const isExtra = pageType === "extra";
-    const isExperiment = pageType === "experiment";
+    const isTutorial = pageType === "tutorial" || pageType === "tutorial_en";
+    const isExperiment =
+        pageType === "experiment" || pageType === "experiment_en";
     const isPerspective = pageType === "perspective";
+    const isEnglish =
+        pageType === "tutorial_en" || pageType === "experiment_en";
 
     return {
         props: {
             availables: {
                 orthographic: !isPerspective,
-                player: isExtra || isExperiment || isPerspective,
-                shield: isExtra || isExperiment || isPerspective,
-                dosimeter: isExtra || isExperiment || isPerspective,
+                player: isExtra || isTutorial || isExperiment || isPerspective,
+                shield: isExtra || isTutorial || isExperiment || isPerspective,
+                dosimeter:
+                    isExtra || isTutorial || isExperiment || isPerspective,
                 experimentUI: isExperiment,
+                exerciseUI: isExtra || isExperiment || isPerspective,
+                tutorialUI: isTutorial,
+                isEnglish: isEnglish,
             },
         },
     };
 };
 
 function VisualizationXRay({ ...props }: PageProps) {
-    const [set, debug, viewing, objectVisibles] = useStore((state) => [
-        state.set,
-        state.debug,
-        state.viewing,
-        state.sceneStates.objectVisibles,
-    ]);
+    const [set, debug, viewing, objectVisibles, executeLog] = useStore(
+        (state) => [
+            state.set,
+            state.debug,
+            state.viewing,
+            state.sceneStates.objectVisibles,
+            state.sceneStates.executeLog,
+        ]
+    );
 
     const doseOriginPosition = new THREE.Vector3(-0.182, 1.15, -0.18);
     set((state) => ({
@@ -217,12 +237,11 @@ function VisualizationXRay({ ...props }: PageProps) {
     const [,] = useControls(() => ({
         Scene: folder({
             Gimmick: folder({
-                curtain: {
+                type: {
                     options: options,
                     value: options[0],
                     onChange: (e) => {
                         const visibles = options.map((value) => value === e);
-                        console.log(visibles);
 
                         visibles.forEach((value, index) => {
                             let refTime = refs[index].time.current;
@@ -232,6 +251,23 @@ function VisualizationXRay({ ...props }: PageProps) {
                             let refOther = refs[index].other?.current;
                             refOther ? (refOther.visible = value) : null;
                         });
+
+                        // set execute log for experiment
+                        const _xRay = executeLog.gimmick.xRay;
+                        _xRay[e] = true;
+
+                        set((state) => ({
+                            sceneStates: {
+                                ...state.sceneStates,
+                                executeLog: {
+                                    ...state.sceneStates.executeLog,
+                                    gimmick: {
+                                        ...state.sceneStates.executeLog.gimmick,
+                                        xRay: _xRay,
+                                    },
+                                },
+                            },
+                        }));
                     },
                 },
             }),
@@ -624,13 +660,18 @@ function VisualizationXRay({ ...props }: PageProps) {
                             <DosimeterUI />
                         </>
                     ) : null}
-                    {objectVisibles.experimentUI &&
-                    props.availables.experimentUI ? (
+                    {objectVisibles.exerciseUI &&
+                    props.availables.exerciseUI ? (
                         <>
-                            <ExperimentCheckList />
+                            <Exercise />
                         </>
                     ) : null}
-                    {/* <Exercise /> */}
+                    {objectVisibles.tutorialUI &&
+                    props.availables.tutorialUI ? (
+                        <>
+                            <Tutorial sceneName="X-Ray" />
+                        </>
+                    ) : null}
 
                     <Tips />
                 </div>
