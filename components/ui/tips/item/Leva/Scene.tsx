@@ -16,7 +16,7 @@ export function LevaSceneGimmickXRay({ isEnglish = false }: TipsBaseProps) {
                             <code>viewing</code>が操作できます。
                         </p>
                         <p>
-                            X線照射室では，<code>curtain</code>
+                            X線検査室では，<code>curtain</code>
                             でカーテンの有無を操作できます。
                         </p>
                     </>

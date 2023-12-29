@@ -48,9 +48,12 @@ export function Exercise1({ isEnglish = false }: ScenarioProps) {
                 <div className={`${style.items}`}>
                     <MemoItem isDone={inRange}>
                         {!isEnglish ? (
-                            <></>
+                            <>
+                                プレイヤーを{RangeRadius * 100}
+                                cm以内に移動させる
+                            </>
                         ) : (
-                            <>Move Player to within {RangeRadius * 100} cm.</>
+                            <>Move Player to within {RangeRadius * 100}cm.</>
                         )}
                         <MemoSubItem isDone={inRange}>
                             Distance: {(distance * 100).toFixed()} /{" "}
@@ -59,7 +62,7 @@ export function Exercise1({ isEnglish = false }: ScenarioProps) {
                     </MemoItem>
                     <MemoItem isDone={allWithin}>
                         {!isEnglish ? (
-                            <></>
+                            <>全ての測定値が上限被ばく量を下回る</>
                         ) : (
                             <>
                                 All measurements are below the upper limit.
@@ -73,7 +76,8 @@ export function Exercise1({ isEnglish = false }: ScenarioProps) {
                         </MemoSubItem>
                     </MemoItem>
                     <MemoItem isDone={withinShield === 0}>
-                        (Optional) No Shield
+                        (Optional){" "}
+                        {!isEnglish ? <>防護板を使用しない</> : <>No Shield</>}
                         <MemoSubItem isDone={withinShield === 0}>
                             Shield: {withinShield} / {dosimeterResultsLength}
                         </MemoSubItem>
@@ -118,7 +122,11 @@ export function Exercise2Preparation({ isEnglish = false }: ScenarioProps) {
                 <div className={`${style.items}`}>
                     <MemoItem isDone={withinShield === 0}>
                         {!isEnglish ? (
-                            <></>
+                            <>
+                                全ての測定値が防護板の影響を受けない状態にする
+                                <br />
+                                (プレイヤーを移動させないこと)
+                            </>
                         ) : (
                             <>
                                 All measurements to be unaffected by Shield.
@@ -131,7 +139,11 @@ export function Exercise2Preparation({ isEnglish = false }: ScenarioProps) {
                         </MemoSubItem>
                     </MemoItem>
                     <MemoItem isDone={equipped === 0}>
-                        {!isEnglish ? <></> : <>Remove all Equipment.</>}
+                        {!isEnglish ? (
+                            <>全ての防護具を外す</>
+                        ) : (
+                            <>Remove all Equipment.</>
+                        )}
                         <MemoSubItem isDone={equipped === 0}>
                             Equipment: {equipped} / {equipmentsLength}
                         </MemoSubItem>
@@ -176,9 +188,15 @@ export function Exercise2({ isEnglish = false }: ScenarioProps) {
                 <div className={`${style.items}`}>
                     <MemoItem isDone={inRange}>
                         {!isEnglish ? (
-                            <></>
+                            <>
+                                プレイヤーを{RangeRadius}
+                                mまで遠ざけ，被ばく量の変化を観察する
+                            </>
                         ) : (
-                            <>Move Player away to {RangeRadius} m.</>
+                            <>
+                                Move Player away to {RangeRadius}m and observe
+                                the change in exposure.
+                            </>
                         )}
                         <MemoSubItem isDone={inRange}>
                             Distance: {distance.toFixed(2)} / {RangeRadius} [m]
@@ -224,10 +242,12 @@ export function Exercise3({ isEnglish = false }: ScenarioProps) {
                 <div className={`${style.items}`}>
                     <MemoItem isDone={allWithinShield}>
                         {!isEnglish ? (
-                            <></>
+                            <>
+                                全ての測量値が防護板の影響を受けている状態にする
+                            </>
                         ) : (
                             <>
-                                All measuring points are under the influence of
+                                All measurements are under the influence of
                                 Shield.
                             </>
                         )}

@@ -78,16 +78,38 @@ export function Tutorial1({ isEnglish = false, sceneName }: Tutorial1Props) {
                                 >
                                     <QuestionMark sx={{ fontSize: "1em" }} />
                                 </span>
-                                をクリックし、
+                                をクリックし，
                                 <br />
                                 Tipsが表示されることを確認する
                             </>
                         ) : (
-                            <></>
+                            <>
+                                Click{" "}
+                                <span
+                                    style={{
+                                        backgroundColor: "#007aff",
+                                        borderRadius: "1px",
+                                    }}
+                                >
+                                    <QuestionMark sx={{ fontSize: "1em" }} />
+                                </span>{" "}
+                                in the upper left corner of the screen, and
+                                confirm that the Tips are displayed.
+                            </>
                         )}
                     </MemoItem>
                     <MemoItem isDone={allCheck}>
-                        {!isEnglish ? <>Gimmickのtypeを全て確認する</> : <></>}
+                        {!isEnglish ? (
+                            <>
+                                操作パネルの<code>Scene/Gimmick/type</code>
+                                を操作し， Gimmickのtypeを全て確認する
+                            </>
+                        ) : (
+                            <>
+                                Operate <code>Scene/Gimmick/type</code> on the
+                                operation panel to check all Gimmick types.
+                            </>
+                        )}
                         <MemoSubItem isDone={allCheck}>
                             type: {gimmick.filter((v) => v === true).length}/
                             {gimmick.length}
@@ -147,21 +169,41 @@ export function Tutorial2({ isEnglish = false }: ScenarioProps) {
                 <div className={`${style.items}`}>
                     <MemoItem isDone={allEquipped}>
                         {!isEnglish ? (
-                            <>プレイヤーの装備を全て有効にする</>
+                            <>
+                                操作パネルの<code>Player/Equipments</code>
+                                で，防護具を全て装備する
+                            </>
                         ) : (
-                            <></>
+                            <>
+                                Equip all protective gear in{" "}
+                                <code>Player/Equipments</code>
+                                in the operation panel
+                            </>
                         )}
                         <MemoSubItem isDone={allEquipped}>
                             (Optional){" "}
                             {!isEnglish ? (
-                                <>線量計UIと3Dモデルの変化を確認する</>
+                                <>線量計と3Dモデルの変化を確認する</>
                             ) : (
-                                <></>
+                                <>
+                                    Check the dosimeter and the 3D model for
+                                    changes.
+                                </>
                             )}
                         </MemoSubItem>
                     </MemoItem>
                     <MemoItem isDone={allHandMoved}>
-                        {!isEnglish ? <>プレイヤーの手の位置を変える</> : <></>}
+                        {!isEnglish ? (
+                            <>
+                                操作パネルの<code>Player/Hand</code>
+                                で，手の位置を変更する
+                            </>
+                        ) : (
+                            <>
+                                Change hand position in <code>Player/Hand</code>
+                                in the operation panel
+                            </>
+                        )}
                     </MemoItem>
                 </div>
                 <NextButton disabled={!exerciseProgress.tutorial2} />
@@ -228,14 +270,30 @@ export function Tutorial3({ isEnglish = false }: ScenarioProps) {
                     </MemoItem>
                     <MemoItem isDone={checkClip}>
                         (Optional){" "}
-                        {!isEnglish ? <>Clipを操作し、断面を確認する</> : <></>}
+                        {!isEnglish ? (
+                            <>
+                                操作パネルの<code>Data/Clip</code>
+                                を操作し、断面を確認する
+                            </>
+                        ) : (
+                            <>
+                                Operate <code>Data/Clip</code> on the operation
+                                panel to check the cross section.
+                            </>
+                        )}
                     </MemoItem>
                     <MemoItem isDone={checkParameter}>
                         (Optional){" "}
                         {!isEnglish ? (
-                            <>Detailでcolormap, renderstyle などの変更を行う</>
+                            <>
+                                <code>Data/Detail</code>でcolormap, renderstyle
+                                などの変更を行う
+                            </>
                         ) : (
-                            <></>
+                            <>
+                                Change colormap, renderstyle, etc. in
+                                <code>Data/Detail</code>.
+                            </>
                         )}
                     </MemoItem>
                 </div>
@@ -286,13 +344,17 @@ export function Tutorial4({ isEnglish = false }: ScenarioProps) {
                 <h3>Tutorial (4/4)</h3>
                 <div className={`${style.items}`}>
                     <MemoItem isDone={playerMoved}>
-                        {!isEnglish ? <>プレイヤーを移動させる</> : <></>}
+                        {!isEnglish ? (
+                            <>線量分布内でプレイヤーを移動させる</>
+                        ) : (
+                            <>Move the player within the dose distribution</>
+                        )}
                     </MemoItem>
                     <MemoItem isDone={shieldMoved && shieldEnabled}>
                         {!isEnglish ? (
                             <>防護板を線量分布内に移動させる</>
                         ) : (
-                            <></>
+                            <>Move the shield within the dose distribution</>
                         )}
                         <MemoSubItem>
                             {!isEnglish ? (
@@ -301,7 +363,12 @@ export function Tutorial4({ isEnglish = false }: ScenarioProps) {
                                     処理が重くなる恐れがあります。現在使用しているデバイスで操作が困難になった場合、GPUを搭載しているデバイスで実施して下さい。
                                 </>
                             ) : (
-                                <></>
+                                <>
+                                    Caution: The Processing may become slow. If
+                                    you experience difficulties operating your
+                                    current device, please use a device with a
+                                    GPU.
+                                </>
                             )}
                         </MemoSubItem>
                     </MemoItem>

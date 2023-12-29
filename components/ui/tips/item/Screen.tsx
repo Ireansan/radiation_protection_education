@@ -141,6 +141,9 @@ export function ScreenUIDosimeter1({ isEnglish = false }: TipsBaseProps) {
                         <p>
                             左側が年間の上限被ばく量(20,000[&micro;Sv])，右側が一回の目標上限被ばく量に対して被ばく量を表しています。
                         </p>
+                        <p>
+                            左側が年間，右側が一回がデフォルトの順番ですが，操作パネルで左右の順番を変更することが可能です。
+                        </p>
                     </>
                 ) : (
                     <>
@@ -154,6 +157,12 @@ export function ScreenUIDosimeter1({ isEnglish = false }: TipsBaseProps) {
                             dose (20,000[&micro;Sv]), and the right side shows
                             the exposure dose against the target upper limit
                             exposure dose per exposure.
+                        </p>
+                        <p>
+                            The default order is once a year on the left side
+                            and once a year on the right side, but the order of
+                            left and right can be changed on the operation
+                            panel.
                         </p>
                     </>
                 )}
