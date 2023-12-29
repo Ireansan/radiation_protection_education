@@ -108,6 +108,8 @@ const objectVisibles = {
     shieldPivot: true,
     dosimeterUI: true,
     experimentUI: true,
+    exerciseUI: true,
+    tutorialUI: true,
 };
 export type ObjectVisibles = typeof objectVisibles;
 

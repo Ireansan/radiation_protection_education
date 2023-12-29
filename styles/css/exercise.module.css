@@ -45,21 +45,29 @@
   margin: 0 6px;
 }
 .content .items .item {
-  font-size: 0.8rem;
+  font-size: 0.75em;
   margin: 6px 0;
   display: flex;
 }
 .content .items .item .check {
   display: flex;
-  align-items: center;
+  margin: 4px 0;
+  vertical-align: top;
 }
 .content .items .item .objective {
-  display: flex;
   align-items: center;
   margin: auto 5px;
 }
 .content .items .item .objective.done {
   color: #858b8e;
+}
+.content .items .item .objective .sub {
+  margin: 2px 0 0 16px;
+  font-size: 0.9em;
+  color: #b6baba;
+}
+.content .items .item .objective .sub.done {
+  color: #606263;
 }
 .content .slideNext {
   position: absolute;

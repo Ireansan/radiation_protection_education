@@ -1,11 +1,12 @@
 import React, { memo, useEffect } from "react";
 
 import { useStore } from "../../../store";
-import { Item, NextButton, useScenario } from "../utils";
+import { Item, SubItem, NextButton, useScenario } from "../utils";
 
 import style from "../../../../styles/css/exercise.module.css";
 
 const MemoItem = memo(Item);
+const MemoSubItem = memo(SubItem);
 
 /**
  *
@@ -46,22 +47,25 @@ export function Exercise1() {
                 <div className={`${style.items}`}>
                     <MemoItem isDone={inRange}>
                         Move Player to within {RangeRadius * 100} cm.
-                        <br />
-                        Distance: {(distance * 100).toFixed()} /{" "}
-                        {RangeRadius * 100} [cm]
+                        <MemoSubItem isDone={inRange}>
+                            Distance: {(distance * 100).toFixed()} /{" "}
+                            {RangeRadius * 100} [cm]
+                        </MemoSubItem>
                     </MemoItem>
                     <MemoItem isDone={allWithin}>
                         All measurements are below the upper limit.
                         {/* All measurements below regulatory limits */}
-                        <br />
-                        Year: {yearWithin} / {dosimeterResultsLength}
-                        <br />
-                        Once: {onceWithin} / {dosimeterResultsLength}
+                        <MemoSubItem isDone={allWithin}>
+                            Year: {yearWithin} / {dosimeterResultsLength}
+                            <br />
+                            Once: {onceWithin} / {dosimeterResultsLength}
+                        </MemoSubItem>
                     </MemoItem>
                     <MemoItem isDone={withinShield === 0}>
                         (Optional) No Shield
-                        <br />
-                        Shield: {withinShield} / {dosimeterResultsLength}
+                        <MemoSubItem isDone={withinShield === 0}>
+                            Shield: {withinShield} / {dosimeterResultsLength}
+                        </MemoSubItem>
                     </MemoItem>
                 </div>
                 <NextButton disabled={!exerciseProgress.execise1} />
@@ -79,9 +83,10 @@ export function Exercise2Preparation() {
         state.sceneStates.exerciseProgress,
     ]);
 
-    const { dosimeterResultsLength, withinShield, equipped } = useScenario({
-        distanceMin: undefined,
-    });
+    const { dosimeterResultsLength, withinShield, equipmentsLength, equipped } =
+        useScenario({
+            distanceMin: undefined,
+        });
 
     useEffect(() => {
         set((state) => ({
@@ -104,13 +109,15 @@ export function Exercise2Preparation() {
                         All measurements to be unaffected by Shield.
                         <br />
                         (Players should not be moved.)
-                        <br />
-                        Shield: {withinShield} / {dosimeterResultsLength}
+                        <MemoSubItem isDone={withinShield === 0}>
+                            Shield: {withinShield} / {dosimeterResultsLength}
+                        </MemoSubItem>
                     </MemoItem>
                     <MemoItem isDone={equipped === 0}>
                         Remove all Equipment.
-                        <br />
-                        Equipment: {equipped} / {dosimeterResultsLength}
+                        <MemoSubItem isDone={equipped === 0}>
+                            Equipment: {equipped} / {equipmentsLength}
+                        </MemoSubItem>
                     </MemoItem>
                 </div>
                 <NextButton disabled={!exerciseProgress.execise2Preparation} />
@@ -152,8 +159,9 @@ export function Exercise2() {
                 <div className={`${style.items}`}>
                     <MemoItem isDone={inRange}>
                         Move Player away to {RangeRadius} m.
-                        <br />
-                        Distance: {distance.toFixed(2)} / {RangeRadius} [m]
+                        <MemoSubItem isDone={inRange}>
+                            Distance: {distance.toFixed(2)} / {RangeRadius} [m]
+                        </MemoSubItem>
                     </MemoItem>
                 </div>
                 <NextButton disabled={!exerciseProgress.execise2} />
@@ -195,8 +203,9 @@ export function Exercise3() {
                 <div className={`${style.items}`}>
                     <MemoItem isDone={allWithinShield}>
                         All measuring points are under the influence of Shield.
-                        <br />
-                        Shield: {withinShield} / {dosimeterResultsLength}
+                        <MemoSubItem isDone={allWithinShield}>
+                            Shield: {withinShield} / {dosimeterResultsLength}
+                        </MemoSubItem>
                     </MemoItem>
                 </div>
                 <NextButton disabled={!exerciseProgress.execise3} />

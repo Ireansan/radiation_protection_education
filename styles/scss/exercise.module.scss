@@ -49,22 +49,33 @@
         margin: 0 6px;
 
         .item {
-            font-size: 0.8rem;
+            font-size: 0.75em;
             margin: 6px 0;
             display: flex;
 
             .check {
                 display: flex;
-                align-items: center;
+                margin: 4px 0;
+                vertical-align: top;
             }
 
             .objective {
-                display: flex;
+                // display: flex;
                 align-items: center;
                 margin: auto 5px;
 
                 &.done {
                     color: #858b8e;
+                }
+
+                .sub {
+                    margin: 2px 0 0 16px;
+                    font-size: 0.9em;
+                    color: #b6baba;
+
+                    &.done {
+                        color: #606263;
+                    }
                 }
             }
         }

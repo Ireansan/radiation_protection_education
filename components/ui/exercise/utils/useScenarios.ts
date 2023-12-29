@@ -124,12 +124,12 @@ export function useScenario(scenearioConfig: ScenearioConfig) {
     }, [doseValues]);
 
     // Equipments
-    const [equipped] = useMemo(() => {
-        const equipped: number = Object.values(equipments).filter(
-            (value) => value
-        ).length;
+    const [equipmentsLength, equipped] = useMemo(() => {
+        const _equipments = Object.values(equipments);
+        const equipmentsLength = _equipments.length;
+        const equipped: number = _equipments.filter((value) => value).length;
 
-        return [equipped];
+        return [equipmentsLength, equipped];
     }, [equipments]);
 
     return {
@@ -141,6 +141,7 @@ export function useScenario(scenearioConfig: ScenearioConfig) {
         allWithin: allWithin,
         withinShield: withinShield,
         allWithinShield: allWithinShield,
+        equipmentsLength: equipmentsLength,
         equipped: equipped,
     };
 }

@@ -39,3 +39,17 @@ export function Item({
         </>
     );
 }
+
+export type SubItemProps = {
+    children: React.ReactNode;
+    isDone?: boolean;
+};
+export function SubItem({ children, isDone = false }: SubItemProps) {
+    return (
+        <>
+            <p className={`${style.sub} ${isDone && `${style.done}`}`}>
+                {children}
+            </p>
+        </>
+    );
+}
