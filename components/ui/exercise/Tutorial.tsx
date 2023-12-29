@@ -12,8 +12,8 @@ import "swiper/css/pagination";
 
 import style from "../../../styles/css/exercise.module.css";
 
-export type TutorialProps = { sceneName: string };
-export function Tutorial({ sceneName }: TutorialProps) {
+export type TutorialProps = { sceneName: string; isEnglish?: boolean };
+export function Tutorial({ sceneName, isEnglish = false }: TutorialProps) {
     const [debug] = useStore((state) => [state.debug]);
 
     return (
@@ -26,16 +26,19 @@ export function Tutorial({ sceneName }: TutorialProps) {
                     className={style.swiper}
                 >
                     <SwiperSlide className={style.swiperSlide}>
-                        <TUTORIALS.Tutorial1 sceneName={sceneName} />
+                        <TUTORIALS.Tutorial1
+                            sceneName={sceneName}
+                            isEnglish={isEnglish}
+                        />
                     </SwiperSlide>
                     <SwiperSlide className={style.swiperSlide}>
-                        <TUTORIALS.Tutorial2 />
+                        <TUTORIALS.Tutorial2 isEnglish={isEnglish} />
                     </SwiperSlide>
                     <SwiperSlide className={style.swiperSlide}>
-                        <TUTORIALS.Tutorial3 />
+                        <TUTORIALS.Tutorial3 isEnglish={isEnglish} />
                     </SwiperSlide>
                     <SwiperSlide className={style.swiperSlide}>
-                        <TUTORIALS.Tutorial4 />
+                        <TUTORIALS.Tutorial4 isEnglish={isEnglish} />
                     </SwiperSlide>
                 </Swiper>
             </div>

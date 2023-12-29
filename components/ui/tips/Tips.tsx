@@ -16,7 +16,8 @@ import style from "../../../styles/css/tips.module.css";
 /**
  * @link https://swiperjs.com/demos#css-mode
  */
-export function Tips() {
+export type TipsProps = { isEnglish?: boolean };
+export function Tips({ isEnglish = false }: TipsProps) {
     const [set, tips] = useStore((state) => [state.set, state.tips]);
 
     return (
@@ -79,80 +80,84 @@ export function Tips() {
                         {/* ================================================== */}
                         {/* Screen */}
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.ScreenStructure />
+                            <ITEM.ScreenStructure isEnglish={isEnglish} />
                         </SwiperSlide>
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.Screen3DSpace />
+                            <ITEM.Screen3DSpace isEnglish={isEnglish} />
                         </SwiperSlide>
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.ScreenOperationPanel />
+                            <ITEM.ScreenOperationPanel isEnglish={isEnglish} />
                         </SwiperSlide>
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.ScreenUIDosimeter1 />
+                            <ITEM.ScreenUIDosimeter1 isEnglish={isEnglish} />
                         </SwiperSlide>
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.ScreenUIDosimeter2 />
+                            <ITEM.ScreenUIDosimeter2 isEnglish={isEnglish} />
                         </SwiperSlide>
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.ScreenUIDosimeter3 />
+                            <ITEM.ScreenUIDosimeter3 isEnglish={isEnglish} />
                         </SwiperSlide>
                         {/* ================================================== */}
                         {/* Scene Object */}
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.SceneObjectManual />
+                            <ITEM.SceneObjectManual isEnglish={isEnglish} />
                         </SwiperSlide>
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.SceneObjectPlayer />
+                            <ITEM.SceneObjectPlayer isEnglish={isEnglish} />
                         </SwiperSlide>
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.SceneObjectShield />
+                            <ITEM.SceneObjectShield isEnglish={isEnglish} />
                         </SwiperSlide>
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.SceneObjectClip1 />
+                            <ITEM.SceneObjectClip1 isEnglish={isEnglish} />
                         </SwiperSlide>
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.SceneObjectClip2 />
+                            <ITEM.SceneObjectClip2 isEnglish={isEnglish} />
                         </SwiperSlide>
                         {/* ================================================== */}
                         {/* Operation Panel */}
                         {/* -------------------------------------------------- */}
                         {/* Leva/Scene */}
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.LevaSceneGimmickXRay />
+                            <ITEM.LevaSceneGimmickXRay isEnglish={isEnglish} />
                         </SwiperSlide>
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.LevaSceneGimmickCArm />
+                            <ITEM.LevaSceneGimmickCArm isEnglish={isEnglish} />
                         </SwiperSlide>
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.LevaSceneOptions />
+                            <ITEM.LevaSceneOptions isEnglish={isEnglish} />
                         </SwiperSlide>
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.LevaSceneOptionsCameraControlsSettings />
+                            <ITEM.LevaSceneOptionsCameraControlsSettings
+                                isEnglish={isEnglish}
+                            />
                         </SwiperSlide>
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.LevaSceneOptionsDosimeterSettings />
+                            <ITEM.LevaSceneOptionsDosimeterSettings
+                                isEnglish={isEnglish}
+                            />
                         </SwiperSlide>
                         {/* -------------------------------------------------- */}
                         {/* Leva/Player */}
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.LevaPlayerEquipments />
+                            <ITEM.LevaPlayerEquipments isEnglish={isEnglish} />
                         </SwiperSlide>
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.LevaPlayerHands />
+                            <ITEM.LevaPlayerHands isEnglish={isEnglish} />
                         </SwiperSlide>
                         {/* -------------------------------------------------- */}
                         {/* Leva/Data */}
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.LevaDataMode />
+                            <ITEM.LevaDataMode isEnglish={isEnglish} />
                         </SwiperSlide>
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.LevaDataAnimation />
+                            <ITEM.LevaDataAnimation isEnglish={isEnglish} />
                         </SwiperSlide>
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.LevaDataClip />
+                            <ITEM.LevaDataClip isEnglish={isEnglish} />
                         </SwiperSlide>
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.LevaDataDetail />
+                            <ITEM.LevaDataDetail isEnglish={isEnglish} />
                         </SwiperSlide>
                     </Swiper>
                 </div>

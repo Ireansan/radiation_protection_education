@@ -12,7 +12,8 @@ import "swiper/css/pagination";
 
 import style from "../../../styles/css/exercise.module.css";
 
-export function Exercise({ ...props }) {
+export type ExerciseProps = { isEnglish?: boolean };
+export function Exercise({ isEnglish = false }: ExerciseProps) {
     const [debug] = useStore((state) => [state.debug]);
 
     return (
@@ -25,16 +26,16 @@ export function Exercise({ ...props }) {
                     className={style.swiper}
                 >
                     <SwiperSlide className={style.swiperSlide}>
-                        <SCENARIOS.Exercise1 />
+                        <SCENARIOS.Exercise1 isEnglish={isEnglish} />
                     </SwiperSlide>
                     <SwiperSlide className={style.swiperSlide}>
-                        <SCENARIOS.Exercise2Preparation />
+                        <SCENARIOS.Exercise2Preparation isEnglish={isEnglish} />
                     </SwiperSlide>
                     <SwiperSlide className={style.swiperSlide}>
-                        <SCENARIOS.Exercise2 />
+                        <SCENARIOS.Exercise2 isEnglish={isEnglish} />
                     </SwiperSlide>
                     <SwiperSlide className={style.swiperSlide}>
-                        <SCENARIOS.Exercise3 />
+                        <SCENARIOS.Exercise3 isEnglish={isEnglish} />
                     </SwiperSlide>
                 </Swiper>
             </div>

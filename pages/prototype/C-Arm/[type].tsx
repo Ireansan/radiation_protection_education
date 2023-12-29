@@ -147,8 +147,8 @@ export const getStaticProps: GetStaticProps = async ({
                 experimentUI: isExperiment,
                 exerciseUI: isExtra || isExperiment || isPerspective,
                 tutorialUI: isTutorial,
-                isEnglish: isEnglish,
             },
+            isEnglish: isEnglish,
         },
     };
 };
@@ -692,17 +692,20 @@ function VisualizationCArm({ ...props }: PageProps) {
                     {objectVisibles.exerciseUI &&
                     props.availables.exerciseUI ? (
                         <>
-                            <Exercise />
+                            <Exercise isEnglish={props.isEnglish} />
                         </>
                     ) : null}
                     {objectVisibles.tutorialUI &&
                     props.availables.tutorialUI ? (
                         <>
-                            <Tutorial sceneName="C-Arm" />
+                            <Tutorial
+                                sceneName="C-Arm"
+                                isEnglish={props.isEnglish}
+                            />
                         </>
                     ) : null}
 
-                    <Tips />
+                    <Tips isEnglish={props.isEnglish} />
                 </div>
             </div>
         </>
