@@ -1,6 +1,7 @@
 import { TipsItem } from "../TipsItemTemplate";
+import type { TipsBaseProps } from "../TipsItemTemplate";
 
-export function LevaPlayerEquipments({ ...props }) {
+export function LevaPlayerEquipments({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
@@ -9,22 +10,29 @@ export function LevaPlayerEquipments({ ...props }) {
                 }
                 imgAlt={"img/leva/Player/Equipments"}
             >
-                <h3>Operation panel - Player/Equipments</h3>
-                <p>
-                    You can select whether or not you are equipped with{" "}
-                    radiation protection equipment.
-                </p>
-                <p>
-                    By activating the equipment, the dosimeter UI displays icons{" "}
-                    according to the type and the exposure dose.
-                </p>
+                {!isEnglish ? (
+                    <></>
+                ) : (
+                    <>
+                        <h3>Operation panel - Player/Equipments</h3>
+                        <p>
+                            You can select whether or not you are equipped with{" "}
+                            radiation protection equipment.
+                        </p>
+                        <p>
+                            By activating the equipment, the dosimeter UI
+                            displays icons according to the type and the
+                            exposure dose.
+                        </p>
+                    </>
+                )}
             </TipsItem>
         </>
     );
 }
 
 // FIXME:
-export function LevaPlayerHands({ ...props }) {
+export function LevaPlayerHands({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
@@ -33,8 +41,14 @@ export function LevaPlayerHands({ ...props }) {
                 // }
                 imgAlt={"img/leva/Player/Hands"}
             >
-                <h3>Operation panel - Player/Hands</h3>
-                <p></p>
+                {!isEnglish ? (
+                    <></>
+                ) : (
+                    <>
+                        <h3>Operation panel - Player/Hands</h3>
+                        <p></p>
+                    </>
+                )}
             </TipsItem>
         </>
     );

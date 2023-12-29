@@ -3,6 +3,7 @@ import { QuestionMark } from "@mui/icons-material";
 
 import { useStore } from "../../../store";
 import { Item, SubItem, NextButton } from "../utils";
+import type { ScenarioProps } from "../utils";
 
 import style from "../../../../styles/css/exercise.module.css";
 
@@ -14,8 +15,8 @@ const MemoSubItem = memo(SubItem);
  */
 export type Tutorial1Props = {
     sceneName: string;
-};
-export function Tutorial1({ sceneName }: Tutorial1Props) {
+} & ScenarioProps;
+export function Tutorial1({ isEnglish = false, sceneName }: Tutorial1Props) {
     const [set, exerciseProgress, executeLog] = useStore((state) => [
         state.set,
         state.sceneStates.exerciseProgress,
@@ -66,21 +67,27 @@ export function Tutorial1({ sceneName }: Tutorial1Props) {
                 <h3>Tutorial (1/4)</h3>
                 <div className={`${style.items}`}>
                     <MemoItem isDone={openAndClose}>
-                        画面左上の
-                        <span
-                            style={{
-                                backgroundColor: "#007aff",
-                                borderRadius: "1px",
-                            }}
-                        >
-                            <QuestionMark sx={{ fontSize: "1em" }} />
-                        </span>
-                        をクリックし、
-                        <br />
-                        Tipsが表示されることを確認する
+                        {!isEnglish ? (
+                            <>
+                                画面左上の
+                                <span
+                                    style={{
+                                        backgroundColor: "#007aff",
+                                        borderRadius: "1px",
+                                    }}
+                                >
+                                    <QuestionMark sx={{ fontSize: "1em" }} />
+                                </span>
+                                をクリックし、
+                                <br />
+                                Tipsが表示されることを確認する
+                            </>
+                        ) : (
+                            <></>
+                        )}
                     </MemoItem>
                     <MemoItem isDone={allCheck}>
-                        Gimmickのtypeを全て確認する <br />
+                        {!isEnglish ? <>Gimmickのtypeを全て確認する</> : <></>}
                         <MemoSubItem isDone={allCheck}>
                             type: {gimmick.filter((v) => v === true).length}/
                             {gimmick.length}
@@ -93,7 +100,10 @@ export function Tutorial1({ sceneName }: Tutorial1Props) {
     );
 }
 
-export function Tutorial2() {
+/**
+ *
+ */
+export function Tutorial2({ isEnglish = false }: ScenarioProps) {
     const [set, exerciseProgress, executeLog] = useStore((state) => [
         state.set,
         state.sceneStates.exerciseProgress,
@@ -136,13 +146,22 @@ export function Tutorial2() {
                 <h3>Tutorial (2/4)</h3>
                 <div className={`${style.items}`}>
                     <MemoItem isDone={allEquipped}>
-                        プレイヤーの装備を全て有効にする
+                        {!isEnglish ? (
+                            <>プレイヤーの装備を全て有効にする</>
+                        ) : (
+                            <></>
+                        )}
                         <MemoSubItem isDone={allEquipped}>
-                            (Optional) 線量計UIと3Dモデルの変化を確認する
+                            (Optional){" "}
+                            {!isEnglish ? (
+                                <>線量計UIと3Dモデルの変化を確認する</>
+                            ) : (
+                                <></>
+                            )}
                         </MemoSubItem>
                     </MemoItem>
                     <MemoItem isDone={allHandMoved}>
-                        プレイヤーの手の位置を変える
+                        {!isEnglish ? <>プレイヤーの手の位置を変える</> : <></>}
                     </MemoItem>
                 </div>
                 <NextButton disabled={!exerciseProgress.tutorial2} />
@@ -150,8 +169,10 @@ export function Tutorial2() {
         </>
     );
 }
-
-export function Tutorial3() {
+/**
+ *
+ */
+export function Tutorial3({ isEnglish = false }: ScenarioProps) {
     const [set, exerciseProgress, executeLog] = useStore((state) => [
         state.set,
         state.sceneStates.exerciseProgress,
@@ -181,10 +202,6 @@ export function Tutorial3() {
         const renderStyle = Object.values(executeLog.parameter.renderStyle);
         const parameter = [...colormap, ...renderStyle];
         const checkParameter = parameter.filter((value) => value).length > 3;
-        console.log(
-            parameter.length,
-            parameter.filter((value) => value).length
-        ); // FIXME:
 
         return [parameter, checkParameter];
     }, [executeLog]);
@@ -207,14 +224,19 @@ export function Tutorial3() {
                 <h3>Tutorial (3/4)</h3>
                 <div className={`${style.items}`}>
                     <MemoItem isDone={allCheckMode}>
-                        Dataのmodeを変える
+                        {!isEnglish ? <>Dataのmodeを変える</> : <></>}
                     </MemoItem>
                     <MemoItem isDone={checkClip}>
-                        (Optional) Clipを操作し、断面を確認する
+                        (Optional){" "}
+                        {!isEnglish ? <>Clipを操作し、断面を確認する</> : <></>}
                     </MemoItem>
                     <MemoItem isDone={checkParameter}>
-                        (Optional) Detailでcolormap, renderstyle
-                        などの変更を行う
+                        (Optional){" "}
+                        {!isEnglish ? (
+                            <>Detailでcolormap, renderstyle などの変更を行う</>
+                        ) : (
+                            <></>
+                        )}
                     </MemoItem>
                 </div>
                 <NextButton disabled={!exerciseProgress.tutorial3} />
@@ -223,7 +245,10 @@ export function Tutorial3() {
     );
 }
 
-export function Tutorial4() {
+/**
+ *
+ */
+export function Tutorial4({ isEnglish = false }: ScenarioProps) {
     const [set, exerciseProgress, executeLog] = useStore((state) => [
         state.set,
         state.sceneStates.exerciseProgress,
@@ -261,13 +286,23 @@ export function Tutorial4() {
                 <h3>Tutorial (4/4)</h3>
                 <div className={`${style.items}`}>
                     <MemoItem isDone={playerMoved}>
-                        プレイヤーを移動させる
+                        {!isEnglish ? <>プレイヤーを移動させる</> : <></>}
                     </MemoItem>
                     <MemoItem isDone={shieldMoved && shieldEnabled}>
-                        防護板を線量分布内に移動させる
+                        {!isEnglish ? (
+                            <>防護板を線量分布内に移動させる</>
+                        ) : (
+                            <></>
+                        )}
                         <MemoSubItem>
-                            注意:
-                            処理が重くなる恐れがあります。現在使用しているデバイスで操作が困難になった場合、GPUを搭載しているデバイスで実施して下さい。
+                            {!isEnglish ? (
+                                <>
+                                    注意:
+                                    処理が重くなる恐れがあります。現在使用しているデバイスで操作が困難になった場合、GPUを搭載しているデバイスで実施して下さい。
+                                </>
+                            ) : (
+                                <></>
+                            )}
                         </MemoSubItem>
                     </MemoItem>
                 </div>

@@ -2,6 +2,7 @@ import React, { memo, useEffect } from "react";
 
 import { useStore } from "../../../store";
 import { Item, SubItem, NextButton, useScenario } from "../utils";
+import type { ScenarioProps } from "../utils";
 
 import style from "../../../../styles/css/exercise.module.css";
 
@@ -11,7 +12,7 @@ const MemoSubItem = memo(SubItem);
 /**
  *
  */
-export function Exercise1() {
+export function Exercise1({ isEnglish = false }: ScenarioProps) {
     const [set, exerciseProgress] = useStore((state) => [
         state.set,
         state.sceneStates.exerciseProgress,
@@ -46,15 +47,25 @@ export function Exercise1() {
                 <h3>Exercise - 1</h3>
                 <div className={`${style.items}`}>
                     <MemoItem isDone={inRange}>
-                        Move Player to within {RangeRadius * 100} cm.
+                        {!isEnglish ? (
+                            <></>
+                        ) : (
+                            <>Move Player to within {RangeRadius * 100} cm.</>
+                        )}
                         <MemoSubItem isDone={inRange}>
                             Distance: {(distance * 100).toFixed()} /{" "}
                             {RangeRadius * 100} [cm]
                         </MemoSubItem>
                     </MemoItem>
                     <MemoItem isDone={allWithin}>
-                        All measurements are below the upper limit.
-                        {/* All measurements below regulatory limits */}
+                        {!isEnglish ? (
+                            <></>
+                        ) : (
+                            <>
+                                All measurements are below the upper limit.
+                                {/* All measurements below regulatory limits */}
+                            </>
+                        )}
                         <MemoSubItem isDone={allWithin}>
                             Year: {yearWithin} / {dosimeterResultsLength}
                             <br />
@@ -77,7 +88,7 @@ export function Exercise1() {
 /**
  *
  */
-export function Exercise2Preparation() {
+export function Exercise2Preparation({ isEnglish = false }: ScenarioProps) {
     const [set, exerciseProgress] = useStore((state) => [
         state.set,
         state.sceneStates.exerciseProgress,
@@ -106,15 +117,21 @@ export function Exercise2Preparation() {
                 <h3>Exercise - 2 (Preparation)</h3>
                 <div className={`${style.items}`}>
                     <MemoItem isDone={withinShield === 0}>
-                        All measurements to be unaffected by Shield.
-                        <br />
-                        (Players should not be moved.)
+                        {!isEnglish ? (
+                            <></>
+                        ) : (
+                            <>
+                                All measurements to be unaffected by Shield.
+                                <br />
+                                (Players should not be moved.)
+                            </>
+                        )}
                         <MemoSubItem isDone={withinShield === 0}>
                             Shield: {withinShield} / {dosimeterResultsLength}
                         </MemoSubItem>
                     </MemoItem>
                     <MemoItem isDone={equipped === 0}>
-                        Remove all Equipment.
+                        {!isEnglish ? <></> : <>Remove all Equipment.</>}
                         <MemoSubItem isDone={equipped === 0}>
                             Equipment: {equipped} / {equipmentsLength}
                         </MemoSubItem>
@@ -129,7 +146,7 @@ export function Exercise2Preparation() {
 /**
  *
  */
-export function Exercise2() {
+export function Exercise2({ isEnglish = false }: ScenarioProps) {
     const [set, exerciseProgress] = useStore((state) => [
         state.set,
         state.sceneStates.exerciseProgress,
@@ -158,7 +175,11 @@ export function Exercise2() {
                 <h3>Exercise - 2</h3>
                 <div className={`${style.items}`}>
                     <MemoItem isDone={inRange}>
-                        Move Player away to {RangeRadius} m.
+                        {!isEnglish ? (
+                            <></>
+                        ) : (
+                            <>Move Player away to {RangeRadius} m.</>
+                        )}
                         <MemoSubItem isDone={inRange}>
                             Distance: {distance.toFixed(2)} / {RangeRadius} [m]
                         </MemoSubItem>
@@ -173,7 +194,7 @@ export function Exercise2() {
 /**
  *
  */
-export function Exercise3() {
+export function Exercise3({ isEnglish = false }: ScenarioProps) {
     const [set, exerciseProgress] = useStore((state) => [
         state.set,
         state.sceneStates.exerciseProgress,
@@ -202,7 +223,14 @@ export function Exercise3() {
                 <h3>Exercise - 3</h3>
                 <div className={`${style.items}`}>
                     <MemoItem isDone={allWithinShield}>
-                        All measuring points are under the influence of Shield.
+                        {!isEnglish ? (
+                            <></>
+                        ) : (
+                            <>
+                                All measuring points are under the influence of
+                                Shield.
+                            </>
+                        )}
                         <MemoSubItem isDone={allWithinShield}>
                             Shield: {withinShield} / {dosimeterResultsLength}
                         </MemoSubItem>

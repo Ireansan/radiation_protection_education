@@ -6,12 +6,15 @@ import { applyBasePath } from "../../../../utils";
 
 import style from "../../../../styles/css/tips.module.css";
 
+export type TipsBaseProps = {
+    isEnglish?: boolean;
+};
+
 export type TipsItemProps = {
     children: React.ReactNode;
     imgSrc?: string;
     imgAlt?: string;
 };
-
 export function TipsItem({
     children,
     imgSrc,

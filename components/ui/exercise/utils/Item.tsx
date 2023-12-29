@@ -3,6 +3,10 @@ import { CheckBox, CheckBoxOutlineBlank } from "@mui/icons-material";
 
 import style from "../../../../styles/css/exercise.module.css";
 
+export type ScenarioProps = {
+    isEnglish?: boolean;
+};
+
 /**
  *
  */
