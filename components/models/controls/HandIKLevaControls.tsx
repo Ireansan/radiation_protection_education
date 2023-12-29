@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { useControls, folder } from "leva";
 
 import { IKControls as IKControlsImpl } from "../../../src";
+import { useStore } from "../../store";
 
 type HandIKLevaControlsProps = {
     children?: React.ReactElement<THREE.Object3D>;
@@ -12,6 +13,8 @@ export const HandIKLevaControls = React.forwardRef<
     IKControlsImpl,
     HandIKLevaControlsProps
 >(function HandIKLevaControls({ object, children, ...props }, ref) {
+    const [set] = useStore((state) => [state.set]);
+
     const controls = React.useMemo(() => new IKControlsImpl(), []);
     const group = React.useRef<THREE.Group>(null);
 
@@ -45,6 +48,22 @@ export const HandIKLevaControls = React.forwardRef<
                                 position
                             );
                         },
+                        onEditEnd: () => {
+                            // set execute log for experiment
+                            set((state) => ({
+                                sceneStates: {
+                                    ...state.sceneStates,
+                                    executeLog: {
+                                        ...state.sceneStates.executeLog,
+                                        player: {
+                                            ...state.sceneStates.executeLog
+                                                .player,
+                                            leftHand: true,
+                                        },
+                                    },
+                                },
+                            }));
+                        },
                     },
                     right: {
                         value: { x: 0, y: 0 },
@@ -62,6 +81,22 @@ export const HandIKLevaControls = React.forwardRef<
                                 "mixamorigRightHandIK",
                                 position
                             );
+                        },
+                        onEditEnd: () => {
+                            // set execute log for experiment
+                            set((state) => ({
+                                sceneStates: {
+                                    ...state.sceneStates,
+                                    executeLog: {
+                                        ...state.sceneStates.executeLog,
+                                        player: {
+                                            ...state.sceneStates.executeLog
+                                                .player,
+                                            rightHand: true,
+                                        },
+                                    },
+                                },
+                            }));
                         },
                     },
                 }),

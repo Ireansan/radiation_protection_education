@@ -27,7 +27,10 @@ export function PrototypeAnimationControls({
     mode = "time lapse",
     ...props
 }: PrototypeAnimationControlsProps) {
-    const [set] = useStore((state) => [state.set]);
+    const [set, executeLog] = useStore((state) => [
+        state.set,
+        state.sceneStates.executeLog,
+    ]);
 
     /**
      * @link https://github.com/pmndrs/drei/blob/cce70ae77b5151601089114259fbffab8747c8fa/src/core/useAnimations.tsx
@@ -108,38 +111,19 @@ export function PrototypeAnimationControls({
                         }
 
                         // set execute log for experiment
-                        switch (e) {
-                            case "time lapse":
-                                set((state) => ({
-                                    sceneStates: {
-                                        ...state.sceneStates,
-                                        executeLog: {
-                                            ...state.sceneStates.executeLog,
-                                            animation: {
-                                                ...state.sceneStates.executeLog
-                                                    .animation,
-                                                timeLapse: true,
-                                            },
-                                        },
-                                    },
-                                }));
-                                break;
-                            case "accumulate":
-                                set((state) => ({
-                                    sceneStates: {
-                                        ...state.sceneStates,
-                                        executeLog: {
-                                            ...state.sceneStates.executeLog,
-                                            animation: {
-                                                ...state.sceneStates.executeLog
-                                                    .animation,
-                                                accumulate: true,
-                                            },
-                                        },
-                                    },
-                                }));
-                                break;
-                        }
+                        const _animation = executeLog.animation;
+                        console.log(e);
+                        _animation[e] = true;
+
+                        set((state) => ({
+                            sceneStates: {
+                                ...state.sceneStates,
+                                executeLog: {
+                                    ...state.sceneStates.executeLog,
+                                    animation: _animation,
+                                },
+                            },
+                        }));
                     },
                 },
             },

@@ -80,7 +80,6 @@ export const VolumeParameterControls = React.forwardRef<
                             max: cmax,
                             step: climStep,
                             onChange: (e) => {
-                                console.log(e);
                                 controls.clim1 = e[0];
                                 controls.clim2 = e[1];
                             },
