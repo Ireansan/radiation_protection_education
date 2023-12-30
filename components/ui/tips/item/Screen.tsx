@@ -13,9 +13,9 @@ import {
     // BackHand
 } from "@mui/icons-material";
 
-import { TipsItem } from "./TipsItemTemplate";
+import { TipsItem } from "../utils/TipsItemTemplate";
 import { applyBasePath } from "../../../../utils";
-import type { TipsBaseProps } from "./TipsItemTemplate";
+import type { TipsBaseProps } from "../utils";
 
 export function ScreenStructure({ isEnglish = false }: TipsBaseProps) {
     return (

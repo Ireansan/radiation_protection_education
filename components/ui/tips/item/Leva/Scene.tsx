@@ -1,5 +1,5 @@
-import { TipsItem } from "../TipsItemTemplate";
-import type { TipsBaseProps } from "../TipsItemTemplate";
+import { TipsItem } from "../../utils";
+import type { TipsBaseProps } from "../../utils";
 
 export function LevaSceneGimmickXRay({ isEnglish = false }: TipsBaseProps) {
     return (
