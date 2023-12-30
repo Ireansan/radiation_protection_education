@@ -82,23 +82,28 @@ export function LevaSceneGimmickCArm({ isEnglish = false }: TipsBaseProps) {
     );
 }
 
-// FIXME:
 export function LevaSceneOptions({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                // FIXME: img
                 // imgSrc={"/img/manual/experiment/01/png/leva/Data/Clip.png"}
                 imgAlt={"img/leva/Data/Clip"}
             >
                 {!isEnglish ? (
                     <>
                         <h3>操作パネル - Scene/Options</h3>
-                        <p></p>
+                        <p>
+                            カメラ操作と線量計UIについて、詳細な設定を変更できます。
+                        </p>
                     </>
                 ) : (
                     <>
                         <h3>Operation panel - Scene/Options</h3>
-                        <p></p>
+                        <p>
+                            You can change detailed settings for camera
+                            controller and dosimeter UI.
+                        </p>
                     </>
                 )}
             </TipsItem>
@@ -106,13 +111,13 @@ export function LevaSceneOptions({ isEnglish = false }: TipsBaseProps) {
     );
 }
 
-// FIXME:
 export function LevaSceneOptionsCameraControlsSettings({
     isEnglish = false,
 }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                // FIXME: img
                 // imgSrc={"/img/manual/experiment/01/png/leva/Data/Clip.png"}
                 imgAlt={"img/leva/Scene/Options/CameraControlsSettings"}
             >
@@ -121,7 +126,28 @@ export function LevaSceneOptionsCameraControlsSettings({
                         <h3>
                             操作パネル - Scene/Options/Camera Controls Settings
                         </h3>
-                        <p></p>
+                        <p>
+                            カメラ操作に関連する以下の項目について，設定を変更できます。
+                        </p>
+                        <ul>
+                            <li>
+                                <code>dampingFactor</code>
+                                ：慣性が有効な時のみ影響する，減衰係数。
+                            </li>
+                            <li>
+                                <code>enableDamping</code>
+                                ：慣性の切り替え。デフォルトはoff。
+                            </li>
+                            <li>
+                                <code>panSpeed</code>：移動の速度
+                            </li>
+                            <li>
+                                <code>rotateSpeed</code>：回転の速度
+                            </li>
+                            <li>
+                                <code>zoomSpeed</code>：ズームの速度
+                            </li>
+                        </ul>
                     </>
                 ) : (
                     <>
@@ -129,7 +155,29 @@ export function LevaSceneOptionsCameraControlsSettings({
                             Operation panel - Scene/Options/Camera Controls
                             Settings
                         </h3>
-                        <p></p>
+                        <p>
+                            You can change the settings for the following items
+                            related to camera controller.
+                        </p>
+                        <ul>
+                            <li>
+                                <code>dampingFactor</code>: Damping factor,
+                                which affects only when inertia is in effect.
+                            </li>
+                            <li>
+                                <code>enableDamping</code>: Toggle inertia.
+                                Default is off.
+                            </li>
+                            <li>
+                                <code>panSpeed</code>: Speed of pan.
+                            </li>
+                            <li>
+                                <code>rotateSpeed</code>: Speed of rotate.
+                            </li>
+                            <li>
+                                <code>zoomSpeed</code>: Speed of zoom.
+                            </li>
+                        </ul>
                     </>
                 )}
             </TipsItem>
@@ -137,13 +185,13 @@ export function LevaSceneOptionsCameraControlsSettings({
     );
 }
 
-// FIXME:
 export function LevaSceneOptionsDosimeterSettingsParameter({
     isEnglish = false,
 }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                // FIXME: img
                 // imgSrc={"/img/manual/experiment/01/png/leva/Data/Clip.png"}
                 imgAlt={"img/leva/Scene/DosimeterSettings"}
             >
@@ -213,13 +261,13 @@ export function LevaSceneOptionsDosimeterSettingsParameter({
     );
 }
 
-// FIXME:
 export function LevaSceneOptionsDosimeterSettingsLayout({
     isEnglish = false,
 }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                // FIXME: img
                 // imgSrc={"/img/manual/experiment/01/png/leva/Data/Clip.png"}
                 imgAlt={"img/leva/Scene/DosimeterSettings"}
             >
@@ -228,7 +276,17 @@ export function LevaSceneOptionsDosimeterSettingsLayout({
                         <h3>
                             操作パネル - Scene/Options/Dosimeter Settings/Layout
                         </h3>
-                        <p></p>
+                        <p>線量計UIの表示設定を変更できます。</p>
+                        <ul>
+                            <li>
+                                <code>order</code>：年間と一回の値の並び順
+                                {/* デフォルトの<code>Year-Once</code>
+                                では年間の値が左、一回の値が右の順番に並びます。 */}
+                            </li>
+                            <li>
+                                <code>data</code>：被ばく量の表現方法
+                            </li>
+                        </ul>
                     </>
                 ) : (
                     <>
@@ -236,7 +294,83 @@ export function LevaSceneOptionsDosimeterSettingsLayout({
                             Operation panel - Scene/Options/Dosimeter
                             Settings/Layout
                         </h3>
-                        <p></p>
+                        <p>
+                            You can change the display settings of the
+                            Dosimeter.
+                        </p>
+                        <ul>
+                            <li>
+                                <code>order</code>: order of Year and Once
+                                values
+                                {/* デフォルトの<code>Year-Once</code>
+                                では年間の値が左、一回の値が右の順番に並びます。 */}
+                            </li>
+                            <li>
+                                <code>data</code>: expression of exposure dose
+                            </li>
+                        </ul>
+                    </>
+                )}
+            </TipsItem>
+        </>
+    );
+}
+
+export function LevaSceneOptionsDosimeterSettingsLayoutData({
+    isEnglish = false,
+}: TipsBaseProps) {
+    return (
+        <>
+            <TipsItem
+                // FIXME: img
+                // imgSrc={"/img/manual/experiment/01/png/leva/Data/Clip.png"}
+                imgAlt={"img/leva/Scene/DosimeterSettings"}
+            >
+                {!isEnglish ? (
+                    <>
+                        <h3>
+                            操作パネル - Scene/Options/Dosimeter
+                            Settings/Layout/data
+                        </h3>
+                        <p>
+                            表現方法が<code>addition</code>
+                            の場合，被ばく量がそのまま表示され，白いバーが伸びていきます。
+                        </p>
+                        <p>
+                            <code>subtraction</code>
+                            ではそれぞれの規制量から被ばく量を引いた値が表示され，緑色のバーが削れていき，黄色のバー（被ばく量）表示されていきます。
+                            <br />
+                            被ばく量が規制量を超えた場合，マイナスの値が表示されます。
+                        </p>
+                        <p>
+                            どちらの表現方法でも規制量を超過した場合，数値とバーの色が赤に変わります。
+                        </p>
+                    </>
+                ) : (
+                    <>
+                        <h3>
+                            Operation panel - Scene/Options/Dosimeter
+                            Settings/Layout/data
+                        </h3>
+                        <p>
+                            If the expression method is <code>addition</code>,
+                            the exposure dose is displayed as it is, and the
+                            white bar extends.
+                        </p>
+                        <p>
+                            In <code>subtraction</code>, the exposure dose is
+                            subtracted from the respective regulated dose, and
+                            the green bar is shaved off, and the yellow bar
+                            (exposure dose) is displayed.
+                            <br />
+                            If the exposure dose exceeds the regulation dose, a
+                            negative value is displayed.
+                        </p>
+                        <p>
+                            When the regulation amount is exceeded in either
+                            representation, the color of the value and the bar
+                            changes to red.
+                        </p>
                     </>
                 )}
             </TipsItem>

@@ -102,12 +102,12 @@ export function Tutorial1({ isEnglish = false, sceneName }: Tutorial1Props) {
                         {!isEnglish ? (
                             <>
                                 操作パネルの<code>Scene/Gimmick/type</code>
-                                を操作し， Gimmickのtypeを全て確認する
+                                を操作し， typeを全て確認する
                             </>
                         ) : (
                             <>
                                 Operate <code>Scene/Gimmick/type</code> on the
-                                operation panel to check all Gimmick types.
+                                operation panel to check all types.
                             </>
                         )}
                         <MemoSubItem isDone={allCheck}>

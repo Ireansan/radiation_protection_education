@@ -32,11 +32,11 @@ export function LevaDataMode({ isEnglish = false }: TipsBaseProps) {
     );
 }
 
-// FIXME:
 export function LevaDataAnimation({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                // FIXME: img
                 imgSrc={"/img/manual/experiment/01/png/leva/Data/Animation.png"}
                 imgAlt={"img/leva/Data/Animation"}
             >
@@ -44,7 +44,6 @@ export function LevaDataAnimation({ isEnglish = false }: TipsBaseProps) {
                     <>
                         <h3>操作パネル - Data/Animation</h3>
                         <p>
-                            {/* FIXME: */}
                             データ表示形式が<code>time lapse</code>
                             の時，アニメーションを操作できます。
                         </p>
@@ -68,7 +67,6 @@ export function LevaDataAnimation({ isEnglish = false }: TipsBaseProps) {
                     <>
                         <h3>Operation panel - Data/Animation</h3>
                         <p>
-                            {/* FIXME: */}
                             When the data display format is{" "}
                             <code>time lapse</code>, animation can be
                             manipulated.
@@ -133,12 +131,11 @@ export function LevaDataClip({ isEnglish = false }: TipsBaseProps) {
     );
 }
 
-// FIXME:
 export function LevaDataDetail({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
-                // FIXME:
+                // FIXME: img
                 imgSrc={"/img/manual/experiment/01/png/leva/Data/Parameter.png"}
                 imgAlt={"img/leva/Data/Detail"}
             >
@@ -151,8 +148,8 @@ export function LevaDataDetail({ isEnglish = false }: TipsBaseProps) {
                                 <code>opacity</code>：不透明度
                             </li>
                             <li>
-                                {/* FIXME: */}
-                                <code>clim</code>: clim
+                                <code>clim</code>：カラーマップの範囲
+                                (小数点第二位以下は数値として表示されません)
                             </li>
                             <li>
                                 <code>colormap</code>
@@ -190,8 +187,8 @@ export function LevaDataDetail({ isEnglish = false }: TipsBaseProps) {
                                 <code>opacity</code>: opacity
                             </li>
                             <li>
-                                {/* FIXME: */}
-                                <code>clim</code>: clim
+                                <code>clim</code>: colormap range (Any decimal
+                                places are not displayed as numerical values)
                             </li>
                             <li>
                                 <code>colormap</code>: colormap to be applied to

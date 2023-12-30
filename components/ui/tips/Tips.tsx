@@ -133,7 +133,17 @@ export function Tips({ isEnglish = false }: TipsProps) {
                             />
                         </SwiperSlide>
                         <SwiperSlide className={style.swiperSlide}>
-                            <ITEM.LevaSceneOptionsDosimeterSettings
+                            <ITEM.LevaSceneOptionsDosimeterSettingsParameter
+                                isEnglish={isEnglish}
+                            />
+                        </SwiperSlide>
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.LevaSceneOptionsDosimeterSettingsLayout
+                                isEnglish={isEnglish}
+                            />
+                        </SwiperSlide>
+                        <SwiperSlide className={style.swiperSlide}>
+                            <ITEM.LevaSceneOptionsDosimeterSettingsLayoutData
                                 isEnglish={isEnglish}
                             />
                         </SwiperSlide>

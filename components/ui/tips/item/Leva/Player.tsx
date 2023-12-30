@@ -37,11 +37,11 @@ export function LevaPlayerEquipments({ isEnglish = false }: TipsBaseProps) {
     );
 }
 
-// FIXME:
 export function LevaPlayerHands({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                // FIXME: gif
                 // imgSrc={
                 //     "/img/manual/experiment/01/png/leva/Player/Equipments.png"
                 // }
@@ -50,12 +50,26 @@ export function LevaPlayerHands({ isEnglish = false }: TipsBaseProps) {
                 {!isEnglish ? (
                     <>
                         <h3>操作パネル - Player/Hands</h3>
-                        <p></p>
+                        <p>
+                            数値の左にある部分をクリックしながら移動させることで，手の位置を変更できます。
+                        </p>
+                        <p>
+                            右に移動させると手を前に，左に移動させると後ろに，上に移動させると上に，下に移動させると下に移動します。
+                        </p>
                     </>
                 ) : (
                     <>
                         <h3>Operation panel - Player/Hands</h3>
-                        <p></p>
+                        <p>
+                            The position of the hand can be changed by clicking
+                            and moving the area to the left of the numerical
+                            value.
+                        </p>
+                        <p>
+                            Moving it to the right moves the hand forward,
+                            moving it to the left moves it backward, moving it
+                            up moves it up, and moving it down moves it down.
+                        </p>
                     </>
                 )}
             </TipsItem>
