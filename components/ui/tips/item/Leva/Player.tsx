@@ -5,6 +5,15 @@ export function LevaPlayerEquipments({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>操作パネル - Player/Equipments</h3>
+                        ) : (
+                            <h3>Operation panel - Player/Equipments</h3>
+                        )}
+                    </>
+                }
                 imgSrc={
                     "/img/manual/experiment/01/png/leva/Player/Equipments.png"
                 }
@@ -12,7 +21,6 @@ export function LevaPlayerEquipments({ isEnglish = false }: TipsBaseProps) {
             >
                 {!isEnglish ? (
                     <>
-                        <h3>操作パネル - Player/Equipments</h3>
                         <p>放射線防護具の装備の有無を選択できます。</p>
                         <p>
                             装備を有効にすることで，線量計UIに種類に応じたアイコンが表示され，被ばく量が変化します。
@@ -20,7 +28,6 @@ export function LevaPlayerEquipments({ isEnglish = false }: TipsBaseProps) {
                     </>
                 ) : (
                     <>
-                        <h3>Operation panel - Player/Equipments</h3>
                         <p>
                             You can select whether or not you are equipped with{" "}
                             radiation protection equipment.
@@ -41,6 +48,15 @@ export function LevaPlayerHands({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>操作パネル - Player/Hands</h3>
+                        ) : (
+                            <h3>Operation panel - Player/Hands</h3>
+                        )}
+                    </>
+                }
                 // FIXME: gif
                 // imgSrc={
                 //     "/img/manual/experiment/01/png/leva/Player/Equipments.png"
@@ -49,7 +65,6 @@ export function LevaPlayerHands({ isEnglish = false }: TipsBaseProps) {
             >
                 {!isEnglish ? (
                     <>
-                        <h3>操作パネル - Player/Hands</h3>
                         <p>
                             数値の左にある部分をクリックしながら移動させることで，手の位置を変更できます。
                         </p>
@@ -59,7 +74,6 @@ export function LevaPlayerHands({ isEnglish = false }: TipsBaseProps) {
                     </>
                 ) : (
                     <>
-                        <h3>Operation panel - Player/Hands</h3>
                         <p>
                             The position of the hand can be changed by clicking
                             and moving the area to the left of the numerical

@@ -21,17 +21,24 @@ export function ScreenStructure({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>画面構成</h3>
+                        ) : (
+                            <h3>Screen structure</h3>
+                        )}
+                    </>
+                }
                 imgSrc={"/img/manual/experiment/01/png/All/screen_all.png "}
                 imgAlt={"img/Screen"}
             >
                 {!isEnglish ? (
                     <>
-                        <h3>画面構成</h3>
                         <p>この教材の画面構成は大きく3つに分かれています。</p>
                     </>
                 ) : (
                     <>
-                        <h3>Screen structure</h3>
                         <p>
                             The screen structure of this material is divided
                             into three main sections.
@@ -46,10 +53,19 @@ export function ScreenStructure({ isEnglish = false }: TipsBaseProps) {
 export function Screen3DSpace({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
-            <TipsItem>
+            <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>画面構成 - 3D空間</h3>
+                        ) : (
+                            <h3>Screen structure - 3D Space</h3>
+                        )}
+                    </>
+                }
+            >
                 {!isEnglish ? (
                     <>
-                        <h3>画面構成 - 3D空間</h3>
                         <p>
                             線量分布データや，プレイヤーのとしての3Dオブジェクト，防護板などが表示されます。
                         </p>
@@ -68,7 +84,6 @@ export function Screen3DSpace({ isEnglish = false }: TipsBaseProps) {
                     </>
                 ) : (
                     <>
-                        <h3>Screen structure - 3D Space</h3>
                         <p>
                             Dose distribution data, 3D objects as players, and{" "}
                             protective boards are displayed.
@@ -95,10 +110,19 @@ export function Screen3DSpace({ isEnglish = false }: TipsBaseProps) {
 export function ScreenOperationPanel({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
-            <TipsItem>
+            <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>画面構成 - 操作パネル</h3>
+                        ) : (
+                            <h3>Screen structure - Operation Panel</h3>
+                        )}
+                    </>
+                }
+            >
                 {!isEnglish ? (
                     <>
-                        <h3>画面構成 - 操作パネル</h3>
                         <p>
                             線量分布データの操作や，線量計UI，3D空間全体などに関係する数値などを操作できるパネルになっています。
                         </p>
@@ -106,7 +130,6 @@ export function ScreenOperationPanel({ isEnglish = false }: TipsBaseProps) {
                     </>
                 ) : (
                     <>
-                        <h3>Screen structure - Operation Panel</h3>
                         <p>
                             The panel allows manipulation of dose distribution
                             data, dosimeter UI, and numerical values related to
@@ -127,6 +150,15 @@ export function ScreenUIDosimeter1({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>画面構成 - 線量計 (1/3)</h3>
+                        ) : (
+                            <h3>Screen structure - Dosimeter (1/3)</h3>
+                        )}
+                    </>
+                }
                 imgSrc={
                     "/img/manual/experiment/01/png/UI/DosimeterUI/Dosimeter.png"
                 }
@@ -134,7 +166,6 @@ export function ScreenUIDosimeter1({ isEnglish = false }: TipsBaseProps) {
             >
                 {!isEnglish ? (
                     <>
-                        <h3>画面構成 - 線量計 (1/3)</h3>
                         <p>
                             プレイヤーに紐付けられた仮想の線量計から被ばく量を取得し表示しています。
                         </p>
@@ -147,7 +178,6 @@ export function ScreenUIDosimeter1({ isEnglish = false }: TipsBaseProps) {
                     </>
                 ) : (
                     <>
-                        <h3>Screen structure - Dosimeter (1/3)</h3>
                         <p>
                             The exposure dose is obtained from a virtual
                             dosimeter tied to the player and displayed.
@@ -175,6 +205,15 @@ export function ScreenUIDosimeter2({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>画面構成 - 線量計 (2/3)</h3>
+                        ) : (
+                            <h3>Screen structure - Dosimeter (2/3)</h3>
+                        )}
+                    </>
+                }
                 imgSrc={
                     "/img/manual/experiment/01/png/UI/DosimeterUI/Dosimeter_all-icon.png"
                 }
@@ -182,7 +221,6 @@ export function ScreenUIDosimeter2({ isEnglish = false }: TipsBaseProps) {
             >
                 {!isEnglish ? (
                     <>
-                        <h3>画面構成 - 線量計 (2/3)</h3>
                         <p>
                             被ばく量以外にも防護具，防護板の影響を受けた場合，対応するアイコンが表示されます。
                         </p>
@@ -194,7 +232,6 @@ export function ScreenUIDosimeter2({ isEnglish = false }: TipsBaseProps) {
                     </>
                 ) : (
                     <>
-                        <h3>Screen structure - Dosimeter (2/3)</h3>
                         <p>
                             If the exposure dose is affected by protective
                             equipment or protective plates in addition to the
@@ -227,10 +264,19 @@ export function ScreenUIDosimeter3({ isEnglish = false }: TipsBaseProps) {
 
     return (
         <>
-            <TipsItem>
+            <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>画面構成 - 線量計 (3/3)</h3>
+                        ) : (
+                            <h3>Screen structure - Dosimeter (3/3)</h3>
+                        )}
+                    </>
+                }
+            >
                 {!isEnglish ? (
                     <>
-                        <h3>画面構成 - 線量計 (3/3)</h3>
                         <p>アイコンの種類は以下の通りになっています。</p>
                         <table>
                             <tr>
@@ -296,7 +342,6 @@ export function ScreenUIDosimeter3({ isEnglish = false }: TipsBaseProps) {
                     </>
                 ) : (
                     <>
-                        <h3>Screen structure - Dosimeter (3/3)</h3>
                         <p>The types of icons are as follows</p>
                         <table>
                             <tr>

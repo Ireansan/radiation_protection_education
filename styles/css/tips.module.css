@@ -55,24 +55,33 @@
      object-fit: cover;
 }
 .fullscreen .foundation .swiperSlide .tipsItem {
-  display: flex;
   width: 85%;
   height: 85%;
 }
-.fullscreen .foundation .swiperSlide .tipsItem .text {
+.fullscreen .foundation .swiperSlide .tipsItem .title {
+  width: 100%;
+  height: 8%;
   text-align: left;
-  padding: 8px;
 }
-.fullscreen .foundation .swiperSlide .tipsItem .text h3 {
+.fullscreen .foundation .swiperSlide .tipsItem .title h3 {
   margin: 12px 0;
   font-size: 1.25em;
   color: #fefefe;
 }
-.fullscreen .foundation .swiperSlide .tipsItem .text p {
+.fullscreen .foundation .swiperSlide .tipsItem .content {
+  display: flex;
+  width: 100%;
+  height: 92%;
+}
+.fullscreen .foundation .swiperSlide .tipsItem .content .text {
+  text-align: left;
+  padding: 8px;
+}
+.fullscreen .foundation .swiperSlide .tipsItem .content .text p {
   margin: 8px 0 8px 16px;
   color: #A3AABF;
 }
-.fullscreen .foundation .swiperSlide .tipsItem .image {
+.fullscreen .foundation .swiperSlide .tipsItem .content .image {
   position: relative !important;
   max-width: 50%;
   height: auto;

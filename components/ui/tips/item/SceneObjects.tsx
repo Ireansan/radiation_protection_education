@@ -4,10 +4,11 @@ import type { TipsBaseProps } from "../utils";
 export function SceneObjectManual({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
-            <TipsItem>
+            <TipsItem
+                title={<>{!isEnglish ? <h3>3D空間</h3> : <h3>3D Space</h3>}</>}
+            >
                 {!isEnglish ? (
                     <>
-                        <h3>3D空間</h3>
                         <p>
                             3D空間内でのオブジェクトの操作には
                             <a href="https://github.com/pmndrs/drei#pivotcontrols">
@@ -29,7 +30,6 @@ export function SceneObjectManual({ isEnglish = false }: TipsBaseProps) {
                     </>
                 ) : (
                     <>
-                        <h3>3D Space</h3>
                         <p>
                             The controller{" "}
                             <a href="https://github.com/pmndrs/drei#pivotcontrols">
@@ -63,6 +63,15 @@ export function SceneObjectPlayer({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>3D空間 - Player</h3>
+                        ) : (
+                            <h3>3D Space - Player</h3>
+                        )}
+                    </>
+                }
                 // FIXME:
                 imgSrc={
                     "/img/manual/experiment/01/gif/3D/Player/Move_and_HandIK.gif"
@@ -71,14 +80,12 @@ export function SceneObjectPlayer({ isEnglish = false }: TipsBaseProps) {
             >
                 {!isEnglish ? (
                     <>
-                        <h3>3D空間 - Player</h3>
                         <p>
                             プレイヤーの位置，手の位置を移動させることで，被ばく量が変化します。
                         </p>
                     </>
                 ) : (
                     <>
-                        <h3>3D Space - Player</h3>
                         <p>
                             The amount of exposure is changed by moving the
                             position of the player and the position of the hand.
@@ -94,12 +101,20 @@ export function SceneObjectShield({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>3D空間 - Shield</h3>
+                        ) : (
+                            <h3>3D Space - Shield</h3>
+                        )}
+                    </>
+                }
                 imgSrc={"/img/manual/experiment/01/gif/3D/Shield/Move.gif"}
                 imgAlt={"gif/Shield"}
             >
                 {!isEnglish ? (
                     <>
-                        <h3>3D空間 - Shield</h3>
                         <p>
                             防護板を線量分布内に移動させることで，線量分布に影響が反映されます。
                         </p>
@@ -109,7 +124,6 @@ export function SceneObjectShield({ isEnglish = false }: TipsBaseProps) {
                     </>
                 ) : (
                     <>
-                        <h3>3D Space - Shield</h3>
                         <p>
                             Moving the protective plate into the dose
                             distribution reflects the effect on the dose
@@ -132,12 +146,20 @@ export function SceneObjectClip1({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>3D空間 - Clip (1/2)</h3>
+                        ) : (
+                            <h3>3D Space - Clip (1/2)</h3>
+                        )}
+                    </>
+                }
                 imgSrc={"/img/manual/experiment/01/gif/3D/Clip/FreeAxis.gif"}
                 imgAlt={"gif/Clip/FreeAxis"}
             >
                 {!isEnglish ? (
                     <>
-                        <h3>3D空間 - Clip (1/2)</h3>
                         <p>
                             操作パネル内の<code>Clip</code>
                             で有効にしたクリッピング平面が3D空間内に表示され，操作が可能になります。
@@ -148,7 +170,6 @@ export function SceneObjectClip1({ isEnglish = false }: TipsBaseProps) {
                     </>
                 ) : (
                     <>
-                        <h3>3D Space - Clip (1/2)</h3>
                         <p>
                             The clipping plane activated by <code>Clip</code> in
                             the operation panel is displayed in 3D space and can
@@ -170,12 +191,20 @@ export function SceneObjectClip2({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>3D空間 - Clip (2/2)</h3>
+                        ) : (
+                            <h3>3D Space - Clip (2/2)</h3>
+                        )}
+                    </>
+                }
                 imgSrc={"/img/manual/experiment/01/png/3D/Clip/X_and_Z.png"}
                 imgAlt={"img/3D/Clip"}
             >
                 {!isEnglish ? (
                     <>
-                        <h3>3D空間 - Clip (2/2)</h3>
                         <p>
                             有効にした全ての平面に対してクリッピングが成り立つ部分がクリッピングされます。
                         </p>
@@ -186,7 +215,6 @@ export function SceneObjectClip2({ isEnglish = false }: TipsBaseProps) {
                     </>
                 ) : (
                     <>
-                        <h3>3D Space - Clip (2/2)</h3>
                         <p>
                             For all enabled planes, the part of the image for
                             which clipping is valid will be clipped.

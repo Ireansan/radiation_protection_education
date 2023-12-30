@@ -11,11 +11,13 @@ export type TipsBaseProps = {
 };
 
 export type TipsItemProps = {
+    title: React.ReactNode;
     children: React.ReactNode;
     imgSrc?: string;
     imgAlt?: string;
 };
 export function TipsItem({
+    title,
     children,
     imgSrc,
     imgAlt,
@@ -24,15 +26,18 @@ export function TipsItem({
     return (
         <>
             <div className={`${style.tipsItem}`}>
-                <div className={`${style.text}`}>{children}</div>
-                {imgSrc && (
-                    <Image
-                        className={`${style.image}`}
-                        src={applyBasePath(imgSrc)}
-                        alt={imgAlt ? imgAlt : ""}
-                        fill={true}
-                    />
-                )}
+                <div className={`${style.title}`}>{title}</div>
+                <div className={`${style.content}`}>
+                    <div className={`${style.text}`}>{children}</div>
+                    {imgSrc && (
+                        <Image
+                            className={`${style.image}`}
+                            src={applyBasePath(imgSrc)}
+                            alt={imgAlt ? imgAlt : ""}
+                            fill={true}
+                        />
+                    )}
+                </div>
             </div>
         </>
     );

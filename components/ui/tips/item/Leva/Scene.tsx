@@ -5,12 +5,20 @@ export function LevaSceneGimmickXRay({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>操作パネル - Scene/Gimmick (X-Ray)</h3>
+                        ) : (
+                            <h3>Operation panel - Scene/Gimmick</h3>
+                        )}
+                    </>
+                }
                 imgSrc={"/img/manual/experiment/01/png/All/Gimmick_X-Ray.png"}
                 imgAlt={"img/leva/Scene/Gimmick/X-Ray"}
             >
                 {!isEnglish ? (
                     <>
-                        <h3>操作パネル - Scene/Gimmick (X-Ray)</h3>
                         <p>
                             シーン毎に固有の結果を返す項目と，3D空間内のコントローラーを非表示にする
                             <code>viewing</code>が操作できます。
@@ -22,7 +30,6 @@ export function LevaSceneGimmickXRay({ isEnglish = false }: TipsBaseProps) {
                     </>
                 ) : (
                     <>
-                        <h3>Operation panel - Scene/Gimmick</h3>
                         <p>
                             You can manipulate items that return scene-specific
                             results and <code>viewing</code> that hides the
@@ -44,12 +51,20 @@ export function LevaSceneGimmickCArm({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>操作パネル - Scene/Gimmick (C-Arm)</h3>
+                        ) : (
+                            <h3>Operation panel - Scene/Gimmick</h3>
+                        )}
+                    </>
+                }
                 imgSrc={"/img/manual/experiment/01/png/All/Gimmick_C-Arm.png"}
                 imgAlt={"img/leva/Scene/Gimmick/C-Arm"}
             >
                 {!isEnglish ? (
                     <>
-                        <h3>操作パネル - Scene/Gimmick (C-Arm)</h3>
                         <p>
                             シーン毎に固有の結果を返す項目と，3D空間内のコントローラーを非表示にする
                             <code>viewing</code>が操作できます。
@@ -63,7 +78,6 @@ export function LevaSceneGimmickCArm({ isEnglish = false }: TipsBaseProps) {
                     </>
                 ) : (
                     <>
-                        <h3>Operation panel - Scene/Gimmick</h3>
                         <p>
                             You can manipulate items that return scene-specific
                             results and <code>viewing</code> that hides the
@@ -86,20 +100,27 @@ export function LevaSceneOptions({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>操作パネル - Scene/Options</h3>
+                        ) : (
+                            <h3>Operation panel - Scene/Options</h3>
+                        )}
+                    </>
+                }
                 // FIXME: img
                 // imgSrc={"/img/manual/experiment/01/png/leva/Data/Clip.png"}
                 imgAlt={"img/leva/Data/Clip"}
             >
                 {!isEnglish ? (
                     <>
-                        <h3>操作パネル - Scene/Options</h3>
                         <p>
                             カメラ操作と線量計UIについて、詳細な設定を変更できます。
                         </p>
                     </>
                 ) : (
                     <>
-                        <h3>Operation panel - Scene/Options</h3>
                         <p>
                             You can change detailed settings for camera
                             controller and dosimeter UI.
@@ -117,15 +138,27 @@ export function LevaSceneOptionsCameraControlsSettings({
     return (
         <>
             <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>
+                                操作パネル - Scene/Options/Camera Controls
+                                Settings
+                            </h3>
+                        ) : (
+                            <h3>
+                                Operation panel - Scene/Options/Camera Controls
+                                Settings
+                            </h3>
+                        )}
+                    </>
+                }
                 // FIXME: img
                 // imgSrc={"/img/manual/experiment/01/png/leva/Data/Clip.png"}
                 imgAlt={"img/leva/Scene/Options/CameraControlsSettings"}
             >
                 {!isEnglish ? (
                     <>
-                        <h3>
-                            操作パネル - Scene/Options/Camera Controls Settings
-                        </h3>
                         <p>
                             カメラ操作に関連する以下の項目について，設定を変更できます。
                         </p>
@@ -151,10 +184,6 @@ export function LevaSceneOptionsCameraControlsSettings({
                     </>
                 ) : (
                     <>
-                        <h3>
-                            Operation panel - Scene/Options/Camera Controls
-                            Settings
-                        </h3>
                         <p>
                             You can change the settings for the following items
                             related to camera controller.
@@ -191,16 +220,27 @@ export function LevaSceneOptionsDosimeterSettingsParameter({
     return (
         <>
             <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>
+                                操作パネル - Scene/Options/Dosimeter
+                                Settings/Parameter
+                            </h3>
+                        ) : (
+                            <h3>
+                                Operation panel - Scene/Options/Dosimeter
+                                Settings/Parameter
+                            </h3>
+                        )}
+                    </>
+                }
                 // FIXME: img
                 // imgSrc={"/img/manual/experiment/01/png/leva/Data/Clip.png"}
                 imgAlt={"img/leva/Scene/DosimeterSettings"}
             >
                 {!isEnglish ? (
                     <>
-                        <h3>
-                            操作パネル - Scene/Options/Dosimeter
-                            Settings/Parameter
-                        </h3>
                         <p>
                             線量計UIの表示と，被ばく量の計算に関係する値の設定ができます。
                         </p>
@@ -227,10 +267,6 @@ export function LevaSceneOptionsDosimeterSettingsParameter({
                     </>
                 ) : (
                     <>
-                        <h3>
-                            Operation panel - Scene/Options/Dosimeter
-                            Settings/Parameter
-                        </h3>
                         <p>
                             You can display the dosimeter UI and set values
                             related to the calculation of the exposure dose.
@@ -267,15 +303,27 @@ export function LevaSceneOptionsDosimeterSettingsLayout({
     return (
         <>
             <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>
+                                操作パネル - Scene/Options/Dosimeter
+                                Settings/Layout
+                            </h3>
+                        ) : (
+                            <h3>
+                                Operation panel - Scene/Options/Dosimeter
+                                Settings/Layout
+                            </h3>
+                        )}
+                    </>
+                }
                 // FIXME: img
                 // imgSrc={"/img/manual/experiment/01/png/leva/Data/Clip.png"}
                 imgAlt={"img/leva/Scene/DosimeterSettings"}
             >
                 {!isEnglish ? (
                     <>
-                        <h3>
-                            操作パネル - Scene/Options/Dosimeter Settings/Layout
-                        </h3>
                         <p>線量計UIの表示設定を変更できます。</p>
                         <ul>
                             <li>
@@ -290,10 +338,6 @@ export function LevaSceneOptionsDosimeterSettingsLayout({
                     </>
                 ) : (
                     <>
-                        <h3>
-                            Operation panel - Scene/Options/Dosimeter
-                            Settings/Layout
-                        </h3>
                         <p>
                             You can change the display settings of the
                             Dosimeter.
@@ -322,16 +366,27 @@ export function LevaSceneOptionsDosimeterSettingsLayoutData({
     return (
         <>
             <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>
+                                操作パネル - Scene/Options/Dosimeter
+                                Settings/Layout/data
+                            </h3>
+                        ) : (
+                            <h3>
+                                Operation panel - Scene/Options/Dosimeter
+                                Settings/Layout/data
+                            </h3>
+                        )}
+                    </>
+                }
                 // FIXME: img
                 // imgSrc={"/img/manual/experiment/01/png/leva/Data/Clip.png"}
                 imgAlt={"img/leva/Scene/DosimeterSettings"}
             >
                 {!isEnglish ? (
                     <>
-                        <h3>
-                            操作パネル - Scene/Options/Dosimeter
-                            Settings/Layout/data
-                        </h3>
                         <p>
                             表現方法が<code>addition</code>
                             の場合，被ばく量がそのまま表示され，白いバーが伸びていきます。
@@ -348,10 +403,6 @@ export function LevaSceneOptionsDosimeterSettingsLayoutData({
                     </>
                 ) : (
                     <>
-                        <h3>
-                            Operation panel - Scene/Options/Dosimeter
-                            Settings/Layout/data
-                        </h3>
                         <p>
                             If the expression method is <code>addition</code>,
                             the exposure dose is displayed as it is, and the

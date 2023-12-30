@@ -5,12 +5,20 @@ export function LevaDataMode({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>操作パネル - Data/mode</h3>
+                        ) : (
+                            <h3>Operation panel - Data/mode</h3>
+                        )}
+                    </>
+                }
                 imgSrc={"/img/manual/experiment/01/png/leva/Data/mode.png"}
                 imgAlt={"img/leva/Data/mode"}
             >
                 {!isEnglish ? (
                     <>
-                        <h3>操作パネル - Data/mode</h3>
                         <p>
                             時間経過データ(<code>time lapse</code>)と累積データ(
                             <code>accumulate</code>
@@ -19,7 +27,6 @@ export function LevaDataMode({ isEnglish = false }: TipsBaseProps) {
                     </>
                 ) : (
                     <>
-                        <h3>Operation panel - Data/mode</h3>
                         <p>
                             Two data display formats can be set: time lapse data
                             (<code>time lapse</code>) and cumulative data (
@@ -36,13 +43,21 @@ export function LevaDataAnimation({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>操作パネル - Data/Animation</h3>
+                        ) : (
+                            <h3>Operation panel - Data/Animation</h3>
+                        )}
+                    </>
+                }
                 // FIXME: img
                 imgSrc={"/img/manual/experiment/01/png/leva/Data/Animation.png"}
                 imgAlt={"img/leva/Data/Animation"}
             >
                 {!isEnglish ? (
                     <>
-                        <h3>操作パネル - Data/Animation</h3>
                         <p>
                             データ表示形式が<code>time lapse</code>
                             の時，アニメーションを操作できます。
@@ -65,7 +80,6 @@ export function LevaDataAnimation({ isEnglish = false }: TipsBaseProps) {
                     </>
                 ) : (
                     <>
-                        <h3>Operation panel - Data/Animation</h3>
                         <p>
                             When the data display format is{" "}
                             <code>time lapse</code>, animation can be
@@ -97,12 +111,20 @@ export function LevaDataClip({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>操作パネル - Data/Clip</h3>
+                        ) : (
+                            <h3>Operation panel - Data/Clip</h3>
+                        )}
+                    </>
+                }
                 imgSrc={"/img/manual/experiment/01/png/leva/Data/Clip.png"}
                 imgAlt={"img/leva/Data/Clip"}
             >
                 {!isEnglish ? (
                     <>
-                        <h3>操作パネル - Data/Clip</h3>
                         <p>
                             X, Y,
                             Z軸に垂直なクリッピング平面3つと，自由に位置・向きを変更できるクリッピング平面の4つについて，それぞれ有効にするか操作ができます。
@@ -113,7 +135,6 @@ export function LevaDataClip({ isEnglish = false }: TipsBaseProps) {
                     </>
                 ) : (
                     <>
-                        <h3>Operation panel - Data/Clip</h3>
                         <p>
                             You can enable or disable each of the four clipping
                             planes: the three clipping planes perpendicular to
@@ -135,13 +156,21 @@ export function LevaDataDetail({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
             <TipsItem
+                title={
+                    <>
+                        {!isEnglish ? (
+                            <h3>操作パネル - Data/Detail</h3>
+                        ) : (
+                            <h3>Operation panel - Data/Detail</h3>
+                        )}
+                    </>
+                }
                 // FIXME: img
                 imgSrc={"/img/manual/experiment/01/png/leva/Data/Parameter.png"}
                 imgAlt={"img/leva/Data/Detail"}
             >
                 {!isEnglish ? (
                     <>
-                        <h3>操作パネル - Data/Detail</h3>
                         <p>線量分布データの描画に関係する値を設定できます。</p>
                         <ul>
                             <li>
@@ -177,7 +206,6 @@ export function LevaDataDetail({ isEnglish = false }: TipsBaseProps) {
                     </>
                 ) : (
                     <>
-                        <h3>Operation panel - Data/Detail</h3>
                         <p>
                             You can set values related to the plotting of dose{" "}
                             distribution data.
