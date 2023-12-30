@@ -9,7 +9,8 @@ import { useStore } from "../../../components/store";
 export type PlayerPivotControlsProps = {
     playerRef: React.RefObject<THREE.Group>;
     dosimeterRef: React.RefObject<Dosimeter>;
-    matrix?: THREE.Matrix4;
+    position?: THREE.Vector3;
+    rotation?: THREE.Euler;
     scale?: number;
     fixed?: boolean;
     activeAxes?: [boolean, boolean, boolean];
@@ -17,7 +18,8 @@ export type PlayerPivotControlsProps = {
 export function PlayerPivotControls({
     playerRef,
     dosimeterRef,
-    matrix = new THREE.Matrix4(),
+    position = new THREE.Vector3(),
+    rotation = new THREE.Euler(),
     scale = 1,
     fixed = false,
     activeAxes = [true, true, true],
@@ -28,6 +30,16 @@ export function PlayerPivotControls({
         state.viewing,
         state.sceneStates.objectVisibles,
     ]);
+
+    const [matrix, setMatrix] = React.useState<THREE.Matrix4>(
+        new THREE.Matrix4().compose(
+            position,
+            new THREE.Quaternion().setFromEuler(rotation),
+            new THREE.Vector3(1, 1, 1)
+        )
+    );
+
+    const pivotRef = React.useRef<THREE.Group>(null!);
 
     useFrame(() => {
         set((state) => ({
@@ -48,6 +60,7 @@ export function PlayerPivotControls({
 
     return (
         <PivotControls
+            ref={pivotRef}
             matrix={matrix}
             scale={scale}
             fixed={fixed}

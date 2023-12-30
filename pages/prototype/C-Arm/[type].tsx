@@ -512,17 +512,10 @@ function VisualizationCArm({ ...props }: PageProps) {
                                     <PlayerPivotControls
                                         playerRef={yBotRef}
                                         dosimeterRef={dosimeterRef}
-                                        matrix={new THREE.Matrix4().compose(
-                                            new THREE.Vector3(1.5, 0, 0),
-                                            new THREE.Quaternion().setFromEuler(
-                                                new THREE.Euler(
-                                                    0,
-                                                    -Math.PI / 2,
-                                                    0
-                                                )
-                                            ),
-                                            new THREE.Vector3(1, 1, 1)
-                                        )}
+                                        position={new THREE.Vector3(2, 0, 0)}
+                                        rotation={
+                                            new THREE.Euler(0, -Math.PI / 2, 0)
+                                        }
                                         scale={70}
                                         fixed={true}
                                         activeAxes={[true, false, true]}
