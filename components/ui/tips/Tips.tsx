@@ -43,8 +43,31 @@ export function Tips({ isEnglish = false }: TipsProps) {
             >
                 <QuestionMark sx={{ fontSize: 16 }} />
             </button>
-            <div className={`${style.fullscreen} ${!tips && `${style.close}`}`}>
-                <div className={style.foundation}>
+            <div
+                className={`${style.fullscreen} ${!tips && `${style.close}`}`}
+                onClick={() => {
+                    set({ tips: false });
+
+                    set((state) => ({
+                        sceneStates: {
+                            ...state.sceneStates,
+                            executeLog: {
+                                ...state.sceneStates.executeLog,
+                                tips: {
+                                    ...state.sceneStates.executeLog.tips,
+                                    close: true,
+                                },
+                            },
+                        },
+                    }));
+                }}
+            >
+                <div
+                    className={style.foundation}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                    }}
+                >
                     <button
                         className={style.closeButton}
                         onClick={() => {
