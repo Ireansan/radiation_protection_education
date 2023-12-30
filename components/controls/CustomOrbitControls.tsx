@@ -11,6 +11,9 @@ export type CustomOrbitControlsProps = {
     panSpeed?: number;
     rotateSpeed?: number;
     zoomSpeed?: number;
+    enablePan?: boolean;
+    enableRotate?: boolean;
+    enableZoom?: boolean;
 };
 export function CustomOrbitControls({
     dampingFactor = 0.05,
@@ -18,6 +21,9 @@ export function CustomOrbitControls({
     panSpeed = 1.0,
     rotateSpeed = 1.0,
     zoomSpeed = 1.0,
+    enablePan = true,
+    enableRotate = true,
+    enableZoom = true,
     ...props
 }: CustomOrbitControlsProps) {
     const ref = React.useRef<OrbitControlsImpl>(null!);
@@ -71,6 +77,34 @@ export function CustomOrbitControls({
                         },
                     },
                     { order: -2, collapsed: true }
+                ),
+                Debug: folder(
+                    {
+                        "Camera Controls Settings": folder(
+                            {
+                                enablePan: {
+                                    value: enablePan,
+                                    onChange: (e) => {
+                                        ref.current.enablePan = e;
+                                    },
+                                },
+                                enableRotate: {
+                                    value: enableRotate,
+                                    onChange: (e) => {
+                                        ref.current.enableRotate = e;
+                                    },
+                                },
+                                enableZoom: {
+                                    value: enableZoom,
+                                    onChange: (e) => {
+                                        ref.current.enableZoom = e;
+                                    },
+                                },
+                            },
+                            { collapsed: true }
+                        ),
+                    },
+                    { collapsed: true }
                 ),
             }),
         }),
