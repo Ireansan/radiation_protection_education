@@ -10,6 +10,7 @@ import styles from "../../styles/css/experimentCheckList.module.css";
 type experimentCheckListProps = {};
 export function ExperimentCheckList({ ...props }: experimentCheckListProps) {
     const [
+        parameter,
         Animation,
         Colormap,
         RenderStyle,
@@ -18,11 +19,12 @@ export function ExperimentCheckList({ ...props }: experimentCheckListProps) {
         Shield,
         Dosimeter,
     ] = useStore((state) => [
+        state.sceneStates.executeLog.parameter,
         state.sceneStates.executeLog.animation,
         state.sceneStates.executeLog.parameter.colormap,
         state.sceneStates.executeLog.parameter.renderStyle,
         state.sceneStates.executeLog.clipping,
-        state.sceneStates.executeLog.avatar,
+        state.sceneStates.executeLog.player,
         state.sceneStates.executeLog.shield,
         state.sceneStates.executeLog.dosimeter,
     ]);
@@ -36,21 +38,10 @@ export function ExperimentCheckList({ ...props }: experimentCheckListProps) {
         Dosimeter.glove,
     ];
     const animation = [Animation.timeLapse, Animation.accumulate];
-    const colormap = [
-        Colormap.parula,
-        Colormap.heat,
-        Colormap.jet,
-        Colormap.turbo,
-        Colormap.hot,
-        Colormap.gray,
-        Colormap.magma,
-        Colormap.inferno,
-        Colormap.plasma,
-        Colormap.viridis,
-        Colormap.cividis,
-        Colormap.github,
-        Colormap.cubehelix,
-    ];
+    const colormap = React.useMemo(() => {
+        console.log(parameter.colormap);
+        return Object.values(parameter.colormap);
+    }, [parameter]);
     const renderStyle = [RenderStyle.mip, RenderStyle.iso];
     const clipping = [Clipping.x, Clipping.y, Clipping.z, Clipping.free];
     const clippingInvert = [Clipping.invert];
