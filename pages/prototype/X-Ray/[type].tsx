@@ -53,6 +53,8 @@ import * as VOLUMEDATA from "../../../components/models/VolumeData";
 // controls
 import {
     DoseAnimationControls,
+    DoseAnimationControlsWithAudio,
+    DoseAnimationControlsWithAudioUI,
     DoseBoardControls,
     DoseEquipmentsUI,
     DosimeterControls,
@@ -60,10 +62,6 @@ import {
     VolumeParameterControls,
     VolumeXYZClippingControls,
 } from "../../../components/volumeRender";
-
-// FIXME:
-import { PrototypeAnimationControls } from "../../../components/volumeRender/controls/dose/PrototypeAnimationControls";
-import { PrototypeAnimationControlsUI } from "../../../components/volumeRender/ui/PrototypeAnimationControlsUI";
 
 // ==========
 // Controls
@@ -401,7 +399,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                                 speed={8.0}
                                 customSpeed={[8.0, 16.0]}
                             /> */}
-                            <PrototypeAnimationControls
+                            <DoseAnimationControlsWithAudio
                                 audioRef={audioRef}
                                 objects={[
                                     nocurtainRef,
@@ -641,7 +639,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                         ref={audioRef}
                         muted={true}
                     />
-                    <PrototypeAnimationControlsUI
+                    <DoseAnimationControlsWithAudioUI
                         audioRef={audioRef}
                         duration={16}
                         speed={8.0}

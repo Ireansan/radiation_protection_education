@@ -62,8 +62,8 @@ import {
     VolumeXYZClippingControls,
 } from "../../components/volumeRender";
 // FIXME:
-import { PrototypeAnimationControls } from "../../components/volumeRender/controls/dose/PrototypeAnimationControls";
-import { PrototypeAnimationControlsUI } from "../../components/volumeRender/ui/PrototypeAnimationControlsUI";
+import { DoseAnimationControlsWithAudio } from "../../components/volumeRender/controls/dose/DoseAnimationControlsWithAudio";
+import { DoseAnimationControlsWithAudioUI } from "../../components/volumeRender/ui/DoseAnimationControlsWithAudioUI";
 
 // ==========
 // UI

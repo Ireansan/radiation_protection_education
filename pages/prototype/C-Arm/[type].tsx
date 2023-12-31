@@ -54,6 +54,8 @@ import * as VOLUMEDATA from "../../../components/models/VolumeData";
 // controls
 import {
     DoseAnimationControls,
+    DoseAnimationControlsWithAudio,
+    DoseAnimationControlsWithAudioUI,
     DoseBoardControls,
     DoseEquipmentsUI,
     DosimeterControls,
@@ -61,10 +63,6 @@ import {
     VolumeParameterControls,
     VolumeXYZClippingControls,
 } from "../../../components/volumeRender";
-
-// FIXME:
-import { PrototypeAnimationControls } from "../../../components/volumeRender/controls/dose/PrototypeAnimationControls";
-import { PrototypeAnimationControlsUI } from "../../../components/volumeRender/ui/PrototypeAnimationControlsUI";
 
 // ==========
 // Controls
@@ -395,7 +393,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                                 speed={8}
                                 customSpeed={[8.0, 16.0]}
                             /> */}
-                            <PrototypeAnimationControls
+                            <DoseAnimationControlsWithAudio
                                 audioRef={audioRef}
                                 objects={[cArmRef, cArmRoll180Pitch360Ref]}
                                 mainGroup={timelapseRef}
@@ -668,35 +666,43 @@ function VisualizationCArm({ ...props }: PageProps) {
                         ref={audioRef}
                         muted={true}
                     />
-                    <PrototypeAnimationControlsUI
+                    <DoseAnimationControlsWithAudioUI
                         audioRef={audioRef}
                         duration={16}
                         speed={8.0}
                         customSpeed={[8.0, 16.0]}
                     />
 
-                    {objectVisibles.dosimeterUI &&
-                    props.availables.dosimeter ? (
-                        <>
-                            <DoseEquipmentsUI />
-                            <DosimeterUI nPerPatient={5e5} />
-                        </>
-                    ) : null}
-                    {objectVisibles.exerciseUI &&
-                    props.availables.exerciseUI ? (
-                        <>
-                            <Exercise isEnglish={props.isEnglish} />
-                        </>
-                    ) : null}
-                    {objectVisibles.tutorialUI &&
-                    props.availables.tutorialUI ? (
-                        <>
-                            <Tutorial
-                                sceneName="C-Arm"
-                                isEnglish={props.isEnglish}
-                            />
-                        </>
-                    ) : null}
+                    <div
+                        className={`${
+                            (!props.availables.dosimeter ||
+                                !objectVisibles.dosimeterUI) &&
+                            `${styles.isTransparent}`
+                        }`}
+                    >
+                        <DoseEquipmentsUI />
+                        <DosimeterUI nPerPatient={5e5} />
+                    </div>
+                    <div
+                        className={`${
+                            !objectVisibles.scenarioUI &&
+                            `${styles.isTransparent}`
+                        }`}
+                    >
+                        {props.availables.exerciseUI ? (
+                            <>
+                                <Exercise isEnglish={props.isEnglish} />
+                            </>
+                        ) : null}
+                        {props.availables.tutorialUI ? (
+                            <>
+                                <Tutorial
+                                    sceneName="C-Arm"
+                                    isEnglish={props.isEnglish}
+                                />
+                            </>
+                        ) : null}
+                    </div>
 
                     <Tips isEnglish={props.isEnglish} />
                 </div>

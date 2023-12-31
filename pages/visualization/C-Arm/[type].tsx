@@ -61,6 +61,8 @@ import {
 // ==========
 // UI
 import { ExperimentCheckList, SceneOptionsPanel } from "../../../components/ui";
+import { Tips } from "../../../components/ui/tips";
+import { Exercise, Tutorial } from "../../../components/ui/exercise";
 
 // ==========
 // Store
@@ -587,19 +589,39 @@ function VisualizationCArm({ ...props }: PageProps) {
                     </Canvas>
                     <Loader />
                     <SceneOptionsPanel activateStats={false} />
-                    {objectVisibles.dosimeterUI &&
-                    props.availables.dosimeter ? (
-                        <>
-                            <DoseEquipmentsUI />
-                            <DosimeterUI nPerPatient={5e5} />
-                        </>
-                    ) : null}
-                    {objectVisibles.experimentUI &&
-                    props.availables.experimentUI ? (
-                        <>
-                            <ExperimentCheckList />
-                        </>
-                    ) : null}
+
+                    <div
+                        className={`${
+                            (!props.availables.dosimeter ||
+                                !objectVisibles.dosimeterUI) &&
+                            `${styles.isTransparent}`
+                        }`}
+                    >
+                        <DoseEquipmentsUI />
+                        <DosimeterUI nPerPatient={5e5} />
+                    </div>
+                    <div
+                        className={`${
+                            !objectVisibles.scenarioUI &&
+                            `${styles.isTransparent}`
+                        }`}
+                    >
+                        {props.availables.exerciseUI ? (
+                            <>
+                                <Exercise isEnglish={props.isEnglish} />
+                            </>
+                        ) : null}
+                        {props.availables.tutorialUI ? (
+                            <>
+                                <Tutorial
+                                    sceneName="C-Arm"
+                                    isEnglish={props.isEnglish}
+                                />
+                            </>
+                        ) : null}
+                    </div>
+
+                    <Tips isEnglish={props.isEnglish} />
                 </div>
             </div>
         </>
