@@ -12,21 +12,21 @@ import {
 } from "../../../../src";
 import { useStore } from "../../../store";
 
-export type PrototypeAnimationControlsProps = {
+export type DoseAnimationControlsWithAudioProps = {
     audioRef: React.RefObject<HTMLAudioElement>;
     objects: React.RefObject<VolumeAnimationObject | DoseAnimationObject>[];
     mainGroup: React.RefObject<VolumeBase>;
     subGroup?: React.RefObject<VolumeBase>;
     mode?: string;
 };
-export function PrototypeAnimationControls({
+export function DoseAnimationControlsWithAudio({
     audioRef,
     objects,
     mainGroup,
     subGroup,
     mode = "time lapse",
     ...props
-}: PrototypeAnimationControlsProps) {
+}: DoseAnimationControlsWithAudioProps) {
     const [set, executeLog] = useStore((state) => [
         state.set,
         state.sceneStates.executeLog,

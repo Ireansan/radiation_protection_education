@@ -2,25 +2,25 @@ import React from "react";
 import * as THREE from "three";
 import { LevaPanel, useControls, useCreateStore } from "leva";
 
-import { useStore } from "../../../components/store";
+import { useStore } from "../../store";
 
 import style from "../../../styles/css/volumeAnimationControls.module.css";
 
-export type PrototypeAnimationControlsUIProps = {
+export type DoseAnimationControlsWithAudioUIProps = {
     audioRef: React.RefObject<HTMLAudioElement>;
     duration: number;
     mode?: string;
     speed?: number;
     customSpeed?: number[];
 };
-export function PrototypeAnimationControlsUI({
+export function DoseAnimationControlsWithAudioUI({
     audioRef,
     duration,
     mode = "time lapse",
     speed = 1.0,
     customSpeed,
     ...props
-}: PrototypeAnimationControlsUIProps) {
+}: DoseAnimationControlsWithAudioUIProps) {
     const [isTimeLapse] = useStore((state) => [state.sceneStates.isTimeLapse]);
 
     const speedList = React.useMemo(() => {
