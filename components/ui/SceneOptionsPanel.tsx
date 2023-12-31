@@ -7,13 +7,11 @@ import { folder, useControls } from "leva";
 import { useStore } from "../store";
 
 type SceneOptionsPanelProps = {
-    activateDebug?: boolean;
     activateViewing?: boolean;
     activateAnnotations?: boolean;
     activateStats?: boolean;
 };
 export function SceneOptionsPanel({
-    activateDebug = true,
     activateViewing = true,
     activateAnnotations = true,
     activateStats = true,
@@ -28,6 +26,8 @@ export function SceneOptionsPanel({
             state.sceneStates.objectVisibles,
         ]
     );
+
+    const backgroundColorOptions = ["default", "red", "green", "blue"];
 
     const [, setDebug] = useControls(() => ({
         Scene: folder(
@@ -58,9 +58,6 @@ export function SceneOptionsPanel({
                                 debug: {
                                     value: debug,
                                     onChange: (debug) => set({ debug }),
-                                    render: () => {
-                                        return activateDebug;
-                                    },
                                 },
                                 stats: {
                                     value: stats,
@@ -206,8 +203,8 @@ export function SceneOptionsPanel({
                                                     }));
                                                 },
                                             },
-                                            experimentUI: {
-                                                value: objectVisibles.experimentUI,
+                                            scenarioUI: {
+                                                value: objectVisibles.scenarioUI,
                                                 onChange: (e) => {
                                                     set((state) => ({
                                                         sceneStates: {
@@ -216,7 +213,41 @@ export function SceneOptionsPanel({
                                                                 ...state
                                                                     .sceneStates
                                                                     .objectVisibles,
-                                                                experimentUI: e,
+                                                                scenarioUI: e,
+                                                            },
+                                                        },
+                                                    }));
+                                                },
+                                            },
+                                        }),
+                                        Enviroment: folder({
+                                            grid: {
+                                                value: objectVisibles.grid,
+                                                onChange: (e) => {
+                                                    set((state) => ({
+                                                        sceneStates: {
+                                                            ...state.sceneStates,
+                                                            objectVisibles: {
+                                                                ...state
+                                                                    .sceneStates
+                                                                    .objectVisibles,
+                                                                grid: e,
+                                                            },
+                                                        },
+                                                    }));
+                                                },
+                                            },
+                                            gizmo: {
+                                                value: objectVisibles.gizmo,
+                                                onChange: (e) => {
+                                                    set((state) => ({
+                                                        sceneStates: {
+                                                            ...state.sceneStates,
+                                                            objectVisibles: {
+                                                                ...state
+                                                                    .sceneStates
+                                                                    .objectVisibles,
+                                                                gizmo: e,
                                                             },
                                                         },
                                                     }));

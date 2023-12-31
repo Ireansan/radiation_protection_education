@@ -107,9 +107,9 @@ const objectVisibles = {
     shield: true,
     shieldPivot: true,
     dosimeterUI: true,
-    experimentUI: true,
-    exerciseUI: true,
-    tutorialUI: true,
+    scenarioUI: true,
+    grid: true,
+    gizmo: true,
 };
 export type ObjectVisibles = typeof objectVisibles;
 
@@ -202,6 +202,7 @@ const sceneStates = {
     dosimeterSettingsState: dosimeterSettingsState as DosimeterSettingsState,
     exerciseProgress: exerciseProgress as ExerciseProgress,
     executeLog: executeLog as ExecuteLog,
+    backGroundType: "default",
 };
 
 const actionNames = ["reset"] as const;

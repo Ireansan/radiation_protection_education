@@ -89,7 +89,7 @@ import { applyBasePath } from "../../../utils";
 
 // ==========
 // Styles
-import styles from "../../../styles/threejs.module.css";
+import styles from "../../../styles/css/threejs.module.css";
 
 type PageProps = InferGetStaticPropsType<typeof getStaticProps>;
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -601,6 +601,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                             <Grid
                                 position={[0, -0.01, 0]}
                                 args={[10.5, 10.5]}
+                                visible={objectVisibles.grid}
                                 cellColor={"#121d7d"}
                                 sectionColor={"#262640"}
                                 fadeDistance={20}
@@ -627,6 +628,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                                         "#3498DB",
                                     ]}
                                     labelColor="black"
+                                    visible={objectVisibles.gizmo}
                                 />
                             </GizmoHelper>
                         </Suspense>
@@ -646,28 +648,36 @@ function VisualizationXRay({ ...props }: PageProps) {
                         customSpeed={[8.0, 16.0]}
                     />
 
-                    {objectVisibles.dosimeterUI &&
-                    props.availables.dosimeter ? (
-                        <>
-                            <DoseEquipmentsUI />
-                            <DosimeterUI />
-                        </>
-                    ) : null}
-                    {objectVisibles.exerciseUI &&
-                    props.availables.exerciseUI ? (
-                        <>
-                            <Exercise isEnglish={props.isEnglish} />
-                        </>
-                    ) : null}
-                    {objectVisibles.tutorialUI &&
-                    props.availables.tutorialUI ? (
-                        <>
-                            <Tutorial
-                                sceneName="X-Ray"
-                                isEnglish={props.isEnglish}
-                            />
-                        </>
-                    ) : null}
+                    <div
+                        className={`${
+                            (!props.availables.dosimeter ||
+                                !objectVisibles.dosimeterUI) &&
+                            `${styles.isTransparent}`
+                        }`}
+                    >
+                        <DoseEquipmentsUI />
+                        <DosimeterUI />
+                    </div>
+                    <div
+                        className={`${
+                            !objectVisibles.scenarioUI &&
+                            `${styles.isTransparent}`
+                        }`}
+                    >
+                        {props.availables.exerciseUI ? (
+                            <>
+                                <Exercise isEnglish={props.isEnglish} />
+                            </>
+                        ) : null}
+                        {props.availables.tutorialUI ? (
+                            <>
+                                <Tutorial
+                                    sceneName="X-Ray"
+                                    isEnglish={props.isEnglish}
+                                />
+                            </>
+                        ) : null}
+                    </div>
 
                     <Tips isEnglish={props.isEnglish} />
                 </div>

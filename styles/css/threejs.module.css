@@ -1,0 +1,15 @@
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.canvas {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #909090;
+}
+.canvas .isTransparent {
+  opacity: 0;
+}/*# sourceMappingURL=threejs.module.css.map */

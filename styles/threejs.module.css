@@ -12,3 +12,7 @@
     background: #909090;
     /* background: #0f0f0f; */
 }
+
+.isTransparent {
+    opacity: 0;
+}
