@@ -9,6 +9,10 @@
   margin: 0;
   padding: 0;
   background: #909090;
+  /* background: #0f0f0f; */
+  /* background: #ff0000; */
+  /* background: #00ff00; */
+  /* background: #0000ff; */
 }
 .canvas .isTransparent {
   opacity: 0;
