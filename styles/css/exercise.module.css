@@ -58,6 +58,14 @@
   align-items: center;
   margin: auto 5px;
 }
+.content .items .item .objective code {
+  padding: 0.1em 0.2em;
+  color: #c8ccd5;
+  background-color: rgba(110, 118, 129, 0.4);
+  border-radius: 4px;
+  font-size: 85%;
+  font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+}
 .content .items .item .objective.done {
   color: #858b8e;
 }
@@ -78,7 +86,7 @@
   border: 0;
   border-radius: 5px;
   padding: 4px 8px;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   background-color: #007aff;
 }
 .content .slideNext:disabled {

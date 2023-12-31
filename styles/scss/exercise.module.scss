@@ -64,6 +64,15 @@
                 align-items: center;
                 margin: auto 5px;
 
+                code {
+                    padding: 0.1em 0.2em;
+                    color: #c8ccd5;
+                    background-color: #6e768166;
+                    border-radius: 4px;
+                    font-size: 85%;
+                    font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace
+                }
+
                 &.done {
                     color: #858b8e;
                 }
@@ -90,7 +99,7 @@
         border: 0;
         border-radius: 5px;
         padding: 4px 8px;
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         // background-color: #0066dc;
         background-color: #007aff;
 

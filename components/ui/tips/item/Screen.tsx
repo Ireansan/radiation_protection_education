@@ -17,6 +17,8 @@ import { TipsItem } from "../utils/TipsItemTemplate";
 import { applyBasePath } from "../../../../utils";
 import type { TipsBaseProps } from "../utils";
 
+import style from "../../../../styles/css/tips.module.css";
+
 export function ScreenStructure({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
@@ -285,7 +287,7 @@ export function ScreenUIDosimeter3({ isEnglish = false }: TipsBaseProps) {
                             </tr>
                             <tr>
                                 <td>防護板</td>
-                                <td>
+                                <td align={"center"}>
                                     <HealthAndSafety
                                         sx={{
                                             color: color,
@@ -296,7 +298,7 @@ export function ScreenUIDosimeter3({ isEnglish = false }: TipsBaseProps) {
                             </tr>
                             <tr>
                                 <td>ゴーグル</td>
-                                <td>
+                                <td align={"center"}>
                                     <Visibility
                                         sx={{
                                             color: color,
@@ -307,7 +309,7 @@ export function ScreenUIDosimeter3({ isEnglish = false }: TipsBaseProps) {
                             </tr>
                             <tr>
                                 <td>ネックガード</td>
-                                <td>
+                                <td align={"center"}>
                                     <PersonAddAlt1
                                         sx={{
                                             color: color,
@@ -318,7 +320,7 @@ export function ScreenUIDosimeter3({ isEnglish = false }: TipsBaseProps) {
                             </tr>
                             <tr>
                                 <td>エプロン</td>
-                                <td>
+                                <td align={"center"}>
                                     <Person
                                         sx={{
                                             color: color,
@@ -329,7 +331,7 @@ export function ScreenUIDosimeter3({ isEnglish = false }: TipsBaseProps) {
                             </tr>
                             <tr>
                                 <td>手袋</td>
-                                <td>
+                                <td align={"center"}>
                                     <SignLanguage
                                         sx={{
                                             color: color,
@@ -350,7 +352,7 @@ export function ScreenUIDosimeter3({ isEnglish = false }: TipsBaseProps) {
                             </tr>
                             <tr>
                                 <td>Shield</td>
-                                <td>
+                                <td align={"center"}>
                                     <HealthAndSafety
                                         sx={{
                                             color: color,
@@ -361,7 +363,7 @@ export function ScreenUIDosimeter3({ isEnglish = false }: TipsBaseProps) {
                             </tr>
                             <tr>
                                 <td>Goggle</td>
-                                <td>
+                                <td align={"center"}>
                                     <Visibility
                                         sx={{
                                             color: color,
@@ -372,7 +374,7 @@ export function ScreenUIDosimeter3({ isEnglish = false }: TipsBaseProps) {
                             </tr>
                             <tr>
                                 <td>Neck Guard</td>
-                                <td>
+                                <td align={"center"}>
                                     <PersonAddAlt1
                                         sx={{
                                             color: color,
@@ -383,7 +385,7 @@ export function ScreenUIDosimeter3({ isEnglish = false }: TipsBaseProps) {
                             </tr>
                             <tr>
                                 <td>Apron</td>
-                                <td>
+                                <td align={"center"}>
                                     <Person
                                         sx={{
                                             color: color,
@@ -394,7 +396,7 @@ export function ScreenUIDosimeter3({ isEnglish = false }: TipsBaseProps) {
                             </tr>
                             <tr>
                                 <td>Glove</td>
-                                <td>
+                                <td align={"center"}>
                                     <SignLanguage
                                         sx={{
                                             color: color,

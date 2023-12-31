@@ -79,21 +79,43 @@
 }
 .fullscreen .foundation .swiperSlide .tipsItem .content .text p {
   margin: 8px 0 8px 16px;
-  color: #A3AABF;
+  color: #c0c7d5;
 }
 .fullscreen .foundation .swiperSlide .tipsItem .content .text a {
   color: #2f81f7;
 }
 .fullscreen .foundation .swiperSlide .tipsItem .content .text code {
   padding: 0.1em 0.2em;
+  color: #c8ccd5;
   background-color: rgba(110, 118, 129, 0.4);
   border-radius: 4px;
   font-size: 85%;
   font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
 }
+.fullscreen .foundation .swiperSlide .tipsItem .content .text li {
+  color: #d0d4dc;
+}
+.fullscreen .foundation .swiperSlide .tipsItem .content .text table {
+  border-collapse: collapse;
+  margin: 16px 0 16px 32px;
+}
+.fullscreen .foundation .swiperSlide .tipsItem .content .text table tr {
+  border-top: 1px solid #566375;
+}
+.fullscreen .foundation .swiperSlide .tipsItem .content .text table tr:nth-child(2n) {
+  background-color: #1f262f;
+}
+.fullscreen .foundation .swiperSlide .tipsItem .content .text table th,
+.fullscreen .foundation .swiperSlide .tipsItem .content .text table td {
+  padding: 4px 8px;
+  border: 1px solid #566375;
+}
+.fullscreen .foundation .swiperSlide .tipsItem .content .text table th {
+  text-align: center;
+}
 .fullscreen .foundation .swiperSlide .tipsItem .content .image {
   position: relative !important;
-  max-width: 50%;
+  max-width: 55%;
   height: auto;
   padding: 8px;
   -o-object-fit: contain;

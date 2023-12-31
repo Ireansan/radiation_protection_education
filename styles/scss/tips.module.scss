@@ -84,7 +84,9 @@
 
                         p {
                             margin: 8px 0 8px 16px;
-                            color: #A3AABF;
+                            // color: #d2d7e3;
+                            color: #c0c7d5;
+                            // color: #b3b9c8;
                             // color: #ADB6CC;
                         }
 
@@ -94,16 +96,49 @@
 
                         code {
                             padding: 0.1em 0.2em;
+                            color: #c8ccd5;
                             background-color: #6e768166;
                             border-radius: 4px;
                             font-size: 85%;
                             font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace
                         }
+
+                        li {
+                            color: #d0d4dc;
+                            // color: #b9bfcf;
+                        }
+
+                        table {
+                            border-collapse: collapse;
+                            margin: 16px 0 16px 32px;
+
+                            tr {
+                                // border-top: 1px solid #617085;
+                                border-top: 1px solid #566375;
+                                // border-top: 1px solid #21262d;
+                            }
+
+                            tr:nth-child(2n) {
+                                background-color: #1f262f;
+                            }
+
+                            th,
+                            td {
+                                padding: 4px 8px;
+                                // border: 1px solid #617085;
+                                border: 1px solid #566375;
+                                // border: 1px solid #21262d;
+                            }
+
+                            th {
+                                text-align: center;
+                            }
+                        }
                     }
 
                     .image {
                         position: relative !important;
-                        max-width: 50%;
+                        max-width: 55%;
                         height: auto;
                         padding: 8px;
                         object-fit: contain;
