@@ -1,7 +1,7 @@
 import React from "react";
 import * as THREE from "three";
 import { useCursor, PivotControls } from "@react-three/drei";
-import type { Target } from "./types";
+import type { Target } from "../core/types";
 
 /**
  * Controls
@@ -75,9 +75,16 @@ export function PlaneHelperMesh({
 
     return (
         <>
-            <mesh ref={meshRef} visible={visible} {...props}>
+            <mesh
+                ref={meshRef}
+                visible={visible}
+                {...props}
+            >
                 <planeGeometry args={[width, height]} />
-                <meshBasicMaterial color={subPlaneColor} wireframe={true} />
+                <meshBasicMaterial
+                    color={subPlaneColor}
+                    wireframe={true}
+                />
             </mesh>
         </>
     );

@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { extend, useFrame } from "@react-three/fiber";
 import { useControls, folder, button, Leva } from "leva";
 
-import { DoseAnimationObject, VolumeAnimationObject } from "../../../src";
+import { DoseAnimationObject, VolumeAnimationObject } from "../../../../src";
 extend({ VolumeAnimationObject });
 
 export type VolumeAnimationControlsProps = {
@@ -73,14 +73,14 @@ export function VolumeAnimationControls({
         });
         setActions(lazyActions.current);
 
-        actions.forEach((actions) =>
-            actions["volumeAnimation"]?.reset().play()
+        actions.forEach(
+            (actions) => actions["volumeAnimation"]?.reset().play()
         );
     }, [objects]);
 
     React.useEffect(() => {
-        actions.forEach((actions) =>
-            actions["volumeAnimation"]?.reset().play()
+        actions.forEach(
+            (actions) => actions["volumeAnimation"]?.reset().play()
         );
     }, [actions]);
 

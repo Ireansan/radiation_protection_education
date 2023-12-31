@@ -9,8 +9,8 @@ import {
     VolumeGroup,
     VolumeControls as VolumeControlsImpl,
     VolumeBase,
-} from "../../../src";
-import { useStore } from "../../store";
+} from "../../../../src";
+import { useStore } from "../../../store";
 
 export type VolumeParameterControlsProps =
     JSX.IntrinsicElements["volumeGroup"] & {

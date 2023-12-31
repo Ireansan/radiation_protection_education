@@ -4,8 +4,11 @@ import { MeshBVH } from "three-mesh-bvh";
 import { useCursor, PivotControls } from "@react-three/drei";
 import { useControls, folder, button, Leva } from "leva";
 
-import { VolumeBase, VolumeControls as VolumeControlsImpl } from "../../../src";
-import { useStore } from "../../store";
+import {
+    VolumeBase,
+    VolumeControls as VolumeControlsImpl,
+} from "../../../../src";
+import { useStore } from "../../../store";
 
 /**
  * Line Helper

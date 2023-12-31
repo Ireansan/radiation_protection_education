@@ -1,5 +1,5 @@
 import React from "react";
-import { VolumeBase } from "../../../src";
+import { VolumeBase } from "../../../../src";
 
 export type Target = {
     object: THREE.Object3D | undefined;
