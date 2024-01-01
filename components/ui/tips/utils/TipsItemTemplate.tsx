@@ -35,6 +35,7 @@ export function TipsItem({
                             src={applyBasePath(imgSrc)}
                             alt={imgAlt ? imgAlt : ""}
                             fill={true}
+                            priority={true}
                         />
                     )}
                 </div>
