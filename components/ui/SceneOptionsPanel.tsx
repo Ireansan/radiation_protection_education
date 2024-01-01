@@ -41,13 +41,6 @@ export function SceneOptionsPanel({
                                 return activateViewing;
                             },
                         },
-                        annotations: {
-                            value: annotations,
-                            onChange: (annotations) => set({ annotations }),
-                            render: () => {
-                                return activateAnnotations;
-                            },
-                        },
                     },
                     { order: -1 }
                 ),
@@ -64,6 +57,14 @@ export function SceneOptionsPanel({
                                     onChange: (stats) => set({ stats }),
                                     render: () => {
                                         return activateStats;
+                                    },
+                                },
+                                annotations: {
+                                    value: annotations,
+                                    onChange: (annotations) =>
+                                        set({ annotations }),
+                                    render: () => {
+                                        return activateAnnotations;
                                     },
                                 },
                                 Visibles: folder(
