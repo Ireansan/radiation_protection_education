@@ -58,7 +58,6 @@ export function SceneObjectManual({ isEnglish = false }: TipsBaseProps) {
     );
 }
 
-// FIXME:
 export function SceneObjectPlayer({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
@@ -72,11 +71,8 @@ export function SceneObjectPlayer({ isEnglish = false }: TipsBaseProps) {
                         )}
                     </>
                 }
-                // FIXME:
-                imgSrc={
-                    "/img/manual/experiment/01/gif/3D/Player/Move_and_HandIK.gif"
-                }
-                imgAlt={"gif/Player"}
+                imgSrc={"/img/manual/tips/gif/3D/Player/Move.gif"}
+                imgAlt={"gif/3D/Player"}
             >
                 {!isEnglish ? (
                     <>
@@ -110,8 +106,8 @@ export function SceneObjectShield({ isEnglish = false }: TipsBaseProps) {
                         )}
                     </>
                 }
-                imgSrc={"/img/manual/experiment/01/gif/3D/Shield/Move.gif"}
-                imgAlt={"gif/Shield"}
+                imgSrc={"/img/manual/tips/gif/3D/Shield/Move.gif"}
+                imgAlt={"gif/3D/Shield"}
             >
                 {!isEnglish ? (
                     <>
@@ -120,6 +116,9 @@ export function SceneObjectShield({ isEnglish = false }: TipsBaseProps) {
                         </p>
                         <p>
                             また，防護板とプレイヤーの位置関係を調整することで，線量計UIに防護板の影響を示すアイコンが表示され，被ばく量が変化します。
+                        </p>
+                        <p>
+                            防護板のサイズはW57&times;D2&times;H37(cm)で固定となっています。
                         </p>
                     </>
                 ) : (
@@ -134,6 +133,10 @@ export function SceneObjectShield({ isEnglish = false }: TipsBaseProps) {
                             protective board and the player, the dosimeter UI
                             displays an icon indicating the effect of the
                             protective board, and the exposure dose changes.
+                        </p>
+                        <p>
+                            The size of the protective board is
+                            W57&times;D2&times;H37(cm) and is fixed.
                         </p>
                     </>
                 )}
@@ -155,7 +158,7 @@ export function SceneObjectClip1({ isEnglish = false }: TipsBaseProps) {
                         )}
                     </>
                 }
-                imgSrc={"/img/manual/experiment/01/gif/3D/Clip/FreeAxis.gif"}
+                imgSrc={"/img/manual/tips/gif/3D/Clip/FreeAxis.gif"}
                 imgAlt={"gif/Clip/FreeAxis"}
             >
                 {!isEnglish ? (
@@ -186,7 +189,6 @@ export function SceneObjectClip1({ isEnglish = false }: TipsBaseProps) {
     );
 }
 
-// FIXME:
 export function SceneObjectClip2({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
@@ -200,8 +202,8 @@ export function SceneObjectClip2({ isEnglish = false }: TipsBaseProps) {
                         )}
                     </>
                 }
-                imgSrc={"/img/manual/experiment/01/png/3D/Clip/X_and_Z.png"}
-                imgAlt={"img/3D/Clip"}
+                imgSrc={"/img/manual/tips/png/3D/Clip/X_and_Z.png"}
+                imgAlt={"png/3D/Clip"}
             >
                 {!isEnglish ? (
                     <>
@@ -209,8 +211,7 @@ export function SceneObjectClip2({ isEnglish = false }: TipsBaseProps) {
                             有効にした全ての平面に対してクリッピングが成り立つ部分がクリッピングされます。
                         </p>
                         <p>
-                            例えば，XとZを有効にした場合，下図のような結果になります。
-                            {/* FIXME: below --> right? */}
+                            例えば，XとZを有効にした場合，右図のような結果になります。
                         </p>
                     </>
                 ) : (
@@ -221,8 +222,7 @@ export function SceneObjectClip2({ isEnglish = false }: TipsBaseProps) {
                         </p>
                         <p>
                             For example, if X and Z are enabled, the result will
-                            be as shown below.
-                            {/* FIXME: below --> right? */}
+                            be as shown right.
                         </p>
                     </>
                 )}

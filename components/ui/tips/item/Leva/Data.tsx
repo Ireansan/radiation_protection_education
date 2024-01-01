@@ -14,8 +14,8 @@ export function LevaDataMode({ isEnglish = false }: TipsBaseProps) {
                         )}
                     </>
                 }
-                imgSrc={"/img/manual/experiment/01/png/leva/Data/mode.png"}
-                imgAlt={"img/leva/Data/mode"}
+                imgSrc={"/img/manual/tips/gif/leva/Data/mode.gif"}
+                imgAlt={"gif/leva/Data/mode"}
             >
                 {!isEnglish ? (
                     <>
@@ -52,9 +52,8 @@ export function LevaDataAnimation({ isEnglish = false }: TipsBaseProps) {
                         )}
                     </>
                 }
-                // FIXME: img
-                imgSrc={"/img/manual/experiment/01/png/leva/Data/Animation.png"}
-                imgAlt={"img/leva/Data/Animation"}
+                imgSrc={"/img/manual/tips/png/leva/Data/Animation.png"}
+                imgAlt={"png/leva/Data/Animation"}
             >
                 {!isEnglish ? (
                     <>
@@ -120,8 +119,8 @@ export function LevaDataClip({ isEnglish = false }: TipsBaseProps) {
                         )}
                     </>
                 }
-                imgSrc={"/img/manual/experiment/01/png/leva/Data/Clip.png"}
-                imgAlt={"img/leva/Data/Clip"}
+                imgSrc={"/img/manual/tips/png/leva/Data/Clip.png"}
+                imgAlt={"png/leva/Data/Clip"}
             >
                 {!isEnglish ? (
                     <>
@@ -165,9 +164,8 @@ export function LevaDataDetail({ isEnglish = false }: TipsBaseProps) {
                         )}
                     </>
                 }
-                // FIXME: img
-                imgSrc={"/img/manual/experiment/01/png/leva/Data/Parameter.png"}
-                imgAlt={"img/leva/Data/Detail"}
+                imgSrc={"/img/manual/tips/png/leva/Data/Detail.png"}
+                imgAlt={"png/leva/Data/Detail"}
             >
                 {!isEnglish ? (
                     <>

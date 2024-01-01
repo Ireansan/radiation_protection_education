@@ -1,6 +1,7 @@
 import { TipsItem } from "../../utils";
 import type { TipsBaseProps } from "../../utils";
 
+// FIXME: add nocurtain 15x15
 export function LevaSceneGimmickXRay({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
@@ -14,8 +15,8 @@ export function LevaSceneGimmickXRay({ isEnglish = false }: TipsBaseProps) {
                         )}
                     </>
                 }
-                imgSrc={"/img/manual/experiment/01/png/All/Gimmick_X-Ray.png"}
-                imgAlt={"img/leva/Scene/Gimmick/X-Ray"}
+                imgSrc={"/img/manual/tips/gif/leva/Scene/type_XRay.gif"}
+                imgAlt={"gif/leva/Scene/Gimmick/type (X-Ray)"}
             >
                 {!isEnglish ? (
                     <>
@@ -23,6 +24,7 @@ export function LevaSceneGimmickXRay({ isEnglish = false }: TipsBaseProps) {
                             シーン毎に固有の結果を返す項目と，3D空間内のコントローラーを非表示にする
                             <code>viewing</code>が操作できます。
                         </p>
+                        {/* FIXME: nocurtain, nocurtain 15x15, curtain */}
                         <p>
                             X線検査室では，<code>curtain</code>
                             でカーテンの有無を操作できます。
@@ -60,8 +62,8 @@ export function LevaSceneGimmickCArm({ isEnglish = false }: TipsBaseProps) {
                         )}
                     </>
                 }
-                imgSrc={"/img/manual/experiment/01/png/All/Gimmick_C-Arm.png"}
-                imgAlt={"img/leva/Scene/Gimmick/C-Arm"}
+                imgSrc={"/img/manual/tips/gif/leva/Scene/type_CArm.gif"}
+                imgAlt={"gif/leva/Scene/Gimmick/type (C-Arm)"}
             >
                 {!isEnglish ? (
                     <>
@@ -109,9 +111,8 @@ export function LevaSceneOptions({ isEnglish = false }: TipsBaseProps) {
                         )}
                     </>
                 }
-                // FIXME: img
-                // imgSrc={"/img/manual/experiment/01/png/leva/Data/Clip.png"}
-                imgAlt={"img/leva/Data/Clip"}
+                imgSrc={"/img/manual/tips/png/leva/Scene/Options.png"}
+                imgAlt={"png/leva/Data/Clip"}
             >
                 {!isEnglish ? (
                     <>
@@ -153,9 +154,8 @@ export function LevaSceneOptionsCameraControlsSettings({
                         )}
                     </>
                 }
-                // FIXME: img
-                // imgSrc={"/img/manual/experiment/01/png/leva/Data/Clip.png"}
-                imgAlt={"img/leva/Scene/Options/CameraControlsSettings"}
+                imgSrc={"/img/manual/tips/png/leva/Scene/CameraControls.png"}
+                imgAlt={"png/leva/Scene/Options/CameraControlsSettings"}
             >
                 {!isEnglish ? (
                     <>
@@ -235,9 +235,8 @@ export function LevaSceneOptionsDosimeterSettingsParameter({
                         )}
                     </>
                 }
-                // FIXME: img
-                // imgSrc={"/img/manual/experiment/01/png/leva/Data/Clip.png"}
-                imgAlt={"img/leva/Scene/DosimeterSettings"}
+                imgSrc={"/img/manual/tips/png/leva/Scene/DosimeterAll.png"}
+                imgAlt={"png/leva/Scene/DosimeterSettings"}
             >
                 {!isEnglish ? (
                     <>
@@ -318,18 +317,17 @@ export function LevaSceneOptionsDosimeterSettingsLayout({
                         )}
                     </>
                 }
-                // FIXME: img
-                // imgSrc={"/img/manual/experiment/01/png/leva/Data/Clip.png"}
-                imgAlt={"img/leva/Scene/DosimeterSettings"}
+                imgSrc={"/img/manual/tips/png/leva/Scene/DosimeterLayout.png"}
+                imgAlt={"png/leva/Scene/DosimeterSettings/Layout"}
             >
                 {!isEnglish ? (
                     <>
                         <p>線量計UIの表示設定を変更できます。</p>
                         <ul>
                             <li>
-                                <code>order</code>：年間と一回の値の並び順
-                                {/* デフォルトの<code>Year-Once</code>
-                                では年間の値が左、一回の値が右の順番に並びます。 */}
+                                <code>order</code>：年間と一回の値の並び順。
+                                デフォルトでは左がYear，右がOnce(
+                                <code>year-once</code>)となっています
                             </li>
                             <li>
                                 <code>data</code>：被ばく量の表現方法
@@ -345,9 +343,8 @@ export function LevaSceneOptionsDosimeterSettingsLayout({
                         <ul>
                             <li>
                                 <code>order</code>: order of Year and Once
-                                values
-                                {/* デフォルトの<code>Year-Once</code>
-                                では年間の値が左、一回の値が右の順番に並びます。 */}
+                                values. By default, the left side is Year, and
+                                the right side is Once (<code>year-once</code>).
                             </li>
                             <li>
                                 <code>data</code>: expression of exposure dose
@@ -381,9 +378,8 @@ export function LevaSceneOptionsDosimeterSettingsLayoutData({
                         )}
                     </>
                 }
-                // FIXME: img
-                // imgSrc={"/img/manual/experiment/01/png/leva/Data/Clip.png"}
-                imgAlt={"img/leva/Scene/DosimeterSettings"}
+                imgSrc={"/img/manual/tips/gif/leva/Scene/DosimeterData.gif"}
+                imgAlt={"gif/leva/Scene/DosimeterSettings/Layout/Data"}
             >
                 {!isEnglish ? (
                     <>

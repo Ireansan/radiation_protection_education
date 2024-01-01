@@ -287,7 +287,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                         orthographic={props.availables.orthographic}
                         camera={{
                             position: [4, 8, 4],
-                            zoom: props.availables.orthographic ? 75 : 1.0,
+                            zoom: props.availables.orthographic ? 90 : 1.0,
                         }}
                     >
                         <Suspense fallback={null}>

@@ -14,16 +14,14 @@ export function LevaPlayerEquipments({ isEnglish = false }: TipsBaseProps) {
                         )}
                     </>
                 }
-                imgSrc={
-                    "/img/manual/experiment/01/png/leva/Player/Equipments.png"
-                }
-                imgAlt={"img/leva/Player/Equipments"}
+                imgSrc={"/img/manual/tips/png/leva/Player/Equipments.png"}
+                imgAlt={"png/leva/Player/Equipments"}
             >
                 {!isEnglish ? (
                     <>
                         <p>放射線防護具の装備の有無を選択できます。</p>
                         <p>
-                            装備を有効にすることで，線量計UIに種類に応じたアイコンが表示され，被ばく量が変化します。
+                            装備を有効にすることで，線量計UIに種類に応じたアイコンと防護具の3Dモデルが表示され，被ばく量が変化します。
                         </p>
                     </>
                 ) : (
@@ -34,8 +32,9 @@ export function LevaPlayerEquipments({ isEnglish = false }: TipsBaseProps) {
                         </p>
                         <p>
                             By activating the equipment, the dosimeter UI
-                            displays icons according to the type and the
-                            exposure dose.
+                            displays icons and 3D models of the protective
+                            equipment according to the type and the exposure
+                            dose.
                         </p>
                     </>
                 )}
@@ -57,16 +56,13 @@ export function LevaPlayerHands({ isEnglish = false }: TipsBaseProps) {
                         )}
                     </>
                 }
-                // FIXME: gif
-                // imgSrc={
-                //     "/img/manual/experiment/01/png/leva/Player/Equipments.png"
-                // }
-                imgAlt={"img/leva/Player/Hands"}
+                imgSrc={"/img/manual/tips/gif/leva/Player/Hands.gif"}
+                imgAlt={"gif/leva/Player/Hands"}
             >
                 {!isEnglish ? (
                     <>
                         <p>
-                            数値の左にある部分をクリックしながら移動させることで，手の位置を変更できます。
+                            数値の左にある部分をクリックしながら移動させるか，数値を入力することで，手の位置を変更できます。
                         </p>
                         <p>
                             右に移動させると手を前に，左に移動させると後ろに，上に移動させると上に，下に移動させると下に移動します。
@@ -75,9 +71,9 @@ export function LevaPlayerHands({ isEnglish = false }: TipsBaseProps) {
                 ) : (
                     <>
                         <p>
-                            The position of the hand can be changed by clicking
-                            and moving the area to the left of the numerical
-                            value.
+                            You can change the position of the hand by clicking
+                            and moving the area to the left of the number or by
+                            entering a numerical value.
                         </p>
                         <p>
                             Moving it to the right moves the hand forward,

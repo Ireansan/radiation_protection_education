@@ -17,8 +17,6 @@ import { TipsItem } from "../utils/TipsItemTemplate";
 import { applyBasePath } from "../../../../utils";
 import type { TipsBaseProps } from "../utils";
 
-import style from "../../../../styles/css/tips.module.css";
-
 export function ScreenStructure({ isEnglish = false }: TipsBaseProps) {
     return (
         <>
@@ -32,7 +30,7 @@ export function ScreenStructure({ isEnglish = false }: TipsBaseProps) {
                         )}
                     </>
                 }
-                imgSrc={"/img/manual/experiment/01/png/All/screen_all.png "}
+                imgSrc={"/img/manual/tips/png/All/screen_all.png "}
                 imgAlt={"img/Screen"}
             >
                 {!isEnglish ? (
@@ -161,9 +159,7 @@ export function ScreenUIDosimeter1({ isEnglish = false }: TipsBaseProps) {
                         )}
                     </>
                 }
-                imgSrc={
-                    "/img/manual/experiment/01/png/UI/DosimeterUI/Dosimeter.png"
-                }
+                imgSrc={"/img/manual/tips/png/UI/DosimeterUI/Dosimeter.png"}
                 imgAlt={"img/UI/DosimeterUI"}
             >
                 {!isEnglish ? (
@@ -217,7 +213,7 @@ export function ScreenUIDosimeter2({ isEnglish = false }: TipsBaseProps) {
                     </>
                 }
                 imgSrc={
-                    "/img/manual/experiment/01/png/UI/DosimeterUI/Dosimeter_all-icon.png"
+                    "/img/manual/tips/png/UI/DosimeterUI/Dosimeter_all-icon.png"
                 }
                 imgAlt={"img/UI/DosimeterUIIcon"}
             >
@@ -276,10 +272,13 @@ export function ScreenUIDosimeter3({ isEnglish = false }: TipsBaseProps) {
                         )}
                     </>
                 }
+                imgSrc={"/img/manual/tips/gif/leva/Player/Equipments.gif"}
+                imgAlt={"gif/leva/Player/Equipments"}
             >
                 {!isEnglish ? (
                     <>
-                        <p>アイコンの種類は以下の通りになっています。</p>
+                        <p>アイコンの種類は以下の表の通りになっています。</p>
+                        <p>また，防護具は3Dモデルにも反映されます。</p>
                         <table>
                             <tr>
                                 <th>種類</th>
@@ -344,7 +343,11 @@ export function ScreenUIDosimeter3({ isEnglish = false }: TipsBaseProps) {
                     </>
                 ) : (
                     <>
-                        <p>The types of icons are as follows</p>
+                        <p>The types of icons are listed in the table below.</p>
+                        <p>
+                            Protective equipment is also reflected in the 3D
+                            model.
+                        </p>
                         <table>
                             <tr>
                                 <th>Category</th>
