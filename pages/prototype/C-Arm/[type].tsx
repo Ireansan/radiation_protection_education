@@ -73,11 +73,7 @@ import { CustomOrbitControls } from "../../../components/controls";
 
 // ==========
 // UI
-import {
-    CoordHTML,
-    ExerciseCheckList,
-    SceneOptionsPanel,
-} from "../../../components/ui";
+import { CoordHTML, SceneOptionsPanel } from "../../../components/ui";
 import { Tips } from "../../../components/ui/tips";
 import { Exercise, Tutorial } from "../../../components/ui/exercise";
 
