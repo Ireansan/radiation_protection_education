@@ -28,6 +28,9 @@ const CArm_roll180_pitch360_Configure = {
             scale: 1 / 8.5, // local scale
         },
     },
+    doseOrigin: {
+        position: [-0.03, 1.23, 0.1] as THREE.Vector3Tuple, // world position
+    },
 };
 
 export { CArm_roll180_pitch360_Configure };
