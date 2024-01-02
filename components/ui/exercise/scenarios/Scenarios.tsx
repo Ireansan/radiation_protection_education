@@ -12,13 +12,15 @@ const MemoSubItem = memo(SubItem);
 /**
  *
  */
-export function Exercise1({ isEnglish = false }: ScenarioProps) {
+export type Exercise1Props = {
+    radius: number;
+} & ScenarioProps;
+export function Exercise1({ radius, isEnglish = false }: Exercise1Props) {
     const [set, exerciseProgress] = useStore((state) => [
         state.set,
         state.sceneStates.exerciseProgress,
     ]);
 
-    const RangeRadius = 0.7; // [m]
     const {
         distance,
         inRange,
@@ -27,7 +29,7 @@ export function Exercise1({ isEnglish = false }: ScenarioProps) {
         onceWithin,
         allWithin,
         withinShield,
-    } = useScenario({ distanceMax: RangeRadius });
+    } = useScenario({ distanceMax: radius });
 
     useEffect(() => {
         set((state) => ({
@@ -49,15 +51,18 @@ export function Exercise1({ isEnglish = false }: ScenarioProps) {
                     <MemoItem isDone={inRange}>
                         {!isEnglish ? (
                             <>
-                                プレイヤーを{RangeRadius * 100}
+                                プレイヤーを{(radius * 100).toFixed()}
                                 cm以内に移動させる
                             </>
                         ) : (
-                            <>Move Player to within {RangeRadius * 100}cm.</>
+                            <>
+                                Move Player to within {(radius * 100).toFixed()}
+                                cm.
+                            </>
                         )}
                         <MemoSubItem isDone={inRange}>
                             Distance: {(distance * 100).toFixed()} /{" "}
-                            {RangeRadius * 100} [cm]
+                            {(radius * 100).toFixed()} [cm]
                         </MemoSubItem>
                     </MemoItem>
                     <MemoItem isDone={allWithin}>
@@ -158,15 +163,14 @@ export function Exercise2Preparation({ isEnglish = false }: ScenarioProps) {
 /**
  *
  */
-export function Exercise2({ isEnglish = false }: ScenarioProps) {
+export function Exercise2({ radius, isEnglish = false }: Exercise1Props) {
     const [set, exerciseProgress] = useStore((state) => [
         state.set,
         state.sceneStates.exerciseProgress,
     ]);
 
-    const RangeRadius = 1.7; // [m]
     const { distance, inRange } = useScenario({
-        distanceMin: RangeRadius,
+        distanceMin: radius,
     });
 
     useEffect(() => {
@@ -189,17 +193,17 @@ export function Exercise2({ isEnglish = false }: ScenarioProps) {
                     <MemoItem isDone={inRange}>
                         {!isEnglish ? (
                             <>
-                                プレイヤーを{RangeRadius}
+                                プレイヤーを{radius}
                                 mまで遠ざけ，被ばく量の変化を観察する
                             </>
                         ) : (
                             <>
-                                Move Player away to {RangeRadius}m and observe
-                                the change in exposure.
+                                Move Player away to {radius}m and observe the
+                                change in exposure.
                             </>
                         )}
                         <MemoSubItem isDone={inRange}>
-                            Distance: {distance.toFixed(2)} / {RangeRadius} [m]
+                            Distance: {distance.toFixed(2)} / {radius} [m]
                         </MemoSubItem>
                     </MemoItem>
                 </div>

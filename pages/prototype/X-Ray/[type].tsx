@@ -550,7 +550,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                                                 )
                                             }
                                             planeSize={Board_Configure.size.y}
-                                            scale={50}
+                                            scale={60}
                                             fixed={true}
                                             offset={[0, 0, 0.1]}
                                             opacity={0.75}
@@ -664,7 +664,10 @@ function VisualizationXRay({ ...props }: PageProps) {
                     >
                         {props.availables.exerciseUI ? (
                             <>
-                                <Exercise isEnglish={props.isEnglish} />
+                                <Exercise
+                                    sceneName="X-Ray"
+                                    isEnglish={props.isEnglish}
+                                />
                             </>
                         ) : null}
                         {props.availables.tutorialUI ? (

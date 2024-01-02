@@ -34,7 +34,10 @@ import {
 // Model
 import * as MODELS from "../../../components/models";
 import { Board_Configure } from "../../../components/models";
-import { CustomYBotIK } from "../../../components/models/Player";
+import {
+    CustomYBotIK,
+    SelfMadePlayer,
+} from "../../../components/models/Player";
 import {
     HandIKLevaControls,
     HandIKPivotControls,
@@ -169,37 +172,42 @@ function VisualizationCArm({ ...props }: PageProps) {
     const audioPath = `/models/nrrd/c-arm/animation/c-arm.mp3`;
     const names = [
         {
-            name: "mixamorigNeck",
-            displayName: "Neck",
-            category: "neck",
-            coefficient: 0.1,
-        },
-        {
-            name: "mixamorigLeftEye",
+            name: "mixamorigLeftEyeDosimeter",
             displayName: "Left Eye",
             category: "goggle",
             coefficient: 0.1,
         },
         {
-            name: "mixamorigRightEye",
+            name: "mixamorigRightEyeDosimeter",
             displayName: "Right Eye",
             category: "goggle",
             coefficient: 0.1,
         },
         {
-            name: "mixamorigLeftHand",
+            name: "mixamorigNeckDosimeter",
+            displayName: "Neck",
+            category: "neck",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigSpine1Dosimeter",
+            displayName: "Chest",
+            category: "apron",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigLeftHandDosimeter",
             displayName: "Left Hand",
             category: "glove",
             coefficient: 0.1,
         },
         {
-            name: "mixamorigRightHand",
+            name: "mixamorigRightHandDosimeter",
             displayName: "Right Hand",
             category: "glove",
             coefficient: 0.1,
         },
     ];
-
     const ref = useRef<DoseGroup>(null);
 
     const timelapseRef = useRef<DoseGroup>(null);
@@ -510,7 +518,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                                     <PlayerPivotControls
                                         playerRef={yBotRef}
                                         dosimeterRef={dosimeterRef}
-                                        position={new THREE.Vector3(2, 0, 0)}
+                                        position={new THREE.Vector3(1.5, 0, 0)}
                                         rotation={
                                             new THREE.Euler(0, -Math.PI / 2, 0)
                                         }
@@ -524,7 +532,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                                         position={[1.5, 0, 0]}
                                         rotation={[0, -Math.PI / 2, 0]}
                                     >
-                                        <CustomYBotIK />
+                                        <SelfMadePlayer />
                                         {/* <HandIKPivotControls
                                             object={yBotRef}
                                             scale={35}
@@ -579,7 +587,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                                                 )
                                             }
                                             planeSize={Board_Configure.size.y}
-                                            scale={50}
+                                            scale={60}
                                             fixed={true}
                                             offset={[0, 0, 0.1]}
                                             opacity={0.75}
@@ -691,7 +699,10 @@ function VisualizationCArm({ ...props }: PageProps) {
                     >
                         {props.availables.exerciseUI ? (
                             <>
-                                <Exercise isEnglish={props.isEnglish} />
+                                <Exercise
+                                    sceneName="C-Arm"
+                                    isEnglish={props.isEnglish}
+                                />
                             </>
                         ) : null}
                         {props.availables.tutorialUI ? (
