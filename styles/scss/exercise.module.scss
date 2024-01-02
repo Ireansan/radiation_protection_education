@@ -107,4 +107,17 @@
             background-color: #858b8e;
         }
     }
+
+    .linkButton {
+        width: 55%;
+        font-size: 1.25rem;
+        padding: 8px 16px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        border: 0;
+        border-radius: 5px;
+        background-color: #007aff;
+    }
 }

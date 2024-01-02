@@ -40,6 +40,12 @@ export function Tutorial({ sceneName, isEnglish = false }: TutorialProps) {
                     <SwiperSlide className={style.swiperSlide}>
                         <TUTORIALS.Tutorial4 isEnglish={isEnglish} />
                     </SwiperSlide>
+                    <SwiperSlide className={style.swiperSlide}>
+                        <TUTORIALS.NextExercise
+                            sceneName={sceneName}
+                            isEnglish={isEnglish}
+                        />
+                    </SwiperSlide>
                 </Swiper>
             </div>
         </>

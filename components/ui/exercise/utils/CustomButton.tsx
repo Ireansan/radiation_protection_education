@@ -1,5 +1,6 @@
 import React from "react";
 import { useSwiper } from "swiper/react";
+import Link from "next/link";
 
 import style from "../../../../styles/css/exercise.module.css";
 
@@ -19,5 +20,17 @@ export function NextButton({ disabled }: NextButtonProps) {
                 Next &rarr;
             </button>
         </>
+    );
+}
+
+export type LinkButtonProps = {
+    href: string;
+    children: React.ReactNode;
+};
+export function LinkButton({ href, children }: LinkButtonProps) {
+    return (
+        <div className={`${style.linkButton}`}>
+            <Link href={href}>{children}</Link>
+        </div>
     );
 }

@@ -1,8 +1,9 @@
 import React, { memo, useMemo, useEffect } from "react";
 import { QuestionMark } from "@mui/icons-material";
+import Link from "next/link";
 
 import { useStore } from "../../../store";
-import { Item, SubItem, NextButton } from "../utils";
+import { Item, SubItem, NextButton, LinkButton } from "../utils";
 import type { ScenarioProps } from "../utils";
 
 import style from "../../../../styles/css/exercise.module.css";
@@ -374,6 +375,35 @@ export function Tutorial4({ isEnglish = false }: ScenarioProps) {
                     </MemoItem>
                 </div>
                 <NextButton disabled={!exerciseProgress.tutorial4} />
+            </div>
+        </>
+    );
+}
+
+/**
+ *
+ */
+export function NextExercise({ isEnglish = false, sceneName }: Tutorial1Props) {
+    const [set, exerciseProgress, executeLog] = useStore((state) => [
+        state.set,
+        state.sceneStates.exerciseProgress,
+        state.sceneStates.executeLog,
+    ]);
+
+    const link = useMemo(() => {
+        let _isEnglish = isEnglish ? "experiment_en" : "experiment";
+
+        return `/prototype/${sceneName}/${_isEnglish}`; // FIXME: prototype --> visualization
+    }, [sceneName, isEnglish]);
+
+    return (
+        <>
+            <div className={`${style.content}`}>
+                <h3>Congratulations!</h3>
+                <LinkButton href={link}>
+                    Go to Exercise <br />
+                    &rarr;
+                </LinkButton>
             </div>
         </>
     );
