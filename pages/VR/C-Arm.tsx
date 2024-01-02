@@ -33,7 +33,7 @@ import {
 
 // ==========
 // Model
-import * as MODELS from "../../../components/models";
+import * as MODELS from "../../components/models";
 import { Board_Configure } from "../../components/models";
 import {
     CustomYBotIK,
@@ -104,7 +104,11 @@ function XRayVR() {
         ]
     );
 
-    const doseOriginPosition = new THREE.Vector3(-0.182, 1.15, -0.18);
+    const doseOriginPosition = new THREE.Vector3(
+        VOLUMEDATA.CArm_Configure.doseOrigin.position[0],
+        VOLUMEDATA.CArm_Configure.doseOrigin.position[1],
+        VOLUMEDATA.CArm_Configure.doseOrigin.position[2] - 10
+    );
     set((state) => ({
         sceneStates: { ...state.sceneStates, doseOrigin: doseOriginPosition },
     }));
@@ -287,11 +291,6 @@ function XRayVR() {
                                 rightHand={true}
                             />
                             <Controllers rayMaterial={{ color: "#B30900" }} />
-
-                            <DosePerspectiveToOrthographic
-                                object={ref}
-                                zoom={450}
-                            />
 
                             {/* -------------------------------------------------- */}
                             {/* Volume Object */}

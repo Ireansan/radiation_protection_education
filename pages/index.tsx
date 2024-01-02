@@ -97,12 +97,12 @@ const Home: NextPage = () => {
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
                     </div>
-                    {/* <div className={styles.card}>
-                        <Link href={"/VR/X-Ray"}>
-                            <h2>X-Ray &rarr;</h2>
+                    <div className={styles.card}>
+                        <Link href={"/VR/C-Arm"}>
+                            <h2>C-Arm &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
-                    </div> */}
+                    </div>
                 </div>
 
                 <h3>Game</h3>

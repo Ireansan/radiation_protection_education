@@ -73,11 +73,7 @@ import { CustomOrbitControls } from "../../../components/controls";
 
 // ==========
 // UI
-import {
-    CoordHTML,
-    ExerciseCheckList,
-    SceneOptionsPanel,
-} from "../../../components/ui";
+import { CoordHTML, SceneOptionsPanel } from "../../../components/ui";
 import { Tips } from "../../../components/ui/tips";
 import { Exercise, Tutorial } from "../../../components/ui/exercise";
 
@@ -162,7 +158,9 @@ function VisualizationCArm({ ...props }: PageProps) {
         ]
     );
 
-    const doseOriginPosition = new THREE.Vector3(-0.182, 1.15, -0.18);
+    const doseOriginPosition = new THREE.Vector3().fromArray(
+        VOLUMEDATA.CArm_Configure.doseOrigin.position
+    );
     set((state) => ({
         sceneStates: { ...state.sceneStates, doseOrigin: doseOriginPosition },
     }));

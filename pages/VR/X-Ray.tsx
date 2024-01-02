@@ -226,11 +226,6 @@ function XRayVR() {
                             />
                             <Controllers rayMaterial={{ color: "#B30900" }} />
 
-                            <DosePerspectiveToOrthographic
-                                object={ref}
-                                zoom={450}
-                            />
-
                             {/* -------------------------------------------------- */}
                             {/* Volume Object */}
                             <doseGroup
