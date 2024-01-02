@@ -93,7 +93,7 @@ import { useStore } from "../../components/store";
 // Styles
 import styles from "../../styles/threejs.module.css";
 
-function XRayVR() {
+function CArmVR() {
     const [set, debug, follow, viewing, objectVisibles, executeLog] = useStore(
         (state) => [
             state.set,
@@ -489,12 +489,12 @@ function XRayVR() {
                                     scale={4}
                                 />
                                 <VRDoseEquipmentsUI
-                                    position={[-1.5, 1.6, -0.325]}
+                                    position={[-1.4, 1.6, -0.325]}
                                     rotation={[0, Math.PI / 2, 0]}
                                     scale={3}
                                 />
                                 <VRDoseAnimationControls
-                                    position={[-1.45, 2.05, -0.325]}
+                                    position={[-1.35, 2.05, -0.325]}
                                     rotation={[
                                         Math.PI / 2,
                                         1.226,
@@ -509,7 +509,7 @@ function XRayVR() {
                                     customSpeed={[8.0, 16.0]}
                                 />
                                 <VRSceneControls
-                                    position={[-1.4, 2.4, -0.325]}
+                                    position={[-1.3, 2.4, -0.325]}
                                     rotation={[
                                         Math.PI / 2,
                                         1.226,
@@ -533,4 +533,4 @@ function XRayVR() {
     );
 }
 
-export default XRayVR;
+export default CArmVR;
