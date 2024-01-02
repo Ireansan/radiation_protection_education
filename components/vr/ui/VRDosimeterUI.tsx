@@ -1,5 +1,6 @@
 import React from "react";
 import { useThree, useFrame } from "@react-three/fiber";
+import { useXREvent } from "@react-three/xr";
 import { HTMLMesh, InteractiveGroup } from "three-stdlib";
 
 /**
@@ -23,10 +24,18 @@ export function VRDosimeterUI({ ...props }: JSX.IntrinsicElements["group"]) {
         return dosimeterUIMesh;
     }, [group]);
 
+    useXREvent("select", (event) => {
+        console.log("Select");
+        // @ts-ignore
+        dosimeterUIMesh.material.map.update();
+    });
+
+    /*
     useFrame(() => {
         // @ts-ignore
         dosimeterUIMesh.material.map.update();
     });
+    */
 
     return (
         <>
