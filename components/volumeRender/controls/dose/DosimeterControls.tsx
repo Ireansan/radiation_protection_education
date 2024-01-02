@@ -17,7 +17,7 @@ import type { SpecifiedSite } from "../../../../src";
 /**
  *
  */
-type DosimeterControlsProps = {
+export type DosimeterControlsProps = {
     children?: React.ReactElement<VolumeObject | VolumeGroup>;
     object: React.RefObject<THREE.Object3D>;
     names: SpecifiedSite[];

@@ -3,10 +3,24 @@ import { useThree, useFrame } from "@react-three/fiber";
 import { useXREvent } from "@react-three/xr";
 import { HTMLMesh, InteractiveGroup } from "three-stdlib";
 
+import { Dosimeter as DosimeterImpl, VolumeBase } from "../../../src";
+import type { DosimeterControlsProps } from "../../volumeRender";
+import { useStore } from "../../store";
+
 /**
  * @link https://github.com/mrdoob/three.js/blob/master/examples/webxr_vr_sandbox.html
  */
-export function VRDosimeterUI({ ...props }: JSX.IntrinsicElements["group"]) {
+export const VRDosimeterControls = React.forwardRef<
+    DosimeterImpl,
+    DosimeterControlsProps & JSX.IntrinsicElements["group"]
+>(function VRDosimeterControls(
+    { children, object, targets, names = [], ...props },
+    ref
+) {
+    const [set] = useStore((state) => [state.set]);
+
+    const controls = React.useMemo(() => new DosimeterImpl(), []);
+
     const { gl, camera } = useThree();
     const group = React.useMemo(
         () => new InteractiveGroup(gl, camera),
@@ -24,10 +38,62 @@ export function VRDosimeterUI({ ...props }: JSX.IntrinsicElements["group"]) {
         return dosimeterUIMesh;
     }, [group]);
 
-    useXREvent("select", (event) => {
-        console.log("Select");
+    // Init
+    React.useEffect(() => {
+        if (object.current) {
+            controls.attach(object.current);
+        }
+
+        return () => {
+            controls.detach();
+        };
+    }, [object, controls]);
+
+    React.useEffect(() => {
+        controls.namesData = names;
+
+        return () => {
+            controls.namesData = undefined;
+        };
+    }, [names, controls]);
+
+    React.useEffect(() => {
+        let targetsArray: VolumeBase[] = [];
+        for (let i = 0; i < targets.length; i++) {
+            let tmp = targets[i].current;
+            if (tmp) {
+                targetsArray.push(tmp);
+            }
+        }
+
+        controls.attachTargets(targetsArray);
+
+        return () => {
+            controls.detachTargets();
+        };
+    }, [targets, controls]);
+
+    const updateDosimeterUI = () => {
+        controls.updateResults();
+        set((state) => ({
+            sceneStates: {
+                ...state.sceneStates,
+                dosimeterResults: controls.results,
+            },
+        }));
+
         // @ts-ignore
         dosimeterUIMesh.material.map.update();
+    };
+
+    React.useEffect(() => {
+        updateDosimeterUI();
+    }, []);
+
+    useXREvent("squeeze", (event) => {
+        console.log("Squeeze");
+
+        updateDosimeterUI();
     });
 
     /*
@@ -43,6 +109,10 @@ export function VRDosimeterUI({ ...props }: JSX.IntrinsicElements["group"]) {
                 object={group}
                 {...props}
             />
+            <primitive
+                ref={ref}
+                object={controls}
+            />
         </>
     );
-}
+});

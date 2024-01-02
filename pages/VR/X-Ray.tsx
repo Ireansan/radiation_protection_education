@@ -75,7 +75,7 @@ import {
     VRDoseAnimationControls,
     VRVolumeParameterControls,
     VRDoseEquipmentsUI,
-    VRDosimeterUI,
+    VRDosimeterControls,
     VRPlayer,
     VRHandIKControls,
     VRSceneControls,
@@ -319,14 +319,6 @@ function XRayVR() {
                                 customSpeed={[8.0, 16.0]}
                             />
 
-                            {/* Dosimeter */}
-                            <DosimeterControls
-                                ref={dosimeterRef}
-                                object={yBotRef}
-                                names={names}
-                                targets={[nocurtainAccumuRef, curtainAccumuRef]}
-                            />
-
                             <group position={[0, 0, -10]}>
                                 {/* -------------------------------------------------- */}
                                 {/* Three.js Object */}
@@ -432,7 +424,15 @@ function XRayVR() {
                                     rotation={[0.124, 0.196, -0.024]}
                                     scale={3}
                                 />
-                                <VRDosimeterUI
+                                <VRDosimeterControls
+                                    ref={dosimeterRef}
+                                    object={yBotRef}
+                                    names={names}
+                                    targets={[
+                                        nocurtainAccumuRef,
+                                        nocurtain15x15AccumuRef,
+                                        curtainAccumuRef,
+                                    ]}
                                     position={[-0.7, 1.75, -1]}
                                     rotation={[0.124, 0.196, -0.024]}
                                     scale={4}

@@ -76,7 +76,7 @@ import {
     VRDoseAnimationControls,
     VRVolumeParameterControls,
     VRDoseEquipmentsUI,
-    VRDosimeterUI,
+    VRDosimeterControls,
     VRPlayer,
     VRHandIKControls,
     VRSceneControls,
@@ -326,17 +326,6 @@ function CArmVR() {
                             {/* -------------------------------------------------- */}
                             {/* Volume Controls */}
 
-                            {/* Dosimeter */}
-                            <DosimeterControls
-                                ref={dosimeterRef}
-                                object={yBotRef}
-                                names={names}
-                                targets={[
-                                    cArmAccumuRef,
-                                    cArmRoll180Pitch360AccumuRef,
-                                ]}
-                            />
-
                             <group position={[0, 0, -10]}>
                                 {/* -------------------------------------------------- */}
                                 {/* Three.js Object */}
@@ -483,7 +472,14 @@ function CArmVR() {
                                     rotation={[0.124, 0.196, -0.024]}
                                     scale={3}
                                 />
-                                <VRDosimeterUI
+                                <VRDosimeterControls
+                                    ref={dosimeterRef}
+                                    object={yBotRef}
+                                    names={names}
+                                    targets={[
+                                        cArmAccumuRef,
+                                        cArmRoll180Pitch360AccumuRef,
+                                    ]}
                                     position={[-0.7, 1.75, -1]}
                                     rotation={[0.124, 0.196, -0.024]}
                                     scale={4}
