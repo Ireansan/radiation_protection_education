@@ -35,14 +35,47 @@ export function ScreenStructure({ isEnglish = false }: TipsBaseProps) {
             >
                 {!isEnglish ? (
                     <>
-                        <p>この教材の画面構成は大きく3つに分かれています。</p>
+                        <p>この教材の画面構成は大きく4つに分かれています。</p>
+                        <ul>
+                            <li>
+                                3D空間：線量分布やプレイヤーなどが表示される
+                            </li>
+                            <li>
+                                操作パネル（画面右部分）：各種設定などの操作を行える
+                            </li>
+                            <li>
+                                目標リスト（画面左上部分）：シナリオなど目標が表示される
+                            </li>
+                            <li>
+                                線量計（画面左下部分）：3D空間内のプレイヤーの位置に応じて値が表示される
+                            </li>
+                        </ul>
                     </>
                 ) : (
                     <>
                         <p>
                             The screen structure of this material is divided
-                            into three main sections.
+                            into four main sections.
                         </p>
+                        <ul>
+                            <li>
+                                3D space: dose distribution, players, etc. are
+                                displayed.
+                            </li>
+                            <li>
+                                Operation panel (right part of the screen):
+                                Allows operation of various settings, etc.
+                            </li>
+                            <li>
+                                Goal list (upper left portion of screen):
+                                Scenarios and other goals are displayed.
+                            </li>
+                            <li>
+                                Dosimeter (lower left portion of the screen):
+                                values are displayed according to the
+                                player&apos;s position in the 3D space
+                            </li>
+                        </ul>
                     </>
                 )}
             </TipsItem>

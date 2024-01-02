@@ -24,10 +24,12 @@ export function LevaSceneGimmickXRay({ isEnglish = false }: TipsBaseProps) {
                             シーン毎に固有の結果を返す項目と，3D空間内のコントローラーを非表示にする
                             <code>viewing</code>が操作できます。
                         </p>
-                        {/* FIXME: nocurtain, nocurtain 15x15, curtain */}
                         <p>
-                            X線検査室では，<code>curtain</code>
-                            でカーテンの有無を操作できます。
+                            X線検査室では，<code>type</code>
+                            でカーテン無しの<code>nocurtain</code>
+                            ，カーテン無しで照射野 15&times;15(cm)の
+                            <code>nocurtain 15x15</code>，カーテン有りの
+                            <code>curtain</code>に切り替えられます。
                         </p>
                     </>
                 ) : (
@@ -38,9 +40,12 @@ export function LevaSceneGimmickXRay({ isEnglish = false }: TipsBaseProps) {
                             controller in 3D space.
                         </p>
                         <p>
-                            In the X-Ray room, the <code>curtain</code> can be
-                            used to control the presence or absence of a
-                            curtain.
+                            In the X-ray examination room, the type can be
+                            switched between <code>nocurtain</code> without a
+                            curtain,
+                            <code>nocurtain 15x15</code> without a curtain with
+                            an irradiation field of 15&times;15(cm) (cm), and
+                            <code>curtain</code> with a curtain.
                         </p>
                     </>
                 )}
