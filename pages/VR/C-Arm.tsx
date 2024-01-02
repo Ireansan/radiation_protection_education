@@ -33,6 +33,7 @@ import {
 
 // ==========
 // Model
+import * as MODELS from "../../../components/models";
 import { Board_Configure } from "../../components/models";
 import {
     CustomYBotIK,
@@ -92,14 +93,18 @@ import { useStore } from "../../components/store";
 import styles from "../../styles/threejs.module.css";
 
 function XRayVR() {
-    const [set, debug, follow, viewing] = useStore((state) => [
-        state.set,
-        state.debug,
-        state.follow,
-        state.viewing,
-    ]);
+    const [set, debug, follow, viewing, objectVisibles, executeLog] = useStore(
+        (state) => [
+            state.set,
+            state.debug,
+            state.follow,
+            state.viewing,
+            state.sceneStates.objectVisibles,
+            state.sceneStates.executeLog,
+        ]
+    );
 
-    const doseOriginPosition = new THREE.Vector3(-0.182, 1.15, -0.18 - 10);
+    const doseOriginPosition = new THREE.Vector3(-0.182, 1.15, -0.18);
     set((state) => ({
         sceneStates: { ...state.sceneStates, doseOrigin: doseOriginPosition },
     }));
@@ -144,20 +149,44 @@ function XRayVR() {
     ];
     const floorColor = "#8F8F96";
 
-    const ref = useRef<DoseGroup>(null!);
+    const ref = useRef<DoseGroup>(null);
 
     const timelapseRef = useRef<DoseGroup>(null);
-    const nocurtainRef = useRef<DoseAnimationObject>(null);
-    const curtainRef = useRef<DoseAnimationObject>(null);
+    const cArmRef = useRef<DoseAnimationObject>(null);
+    const cArmRoll180Pitch360Ref = useRef<DoseAnimationObject>(null);
 
     const accumulateRef = useRef<DoseGroup>(null);
-    const nocurtainAccumuRef = useRef<DoseGroup>(null);
-    const curtainAccumuRef = useRef<DoseGroup>(null);
+    const cArmAccumuRef = useRef<DoseGroup>(null);
+    const cArmRoll180Pitch360AccumuRef = useRef<DoseGroup>(null);
 
-    const curtainObjRef = useRef<THREE.Group>(null);
+    const patientRef = useRef<THREE.Group>(null!);
+    const cArmModelRef = useRef<THREE.Group>(null!);
+
+    const originObjRef = useRef<THREE.Mesh>(null);
 
     const dosimeterRef = useRef<Dosimeter>(null);
     const yBotRef = useRef<THREE.Group>(null!);
+    const audioRef = useRef<HTMLAudioElement>(null!);
+
+    const options = ["type 1", "type 2"];
+    const cArmConfigs = [
+        {
+            model: { ...VOLUMEDATA.CArm_Configure.object3d.model },
+            patient: { ...VOLUMEDATA.CArm_Configure.object3d.patient },
+        },
+        {
+            model: {
+                ...VOLUMEDATA.CArm_roll180_pitch360_Configure.object3d.model,
+            },
+            patient: {
+                ...VOLUMEDATA.CArm_roll180_pitch360_Configure.object3d.patient,
+            },
+        },
+    ];
+    const refs = [
+        { time: cArmRef, accumu: cArmAccumuRef },
+        { time: cArmRoll180Pitch360Ref, accumu: cArmRoll180Pitch360AccumuRef },
+    ];
 
     const ToggledDebug = useToggle(Debug, "debug");
 
@@ -167,22 +196,55 @@ function XRayVR() {
                 curtain: {
                     value: false,
                     onChange: (e) => {
-                        nocurtainRef.current
-                            ? (nocurtainRef.current.visible = !e)
-                            : null;
-                        nocurtainAccumuRef.current
-                            ? (nocurtainAccumuRef.current.visible = !e)
-                            : null;
+                        const visibles = options.map((value) => value === e);
 
-                        curtainRef.current
-                            ? (curtainRef.current.visible = e)
-                            : null;
-                        curtainAccumuRef.current
-                            ? (curtainAccumuRef.current.visible = e)
-                            : null;
-                        curtainObjRef.current
-                            ? (curtainObjRef.current.visible = e)
-                            : null;
+                        visibles.forEach((value, index) => {
+                            let config = cArmConfigs[index];
+
+                            let refTime = refs[index].time.current;
+                            refTime ? (refTime.visible = value) : null;
+                            let refAccumu = refs[index].accumu.current;
+                            refAccumu ? (refAccumu.visible = value) : null;
+
+                            if (value) {
+                                MODELS.updateCArmModel(
+                                    cArmModelRef,
+                                    config.model.position,
+                                    config.model.rotation,
+                                    config.model.roll,
+                                    config.model.pitch,
+                                    config.model.height
+                                );
+                                if (patientRef.current) {
+                                    patientRef.current.position.set(
+                                        ...config.patient.position
+                                    );
+                                    patientRef.current.rotation.set(
+                                        ...config.patient.rotation
+                                    );
+                                    patientRef.current.scale.setScalar(
+                                        config.patient.scale
+                                    );
+                                }
+                            }
+                        });
+
+                        // set execute log for experiment
+                        const _cArm = executeLog.gimmick.cArm;
+                        _cArm[e] = true;
+
+                        set((state) => ({
+                            sceneStates: {
+                                ...state.sceneStates,
+                                executeLog: {
+                                    ...state.sceneStates.executeLog,
+                                    gimmick: {
+                                        ...state.sceneStates.executeLog.gimmick,
+                                        cArm: _cArm,
+                                    },
+                                },
+                            },
+                        }));
                     },
                 },
             }),
@@ -238,35 +300,39 @@ function XRayVR() {
                                 position={[0, 0, -10]}
                             >
                                 <doseGroup
+                                    visible={objectVisibles.dose}
                                     position={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.position
+                                        VOLUMEDATA.CArm_Configure.volume
+                                            .position
                                     }
                                     rotation={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.rotation
+                                        VOLUMEDATA.CArm_Configure.volume
+                                            .rotation
                                     }
                                     scale={
-                                        VOLUMEDATA.XRay_nocurtain_Configure
-                                            .volume.scale
+                                        VOLUMEDATA.CArm_Configure.volume.scale
                                     }
                                 >
                                     {/* Time Lapse */}
-                                    <doseGroup ref={timelapseRef}>
-                                        {/* X-Ray Dose, no curtain */}
-                                        <doseAnimationObject
-                                            ref={nocurtainRef}
-                                            name={"x-ray_animation_nocurtain"}
-                                        >
-                                            <VOLUMEDATA.XRay_nocurtain_all_Animation />
+                                    <doseGroup
+                                        ref={timelapseRef}
+                                        clim2={
+                                            VOLUMEDATA.CArm_Configure.volume
+                                                .clim2.timelapse
+                                        }
+                                        // clim2AutoUpdate={false}
+                                    >
+                                        {/* C-Arm Dose */}
+                                        <doseAnimationObject ref={cArmRef}>
+                                            <VOLUMEDATA.CArm_all_Animation />
                                         </doseAnimationObject>
-                                        {/* X-Ray Dose, curtain */}
+
+                                        {/* C-Arm Roll 180 Pitch 360 Dose */}
                                         <doseAnimationObject
-                                            ref={curtainRef}
-                                            name={"x-ray_animation_curtain"}
+                                            ref={cArmRoll180Pitch360Ref}
                                             visible={false}
                                         >
-                                            <VOLUMEDATA.XRay_curtain_all_Animation />
+                                            <VOLUMEDATA.CArm_roll180_pitch360_all_Animation />
                                         </doseAnimationObject>
                                     </doseGroup>
 
@@ -274,21 +340,23 @@ function XRayVR() {
                                     <doseGroup
                                         ref={accumulateRef}
                                         visible={false}
+                                        clim2={
+                                            VOLUMEDATA.CArm_Configure.volume
+                                                .clim2.accumulate
+                                        }
+                                        // clim2AutoUpdate={false}
                                     >
-                                        {/* X-Ray Dose, no curtain, Accumulate */}
-                                        <doseGroup
-                                            ref={nocurtainAccumuRef}
-                                            name={"x-ray_accumulate_nocurtain"}
-                                        >
-                                            <VOLUMEDATA.XRay_nocurtain_all_accumulate />
+                                        {/* C-Arm Dose, Accumulate */}
+                                        <doseGroup ref={cArmAccumuRef}>
+                                            <VOLUMEDATA.CArm_all_accumulate />
                                         </doseGroup>
-                                        {/* X-Ray Dose, curtain, Accumulate */}
+
+                                        {/* C-Arm Roll 180 Pitch 360 Dose, Accumulate */}
                                         <doseGroup
-                                            ref={curtainAccumuRef}
-                                            name={"x-ray_accumulate_curtain"}
+                                            ref={cArmRoll180Pitch360AccumuRef}
                                             visible={false}
                                         >
-                                            <VOLUMEDATA.XRay_curtain_all_accumulate />
+                                            <VOLUMEDATA.CArm_roll180_pitch360_all_accumulate />
                                         </doseGroup>
                                     </doseGroup>
                                 </doseGroup>
@@ -297,11 +365,7 @@ function XRayVR() {
                             {/* -------------------------------------------------- */}
                             {/* Volume Controls */}
                             <DoseAnimationControls
-                                objects={[
-                                    nocurtainRef,
-                                    // nocurtain15x15Ref,
-                                    curtainRef,
-                                ]}
+                                objects={[cArmRef, cArmRoll180Pitch360Ref]}
                                 mainGroup={timelapseRef}
                                 subGroup={accumulateRef}
                                 duration={16}
@@ -314,39 +378,69 @@ function XRayVR() {
                                 ref={dosimeterRef}
                                 object={yBotRef}
                                 names={names}
-                                targets={[nocurtainAccumuRef, curtainAccumuRef]}
+                                targets={[
+                                    cArmAccumuRef,
+                                    cArmRoll180Pitch360AccumuRef,
+                                ]}
                             />
 
                             <group position={[0, 0, -10]}>
                                 {/* -------------------------------------------------- */}
                                 {/* Three.js Object */}
+                                {/* Patient */}
                                 <group
+                                    ref={patientRef}
                                     position={
-                                        ENVIROMENT.XRay_Configure.object3d
+                                        VOLUMEDATA.CArm_Configure.object3d
+                                            .patient.position
+                                    }
+                                    rotation={
+                                        VOLUMEDATA.CArm_Configure.object3d
+                                            .patient.rotation
+                                    }
+                                    scale={
+                                        VOLUMEDATA.CArm_Configure.object3d
+                                            .patient.scale
+                                    }
+                                >
+                                    <MODELS.XRay_Bed />
+                                    <MODELS.XRay_Patient />
+                                </group>
+                                {/* C Arm */}
+                                <group
+                                    ref={cArmModelRef}
+                                    position={
+                                        VOLUMEDATA.CArm_Configure.object3d.model
                                             .position
                                     }
                                     rotation={
-                                        ENVIROMENT.XRay_Configure.object3d
+                                        VOLUMEDATA.CArm_Configure.object3d.model
                                             .rotation
                                     }
                                     scale={
-                                        ENVIROMENT.XRay_Configure.object3d.scale
+                                        VOLUMEDATA.CArm_Configure.object3d.model
+                                            .scale
                                     }
                                 >
-                                    <ENVIROMENT.XRay_Bed />
-                                    <ENVIROMENT.XRay_Machine />
-                                    <ENVIROMENT.XRay_Patient />
-
-                                    {/* Curtain (Three.js Object) */}
-                                    <group
-                                        ref={curtainObjRef}
-                                        visible={false}
-                                    >
-                                        <ENVIROMENT.XRay_Curtain />
-                                    </group>
+                                    <MODELS.CArmModel
+                                        roll={
+                                            VOLUMEDATA.CArm_Configure.object3d
+                                                .model.roll
+                                        }
+                                        pitch={
+                                            VOLUMEDATA.CArm_Configure.object3d
+                                                .model.pitch
+                                        }
+                                        height={
+                                            VOLUMEDATA.CArm_Configure.object3d
+                                                .model.height
+                                        }
+                                    />
                                 </group>
                                 <mesh
-                                    position={[0, 1, 0]}
+                                    ref={originObjRef}
+                                    position={doseOriginPosition}
+                                    scale={0.2}
                                     visible={debug}
                                 >
                                     <sphereBufferGeometry args={[0.25]} />

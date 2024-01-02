@@ -75,7 +75,7 @@ import { CustomOrbitControls } from "../../../components/controls";
 // UI
 import {
     CoordHTML,
-    ExperimentCheckList,
+    ExerciseCheckList,
     SceneOptionsPanel,
 } from "../../../components/ui";
 import { Tips } from "../../../components/ui/tips";
@@ -110,10 +110,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
                 params: { type: "tutorial_en" },
             },
             {
-                params: { type: "experiment" },
+                params: { type: "exercise" },
             },
             {
-                params: { type: "experiment_en" },
+                params: { type: "exercise_en" },
             },
             {
                 params: { type: "perspective" },
@@ -131,22 +131,19 @@ export const getStaticProps: GetStaticProps = async ({
     const isBasic = pageType === "basic";
     const isExtra = pageType === "extra";
     const isTutorial = pageType === "tutorial" || pageType === "tutorial_en";
-    const isExperiment =
-        pageType === "experiment" || pageType === "experiment_en";
+    const isExercise = pageType === "exercise" || pageType === "exercise_en";
     const isPerspective = pageType === "perspective";
-    const isEnglish =
-        pageType === "tutorial_en" || pageType === "experiment_en";
+    const isEnglish = pageType === "tutorial_en" || pageType === "exercise_en";
 
     return {
         props: {
             availables: {
                 orthographic: !isPerspective,
-                player: isExtra || isTutorial || isExperiment || isPerspective,
-                shield: isExtra || isTutorial || isExperiment || isPerspective,
-                dosimeter:
-                    isExtra || isTutorial || isExperiment || isPerspective,
-                experimentUI: isExperiment,
-                exerciseUI: isExtra || isExperiment || isPerspective,
+                player: isExtra || isTutorial || isExercise || isPerspective,
+                shield: isExtra || isTutorial || isExercise || isPerspective,
+                dosimeter: isExtra || isTutorial || isExercise || isPerspective,
+                experimentUI: isExercise,
+                exerciseUI: isExtra || isExercise || isPerspective,
                 tutorialUI: isTutorial,
             },
             isEnglish: isEnglish,
@@ -289,7 +286,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                             }
                         });
 
-                        // set execute log for experiment
+                        // set execute log for exercise
                         const _cArm = executeLog.gimmick.cArm;
                         _cArm[e] = true;
 

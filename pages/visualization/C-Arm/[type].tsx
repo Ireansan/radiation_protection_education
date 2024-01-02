@@ -34,8 +34,15 @@ import {
 // Model
 import * as MODELS from "../../../components/models";
 import { Board_Configure } from "../../../components/models";
-import { CustomYBotIK } from "../../../components/models/Player";
-import { HandIKPivotControls } from "../../../components/models/controls";
+import {
+    CustomYBotIK,
+    SelfMadePlayer,
+} from "../../../components/models/Player";
+import {
+    HandIKLevaControls,
+    HandIKPivotControls,
+    PlayerPivotControls,
+} from "../../../components/models/controls";
 
 // ==========
 // Volume
@@ -44,12 +51,14 @@ import { HandIKPivotControls } from "../../../components/models/controls";
 import { Dosimeter, DoseGroup, DoseAnimationObject } from "../../../src";
 // ----------
 // data
-
+import * as ENVIROMENT from "../../../components/models/Environment";
 import * as VOLUMEDATA from "../../../components/models/VolumeData";
 // ----------
 // controls
 import {
     DoseAnimationControls,
+    DoseAnimationControlsWithAudio,
+    DoseAnimationControlsWithAudioUI,
     DoseBoardControls,
     DoseEquipmentsUI,
     DosimeterControls,
@@ -59,14 +68,26 @@ import {
 } from "../../../components/volumeRender";
 
 // ==========
+// Controls
+import { CustomOrbitControls } from "../../../components/controls";
+
+// ==========
 // UI
-import { ExperimentCheckList, SceneOptionsPanel } from "../../../components/ui";
+import {
+    CoordHTML,
+    ExerciseCheckList,
+    SceneOptionsPanel,
+} from "../../../components/ui";
 import { Tips } from "../../../components/ui/tips";
 import { Exercise, Tutorial } from "../../../components/ui/exercise";
 
 // ==========
 // Store
 import { useStore } from "../../../components/store";
+
+// ==========
+// Utils
+import { applyBasePath } from "../../../utils";
 
 // ==========
 // Styles
@@ -83,7 +104,19 @@ export const getStaticPaths: GetStaticPaths = async () => {
                 params: { type: "extra" },
             },
             {
-                params: { type: "experiment" },
+                params: { type: "tutorial" },
+            },
+            {
+                params: { type: "tutorial_en" },
+            },
+            {
+                params: { type: "exercise" },
+            },
+            {
+                params: { type: "exercise_en" },
+            },
+            {
+                params: { type: "perspective" },
             },
         ],
         fallback: false,
@@ -97,28 +130,81 @@ export const getStaticProps: GetStaticProps = async ({
 
     const isBasic = pageType === "basic";
     const isExtra = pageType === "extra";
-    const isExperiment = pageType === "experiment";
+    const isTutorial = pageType === "tutorial" || pageType === "tutorial_en";
+    const isExercise = pageType === "exercise" || pageType === "exercise_en";
+    const isPerspective = pageType === "perspective";
+    const isEnglish = pageType === "tutorial_en" || pageType === "exercise_en";
 
     return {
         props: {
             availables: {
-                player: isExtra || isExperiment,
-                shield: isExtra || isExperiment,
-                dosimeter: isExtra || isExperiment,
-                experimentUI: isExperiment,
+                orthographic: !isPerspective,
+                player: isExtra || isTutorial || isExercise || isPerspective,
+                shield: isExtra || isTutorial || isExercise || isPerspective,
+                dosimeter: isExtra || isTutorial || isExercise || isPerspective,
+                experimentUI: isExercise,
+                exerciseUI: isExtra || isExercise || isPerspective,
+                tutorialUI: isTutorial,
             },
+            isEnglish: isEnglish,
         },
     };
 };
 
 function VisualizationCArm({ ...props }: PageProps) {
-    const [set, debug, viewing, objectVisibles] = useStore((state) => [
-        state.set,
-        state.debug,
-        state.viewing,
-        state.sceneStates.objectVisibles,
-    ]);
+    const [set, debug, viewing, objectVisibles, executeLog] = useStore(
+        (state) => [
+            state.set,
+            state.debug,
+            state.viewing,
+            state.sceneStates.objectVisibles,
+            state.sceneStates.executeLog,
+        ]
+    );
 
+    const doseOriginPosition = new THREE.Vector3(-0.182, 1.15, -0.18);
+    set((state) => ({
+        sceneStates: { ...state.sceneStates, doseOrigin: doseOriginPosition },
+    }));
+    const audioPath = `/models/nrrd/c-arm/animation/c-arm.mp3`;
+    const names = [
+        {
+            name: "mixamorigLeftEyeDosimeter",
+            displayName: "Left Eye",
+            category: "goggle",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigRightEyeDosimeter",
+            displayName: "Right Eye",
+            category: "goggle",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigNeckDosimeter",
+            displayName: "Neck",
+            category: "neck",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigSpine1Dosimeter",
+            displayName: "Chest",
+            category: "apron",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigLeftHandDosimeter",
+            displayName: "Left Hand",
+            category: "glove",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigRightHandDosimeter",
+            displayName: "Right Hand",
+            category: "glove",
+            coefficient: 0.1,
+        },
+    ];
     const ref = useRef<DoseGroup>(null);
 
     const timelapseRef = useRef<DoseGroup>(null);
@@ -132,8 +218,11 @@ function VisualizationCArm({ ...props }: PageProps) {
     const patientRef = useRef<THREE.Group>(null!);
     const cArmModelRef = useRef<THREE.Group>(null!);
 
+    const originObjRef = useRef<THREE.Mesh>(null);
+
     const dosimeterRef = useRef<Dosimeter>(null);
     const yBotRef = useRef<THREE.Group>(null!);
+    const audioRef = useRef<HTMLAudioElement>(null!);
 
     const options = ["type 1", "type 2"];
     const cArmConfigs = [
@@ -196,6 +285,23 @@ function VisualizationCArm({ ...props }: PageProps) {
                                 }
                             }
                         });
+
+                        // set execute log for exercise
+                        const _cArm = executeLog.gimmick.cArm;
+                        _cArm[e] = true;
+
+                        set((state) => ({
+                            sceneStates: {
+                                ...state.sceneStates,
+                                executeLog: {
+                                    ...state.sceneStates.executeLog,
+                                    gimmick: {
+                                        ...state.sceneStates.executeLog.gimmick,
+                                        cArm: _cArm,
+                                    },
+                                },
+                            },
+                        }));
                     },
                 },
             }),
@@ -213,11 +319,14 @@ function VisualizationCArm({ ...props }: PageProps) {
                 <div className={styles.canvas}>
                     {/* ================================================== */}
                     {/* Three.js Canvas */}
-                    <Canvas
-                        orthographic
-                        camera={{ position: [4, 8, 4], zoom: 75 }}
-                    >
-                        <Suspense fallback={null}>
+                    <Suspense fallback={null}>
+                        <Canvas
+                            orthographic={props.availables.orthographic}
+                            camera={{
+                                position: [4, 8, 4],
+                                zoom: props.availables.orthographic ? 75 : 1.0,
+                            }}
+                        >
                             {/* -------------------------------------------------- */}
                             {/* Volume Object */}
                             <doseGroup
@@ -238,7 +347,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                                         VOLUMEDATA.CArm_Configure.volume.clim2
                                             .timelapse
                                     }
-                                    clim2AutoUpdate={false}
+                                    // clim2AutoUpdate={false}
                                 >
                                     {/* C-Arm Dose */}
                                     <doseAnimationObject ref={cArmRef}>
@@ -262,7 +371,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                                         VOLUMEDATA.CArm_Configure.volume.clim2
                                             .accumulate
                                     }
-                                    clim2AutoUpdate={false}
+                                    // clim2AutoUpdate={false}
                                 >
                                     {/* C-Arm Dose, Accumulate */}
                                     <doseGroup ref={cArmAccumuRef}>
@@ -281,17 +390,36 @@ function VisualizationCArm({ ...props }: PageProps) {
 
                             {/* -------------------------------------------------- */}
                             {/* Volume Controls */}
-                            <DoseAnimationControls
+                            {/* <DoseAnimationControls
                                 objects={[cArmRef, cArmRoll180Pitch360Ref]}
                                 mainGroup={timelapseRef}
                                 subGroup={accumulateRef}
                                 duration={16}
                                 speed={8}
                                 customSpeed={[8.0, 16.0]}
+                            /> */}
+                            <DoseAnimationControlsWithAudio
+                                audioRef={audioRef}
+                                objects={[cArmRef, cArmRoll180Pitch360Ref]}
+                                mainGroup={timelapseRef}
+                                subGroup={accumulateRef}
                             />
                             <VolumeParameterControls
                                 object={ref}
-                                colormap="jet"
+                                clim2={
+                                    VOLUMEDATA.CArm_Configure.volume.clim2
+                                        .accumulate
+                                    // VOLUMEDATA.CArm_Configure.volume.clim2
+                                    //     .timelapse
+                                }
+                                cmin={0}
+                                cmax={
+                                    VOLUMEDATA.CArm_Configure.volume.clim2
+                                        .accumulate
+                                }
+                                climStep={
+                                    VOLUMEDATA.CArm_Configure.volume.climStep
+                                }
                             />
                             <VolumeXYZClippingControls
                                 object={ref}
@@ -309,38 +437,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                                     <DosimeterControls
                                         ref={dosimeterRef}
                                         object={yBotRef}
-                                        names={[
-                                            {
-                                                name: "mixamorigNeck",
-                                                displayName: "Neck",
-                                                category: "neck",
-                                                coefficient: 0.1,
-                                            },
-                                            {
-                                                name: "mixamorigLeftEye",
-                                                displayName: "Left Eye",
-                                                category: "goggle",
-                                                coefficient: 0.1,
-                                            },
-                                            {
-                                                name: "mixamorigRightEye",
-                                                displayName: "Right Eye",
-                                                category: "goggle",
-                                                coefficient: 0.1,
-                                            },
-                                            {
-                                                name: "mixamorigLeftHand",
-                                                displayName: "Left Hand",
-                                                category: "glove",
-                                                coefficient: 0.1,
-                                            },
-                                            {
-                                                name: "mixamorigRightHand",
-                                                displayName: "Right Hand",
-                                                category: "glove",
-                                                coefficient: 0.1,
-                                            },
-                                        ]}
+                                        names={names}
                                         targets={[
                                             cArmAccumuRef,
                                             cArmRoll180Pitch360AccumuRef,
@@ -403,9 +500,10 @@ function VisualizationCArm({ ...props }: PageProps) {
                                     />
                                 </group>
                             </group>
-
                             <mesh
-                                position={[0, 1, 0]}
+                                ref={originObjRef}
+                                position={doseOriginPosition}
+                                scale={0.2}
                                 visible={debug}
                             >
                                 <sphereBufferGeometry args={[0.25]} />
@@ -414,55 +512,16 @@ function VisualizationCArm({ ...props }: PageProps) {
                             {/* Avatar */}
                             {props.availables.player ? (
                                 <>
-                                    <PivotControls
-                                        matrix={new THREE.Matrix4().compose(
-                                            new THREE.Vector3(1.5, 0, 0),
-                                            new THREE.Quaternion().setFromEuler(
-                                                new THREE.Euler(
-                                                    0,
-                                                    -Math.PI / 2,
-                                                    0
-                                                )
-                                            ),
-                                            new THREE.Vector3(1, 1, 1)
-                                        )}
+                                    <PlayerPivotControls
+                                        playerRef={yBotRef}
+                                        dosimeterRef={dosimeterRef}
+                                        position={new THREE.Vector3(1.5, 0, 0)}
+                                        rotation={
+                                            new THREE.Euler(0, -Math.PI / 2, 0)
+                                        }
                                         scale={70}
                                         fixed={true}
                                         activeAxes={[true, false, true]}
-                                        visible={
-                                            !viewing &&
-                                            objectVisibles.player &&
-                                            objectVisibles.playerPivot
-                                        }
-                                        onDrag={(l, deltaL, w, deltaW) => {
-                                            yBotRef.current.position.setFromMatrixPosition(
-                                                w
-                                            );
-                                            yBotRef.current.rotation.setFromRotationMatrix(
-                                                w
-                                            );
-                                        }}
-                                        onDragEnd={() => {
-                                            if (dosimeterRef.current) {
-                                                dosimeterRef.current.updateResults();
-                                            }
-
-                                            set((state) => ({
-                                                sceneStates: {
-                                                    ...state.sceneStates,
-                                                    executeLog: {
-                                                        ...state.sceneStates
-                                                            .executeLog,
-                                                        player: {
-                                                            ...state.sceneStates
-                                                                .executeLog
-                                                                .player,
-                                                            translate: true,
-                                                        },
-                                                    },
-                                                },
-                                            }));
-                                        }}
                                     />
                                     <group
                                         ref={yBotRef}
@@ -470,14 +529,20 @@ function VisualizationCArm({ ...props }: PageProps) {
                                         position={[1.5, 0, 0]}
                                         rotation={[0, -Math.PI / 2, 0]}
                                     >
-                                        <CustomYBotIK />
-                                        <HandIKPivotControls
+                                        <SelfMadePlayer />
+                                        {/* <HandIKPivotControls
                                             object={yBotRef}
                                             scale={35}
                                             fixed={true}
                                             visible={
                                                 objectVisibles.playerHandPivot
                                             }
+                                        /> */}
+                                        <HandIKLevaControls object={yBotRef} />
+                                        <CoordHTML
+                                            origin={originObjRef}
+                                            enableRotation={false}
+                                            xzPlane={true}
                                         />
                                     </group>
                                 </>
@@ -485,7 +550,7 @@ function VisualizationCArm({ ...props }: PageProps) {
 
                             {/* -------------------------------------------------- */}
                             {/* Three.js Controls */}
-                            <OrbitControls makeDefault />
+                            <CustomOrbitControls />
 
                             {/* -------------------------------------------------- */}
                             {/* Physics */}
@@ -519,7 +584,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                                                 )
                                             }
                                             planeSize={Board_Configure.size.y}
-                                            scale={50}
+                                            scale={60}
                                             fixed={true}
                                             offset={[0, 0, 0.1]}
                                             opacity={0.75}
@@ -528,23 +593,34 @@ function VisualizationCArm({ ...props }: PageProps) {
                                                 objectVisibles.shieldPivot
                                             }
                                         >
-                                            <mesh
-                                                visible={objectVisibles.shield}
-                                                position={[0, 0, 0]}
-                                            >
-                                                <boxBufferGeometry
-                                                    args={[
-                                                        ...Board_Configure.size.toArray(),
-                                                    ]}
-                                                />
-                                                <meshBasicMaterial
-                                                    color={
-                                                        new THREE.Color(
-                                                            0xb39a7b
-                                                        )
+                                            <group>
+                                                <mesh
+                                                    visible={
+                                                        objectVisibles.shield
                                                     }
+                                                    position={[0, 0, 0]}
+                                                    onPointerOver={(e) =>
+                                                        console.log("Board", e)
+                                                    }
+                                                >
+                                                    <boxBufferGeometry
+                                                        args={[
+                                                            ...Board_Configure.size.toArray(),
+                                                        ]}
+                                                    />
+                                                    <meshBasicMaterial
+                                                        color={
+                                                            new THREE.Color(
+                                                                0xb39a7b
+                                                            )
+                                                        }
+                                                    />
+                                                </mesh>
+                                                <CoordHTML
+                                                    origin={originObjRef}
+                                                    enableDistance={false}
                                                 />
-                                            </mesh>
+                                            </group>
                                         </DoseBoardControls>
                                     </>
                                 ) : null}
@@ -585,10 +661,22 @@ function VisualizationCArm({ ...props }: PageProps) {
                                     labelColor="black"
                                 />
                             </GizmoHelper>
-                        </Suspense>
-                    </Canvas>
+                        </Canvas>
+                    </Suspense>
                     <Loader />
                     <SceneOptionsPanel activateStats={false} />
+
+                    <audio
+                        src={applyBasePath(audioPath)}
+                        ref={audioRef}
+                        muted={true}
+                    />
+                    <DoseAnimationControlsWithAudioUI
+                        audioRef={audioRef}
+                        duration={16}
+                        speed={8.0}
+                        customSpeed={[8.0, 16.0]}
+                    />
 
                     <div
                         className={`${
@@ -608,7 +696,10 @@ function VisualizationCArm({ ...props }: PageProps) {
                     >
                         {props.availables.exerciseUI ? (
                             <>
-                                <Exercise isEnglish={props.isEnglish} />
+                                <Exercise
+                                    sceneName="C-Arm"
+                                    isEnglish={props.isEnglish}
+                                />
                             </>
                         ) : null}
                         {props.availables.tutorialUI ? (

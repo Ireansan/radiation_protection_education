@@ -391,9 +391,9 @@ export function NextExercise({ isEnglish = false, sceneName }: Tutorial1Props) {
     ]);
 
     const link = useMemo(() => {
-        let _isEnglish = isEnglish ? "experiment_en" : "experiment";
+        let _isEnglish = isEnglish ? "exercise_en" : "exercise";
 
-        return `/prototype/${sceneName}/${_isEnglish}`; // FIXME: prototype --> visualization
+        return `/visualization/${sceneName}/${_isEnglish}/`;
     }, [sceneName, isEnglish]);
 
     return (

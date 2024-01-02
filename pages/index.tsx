@@ -31,34 +31,59 @@ const Home: NextPage = () => {
 
                 <h2>Content</h2>
                 <h3>Visualization</h3>
+                <h4>Tutorial</h4>
                 <div className={styles.grid}>
                     <div className={styles.card}>
-                        <Link href={"/visualization/extra/X-Ray"}>
+                        <Link href={"/visualization/X-Ray/tutorial"}>
                             <h2>X-Ray &rarr;</h2>
+                            <p>Next.js + react-three/fiber, Texture 3D</p>
+                        </Link>
+                    </div>
+                    <div className={styles.card}>
+                        <Link href={"/visualization/X-Ray/tutorial_en"}>
+                            <h2>X-Ray (English) &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
                     </div>
 
                     <div className={styles.card}>
-                        <Link href={"/visualization/extra/C-Arm"}>
+                        <Link href={"/visualization/C-Arm/tutorial"}>
                             <h2>C-Arm &rarr;</h2>
+                            <p>Next.js + react-three/fiber, Texture 3D</p>
+                        </Link>
+                    </div>
+                    <div className={styles.card}>
+                        <Link href={"/visualization/C-Arm/tutorial_en"}>
+                            <h2>C-Arm (English) &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
                     </div>
                 </div>
 
-                <h3>Visualization (Basic)</h3>
+                <h4>Execise</h4>
                 <div className={styles.grid}>
                     <div className={styles.card}>
-                        <Link href={"/visualization/basic/X-Ray"}>
+                        <Link href={"/visualization/X-Ray/exercise"}>
                             <h2>X-Ray &rarr;</h2>
+                            <p>Next.js + react-three/fiber, Texture 3D</p>
+                        </Link>
+                    </div>
+                    <div className={styles.card}>
+                        <Link href={"/visualization/X-Ray/exercise_en"}>
+                            <h2>X-Ray (English) &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
                     </div>
 
                     <div className={styles.card}>
-                        <Link href={"/visualization/basic/C-Arm"}>
+                        <Link href={"/visualization/C-Arm/exercise"}>
                             <h2>C-Arm &rarr;</h2>
+                            <p>Next.js + react-three/fiber, Texture 3D</p>
+                        </Link>
+                    </div>
+                    <div className={styles.card}>
+                        <Link href={"/visualization/C-Arm/exercise_en"}>
+                            <h2>C-Arm (English) &rarr;</h2>
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
                     </div>
@@ -72,6 +97,12 @@ const Home: NextPage = () => {
                             <p>Next.js + react-three/fiber, Texture 3D</p>
                         </Link>
                     </div>
+                    {/* <div className={styles.card}>
+                        <Link href={"/VR/X-Ray"}>
+                            <h2>X-Ray &rarr;</h2>
+                            <p>Next.js + react-three/fiber, Texture 3D</p>
+                        </Link>
+                    </div> */}
                 </div>
 
                 <h3>Game</h3>
@@ -132,18 +163,6 @@ const Home: NextPage = () => {
                             <p>Next.js + react-three/fiber</p>
                         </Link>
                     </div>
-                    {/* <div className={styles.card}>
-                        <Link href={"/prototype/basic/X-Ray"}>
-                            <h2>X-ray (Basic)&rarr;</h2>
-                            <p>Perspective Camera</p>
-                        </Link>
-                    </div> */}
-                    {/* <div className={styles.card}>
-                        <Link href={"/prototype/extra/X-Ray"}>
-                            <h2>X-ray (Extra)&rarr;</h2>
-                            <p>Dosimeter UI, HP Bar (CSS only)</p>
-                        </Link>
-                    </div> */}
                     <div className={styles.card}>
                         <Link href={"/prototype/X-Ray/basic"}>
                             <h2>X-ray (Basic)&rarr;</h2>
@@ -169,13 +188,13 @@ const Home: NextPage = () => {
                         </Link>
                     </div>
                     <div className={styles.card}>
-                        <Link href={"/prototype/X-Ray/experiment"}>
+                        <Link href={"/prototype/X-Ray/exercise"}>
                             <h2>X-ray (Experiment)&rarr;</h2>
                             <p>prototype, Static Path</p>
                         </Link>
                     </div>
                     <div className={styles.card}>
-                        <Link href={"/prototype/X-Ray/experiment_en"}>
+                        <Link href={"/prototype/X-Ray/exercise_en"}>
                             <h2>X-ray (Experiment, En)&rarr;</h2>
                             <p>prototype, Static Path</p>
                         </Link>
@@ -211,13 +230,13 @@ const Home: NextPage = () => {
                         </Link>
                     </div>
                     <div className={styles.card}>
-                        <Link href={"/prototype/C-Arm/experiment"}>
+                        <Link href={"/prototype/C-Arm/exercise"}>
                             <h2>C-Arm (Experiment)&rarr;</h2>
                             <p>prototype, Static Path</p>
                         </Link>
                     </div>
                     <div className={styles.card}>
-                        <Link href={"/prototype/C-Arm/experiment_en"}>
+                        <Link href={"/prototype/C-Arm/exercise_en"}>
                             <h2>C-Arm (Experiment, En)&rarr;</h2>
                             <p>prototype, Static Path</p>
                         </Link>

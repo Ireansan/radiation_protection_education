@@ -30,8 +30,15 @@ import {
 // ==========
 // Model
 import { Board_Configure } from "../../../components/models";
-import { CustomYBotIK } from "../../../components/models/Player";
-import { HandIKPivotControls } from "../../../components/models/controls";
+import {
+    CustomYBotIK,
+    SelfMadePlayer,
+} from "../../../components/models/Player";
+import {
+    HandIKLevaControls,
+    HandIKPivotControls,
+    PlayerPivotControls,
+} from "../../../components/models/controls";
 
 // ==========
 // Volume
@@ -46,6 +53,8 @@ import * as VOLUMEDATA from "../../../components/models/VolumeData";
 // controls
 import {
     DoseAnimationControls,
+    DoseAnimationControlsWithAudio,
+    DoseAnimationControlsWithAudioUI,
     DoseBoardControls,
     DoseEquipmentsUI,
     DosimeterControls,
@@ -55,7 +64,7 @@ import {
 } from "../../../components/volumeRender";
 
 // ==========
-// UI
+// Controls
 import { CustomOrbitControls } from "../../../components/controls";
 
 // ==========
@@ -73,8 +82,12 @@ import { Exercise, Tutorial } from "../../../components/ui/exercise";
 import { useStore } from "../../../components/store";
 
 // ==========
+// Utils
+import { applyBasePath } from "../../../utils";
+
+// ==========
 // Styles
-import styles from "../../../styles/threejs.module.css";
+import styles from "../../../styles/css/threejs.module.css";
 
 type PageProps = InferGetStaticPropsType<typeof getStaticProps>;
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -87,7 +100,19 @@ export const getStaticPaths: GetStaticPaths = async () => {
                 params: { type: "extra" },
             },
             {
-                params: { type: "experiment" },
+                params: { type: "tutorial" },
+            },
+            {
+                params: { type: "tutorial_en" },
+            },
+            {
+                params: { type: "exercise" },
+            },
+            {
+                params: { type: "exercise_en" },
+            },
+            {
+                params: { type: "perspective" },
             },
         ],
         fallback: false,
@@ -101,55 +126,76 @@ export const getStaticProps: GetStaticProps = async ({
 
     const isBasic = pageType === "basic";
     const isExtra = pageType === "extra";
-    const isExperiment = pageType === "experiment";
+    const isTutorial = pageType === "tutorial" || pageType === "tutorial_en";
+    const isExercise = pageType === "exercise" || pageType === "exercise_en";
+    const isPerspective = pageType === "perspective";
+    const isEnglish = pageType === "tutorial_en" || pageType === "exercise_en";
 
     return {
         props: {
             availables: {
-                player: isExtra || isExperiment,
-                shield: isExtra || isExperiment,
-                dosimeter: isExtra || isExperiment,
-                experimentUI: isExperiment,
+                orthographic: !isPerspective,
+                player: isExtra || isTutorial || isExercise || isPerspective,
+                shield: isExtra || isTutorial || isExercise || isPerspective,
+                dosimeter: isExtra || isTutorial || isExercise || isPerspective,
+                experimentUI: isExercise,
+                exerciseUI: isExtra || isExercise || isPerspective,
+                tutorialUI: isTutorial,
             },
+            isEnglish: isEnglish,
         },
     };
 };
 
 function VisualizationXRay({ ...props }: PageProps) {
-    const [set, debug, viewing, objectVisibles] = useStore((state) => [
-        state.set,
-        state.debug,
-        state.viewing,
-        state.sceneStates.objectVisibles,
-    ]);
+    const [set, debug, viewing, objectVisibles, executeLog] = useStore(
+        (state) => [
+            state.set,
+            state.debug,
+            state.viewing,
+            state.sceneStates.objectVisibles,
+            state.sceneStates.executeLog,
+        ]
+    );
 
+    const doseOriginPosition = new THREE.Vector3(-0.182, 1.15, -0.18);
+    set((state) => ({
+        sceneStates: { ...state.sceneStates, doseOrigin: doseOriginPosition },
+    }));
+    const audioPath = `/models/nrrd/x-ray/nocurtain_animation/x-ray_nocurtain.mp3`;
     const names = [
         {
-            name: "mixamorigNeck",
-            displayName: "Neck",
-            category: "neck",
-            coefficient: 0.1,
-        },
-        {
-            name: "mixamorigLeftEye",
+            name: "mixamorigLeftEyeDosimeter",
             displayName: "Left Eye",
             category: "goggle",
             coefficient: 0.1,
         },
         {
-            name: "mixamorigRightEye",
+            name: "mixamorigRightEyeDosimeter",
             displayName: "Right Eye",
             category: "goggle",
             coefficient: 0.1,
         },
         {
-            name: "mixamorigLeftHand",
+            name: "mixamorigNeckDosimeter",
+            displayName: "Neck",
+            category: "neck",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigSpine1Dosimeter",
+            displayName: "Chest",
+            category: "apron",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigLeftHandDosimeter",
             displayName: "Left Hand",
             category: "glove",
             coefficient: 0.1,
         },
         {
-            name: "mixamorigRightHand",
+            name: "mixamorigRightHandDosimeter",
             displayName: "Right Hand",
             category: "glove",
             coefficient: 0.1,
@@ -160,10 +206,12 @@ function VisualizationXRay({ ...props }: PageProps) {
 
     const timelapseRef = useRef<DoseGroup>(null);
     const nocurtainRef = useRef<DoseAnimationObject>(null);
+    const nocurtain15x15Ref = useRef<DoseAnimationObject>(null);
     const curtainRef = useRef<DoseAnimationObject>(null);
 
     const accumulateRef = useRef<DoseGroup>(null);
     const nocurtainAccumuRef = useRef<DoseGroup>(null);
+    const nocurtain15x15AccumuRef = useRef<DoseGroup>(null);
     const curtainAccumuRef = useRef<DoseGroup>(null);
 
     const originObjRef = useRef<THREE.Mesh>(null);
@@ -171,31 +219,50 @@ function VisualizationXRay({ ...props }: PageProps) {
 
     const dosimeterRef = useRef<Dosimeter>(null);
     const yBotRef = useRef<THREE.Group>(null!);
+    const audioRef = useRef<HTMLAudioElement>(null!);
 
     const ToggledDebug = useToggle(Debug, "debug");
 
+    const options = ["nocurtain", "nocurtain 15x15", "curtain"];
+    const refs = [
+        { time: nocurtainRef, accumu: nocurtainAccumuRef },
+        { time: nocurtain15x15Ref, accumu: nocurtain15x15AccumuRef },
+        { time: curtainRef, accumu: curtainAccumuRef, other: curtainObjRef },
+    ];
     const [,] = useControls(() => ({
         Scene: folder({
             Gimmick: folder({
-                curtain: {
-                    value: false,
+                type: {
+                    options: options,
+                    value: options[0],
                     onChange: (e) => {
-                        nocurtainRef.current
-                            ? (nocurtainRef.current.visible = !e)
-                            : null;
-                        nocurtainAccumuRef.current
-                            ? (nocurtainAccumuRef.current.visible = !e)
-                            : null;
+                        const visibles = options.map((value) => value === e);
 
-                        curtainRef.current
-                            ? (curtainRef.current.visible = e)
-                            : null;
-                        curtainAccumuRef.current
-                            ? (curtainAccumuRef.current.visible = e)
-                            : null;
-                        curtainObjRef.current
-                            ? (curtainObjRef.current.visible = e)
-                            : null;
+                        visibles.forEach((value, index) => {
+                            let refTime = refs[index].time.current;
+                            refTime ? (refTime.visible = value) : null;
+                            let refAccumu = refs[index].accumu.current;
+                            refAccumu ? (refAccumu.visible = value) : null;
+                            let refOther = refs[index].other?.current;
+                            refOther ? (refOther.visible = value) : null;
+                        });
+
+                        // set execute log for experiment
+                        const _xRay = executeLog.gimmick.xRay;
+                        _xRay[e] = true;
+
+                        set((state) => ({
+                            sceneStates: {
+                                ...state.sceneStates,
+                                executeLog: {
+                                    ...state.sceneStates.executeLog,
+                                    gimmick: {
+                                        ...state.sceneStates.executeLog.gimmick,
+                                        xRay: _xRay,
+                                    },
+                                },
+                            },
+                        }));
                     },
                 },
             }),
@@ -214,8 +281,11 @@ function VisualizationXRay({ ...props }: PageProps) {
                     {/* ================================================== */}
                     {/* Three.js Canvas */}
                     <Canvas
-                        orthographic
-                        camera={{ position: [4, 8, 4], zoom: 75 }}
+                        orthographic={props.availables.orthographic}
+                        camera={{
+                            position: [4, 8, 4],
+                            zoom: props.availables.orthographic ? 90 : 1.0,
+                        }}
                     >
                         <Suspense fallback={null}>
                             {/* -------------------------------------------------- */}
@@ -245,6 +315,24 @@ function VisualizationXRay({ ...props }: PageProps) {
                                     >
                                         <VOLUMEDATA.XRay_nocurtain_all_Animation />
                                     </doseAnimationObject>
+                                    {/* X-Ray Dose, no curtain 15x15*/}
+                                    <doseAnimationObject
+                                        ref={nocurtain15x15Ref}
+                                        name={"x-ray_animation_nocurtain_15x15"}
+                                        position={
+                                            VOLUMEDATA
+                                                .XRay_nocurtain_15x15_Configure
+                                                .volume.local.position
+                                        }
+                                        scale={
+                                            VOLUMEDATA
+                                                .XRay_nocurtain_15x15_Configure
+                                                .volume.local.scale
+                                        }
+                                        visible={false}
+                                    >
+                                        <VOLUMEDATA.XRay_nocurtain_15x15_all_Animation />
+                                    </doseAnimationObject>
                                     {/* X-Ray Dose, curtain */}
                                     <doseAnimationObject
                                         ref={curtainRef}
@@ -267,6 +355,26 @@ function VisualizationXRay({ ...props }: PageProps) {
                                     >
                                         <VOLUMEDATA.XRay_nocurtain_all_accumulate />
                                     </doseGroup>
+                                    {/* X-Ray Dose, no curtain 15x15, Accumulate */}
+                                    <doseGroup
+                                        ref={nocurtain15x15AccumuRef}
+                                        name={
+                                            "x-ray_accumulate_nocurtain_15x15"
+                                        }
+                                        position={
+                                            VOLUMEDATA
+                                                .XRay_nocurtain_15x15_Configure
+                                                .volume.local.position
+                                        }
+                                        scale={
+                                            VOLUMEDATA
+                                                .XRay_nocurtain_15x15_Configure
+                                                .volume.local.scale
+                                        }
+                                        visible={false}
+                                    >
+                                        <VOLUMEDATA.XRay_nocurtain_15x15_all_accumulate />
+                                    </doseGroup>
                                     {/* X-Ray Dose, curtain, Accumulate */}
                                     <doseGroup
                                         ref={curtainAccumuRef}
@@ -280,18 +388,25 @@ function VisualizationXRay({ ...props }: PageProps) {
 
                             {/* -------------------------------------------------- */}
                             {/* Volume Controls */}
-                            <DoseAnimationControls
+                            {/* <DoseAnimationControls
                                 objects={[nocurtainRef, curtainRef]}
                                 mainGroup={timelapseRef}
                                 subGroup={accumulateRef}
                                 duration={16}
                                 speed={8.0}
                                 customSpeed={[8.0, 16.0]}
+                            /> */}
+                            <DoseAnimationControlsWithAudio
+                                audioRef={audioRef}
+                                objects={[
+                                    nocurtainRef,
+                                    nocurtain15x15Ref,
+                                    curtainRef,
+                                ]}
+                                mainGroup={timelapseRef}
+                                subGroup={accumulateRef}
                             />
-                            <VolumeParameterControls
-                                object={ref}
-                                colormap="jet"
-                            />
+                            <VolumeParameterControls object={ref} />
                             <VolumeXYZClippingControls
                                 object={ref}
                                 planeSize={2}
@@ -312,6 +427,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                                         names={names}
                                         targets={[
                                             nocurtainAccumuRef,
+                                            nocurtain15x15AccumuRef,
                                             curtainAccumuRef,
                                         ]}
                                     />
@@ -344,7 +460,8 @@ function VisualizationXRay({ ...props }: PageProps) {
                             </group>
                             <mesh
                                 ref={originObjRef}
-                                position={[0, 1, 0]}
+                                position={doseOriginPosition}
+                                scale={0.2}
                                 visible={debug}
                             >
                                 <sphereBufferGeometry args={[0.25]} />
@@ -353,55 +470,16 @@ function VisualizationXRay({ ...props }: PageProps) {
                             {/* Avatar */}
                             {props.availables.player ? (
                                 <>
-                                    <PivotControls
-                                        matrix={new THREE.Matrix4().compose(
-                                            new THREE.Vector3(2, 0, 0),
-                                            new THREE.Quaternion().setFromEuler(
-                                                new THREE.Euler(
-                                                    0,
-                                                    -Math.PI / 2,
-                                                    0
-                                                )
-                                            ),
-                                            new THREE.Vector3(1, 1, 1)
-                                        )}
+                                    <PlayerPivotControls
+                                        playerRef={yBotRef}
+                                        dosimeterRef={dosimeterRef}
+                                        position={new THREE.Vector3(2, 0, 0)}
+                                        rotation={
+                                            new THREE.Euler(0, -Math.PI / 2, 0)
+                                        }
                                         scale={70}
                                         fixed={true}
                                         activeAxes={[true, false, true]}
-                                        visible={
-                                            !viewing &&
-                                            objectVisibles.player &&
-                                            objectVisibles.playerPivot
-                                        }
-                                        onDrag={(l, deltaL, w, deltaW) => {
-                                            yBotRef.current.position.setFromMatrixPosition(
-                                                w
-                                            );
-                                            yBotRef.current.rotation.setFromRotationMatrix(
-                                                w
-                                            );
-                                        }}
-                                        onDragEnd={() => {
-                                            if (dosimeterRef.current) {
-                                                dosimeterRef.current.updateResults();
-                                            }
-
-                                            set((state) => ({
-                                                sceneStates: {
-                                                    ...state.sceneStates,
-                                                    executeLog: {
-                                                        ...state.sceneStates
-                                                            .executeLog,
-                                                        player: {
-                                                            ...state.sceneStates
-                                                                .executeLog
-                                                                .player,
-                                                            translate: true,
-                                                        },
-                                                    },
-                                                },
-                                            }));
-                                        }}
                                     />
                                     <group
                                         ref={yBotRef}
@@ -412,15 +490,17 @@ function VisualizationXRay({ ...props }: PageProps) {
                                             console.log("Player", e)
                                         }
                                     >
-                                        <CustomYBotIK />
-                                        <HandIKPivotControls
+                                        <SelfMadePlayer />
+                                        {/* <CustomYBotIK /> */}
+                                        {/* <HandIKPivotControls
                                             object={yBotRef}
                                             scale={35}
                                             fixed={true}
                                             visible={
                                                 objectVisibles.playerHandPivot
                                             }
-                                        />
+                                        /> */}
+                                        <HandIKLevaControls object={yBotRef} />
                                         <CoordHTML
                                             origin={originObjRef}
                                             enableRotation={false}
@@ -467,7 +547,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                                                 )
                                             }
                                             planeSize={Board_Configure.size.y}
-                                            scale={50}
+                                            scale={60}
                                             fixed={true}
                                             offset={[0, 0, 0.1]}
                                             opacity={0.75}
@@ -516,6 +596,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                             <Grid
                                 position={[0, -0.01, 0]}
                                 args={[10.5, 10.5]}
+                                visible={objectVisibles.grid}
                                 cellColor={"#121d7d"}
                                 sectionColor={"#262640"}
                                 fadeDistance={20}
@@ -542,12 +623,25 @@ function VisualizationXRay({ ...props }: PageProps) {
                                         "#3498DB",
                                     ]}
                                     labelColor="black"
+                                    visible={objectVisibles.gizmo}
                                 />
                             </GizmoHelper>
                         </Suspense>
                     </Canvas>
                     <Loader />
                     <SceneOptionsPanel activateStats={false} />
+
+                    <audio
+                        src={applyBasePath(audioPath)}
+                        ref={audioRef}
+                        muted={true}
+                    />
+                    <DoseAnimationControlsWithAudioUI
+                        audioRef={audioRef}
+                        duration={16}
+                        speed={8.0}
+                        customSpeed={[8.0, 16.0]}
+                    />
 
                     <div
                         className={`${
@@ -567,7 +661,10 @@ function VisualizationXRay({ ...props }: PageProps) {
                     >
                         {props.availables.exerciseUI ? (
                             <>
-                                <Exercise isEnglish={props.isEnglish} />
+                                <Exercise
+                                    sceneName="X-Ray"
+                                    isEnglish={props.isEnglish}
+                                />
                             </>
                         ) : null}
                         {props.availables.tutorialUI ? (
