@@ -79,6 +79,7 @@ import {
     VRDosimeterUI,
     VRPlayer,
     VRHandIKControls,
+    VRSceneControls,
     VRUI,
 } from "../../components/vr";
 
@@ -194,66 +195,51 @@ function XRayVR() {
 
     const ToggledDebug = useToggle(Debug, "debug");
 
-    const [,] = useControls(() => ({
-        Scene: folder({
-            Gimmick: folder({
-                curtain: {
-                    value: false,
-                    onChange: (e) => {
-                        const visibles = options.map((value) => value === e);
+    const onChange = (e: number) => {
+        const visibles = options.map((value, index) => index === e - 1);
 
-                        visibles.forEach((value, index) => {
-                            let config = cArmConfigs[index];
+        visibles.forEach((value, index) => {
+            let config = cArmConfigs[index];
 
-                            let refTime = refs[index].time.current;
-                            refTime ? (refTime.visible = value) : null;
-                            let refAccumu = refs[index].accumu.current;
-                            refAccumu ? (refAccumu.visible = value) : null;
+            let refTime = refs[index].time.current;
+            refTime ? (refTime.visible = value) : null;
+            let refAccumu = refs[index].accumu.current;
+            refAccumu ? (refAccumu.visible = value) : null;
 
-                            if (value) {
-                                MODELS.updateCArmModel(
-                                    cArmModelRef,
-                                    config.model.position,
-                                    config.model.rotation,
-                                    config.model.roll,
-                                    config.model.pitch,
-                                    config.model.height
-                                );
-                                if (patientRef.current) {
-                                    patientRef.current.position.set(
-                                        ...config.patient.position
-                                    );
-                                    patientRef.current.rotation.set(
-                                        ...config.patient.rotation
-                                    );
-                                    patientRef.current.scale.setScalar(
-                                        config.patient.scale
-                                    );
-                                }
-                            }
-                        });
+            if (value) {
+                MODELS.updateCArmModel(
+                    cArmModelRef,
+                    config.model.position,
+                    config.model.rotation,
+                    config.model.roll,
+                    config.model.pitch,
+                    config.model.height
+                );
+                if (patientRef.current) {
+                    patientRef.current.position.set(...config.patient.position);
+                    patientRef.current.rotation.set(...config.patient.rotation);
+                    patientRef.current.scale.setScalar(config.patient.scale);
+                }
+            }
+        });
 
-                        // set execute log for experiment
-                        const _cArm = executeLog.gimmick.cArm;
-                        _cArm[e] = true;
+        // set execute log for experiment
+        const _cArm = executeLog.gimmick.cArm;
+        _cArm[e] = true;
 
-                        set((state) => ({
-                            sceneStates: {
-                                ...state.sceneStates,
-                                executeLog: {
-                                    ...state.sceneStates.executeLog,
-                                    gimmick: {
-                                        ...state.sceneStates.executeLog.gimmick,
-                                        cArm: _cArm,
-                                    },
-                                },
-                            },
-                        }));
+        set((state) => ({
+            sceneStates: {
+                ...state.sceneStates,
+                executeLog: {
+                    ...state.sceneStates.executeLog,
+                    gimmick: {
+                        ...state.sceneStates.executeLog.gimmick,
+                        cArm: _cArm,
                     },
                 },
-            }),
-        }),
-    }));
+            },
+        }));
+    };
 
     useEffect(() => {
         console.log(ref.current);
@@ -363,14 +349,6 @@ function XRayVR() {
 
                             {/* -------------------------------------------------- */}
                             {/* Volume Controls */}
-                            <DoseAnimationControls
-                                objects={[cArmRef, cArmRoll180Pitch360Ref]}
-                                mainGroup={timelapseRef}
-                                subGroup={accumulateRef}
-                                duration={16}
-                                speed={8.0}
-                                customSpeed={[8.0, 16.0]}
-                            />
 
                             {/* Dosimeter */}
                             <DosimeterControls
@@ -507,36 +485,69 @@ function XRayVR() {
                             <VRVolumeParameterControls
                                 object={ref}
                                 radius={4}
+                                clim2={
+                                    VOLUMEDATA.CArm_Configure.volume.clim2
+                                        .accumulate
+                                    // VOLUMEDATA.CArm_Configure.volume.clim2
+                                    //     .timelapse
+                                }
+                                cmin={0}
+                                cmax={
+                                    VOLUMEDATA.CArm_Configure.volume.clim2
+                                        .accumulate
+                                }
+                                climStep={
+                                    VOLUMEDATA.CArm_Configure.volume.climStep
+                                }
                             />
 
-                            <VRUI>
-                                <VRStats
-                                    position={[-0.7, 2.25, -1]}
-                                    rotation={[0.124, 0.196, -0.024]}
-                                    scale={3}
-                                />
-                                <VRDosimeterUI
-                                    position={[-0.7, 1.75, -1]}
-                                    rotation={[0.124, 0.196, -0.024]}
-                                    scale={4}
-                                />
-                                <VRDoseEquipmentsUI
-                                    position={[-1.5, 1.25, -0.325]}
-                                    rotation={[0, Math.PI / 2, 0]}
-                                    scale={3}
-                                />
-                            </VRUI>
+                            {/* <VRUI> */}
+                            <VRStats
+                                position={[-0.7, 2.05, -1]}
+                                rotation={[0.124, 0.196, -0.024]}
+                                scale={3}
+                            />
+                            <VRDosimeterUI
+                                position={[-0.7, 1.75, -1]}
+                                rotation={[0.124, 0.196, -0.024]}
+                                scale={4}
+                            />
+                            <VRDoseEquipmentsUI
+                                position={[-1.5, 1.65, -0.325]}
+                                rotation={[0, Math.PI / 2, 0]}
+                                scale={3}
+                            />
+                            <VRDoseAnimationControls
+                                position={[-1.45, 2.1, -0.325]}
+                                rotation={[Math.PI / 2, 1.226, -Math.PI / 2]}
+                                scale={2.5}
+                                objects={[cArmRef, cArmRoll180Pitch360Ref]}
+                                mainGroup={timelapseRef}
+                                subGroup={accumulateRef}
+                                duration={16}
+                                speed={8.0}
+                                customSpeed={[8.0, 16.0]}
+                            />
+                            <VRSceneControls
+                                position={[-1.4, 2.45, -0.325]}
+                                rotation={[Math.PI / 2, 1.226, -Math.PI / 2]}
+                                scale={2.5}
+                                typeNum={2}
+                                onChange={onChange}
+                            />
+                            {/* </VRUI> */}
                         </XR>
                     </Canvas>
                 </div>
 
-                <DosimeterUI />
+                <DosimeterUI nPerPatient={5e5} />
                 <DosimeterUI
                     isXR
                     activeNames={[
                         "mixamorigLeftHandDosimeter",
                         "mixamorigRightHandDosimeter",
                     ]}
+                    nPerPatient={5e5}
                 />
             </div>
         </>

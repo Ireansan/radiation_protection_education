@@ -30,7 +30,7 @@ export function VRDoseAnimationControls({
     const parameters = {
         mode: modeList.indexOf(mode),
         play: 1,
-        speed: speedList.indexOf(speed),
+        speed: speed,
     };
 
     const [set, sceneStates] = useStore((state) => [
@@ -186,15 +186,18 @@ export function VRDoseAnimationControls({
                 });
             folder
                 .add(parameters, "speed")
-                .min(0.25)
+                .min(1)
                 // .max(maxSpeed)
                 // .step(0.25)
-                .max(speedList.length - 1)
+                .max(
+                    speedList.reduce((previous: number, current: number) =>
+                        Math.max(previous, current)
+                    )
+                )
                 .step(1)
-                .name("speed (Type)")
+                .name("speed")
                 .onChange((n: number) => {
-                    const e: number = speedList[n];
-                    speedRef.current = e;
+                    speedRef.current = n;
                 });
             folder
                 .add(timeRef.current, "time")
