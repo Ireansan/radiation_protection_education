@@ -78,6 +78,7 @@ import {
     VRDosimeterUI,
     VRPlayer,
     VRHandIKControls,
+    VRSceneControls,
     VRUI,
 } from "../../components/vr";
 
@@ -92,12 +93,16 @@ import { useStore } from "../../components/store";
 import styles from "../../styles/threejs.module.css";
 
 function XRayVR() {
-    const [set, debug, follow, viewing] = useStore((state) => [
-        state.set,
-        state.debug,
-        state.follow,
-        state.viewing,
-    ]);
+    const [set, debug, follow, viewing, objectVisibles, executeLog] = useStore(
+        (state) => [
+            state.set,
+            state.debug,
+            state.follow,
+            state.viewing,
+            state.sceneStates.objectVisibles,
+            state.sceneStates.executeLog,
+        ]
+    );
 
     const doseOriginPosition = new THREE.Vector3(-0.182, 1.15, -0.18 - 10);
     set((state) => ({
@@ -148,10 +153,12 @@ function XRayVR() {
 
     const timelapseRef = useRef<DoseGroup>(null);
     const nocurtainRef = useRef<DoseAnimationObject>(null);
+    const nocurtain15x15Ref = useRef<DoseAnimationObject>(null);
     const curtainRef = useRef<DoseAnimationObject>(null);
 
     const accumulateRef = useRef<DoseGroup>(null);
     const nocurtainAccumuRef = useRef<DoseGroup>(null);
+    const nocurtain15x15AccumuRef = useRef<DoseGroup>(null);
     const curtainAccumuRef = useRef<DoseGroup>(null);
 
     const curtainObjRef = useRef<THREE.Group>(null);
@@ -161,33 +168,41 @@ function XRayVR() {
 
     const ToggledDebug = useToggle(Debug, "debug");
 
-    const [,] = useControls(() => ({
-        Scene: folder({
-            Gimmick: folder({
-                curtain: {
-                    value: false,
-                    onChange: (e) => {
-                        nocurtainRef.current
-                            ? (nocurtainRef.current.visible = !e)
-                            : null;
-                        nocurtainAccumuRef.current
-                            ? (nocurtainAccumuRef.current.visible = !e)
-                            : null;
+    const options = ["nocurtain", "nocurtain 15x15", "curtain"];
+    const refs = [
+        { time: nocurtainRef, accumu: nocurtainAccumuRef },
+        { time: nocurtain15x15Ref, accumu: nocurtain15x15AccumuRef },
+        { time: curtainRef, accumu: curtainAccumuRef, other: curtainObjRef },
+    ];
+    const onChange = (e: number) => {
+        const visibles = options.map((value, index) => index === e - 1);
 
-                        curtainRef.current
-                            ? (curtainRef.current.visible = e)
-                            : null;
-                        curtainAccumuRef.current
-                            ? (curtainAccumuRef.current.visible = e)
-                            : null;
-                        curtainObjRef.current
-                            ? (curtainObjRef.current.visible = e)
-                            : null;
+        visibles.forEach((value, index) => {
+            let refTime = refs[index].time.current;
+            refTime ? (refTime.visible = value) : null;
+            let refAccumu = refs[index].accumu.current;
+            refAccumu ? (refAccumu.visible = value) : null;
+            let refOther = refs[index].other?.current;
+            refOther ? (refOther.visible = value) : null;
+        });
+
+        // set execute log for experiment
+        const _xRay = executeLog.gimmick.xRay;
+        _xRay[e] = true;
+
+        set((state) => ({
+            sceneStates: {
+                ...state.sceneStates,
+                executeLog: {
+                    ...state.sceneStates.executeLog,
+                    gimmick: {
+                        ...state.sceneStates.executeLog.gimmick,
+                        xRay: _xRay,
                     },
                 },
-            }),
-        }),
-    }));
+            },
+        }));
+    };
 
     useEffect(() => {
         console.log(ref.current);
@@ -423,16 +438,45 @@ function XRayVR() {
                                     scale={4}
                                 />
                                 <VRDoseEquipmentsUI
-                                    position={[-1.5, 1.25, -0.325]}
+                                    position={[-1.5, 1.6, -0.325]}
                                     rotation={[0, Math.PI / 2, 0]}
                                     scale={3}
+                                />
+                                <VRDoseAnimationControls
+                                    position={[-1.45, 2.05, -0.325]}
+                                    rotation={[
+                                        Math.PI / 2,
+                                        1.226,
+                                        -Math.PI / 2,
+                                    ]}
+                                    scale={2.5}
+                                    objects={[
+                                        nocurtainRef,
+                                        nocurtain15x15Ref,
+                                        curtainRef,
+                                    ]}
+                                    mainGroup={timelapseRef}
+                                    subGroup={accumulateRef}
+                                    duration={16}
+                                    speed={8.0}
+                                    customSpeed={[8.0, 16.0]}
+                                />
+                                <VRSceneControls
+                                    position={[-1.4, 2.4, -0.325]}
+                                    rotation={[
+                                        Math.PI / 2,
+                                        1.226,
+                                        -Math.PI / 2,
+                                    ]}
+                                    scale={2.5}
+                                    typeNum={3}
+                                    onChange={onChange}
                                 />
                             </VRUI>
                         </XR>
                     </Canvas>
                 </div>
 
-                <DosimeterUI />
                 <DosimeterUI
                     isXR
                     activeNames={[
