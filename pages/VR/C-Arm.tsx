@@ -435,21 +435,6 @@ function CArmVR() {
                             {/* ================================================== */}
                             {/* UI */}
 
-                            <GizmoHelper
-                                alignment="bottom-right"
-                                margin={[80, 80]}
-                                renderPriority={1}
-                            >
-                                <GizmoViewport
-                                    axisColors={[
-                                        "hotpink",
-                                        "aquamarine",
-                                        "#3498DB",
-                                    ]}
-                                    labelColor="black"
-                                />
-                            </GizmoHelper>
-
                             {/* VR UI */}
                             <VRVolumeParameterControls
                                 object={ref}
