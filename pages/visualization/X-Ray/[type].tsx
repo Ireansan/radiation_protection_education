@@ -315,7 +315,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                                     >
                                         <VOLUMEDATA.XRay_nocurtain_all_Animation />
                                     </doseAnimationObject>
-                                    {/* X-Ray Dose, no curtain 15x15*/}
+                                    {/* X-Ray Dose, no curtain 15x15 */}
                                     <doseAnimationObject
                                         ref={nocurtain15x15Ref}
                                         name={"x-ray_animation_nocurtain_15x15"}

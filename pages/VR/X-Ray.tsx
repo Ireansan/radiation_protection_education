@@ -253,6 +253,26 @@ function XRayVR() {
                                         >
                                             <VOLUMEDATA.XRay_nocurtain_all_Animation />
                                         </doseAnimationObject>
+                                        {/* X-Ray Dose, no curtain 15x15 */}
+                                        <doseAnimationObject
+                                            ref={nocurtain15x15Ref}
+                                            name={
+                                                "x-ray_animation_nocurtain_15x15"
+                                            }
+                                            position={
+                                                VOLUMEDATA
+                                                    .XRay_nocurtain_15x15_Configure
+                                                    .volume.local.position
+                                            }
+                                            scale={
+                                                VOLUMEDATA
+                                                    .XRay_nocurtain_15x15_Configure
+                                                    .volume.local.scale
+                                            }
+                                            visible={false}
+                                        >
+                                            <VOLUMEDATA.XRay_nocurtain_15x15_all_Animation />
+                                        </doseAnimationObject>
                                         {/* X-Ray Dose, curtain */}
                                         <doseAnimationObject
                                             ref={curtainRef}
@@ -274,6 +294,26 @@ function XRayVR() {
                                             name={"x-ray_accumulate_nocurtain"}
                                         >
                                             <VOLUMEDATA.XRay_nocurtain_all_accumulate />
+                                        </doseGroup>
+                                        {/* X-Ray Dose, no curtain 15x15, Accumulate */}
+                                        <doseGroup
+                                            ref={nocurtain15x15AccumuRef}
+                                            name={
+                                                "x-ray_accumulate_nocurtain_15x15"
+                                            }
+                                            position={
+                                                VOLUMEDATA
+                                                    .XRay_nocurtain_15x15_Configure
+                                                    .volume.local.position
+                                            }
+                                            scale={
+                                                VOLUMEDATA
+                                                    .XRay_nocurtain_15x15_Configure
+                                                    .volume.local.scale
+                                            }
+                                            visible={false}
+                                        >
+                                            <VOLUMEDATA.XRay_nocurtain_15x15_all_accumulate />
                                         </doseGroup>
                                         {/* X-Ray Dose, curtain, Accumulate */}
                                         <doseGroup
