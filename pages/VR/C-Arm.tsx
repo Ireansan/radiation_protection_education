@@ -108,7 +108,7 @@ function CArmVR() {
     const doseOriginPosition = new THREE.Vector3(
         VOLUMEDATA.CArm_Configure.doseOrigin.position[0],
         VOLUMEDATA.CArm_Configure.doseOrigin.position[1],
-        VOLUMEDATA.CArm_Configure.doseOrigin.position[2] - 10
+        VOLUMEDATA.CArm_Configure.doseOrigin.position[2] - 10.1
     );
     set((state) => ({
         sceneStates: { ...state.sceneStates, doseOrigin: doseOriginPosition },
@@ -251,7 +251,6 @@ function CArmVR() {
                             <TeleportationPlane
                                 leftHand={true}
                                 rightHand={true}
-                                maxDistance={5}
                             />
                             <Controllers rayMaterial={{ color: "#B30900" }} />
 
@@ -260,6 +259,7 @@ function CArmVR() {
                             <doseGroup
                                 ref={ref}
                                 position={[0, 0, -10]}
+                                rotation={[0, -Math.PI / 2, 0]}
                             >
                                 <doseGroup
                                     visible={objectVisibles.dose}
@@ -327,7 +327,10 @@ function CArmVR() {
                             {/* -------------------------------------------------- */}
                             {/* Volume Controls */}
 
-                            <group position={[0, 0, -10]}>
+                            <group
+                                position={[0, 0, -10]}
+                                rotation={[0, -Math.PI / 2, 0]}
+                            >
                                 {/* -------------------------------------------------- */}
                                 {/* Three.js Object */}
                                 {/* Patient */}
@@ -380,15 +383,15 @@ function CArmVR() {
                                         }
                                     />
                                 </group>
-                                <mesh
-                                    ref={originObjRef}
-                                    position={doseOriginPosition}
-                                    scale={0.2}
-                                    visible={debug}
-                                >
-                                    <sphereBufferGeometry args={[0.25]} />
-                                </mesh>
                             </group>
+                            <mesh
+                                ref={originObjRef}
+                                position={doseOriginPosition}
+                                scale={0.2}
+                                visible={debug}
+                            >
+                                <sphereBufferGeometry args={[0.25]} />
+                            </mesh>
 
                             {/* Player */}
                             <VRPlayer>
@@ -451,6 +454,7 @@ function CArmVR() {
                             <VRVolumeParameterControls
                                 object={ref}
                                 radius={4}
+                                clim1={0}
                                 clim2={
                                     VOLUMEDATA.CArm_Configure.volume.clim2
                                         .accumulate
@@ -522,6 +526,7 @@ function CArmVR() {
                     isXR
                     nPerPatient={5e5}
                 />
+                <SceneOptionsPanel />
             </div>
         </>
     );

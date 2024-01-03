@@ -90,6 +90,11 @@ export const VRDosimeterControls = React.forwardRef<
         updateDosimeterUI();
     }, []);
 
+    useXREvent("select", (event) => {
+        console.log("Select");
+
+        updateDosimeterUI();
+    });
     useXREvent("squeeze", (event) => {
         console.log("Squeeze");
 

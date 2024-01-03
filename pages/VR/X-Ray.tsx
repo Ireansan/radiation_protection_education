@@ -104,7 +104,11 @@ function XRayVR() {
         ]
     );
 
-    const doseOriginPosition = new THREE.Vector3(-0.182, 1.15, -0.18 - 10);
+    const doseOriginPosition = new THREE.Vector3(
+        -0.182 + 0.4,
+        1.15,
+        -0.18 - 10
+    );
     set((state) => ({
         sceneStates: { ...state.sceneStates, doseOrigin: doseOriginPosition },
     }));
@@ -138,6 +142,8 @@ function XRayVR() {
     const curtainAccumuRef = useRef<DoseGroup>(null);
 
     const curtainObjRef = useRef<THREE.Group>(null);
+
+    const originObjRef = useRef<THREE.Mesh>(null);
 
     const dosimeterRef = useRef<Dosimeter>(null);
     const yBotRef = useRef<THREE.Group>(null!);
@@ -214,7 +220,6 @@ function XRayVR() {
                             <TeleportationPlane
                                 leftHand={true}
                                 rightHand={true}
-                                maxDistance={5}
                             />
                             <Controllers rayMaterial={{ color: "#B30900" }} />
 
@@ -223,6 +228,7 @@ function XRayVR() {
                             <doseGroup
                                 ref={ref}
                                 position={[0, 0, -10]}
+                                rotation={[0, -Math.PI / 2, 0]}
                             >
                                 <doseGroup
                                     position={
@@ -285,7 +291,10 @@ function XRayVR() {
                             {/* Volume Controls */}
 
                             {/* -------------------------------------------------- */}
-                            <group position={[0, 0, -10]}>
+                            <group
+                                position={[0, 0, -10]}
+                                rotation={[0, -Math.PI / 2, 0]}
+                            >
                                 {/* Three.js Object */}
                                 <group
                                     position={
@@ -312,13 +321,15 @@ function XRayVR() {
                                         <ENVIROMENT.XRay_Curtain />
                                     </group>
                                 </group>
-                                <mesh
-                                    position={[0, 1, 0]}
-                                    visible={debug}
-                                >
-                                    <sphereBufferGeometry args={[0.25]} />
-                                </mesh>
                             </group>
+                            <mesh
+                                ref={originObjRef}
+                                position={doseOriginPosition}
+                                scale={0.2}
+                                visible={debug}
+                            >
+                                <sphereBufferGeometry args={[0.25]} />
+                            </mesh>
 
                             {/* Player */}
                             <VRPlayer>
@@ -440,6 +451,7 @@ function XRayVR() {
                 </div>
 
                 <DosimeterUI isXR />
+                <SceneOptionsPanel />
             </div>
         </>
     );
