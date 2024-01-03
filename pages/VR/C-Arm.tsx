@@ -251,6 +251,7 @@ function CArmVR() {
                             <TeleportationPlane
                                 leftHand={true}
                                 rightHand={true}
+                                maxDistance={5}
                             />
                             <Controllers rayMaterial={{ color: "#B30900" }} />
 
@@ -467,6 +468,7 @@ function CArmVR() {
                             />
 
                             <VRUI>
+                                {/* Front */}
                                 <VRStats
                                     position={[-0.7, 2.05, -1]}
                                     rotation={[0.124, 0.196, -0.024]}
@@ -482,38 +484,34 @@ function CArmVR() {
                                     ]}
                                     position={[-0.7, 1.75, -1]}
                                     rotation={[0.124, 0.196, -0.024]}
-                                    scale={4}
-                                />
-                                <VRDoseEquipmentsUI
-                                    position={[-1.4, 1.6, -0.325]}
-                                    rotation={[0, Math.PI / 2, 0]}
                                     scale={3}
                                 />
+
+                                {/* Right */}
+                                <VRSceneControls
+                                    position={[1.15, 1.95, -0.315]}
+                                    rotation={[0, -Math.PI / 2, 0]}
+                                    scale={3}
+                                    typeNum={2}
+                                    onChange={onChange}
+                                />
+                                <VRDoseEquipmentsUI
+                                    position={[1.15, 1.6, -0.315]}
+                                    rotation={[0, -Math.PI / 2, 0]}
+                                    scale={3}
+                                />
+
+                                {/* Left */}
                                 <VRDoseAnimationControls
-                                    position={[-1.35, 2.05, -0.325]}
-                                    rotation={[
-                                        Math.PI / 2,
-                                        1.226,
-                                        -Math.PI / 2,
-                                    ]}
-                                    scale={2.5}
+                                    position={[-1.15, 1.6, -0.315]}
+                                    rotation={[0, Math.PI / 2, 0]}
+                                    scale={3}
                                     objects={[cArmRef, cArmRoll180Pitch360Ref]}
                                     mainGroup={timelapseRef}
                                     subGroup={accumulateRef}
                                     duration={16}
                                     speed={8.0}
                                     customSpeed={[8.0, 16.0]}
-                                />
-                                <VRSceneControls
-                                    position={[-1.3, 2.4, -0.325]}
-                                    rotation={[
-                                        Math.PI / 2,
-                                        1.226,
-                                        -Math.PI / 2,
-                                    ]}
-                                    scale={2.5}
-                                    typeNum={2}
-                                    onChange={onChange}
                                 />
                             </VRUI>
                         </XR>

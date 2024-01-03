@@ -111,30 +111,6 @@ function XRayVR() {
 
     const names = [
         {
-            name: "mixamorigLeftEyeDosimeter",
-            displayName: "Left Eye",
-            category: "goggle",
-            coefficient: 0.1,
-        },
-        {
-            name: "mixamorigRightEyeDosimeter",
-            displayName: "Right Eye",
-            category: "goggle",
-            coefficient: 0.1,
-        },
-        {
-            name: "mixamorigNeckDosimeter",
-            displayName: "Neck",
-            category: "neck",
-            coefficient: 0.1,
-        },
-        {
-            name: "mixamorigSpine1Dosimeter",
-            displayName: "Chest",
-            category: "apron",
-            coefficient: 0.1,
-        },
-        {
             name: "mixamorigLeftHandDosimeter",
             displayName: "Left Hand",
             category: "glove",
@@ -238,6 +214,7 @@ function XRayVR() {
                             <TeleportationPlane
                                 leftHand={true}
                                 rightHand={true}
+                                maxDistance={5}
                             />
                             <Controllers rayMaterial={{ color: "#B30900" }} />
 
@@ -306,21 +283,9 @@ function XRayVR() {
 
                             {/* -------------------------------------------------- */}
                             {/* Volume Controls */}
-                            <DoseAnimationControls
-                                objects={[
-                                    nocurtainRef,
-                                    // nocurtain15x15Ref,
-                                    curtainRef,
-                                ]}
-                                mainGroup={timelapseRef}
-                                subGroup={accumulateRef}
-                                duration={16}
-                                speed={8.0}
-                                customSpeed={[8.0, 16.0]}
-                            />
 
+                            {/* -------------------------------------------------- */}
                             <group position={[0, 0, -10]}>
-                                {/* -------------------------------------------------- */}
                                 {/* Three.js Object */}
                                 <group
                                     position={
@@ -419,6 +384,7 @@ function XRayVR() {
                             />
 
                             <VRUI>
+                                {/* Front */}
                                 <VRStats
                                     position={[-0.7, 2.25, -1]}
                                     rotation={[0.124, 0.196, -0.024]}
@@ -435,21 +401,28 @@ function XRayVR() {
                                     ]}
                                     position={[-0.7, 1.75, -1]}
                                     rotation={[0.124, 0.196, -0.024]}
-                                    scale={4}
-                                />
-                                <VRDoseEquipmentsUI
-                                    position={[-1.4, 1.6, -0.325]}
-                                    rotation={[0, Math.PI / 2, 0]}
                                     scale={3}
                                 />
+
+                                {/* Right */}
+                                <VRSceneControls
+                                    position={[1.15, 1.95, -0.315]}
+                                    rotation={[0, -Math.PI / 2, 0]}
+                                    scale={3}
+                                    typeNum={3}
+                                    onChange={onChange}
+                                />
+                                <VRDoseEquipmentsUI
+                                    position={[1.15, 1.6, -0.315]}
+                                    rotation={[0, -Math.PI / 2, 0]}
+                                    scale={3}
+                                />
+
+                                {/* Left */}
                                 <VRDoseAnimationControls
-                                    position={[-1.35, 2.05, -0.325]}
-                                    rotation={[
-                                        Math.PI / 2,
-                                        1.226,
-                                        -Math.PI / 2,
-                                    ]}
-                                    scale={2.5}
+                                    position={[-1.15, 1.6, -0.315]}
+                                    rotation={[0, Math.PI / 2, 0]}
+                                    scale={3}
                                     objects={[
                                         nocurtainRef,
                                         nocurtain15x15Ref,
@@ -461,29 +434,12 @@ function XRayVR() {
                                     speed={8.0}
                                     customSpeed={[8.0, 16.0]}
                                 />
-                                <VRSceneControls
-                                    position={[-1.3, 2.4, -0.325]}
-                                    rotation={[
-                                        Math.PI / 2,
-                                        1.226,
-                                        -Math.PI / 2,
-                                    ]}
-                                    scale={2.5}
-                                    typeNum={3}
-                                    onChange={onChange}
-                                />
                             </VRUI>
                         </XR>
                     </Canvas>
                 </div>
 
-                <DosimeterUI
-                    isXR
-                    activeNames={[
-                        "mixamorigLeftHandDosimeter",
-                        "mixamorigRightHandDosimeter",
-                    ]}
-                />
+                <DosimeterUI isXR />
             </div>
         </>
     );

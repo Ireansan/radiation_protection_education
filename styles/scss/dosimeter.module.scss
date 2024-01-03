@@ -7,9 +7,8 @@
     border-radius: 5px;
 
     &.isXR {
-        width: 140px;
-        border-radius: 2.5px;
-        z-index: -1;
+        width: 210px;
+        border-radius: 3.75px;
     }
 
     .label {
@@ -20,8 +19,8 @@
         color: #bcc2d2;
 
         &.isXR {
-            padding: 2.5px;
-            font-size: 0.25rem;
+            padding: 3.75px;
+            font-size: 0.5rem;
         }
 
         .unit {
@@ -30,8 +29,8 @@
             color: #8c93a3;
 
             &.isXR {
-                padding: 0px 5px;
-                font-size: 0.35rem;
+                padding: 0px 7.5px;
+                font-size: 0.525rem;
             }
         }
     }
@@ -47,9 +46,8 @@
         color: #8c93a3;
 
         &.isXR {
-            height: 30px;
-            padding: 2.5px;
-
+            height: 45px;
+            padding: 3.75px;
         }
 
         .name {
@@ -57,7 +55,7 @@
             font-weight: bold;
 
             &.isXR {
-                height: 7.5px;
+                height: 11.25px;
             }
 
             .identifier {
@@ -67,7 +65,7 @@
                 float: left;
 
                 &.isXR {
-                    font-size: 0.4rem;
+                    font-size: 0.6rem;
                 }
             }
 
@@ -102,7 +100,7 @@
             display: flex;
 
             &.isXR {
-                height: 15px;
+                height: 22.5px;
             }
 
             .year {
@@ -135,7 +133,7 @@
             padding: 2px;
 
             &.isXR {
-                padding: 1px;
+                padding: 1.5px;
             }
 
             .bar {
@@ -143,7 +141,7 @@
                 display: flex;
 
                 &.isXR {
-                    height: 7.5px;
+                    height: 11.25px;
                 }
 
                 .bg {
@@ -196,8 +194,8 @@
                 font-size: 0.8rem;
 
                 &.isXR {
-                    height: 7.5px;
-                    font-size: 0.4rem;
+                    height: 11.25px;
+                    font-size: 0.6rem;
                 }
 
                 .category {
@@ -223,7 +221,7 @@
                         color: #8c93a3;
 
                         &.isXR {
-                            font-size: 0.3rem;
+                            font-size: 0.45rem;
                         }
                     }
                 }

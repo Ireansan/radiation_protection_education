@@ -30,7 +30,7 @@ export const VRDosimeterControls = React.forwardRef<
         const dosimeterUI = document.getElementById(
             "XRDosimeterUI"
         ) as HTMLElement;
-        dosimeterUI.style.height = `${2 * 30 + 15}px`;
+        dosimeterUI.style.height = `${2 * 45 + 15}px`;
 
         const dosimeterUIMesh = new HTMLMesh(dosimeterUI);
         group.add(dosimeterUIMesh);
