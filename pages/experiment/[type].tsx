@@ -69,58 +69,203 @@ const Experiment: NextPage = ({ ...props }: PageProps) => {
             <main className={styles.main}>
                 <h1 className={styles.title}>Radiation Protection Education</h1>
 
-                <p className={styles.description}></p>
-
-                <h2>{!isEnglish ? <>可視化教材</> : <>Visualization</>}</h2>
+                <h2 className={styles.chapter}>
+                    {!isEnglish ? <>可視化教材</> : <>Visualization Material</>}
+                </h2>
+                <div className={styles.description}>
+                    <ul>
+                        <li>
+                            {!isEnglish ? (
+                                <>
+                                    GPUを搭載したデバイスでの実施を推奨しています。
+                                </>
+                            ) : (
+                                <>
+                                    We recommend that this be done on a device
+                                    with a GPU.
+                                </>
+                            )}
+                        </li>
+                        <li>
+                            {!isEnglish ? (
+                                <>
+                                    スマートフォン，タブレットでの実施は，線量分布が正しく描画されないことがあるため，非推奨としています。
+                                </>
+                            ) : (
+                                <>
+                                    We do not recommend the use of smartphones
+                                    and tablets because they may not render the
+                                    dose distribution correctly.
+                                </>
+                            )}
+                        </li>
+                    </ul>
+                </div>
                 <h3>Tutorial</h3>
                 <div className={styles.grid}>
-                    <div className={styles.card}>
+                    <div className={`${styles.card} ${styles.isExperiment}`}>
                         <Link href={tutorialXRay}>
                             <h2>X-Ray &rarr;</h2>
-                            <p>Next.js + react-three/fiber, Texture 3D</p>
+                            <p>
+                                {!isEnglish ? (
+                                    <>Exerciseへ進む前に実施して下さい</>
+                                ) : (
+                                    <>
+                                        Please implement before proceeding to
+                                        Exercise
+                                    </>
+                                )}
+                            </p>
                         </Link>
                     </div>
-                    <div className={styles.card}>
+                    <div className={`${styles.card} ${styles.isExperiment}`}>
                         <Link href={tutorialCArm}>
                             <h2>C-Arm &rarr;</h2>
-                            <p>Next.js + react-three/fiber, Texture 3D</p>
+                            <p>
+                                {!isEnglish ? (
+                                    <>Exerciseへ進む前に実施して下さい</>
+                                ) : (
+                                    <>
+                                        Please implement before proceeding to
+                                        Exercise
+                                    </>
+                                )}
+                            </p>
                         </Link>
                     </div>
                 </div>
 
                 <h3>Execise</h3>
                 <div className={styles.grid}>
-                    <div className={styles.card}>
+                    <div className={`${styles.card} ${styles.isExperiment}`}>
                         <Link href={exerciseXRay}>
                             <h2>X-Ray &rarr;</h2>
-                            <p>Next.js + react-three/fiber, Texture 3D</p>
+                            <p>
+                                {!isEnglish ? (
+                                    <>
+                                        先にTutorialを実施することを推奨しています
+                                    </>
+                                ) : (
+                                    <>
+                                        It is recommended that Tutorial be
+                                        conducted first
+                                    </>
+                                )}
+                            </p>
                         </Link>
                     </div>
-                    <div className={styles.card}>
+                    <div className={`${styles.card} ${styles.isExperiment}`}>
                         <Link href={exerciseCArm}>
                             <h2>C-Arm &rarr;</h2>
-                            <p>Next.js + react-three/fiber, Texture 3D</p>
+                            <p>
+                                {!isEnglish ? (
+                                    <>
+                                        先にTutorialを実施することを推奨しています
+                                    </>
+                                ) : (
+                                    <>
+                                        It is recommended that Tutorial be
+                                        conducted first
+                                    </>
+                                )}
+                            </p>
                         </Link>
                     </div>
                 </div>
 
-                <h2>{!isEnglish ? <>VR教材</> : <>VR</>}</h2>
+                <h2 className={styles.chapter}>
+                    {!isEnglish ? <>VR教材</> : <>VR Material</>}
+                </h2>
                 <div className={styles.grid}>
-                    <div className={styles.card}>
+                    <div className={`${styles.card} ${styles.isExperiment}`}>
+                        <a
+                            href={
+                                !isEnglish
+                                    ? "https://github.com/Ireansan/radiation_protection_education/blob/develop/docs/Experiment_VR.md"
+                                    : "https://github.com/Ireansan/radiation_protection_education/blob/develop/docs/Experiment_VR_en.md"
+                            }
+                        >
+                            <h2>Document &rarr;</h2>
+                            <p>
+                                {!isEnglish ? (
+                                    <>
+                                        X-Ray, C-Armへ進む前に
+                                        <br />
+                                        確認して下さい
+                                    </>
+                                ) : (
+                                    <>
+                                        Please check before proceeding to X-Ray,
+                                        C-Arm
+                                    </>
+                                )}
+                            </p>
+                        </a>
+                    </div>
+                </div>
+                <div className={styles.grid}>
+                    <div className={`${styles.card} ${styles.isExperiment}`}>
                         <Link href={"/VR/X-Ray"}>
                             <h2>X-Ray &rarr;</h2>
                             <p>
-                                Next.js + react-three/fiber, Texture 3D, WebXR
+                                {!isEnglish ? (
+                                    <>
+                                        Documentを確認してから，
+                                        <br />
+                                        Oculusでアクセスして下さい
+                                    </>
+                                ) : (
+                                    <>
+                                        Please check the Document,
+                                        <br /> and then access it with Oculus
+                                    </>
+                                )}
                             </p>
                         </Link>
                     </div>
-                    <div className={styles.card}>
+                    <div className={`${styles.card} ${styles.isExperiment}`}>
                         <Link href={"/VR/C-Arm"}>
                             <h2>C-Arm &rarr;</h2>
                             <p>
-                                Next.js + react-three/fiber, Texture 3D, WebXR
+                                {!isEnglish ? (
+                                    <>
+                                        Documentを確認してから，
+                                        <br />
+                                        Oculusでアクセスして下さい
+                                    </>
+                                ) : (
+                                    <>
+                                        Please check the Document,
+                                        <br /> and then access it with Oculus
+                                    </>
+                                )}
                             </p>
                         </Link>
+                    </div>
+                </div>
+
+                <h2>{!isEnglish ? <>Google フォーム</> : <>Google Form</>}</h2>
+                <div className={styles.grid}>
+                    <div
+                        className={`${styles.card} ${styles.isExperiment} ${styles.googleForm}`}
+                    >
+                        {/* FIXME: Google form */}
+                        <a href={"/"}>
+                            <h2>Google Form &rarr;</h2>
+                            <p>
+                                {!isEnglish ? (
+                                    <>
+                                        可視化教材とVR教材を実施してからアクセスして下さい
+                                    </>
+                                ) : (
+                                    <>
+                                        Please access the visualization and VR
+                                        materials after they have been
+                                        implemented.
+                                    </>
+                                )}
+                            </p>
+                        </a>
                     </div>
                 </div>
             </main>

@@ -40,15 +40,24 @@
   text-decoration: underline;
 }
 
+.chapter {
+  margin-bottom: 0.25rem;
+}
+
 .title,
 .description {
   text-align: center;
 }
 
 .description {
-  margin: 4rem 0;
+  width: 600px;
+  margin: 0.5rem 0;
   line-height: 1.5;
-  font-size: 1.5rem;
+  font-size: 1rem;
+  text-align: left;
+}
+.description ul {
+  margin: 0.25rem 0;
 }
 .description a {
   color: #0070f3;
@@ -88,6 +97,10 @@
   color: #2250bd;
   border-color: #2250bd;
 }
+.card.googleForm:hover, .card.googleForm:focus, .card.googleForm:active {
+  color: #6f41a1;
+  border-color: #6f41a1;
+}
 .card h2 {
   margin: 0 0 1rem 0;
   font-size: 1.5rem;
@@ -96,6 +109,9 @@
   margin: 0;
   font-size: 1.25rem;
   line-height: 1.5;
+}
+.card.isExperiment p {
+  font-size: 1rem;
 }
 
 .logo {

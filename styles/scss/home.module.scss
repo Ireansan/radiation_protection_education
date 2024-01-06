@@ -45,15 +45,25 @@
     }
 }
 
+.chapter {
+    margin-bottom: 0.25rem;
+}
+
 .title,
 .description {
     text-align: center;
 }
 
 .description {
-    margin: 4rem 0;
+    width: 600px;
+    margin: 0.5rem 0;
     line-height: 1.5;
-    font-size: 1.5rem;
+    font-size: 1rem;
+    text-align: left;
+
+    ul {
+        margin: 0.25rem 0;
+    }
 
     a {
         color: #0070f3;
@@ -98,14 +108,32 @@
         border-color: #2250bd;
     }
 
+    &.googleForm {
+
+        &:hover,
+        &:focus,
+        &:active {
+            color: #6f41a1;
+            border-color: #6f41a1;
+        }
+    }
+
     h2 {
         margin: 0 0 1rem 0;
         font-size: 1.5rem;
     }
+
     p {
         margin: 0;
         font-size: 1.25rem;
         line-height: 1.5;
+
+    }
+
+    &.isExperiment {
+        p {
+            font-size: 1rem;
+        }
     }
 }
 
@@ -122,13 +150,16 @@
 }
 
 @media (prefers-color-scheme: dark) {
+
     .card,
     .footer {
         border-color: #30363c;
     }
+
     .code {
         background: #21262b;
     }
+
     .logo img {
         filter: invert(1);
     }
