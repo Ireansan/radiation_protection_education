@@ -267,7 +267,15 @@ export function Tutorial3({ isEnglish = false }: ScenarioProps) {
                 <h3>Tutorial (3/4)</h3>
                 <div className={`${style.items}`}>
                     <MemoItem isDone={allCheckMode}>
-                        {!isEnglish ? <>Dataのmodeを変える</> : <></>}
+                        {!isEnglish ? (
+                            <>
+                                <code>Data/mode</code>を変更する
+                            </>
+                        ) : (
+                            <>
+                                Change <code>Data/mode</code>
+                            </>
+                        )}
                     </MemoItem>
                     <MemoItem isDone={checkClip}>
                         (Optional){" "}

@@ -50,6 +50,9 @@ export function Exercise({ sceneName, isEnglish = false }: ExerciseProps) {
                     <SwiperSlide className={style.swiperSlide}>
                         <SCENARIOS.Exercise3 isEnglish={isEnglish} />
                     </SwiperSlide>
+                    <SwiperSlide className={style.swiperSlide}>
+                        <SCENARIOS.BackExperiment isEnglish={isEnglish} />
+                    </SwiperSlide>
                 </Swiper>
             </div>
         </>

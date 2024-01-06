@@ -1,7 +1,7 @@
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useMemo } from "react";
 
 import { useStore } from "../../../store";
-import { Item, SubItem, NextButton, useScenario } from "../utils";
+import { Item, SubItem, NextButton, LinkButton, useScenario } from "../utils";
 import type { ScenarioProps } from "../utils";
 
 import style from "../../../../styles/css/exercise.module.css";
@@ -261,6 +261,35 @@ export function Exercise3({ isEnglish = false }: ScenarioProps) {
                     </MemoItem>
                 </div>
                 <NextButton disabled={!exerciseProgress.execise3} />
+            </div>
+        </>
+    );
+}
+
+/**
+ *
+ */
+export function BackExperiment({ isEnglish = false }: ScenarioProps) {
+    const [set] = useStore((state) => [state.set]);
+
+    const link = useMemo(() => {
+        let _isEnglish = isEnglish ? "en" : "jp";
+
+        return `/experiment/${_isEnglish}/`;
+    }, [isEnglish]);
+
+    return (
+        <>
+            <div className={`${style.content}`}>
+                <h3>Congratulations!</h3>
+                <LinkButton href={link}>
+                    <p style={{ margin: 0, fontSize: "1rem" }}>
+                        Back to <br />
+                        Experiment Page
+                        <br />
+                        &rarr;
+                    </p>
+                </LinkButton>
             </div>
         </>
     );
