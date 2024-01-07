@@ -9,6 +9,8 @@ import Head from "next/head";
 import Link from "next/link";
 import { useMemo } from "react";
 
+import { googleFormsURL } from "utils/common/experimentsConfig";
+
 import styles from "../../styles/css/home.module.css";
 
 type PageProps = InferGetStaticPropsType<typeof getStaticProps>;
@@ -249,8 +251,7 @@ const Experiment: NextPage = ({ ...props }: PageProps) => {
                     <div
                         className={`${styles.card} ${styles.isExperiment} ${styles.googleForm}`}
                     >
-                        {/* FIXME: Google form */}
-                        <a href={"/"}>
+                        <a href={`${googleFormsURL}`}>
                             <h2>Google Form &rarr;</h2>
                             <p>
                                 {!isEnglish ? (
