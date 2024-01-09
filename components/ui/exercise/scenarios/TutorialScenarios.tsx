@@ -205,6 +205,10 @@ export function Tutorial2({ isEnglish = false }: ScenarioProps) {
                                 in the operation panel
                             </>
                         )}
+                        <MemoSubItem isDone={allHandMoved}>
+                            Hands: {hands.filter((v) => v === true).length}/
+                            {hands.length}
+                        </MemoSubItem>
                     </MemoItem>
                 </div>
                 <NextButton disabled={!exerciseProgress.tutorial2} />
@@ -402,18 +406,24 @@ export function NextExercise({ isEnglish = false, sceneName }: Tutorial1Props) {
     ]);
 
     const link = useMemo(() => {
-        let _isEnglish = isEnglish ? "exercise_en" : "exercise";
+        let _isEnglish = isEnglish ? "en" : "jp";
 
-        return `/visualization/${sceneName}/${_isEnglish}/`;
-    }, [sceneName, isEnglish]);
+        return `/experiment/${_isEnglish}/`;
+    }, [isEnglish]);
 
     return (
         <>
             <div className={`${style.content}`}>
                 <h3>Congratulations!</h3>
                 <LinkButton href={link}>
-                    Go to Exercise <br />
-                    &rarr;
+                    <p style={{ margin: 0, fontSize: "1rem" }}>
+                        Back to <br />
+                        Experiment Page
+                        <br />
+                        (Next: Exercise)
+                        <br />
+                        &rarr;
+                    </p>
                 </LinkButton>
             </div>
         </>
