@@ -368,15 +368,18 @@ export function Tutorial4({ isEnglish = false }: ScenarioProps) {
                         <MemoSubItem>
                             {!isEnglish ? (
                                 <>
-                                    注意:
-                                    処理が重くなる恐れがあります。現在使用しているデバイスで操作が困難になった場合、GPUを搭載しているデバイスで実施して下さい。
+                                    注意：処理が重くなる恐れがあります。
+                                    <br />
+                                    画面左上に表示されているフレームレート数が15を下回った場合，GPUを搭載しているデバイスでの実施を検討して下さい。
                                 </>
                             ) : (
                                 <>
-                                    Caution: The Processing may become slow. If
-                                    you experience difficulties operating your
-                                    current device, please use a device with a
-                                    GPU.
+                                    CAUTION: The Processing may become slow.
+                                    <br />
+                                    If the frame rate number displayed in the
+                                    upper left corner of the screen falls below
+                                    15, consider performing the test on a device
+                                    equipped with a GPU.
                                 </>
                             )}
                         </MemoSubItem>
