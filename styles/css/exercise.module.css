@@ -5,6 +5,7 @@
   width: 325px;
   height: 250px;
   border-radius: 2px;
+  color: #c8d1d9;
 }
 .foundation .swiper {
   width: 100%;
@@ -87,6 +88,7 @@
   border-radius: 5px;
   padding: 4px 8px;
   font-size: 0.85rem;
+  color: #c8d1d9;
   background-color: #007aff;
 }
 .content .slideNext:disabled {

@@ -20,6 +20,8 @@ export type TipsProps = { isEnglish?: boolean };
 export function Tips({ isEnglish = false }: TipsProps) {
     const [set, tips] = useStore((state) => [state.set, state.tips]);
 
+    const iconColor = "#c8d1d9";
+
     return (
         <>
             <button
@@ -41,7 +43,7 @@ export function Tips({ isEnglish = false }: TipsProps) {
                     }));
                 }}
             >
-                <QuestionMark sx={{ fontSize: 16 }} />
+                <QuestionMark sx={{ fontSize: 16, color: iconColor }} />
             </button>
             <div
                 className={`${style.fullscreen} ${!tips && `${style.close}`}`}
@@ -88,7 +90,7 @@ export function Tips({ isEnglish = false }: TipsProps) {
                             }));
                         }}
                     >
-                        <Close sx={{ fontSize: 16 }} />
+                        <Close sx={{ fontSize: 16, color: iconColor }} />
                     </button>
                     <Swiper
                         cssMode={true}
