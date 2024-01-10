@@ -69,13 +69,27 @@ const Experiment: NextPage = ({ ...props }: PageProps) => {
             </Head>
 
             <main className={styles.main}>
-                <h1 className={styles.title}>Radiation Protection Education</h1>
+                <h1 className={styles.title}>Experiment</h1>
 
-                <h2 className={styles.chapter}>
+                <h2 className={`${styles.chapter} ${styles.isExperiment}`}>
                     {!isEnglish ? <>可視化教材</> : <>Visualization Material</>}
                 </h2>
                 <div className={styles.description}>
                     <ul>
+                        <li>
+                            {!isEnglish ? (
+                                <>
+                                    X-Ray，C-Armの少なくとも1つのシーンでTutorial，Exerciseを実施して
+                                    <br />
+                                    下さい。
+                                </>
+                            ) : (
+                                <>
+                                    Tutorial and Exercise should be performed on
+                                    at least one scene in X-Ray and C-Arm.
+                                </>
+                            )}
+                        </li>
                         <li>
                             {!isEnglish ? (
                                 <>
@@ -103,7 +117,7 @@ const Experiment: NextPage = ({ ...props }: PageProps) => {
                         </li>
                     </ul>
                 </div>
-                <h3>Tutorial</h3>
+                <h3 className={styles.section}>Tutorial</h3>
                 <div className={styles.grid}>
                     <div className={`${styles.card} ${styles.isExperiment}`}>
                         <Link href={tutorialXRay}>
@@ -137,7 +151,7 @@ const Experiment: NextPage = ({ ...props }: PageProps) => {
                     </div>
                 </div>
 
-                <h3>Execise</h3>
+                <h3 className={styles.section}>Execise</h3>
                 <div className={styles.grid}>
                     <div className={`${styles.card} ${styles.isExperiment}`}>
                         <Link href={exerciseXRay}>
@@ -175,9 +189,58 @@ const Experiment: NextPage = ({ ...props }: PageProps) => {
                     </div>
                 </div>
 
-                <h2 className={styles.chapter}>
+                <h2 className={`${styles.chapter} ${styles.isExperiment}`}>
                     {!isEnglish ? <>VR教材</> : <>VR Material</>}
                 </h2>
+                <div className={styles.description}>
+                    <ul>
+                        <li>
+                            {!isEnglish ? (
+                                <>
+                                    可視化教材と同様に，X-Ray，C-Armの少なくとも1つのシーンを実施して
+                                    <br />
+                                    下さい。
+                                </>
+                            ) : (
+                                <>
+                                    As with the visualization materials, at
+                                    least one X-Ray or C-Arm scene should be
+                                    performed.
+                                </>
+                            )}
+                        </li>
+                        <li>
+                            {!isEnglish ? (
+                                <>
+                                    VR教材内にTipsを用意していないため，Documentを最初に確認して下さい。
+                                </>
+                            ) : (
+                                <>
+                                    Please check the Document first, as we do
+                                    not provide tips in the VR materials.
+                                </>
+                            )}
+                        </li>
+                        <li>
+                            {!isEnglish ? (
+                                <>
+                                    実験用のチェックリストも用意していないため，Document内で
+                                    <br />
+                                    説明されている動作を全て確認できましたら，Googleフォームの
+                                    <br />
+                                    回答に進んで下さい。
+                                </>
+                            ) : (
+                                <>
+                                    Since we do not have a checklist for
+                                    experimentation, please proceed to answer
+                                    the Google Form once you have confirmed all
+                                    the behaviors described in the Document.
+                                </>
+                            )}
+                        </li>
+                    </ul>
+                </div>
                 <div className={styles.grid}>
                     <div className={`${styles.card} ${styles.isExperiment}`}>
                         <a
@@ -187,7 +250,7 @@ const Experiment: NextPage = ({ ...props }: PageProps) => {
                                     : "https://github.com/Ireansan/radiation_protection_education/blob/develop/docs/Experiment_VR_en.md"
                             }
                         >
-                            <h2>Document &rarr;</h2>
+                            <h2>Document (GitHub) &rarr;</h2>
                             <p>
                                 {!isEnglish ? (
                                     <>
@@ -246,13 +309,15 @@ const Experiment: NextPage = ({ ...props }: PageProps) => {
                     </div>
                 </div>
 
-                <h2>{!isEnglish ? <>Google フォーム</> : <>Google Form</>}</h2>
+                <h2 className={`${styles.chapter} ${styles.isExperiment}`}>
+                    {!isEnglish ? <>Google フォーム</> : <>Google Forms</>}
+                </h2>
                 <div className={styles.grid}>
                     <div
                         className={`${styles.card} ${styles.isExperiment} ${styles.googleForm}`}
                     >
                         <a href={`${googleFormsURL}`}>
-                            <h2>Google Form &rarr;</h2>
+                            <h2>Google Forms &rarr;</h2>
                             <p>
                                 {!isEnglish ? (
                                     <>
