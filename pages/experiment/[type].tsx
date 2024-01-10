@@ -249,6 +249,8 @@ const Experiment: NextPage = ({ ...props }: PageProps) => {
                                     ? "https://github.com/Ireansan/radiation_protection_education/blob/develop/docs/Experiment_VR.md"
                                     : "https://github.com/Ireansan/radiation_protection_education/blob/develop/docs/Experiment_VR_en.md"
                             }
+                            target="_blank"
+                            rel="noopener noreferrer"
                         >
                             <h2>Document (GitHub) &rarr;</h2>
                             <p>
@@ -316,7 +318,11 @@ const Experiment: NextPage = ({ ...props }: PageProps) => {
                     <div
                         className={`${styles.card} ${styles.isExperiment} ${styles.googleForm}`}
                     >
-                        <a href={`${googleFormsURL}`}>
+                        <a
+                            href={`${googleFormsURL}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
                             <h2>Google Forms &rarr;</h2>
                             <p>
                                 {!isEnglish ? (
