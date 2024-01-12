@@ -419,6 +419,24 @@ export function DosimeterUI({
         }));
     }, [dosimeterConfig]);
 
+    React.useEffect(() => {
+        set((state) => ({
+            sceneStates: {
+                ...state.sceneStates,
+                dosimeterSettingsState: {
+                    N_perPatient: nPerPatient,
+                    N_perYear: nPerYear,
+                    Limit_once: limitOnce,
+                },
+            },
+        }));
+        setDosimeterConfig({
+            N_perPatient: nPerPatient,
+            N_perYear: nPerYear,
+            Limit_once: limitOnce,
+        });
+    }, [nPerPatient, nPerYear, limitOnce]);
+
     return (
         <>
             <div
