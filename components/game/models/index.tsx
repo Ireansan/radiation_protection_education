@@ -1,1 +1,1 @@
-export * from "./Ybot";
+export * from "./YBot";
