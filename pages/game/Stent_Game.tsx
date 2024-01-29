@@ -52,18 +52,20 @@ import {
 // Store
 import { useStore } from "../../components/store";
 
+// ==========
+// Styles
 import styles from "../../styles/css/game.module.css";
 
 function StentGame() {
+    const [menu, set] = useStore((state) => [state.menu, state.set]);
+    const editor = useStore((state) => state.editor);
+
     const ref = React.useRef<VolumeGroup>(null!);
 
     const ToggledDebug = useToggle(Debug, "debug");
     const ToggledEditor = useToggle(Editor, "editor");
     const ToggledOrbitControls = useToggle(OrbitControls, "editor");
     const ToggledStats = useToggle(Stats, "stats");
-
-    const [menu, set] = useStore((state) => [state.menu, state.set]);
-    const editor = useStore((state) => state.editor);
 
     return (
         <>
@@ -74,9 +76,14 @@ function StentGame() {
                 >
                     {/* ================================================== */}
                     {/* Three.js Canvas */}
-                    <Canvas shadows camera={{ fov: 45 }} id={"mainCanvas"}>
+                    <Canvas
+                        shadows
+                        camera={{ fov: 45 }}
+                        id={"mainCanvas"}
+                    >
                         {/* -------------------------------------------------- */}
                         {/* Volume Object */}
+                        {/* ========================= */}
                         {/* Stent */}
                         <volumeGroup ref={ref}>
                             <VOLUMEDATA.Stent
@@ -97,31 +104,34 @@ function StentGame() {
                         {/* Three.js Object */}
                         <ControlPanel position={[0, 2, -5]} />
 
-                        {/* Helper */}
-                        <GizmoHelper
-                            alignment="bottom-right"
-                            margin={[80, 80]}
-                            renderPriority={-1}
-                        >
-                            <GizmoViewport
-                                axisColors={[
-                                    "hotpink",
-                                    "aquamarine",
-                                    "#3498DB",
-                                ]}
-                                labelColor="black"
-                            />
-                        </GizmoHelper>
-
                         {/* -------------------------------------------------- */}
                         {/* Physics */}
                         <Physics gravity={[0, -30, 0]}>
                             <ToggledDebug />
                             <Ground />
+
+                            {/* ========================= */}
+                            {/* Player */}
                             <Player>
                                 <YBot />
                             </Player>
                         </Physics>
+
+                        {/* -------------------------------------------------- */}
+                        {/* Controls */}
+                        {/* ========================= */}
+                        {/* Volume Controls */}
+                        {/* ------------------------- */}
+                        {/* Parameter Controls */}
+                        <VolumeParameterControls object={ref} />
+
+                        {/* ------------------------- */}
+                        {/* Clipping Controls */}
+                        <VolumeXYZClippingControls object={ref} />
+
+                        {/* ========================= */}
+                        {/* Player Contorls */}
+                        <Keyboard />
 
                         {/* -------------------------------------------------- */}
                         {/* Enviroment */}
@@ -132,18 +142,16 @@ function StentGame() {
                             intensity={0.8}
                             position={[100, 100, 100]}
                         />
-
-                        {/* -------------------------------------------------- */}
-                        {/* Player Contorls */}
-                        <Keyboard />
                     </Canvas>
 
                     {/* ================================================== */}
-                    {/* UI */}
+                    {/* UI 1 */}
                     <Help />
                     <Leva />
                 </div>
 
+                {/* ================================================== */}
+                {/* UI 2 */}
                 <Menu />
                 <ToggledStats />
                 <ToggledEditor />

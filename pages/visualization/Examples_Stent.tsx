@@ -72,13 +72,15 @@ function ExampleStent() {
                     {/* -------------------------------------------------- */}
                     {/* Volume Object */}
                     <volumeGroup ref={ref}>
-                        {/* Stent */}
+                        {/* ========================= */}
+                        {/* Stent 1 */}
                         <VOLUMEDATA.Stent
                             position={[-75, 0, 0]}
                             rotation={[-Math.PI / 2, 0, 0]}
                         />
 
-                        {/* Stent */}
+                        {/* ========================= */}
+                        {/* Stent 2 */}
                         <VOLUMEDATA.Stent
                             position={[75, 0, 0]}
                             rotation={[-Math.PI / 2, 0, 0]}
@@ -86,17 +88,27 @@ function ExampleStent() {
                         />
                     </volumeGroup>
 
-                    {/* -------------------------------------------------- */}
-                    {/* Volume Controls */}
-                    <VolumeParameterControls object={ref} />
-                    <VolumeXYZClippingControls object={ref} planeSize={100} />
-
-                    {/* -------------------------------------------------- */}
-                    {/* Three.js Controls */}
-                    <OrbitControls makeDefault />
-
                     {/* <Box scale={[10, 10, 10]} position={[-10, 4.6, -3]} /> */}
                     {/* <Box scale={[10, 10, 10]} position={[0, 0, 0]} /> */}
+
+                    {/* -------------------------------------------------- */}
+                    {/* Controls */}
+                    {/* ========================= */}
+                    {/* Volume Controls */}
+                    {/* ------------------------- */}
+                    {/* Parameter Controls */}
+                    <VolumeParameterControls object={ref} />
+
+                    {/* ------------------------- */}
+                    {/* Clipping Controls */}
+                    <VolumeXYZClippingControls
+                        object={ref}
+                        planeSize={100}
+                    />
+
+                    {/* ========================= */}
+                    {/* Three.js Controls */}
+                    <OrbitControls makeDefault />
 
                     {/* -------------------------------------------------- */}
                     {/* Enviroment */}
@@ -113,8 +125,8 @@ function ExampleStent() {
                         getVertexPosition={undefined}
                     />
 
-                    {/* ================================================== */}
-                    {/* UI */}
+                    {/* -------------------------------------------------- */}
+                    {/* UI (three.js) */}
                     <Stats />
 
                     <GizmoHelper

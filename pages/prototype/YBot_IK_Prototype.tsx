@@ -11,13 +11,17 @@ import {
 import * as THREE from "three";
 import { useControls, folder } from "leva";
 
-import styles from "../../styles/threejs.module.css";
+// ==========
+// Model
 import { CustomYBotIK } from "../../components/models/Player";
-
 import {
     HandIKLevaControls,
     HandIKPivotControls,
 } from "../../components/models/controls";
+
+// ==========
+// Styles
+import styles from "../../styles/threejs.module.css";
 
 type IKPositionData = {
     init: THREE.Vector3;
@@ -44,6 +48,8 @@ function CustomYBotIKPrototype() {
                         </PivotControls>
 
                         {/* -------------------------------------------------- */}
+                        {/* Controls */}
+                        {/* ========================= */}
                         {/* Three.js Controls */}
                         <OrbitControls makeDefault />
                         <HandIKLevaControls object={group} />
@@ -65,8 +71,8 @@ function CustomYBotIKPrototype() {
                             getVertexPosition={undefined}
                         />
 
-                        {/* ================================================== */}
-                        {/* UI */}
+                        {/* -------------------------------------------------- */}
+                        {/* UI (three.js) */}
                         <Stats />
 
                         <GizmoHelper

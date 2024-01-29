@@ -25,7 +25,6 @@ import { useControls, folder } from "leva";
 // ==========
 // Game
 import {
-    ControlPanel,
     // ----------
     // hook
     useToggle,
@@ -33,12 +32,7 @@ import {
 
 // ==========
 // Model
-import { Board_Configure } from "../../components/models";
-import {
-    CustomYBotIK,
-    VRCustomYBotIK,
-    SelfMadePlayer,
-} from "../../components/models/Player";
+import { SelfMadePlayer } from "../../components/models/Player";
 
 // ==========
 // Volume
@@ -51,19 +45,7 @@ import * as ENVIROMENT from "../../components/models/Environment";
 import * as VOLUMEDATA from "../../components/models/VolumeData";
 // ----------
 // controls
-import {
-    DosePerspectiveToOrthographic,
-    DoseAnimationControls,
-    DoseBoardControls,
-    DoseEquipmentsUI,
-    DosimeterControls,
-    DosimeterUI,
-    VolumeParameterControls,
-    VolumeXYZClippingControls,
-} from "../../components/volumeRender";
-// FIXME:
-import { DoseAnimationControlsWithAudio } from "../../components/volumeRender/controls/dose/DoseAnimationControlsWithAudio";
-import { DoseAnimationControlsWithAudioUI } from "../../components/volumeRender/ui/DoseAnimationControlsWithAudioUI";
+import { DosimeterUI } from "../../components/volumeRender";
 
 // ==========
 // UI
@@ -244,8 +226,10 @@ function XRayVR() {
                                             .volume.scale
                                     }
                                 >
+                                    {/* ========================= */}
                                     {/* Time Lapse */}
                                     <doseGroup ref={timelapseRef}>
+                                        {/* ------------------------- */}
                                         {/* X-Ray Dose, no curtain */}
                                         <doseAnimationObject
                                             ref={nocurtainRef}
@@ -253,6 +237,8 @@ function XRayVR() {
                                         >
                                             <VOLUMEDATA.XRay_nocurtain_all_Animation />
                                         </doseAnimationObject>
+
+                                        {/* ------------------------- */}
                                         {/* X-Ray Dose, no curtain 15x15 */}
                                         <doseAnimationObject
                                             ref={nocurtain15x15Ref}
@@ -273,6 +259,8 @@ function XRayVR() {
                                         >
                                             <VOLUMEDATA.XRay_nocurtain_15x15_all_Animation />
                                         </doseAnimationObject>
+
+                                        {/* ------------------------- */}
                                         {/* X-Ray Dose, curtain */}
                                         <doseAnimationObject
                                             ref={curtainRef}
@@ -283,11 +271,13 @@ function XRayVR() {
                                         </doseAnimationObject>
                                     </doseGroup>
 
+                                    {/* ========================= */}
                                     {/* Accumulate */}
                                     <doseGroup
                                         ref={accumulateRef}
                                         visible={false}
                                     >
+                                        {/* ------------------------- */}
                                         {/* X-Ray Dose, no curtain, Accumulate */}
                                         <doseGroup
                                             ref={nocurtainAccumuRef}
@@ -295,6 +285,8 @@ function XRayVR() {
                                         >
                                             <VOLUMEDATA.XRay_nocurtain_all_accumulate />
                                         </doseGroup>
+
+                                        {/* ------------------------- */}
                                         {/* X-Ray Dose, no curtain 15x15, Accumulate */}
                                         <doseGroup
                                             ref={nocurtain15x15AccumuRef}
@@ -315,6 +307,8 @@ function XRayVR() {
                                         >
                                             <VOLUMEDATA.XRay_nocurtain_15x15_all_accumulate />
                                         </doseGroup>
+
+                                        {/* ------------------------- */}
                                         {/* X-Ray Dose, curtain, Accumulate */}
                                         <doseGroup
                                             ref={curtainAccumuRef}
@@ -328,14 +322,13 @@ function XRayVR() {
                             </doseGroup>
 
                             {/* -------------------------------------------------- */}
-                            {/* Volume Controls */}
-
-                            {/* -------------------------------------------------- */}
+                            {/* Three.js Object */}
+                            {/* ========================= */}
+                            {/* Machine & Patient */}
                             <group
                                 position={[0, 0, -10]}
                                 rotation={[0, -Math.PI / 2, 0]}
                             >
-                                {/* Three.js Object */}
                                 <group
                                     position={
                                         ENVIROMENT.XRay_Configure.object3d
@@ -349,11 +342,17 @@ function XRayVR() {
                                         ENVIROMENT.XRay_Configure.object3d.scale
                                     }
                                 >
+                                    {/* ------------------------- */}
+                                    {/* Patient */}
                                     <ENVIROMENT.XRay_Bed />
-                                    <ENVIROMENT.XRay_Machine />
                                     <ENVIROMENT.XRay_Patient />
 
-                                    {/* Curtain (Three.js Object) */}
+                                    {/* ------------------------- */}
+                                    {/* X-Ray machine */}
+                                    <ENVIROMENT.XRay_Machine />
+
+                                    {/* ------------------------- */}
+                                    {/* Curtain */}
                                     <group
                                         ref={curtainObjRef}
                                         visible={false}
@@ -362,6 +361,9 @@ function XRayVR() {
                                     </group>
                                 </group>
                             </group>
+
+                            {/* ========================= */}
+                            {/* Dose Origin */}
                             <mesh
                                 ref={originObjRef}
                                 position={doseOriginPosition}
@@ -371,6 +373,7 @@ function XRayVR() {
                                 <sphereBufferGeometry args={[0.25]} />
                             </mesh>
 
+                            {/* ========================= */}
                             {/* Player */}
                             <VRPlayer>
                                 <group
@@ -382,11 +385,7 @@ function XRayVR() {
                             </VRPlayer>
                             <VRHandIKControls object={yBotRef} />
 
-                            {/* -------------------------------------------------- */}
-                            {/* Enviroment */}
-                            <Sky sunPosition={[0, 1, 0]} />
-                            <ambientLight intensity={0.5} />
-
+                            {/* ========================= */}
                             {/* Floor */}
                             <mesh
                                 name={"VRFloor"}
@@ -396,6 +395,11 @@ function XRayVR() {
                                 <planeGeometry args={[200, 200]} />
                                 <meshStandardMaterial color={floorColor} />
                             </mesh>
+
+                            {/* -------------------------------------------------- */}
+                            {/* Enviroment */}
+                            <Sky sunPosition={[0, 1, 0]} />
+                            <ambientLight intensity={0.5} />
 
                             <Grid
                                 position={[0, -0.01, 0]}
@@ -410,16 +414,17 @@ function XRayVR() {
                                 getVertexPosition={undefined}
                             />
 
-                            {/* ================================================== */}
-                            {/* UI */}
-
-                            {/* VR UI */}
+                            {/* -------------------------------------------------- */}
+                            {/* UI (three.js) */}
                             <VRVolumeParameterControls
                                 object={ref}
                                 radius={4}
                             />
 
+                            {/* ========================= */}
+                            {/* VR UI */}
                             <VRUI>
+                                {/* ------------------------- */}
                                 {/* Front */}
                                 <VRStats
                                     position={[-0.7, 2.25, -1]}
@@ -440,6 +445,7 @@ function XRayVR() {
                                     scale={3}
                                 />
 
+                                {/* ------------------------- */}
                                 {/* Right */}
                                 <VRSceneControls
                                     position={[1.15, 1.95, -0.315]}
@@ -454,6 +460,7 @@ function XRayVR() {
                                     scale={3}
                                 />
 
+                                {/* ------------------------- */}
                                 {/* Left */}
                                 <VRDoseAnimationControls
                                     position={[-1.15, 1.6, -0.315]}
@@ -475,8 +482,15 @@ function XRayVR() {
                     </Canvas>
                 </div>
 
-                <DosimeterUI isXR />
+                {/* ================================================== */}
+                {/* UI */}
+                {/* -------------------------------------------------- */}
+                {/* Scene Options Controls UI */}
                 <SceneOptionsPanel />
+
+                {/* -------------------------------------------------- */}
+                {/* Dosimeter UI */}
+                <DosimeterUI isXR />
             </div>
         </>
     );

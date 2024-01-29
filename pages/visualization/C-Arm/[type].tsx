@@ -164,6 +164,7 @@ function VisualizationCArm({ ...props }: PageProps) {
     set((state) => ({
         sceneStates: { ...state.sceneStates, doseOrigin: doseOriginPosition },
     }));
+
     const audioPath = `/models/nrrd/c-arm/animation/c-arm.mp3`;
     const names = [
         {
@@ -241,9 +242,6 @@ function VisualizationCArm({ ...props }: PageProps) {
         { time: cArmRef, accumu: cArmAccumuRef },
         { time: cArmRoll180Pitch360Ref, accumu: cArmRoll180Pitch360AccumuRef },
     ];
-
-    const ToggledDebug = useToggle(Debug, "debug");
-
     const [,] = useControls(() => ({
         Scene: folder({
             Gimmick: folder({
@@ -306,6 +304,8 @@ function VisualizationCArm({ ...props }: PageProps) {
         }),
     }));
 
+    const ToggledDebug = useToggle(Debug, "debug");
+
     useEffect(() => {
         console.log(ref.current);
         // console.log(cArmRef);
@@ -317,14 +317,14 @@ function VisualizationCArm({ ...props }: PageProps) {
                 <div className={styles.canvas}>
                     {/* ================================================== */}
                     {/* Three.js Canvas */}
-                    <Suspense fallback={null}>
-                        <Canvas
-                            orthographic={props.availables.orthographic}
-                            camera={{
-                                position: [4, 8, 4],
-                                zoom: props.availables.orthographic ? 75 : 1.0,
-                            }}
-                        >
+                    <Canvas
+                        orthographic={props.availables.orthographic}
+                        camera={{
+                            position: [4, 8, 4],
+                            zoom: props.availables.orthographic ? 75 : 1.0,
+                        }}
+                    >
+                        <Suspense fallback={null}>
                             {/* -------------------------------------------------- */}
                             {/* Volume Object */}
                             <doseGroup
@@ -338,6 +338,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                                 }
                                 scale={VOLUMEDATA.CArm_Configure.volume.scale}
                             >
+                                {/* ========================= */}
                                 {/* Time Lapse */}
                                 <doseGroup
                                     ref={timelapseRef}
@@ -347,11 +348,13 @@ function VisualizationCArm({ ...props }: PageProps) {
                                     }
                                     // clim2AutoUpdate={false}
                                 >
+                                    {/* ------------------------- */}
                                     {/* C-Arm Dose */}
                                     <doseAnimationObject ref={cArmRef}>
                                         <VOLUMEDATA.CArm_all_Animation />
                                     </doseAnimationObject>
 
+                                    {/* ------------------------- */}
                                     {/* C-Arm Roll 180 Pitch 360 Dose */}
                                     <doseAnimationObject
                                         ref={cArmRoll180Pitch360Ref}
@@ -361,6 +364,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                                     </doseAnimationObject>
                                 </doseGroup>
 
+                                {/* ========================= */}
                                 {/* Accumulate */}
                                 <doseGroup
                                     ref={accumulateRef}
@@ -371,11 +375,13 @@ function VisualizationCArm({ ...props }: PageProps) {
                                     }
                                     // clim2AutoUpdate={false}
                                 >
+                                    {/* ------------------------- */}
                                     {/* C-Arm Dose, Accumulate */}
                                     <doseGroup ref={cArmAccumuRef}>
                                         <VOLUMEDATA.CArm_all_accumulate />
                                     </doseGroup>
 
+                                    {/* ------------------------- */}
                                     {/* C-Arm Roll 180 Pitch 360 Dose, Accumulate */}
                                     <doseGroup
                                         ref={cArmRoll180Pitch360AccumuRef}
@@ -387,66 +393,11 @@ function VisualizationCArm({ ...props }: PageProps) {
                             </doseGroup>
 
                             {/* -------------------------------------------------- */}
-                            {/* Volume Controls */}
-                            {/* <DoseAnimationControls
-                                objects={[cArmRef, cArmRoll180Pitch360Ref]}
-                                mainGroup={timelapseRef}
-                                subGroup={accumulateRef}
-                                duration={16}
-                                speed={8}
-                                customSpeed={[8.0, 16.0]}
-                            /> */}
-                            <DoseAnimationControlsWithAudio
-                                audioRef={audioRef}
-                                objects={[cArmRef, cArmRoll180Pitch360Ref]}
-                                mainGroup={timelapseRef}
-                                subGroup={accumulateRef}
-                            />
-                            <VolumeParameterControls
-                                object={ref}
-                                clim2={
-                                    VOLUMEDATA.CArm_Configure.volume.clim2
-                                        .accumulate
-                                    // VOLUMEDATA.CArm_Configure.volume.clim2
-                                    //     .timelapse
-                                }
-                                cmin={0}
-                                cmax={
-                                    VOLUMEDATA.CArm_Configure.volume.clim2
-                                        .accumulate
-                                }
-                                climStep={
-                                    VOLUMEDATA.CArm_Configure.volume.climStep
-                                }
-                            />
-                            <VolumeXYZClippingControls
-                                object={ref}
-                                planeSize={2}
-                                areaSize={
-                                    VOLUMEDATA.CArm_Configure.volume.areaSize
-                                }
-                                areaScale={1.1}
-                                lineColor={new THREE.Color(0x6e0010)}
-                            />
-
-                            {/* Dosimeter */}
-                            {props.availables.dosimeter ? (
-                                <>
-                                    <DosimeterControls
-                                        ref={dosimeterRef}
-                                        object={yBotRef}
-                                        names={names}
-                                        targets={[
-                                            cArmAccumuRef,
-                                            cArmRoll180Pitch360AccumuRef,
-                                        ]}
-                                    />
-                                </>
-                            ) : null}
-
-                            {/* -------------------------------------------------- */}
                             {/* Three.js Object */}
+                            {/* ========================= */}
+                            {/* Machine & Patient */}
                             <group visible={objectVisibles.object3d}>
+                                {/* ------------------------- */}
                                 {/* Patient */}
                                 <group
                                     ref={patientRef}
@@ -466,7 +417,9 @@ function VisualizationCArm({ ...props }: PageProps) {
                                     <MODELS.XRay_Bed />
                                     <MODELS.XRay_Patient />
                                 </group>
-                                {/* C Arm */}
+
+                                {/* ------------------------- */}
+                                {/* C-Arm machine */}
                                 <group
                                     ref={cArmModelRef}
                                     position={
@@ -498,6 +451,9 @@ function VisualizationCArm({ ...props }: PageProps) {
                                     />
                                 </group>
                             </group>
+
+                            {/* ========================= */}
+                            {/* Dose Origin */}
                             <mesh
                                 ref={originObjRef}
                                 position={doseOriginPosition}
@@ -507,6 +463,7 @@ function VisualizationCArm({ ...props }: PageProps) {
                                 <sphereBufferGeometry args={[0.25]} />
                             </mesh>
 
+                            {/* ========================= */}
                             {/* Avatar */}
                             {props.availables.player ? (
                                 <>
@@ -547,15 +504,12 @@ function VisualizationCArm({ ...props }: PageProps) {
                             ) : null}
 
                             {/* -------------------------------------------------- */}
-                            {/* Three.js Controls */}
-                            <CustomOrbitControls />
-
-                            {/* -------------------------------------------------- */}
                             {/* Physics */}
                             <Physics gravity={[0, -30, 0]}>
                                 <ToggledDebug />
 
-                                {/* Dose Board */}
+                                {/* ========================= */}
+                                {/* Shield */}
                                 {props.availables.shield ? (
                                     <>
                                         <DoseBoardControls
@@ -625,6 +579,79 @@ function VisualizationCArm({ ...props }: PageProps) {
                             </Physics>
 
                             {/* -------------------------------------------------- */}
+                            {/* Controls */}
+                            {/* ========================= */}
+                            {/* Volume Controls */}
+                            {/* ------------------------- */}
+                            {/* Animation Controls */}
+                            {/* <DoseAnimationControls
+                                objects={[cArmRef, cArmRoll180Pitch360Ref]}
+                                mainGroup={timelapseRef}
+                                subGroup={accumulateRef}
+                                duration={16}
+                                speed={8}
+                                customSpeed={[8.0, 16.0]}
+                            /> */}
+                            <DoseAnimationControlsWithAudio
+                                audioRef={audioRef}
+                                objects={[cArmRef, cArmRoll180Pitch360Ref]}
+                                mainGroup={timelapseRef}
+                                subGroup={accumulateRef}
+                            />
+
+                            {/* ------------------------- */}
+                            {/* Parameter Controls */}
+                            <VolumeParameterControls
+                                object={ref}
+                                clim2={
+                                    VOLUMEDATA.CArm_Configure.volume.clim2
+                                        .accumulate
+                                    // VOLUMEDATA.CArm_Configure.volume.clim2
+                                    //     .timelapse
+                                }
+                                cmin={0}
+                                cmax={
+                                    VOLUMEDATA.CArm_Configure.volume.clim2
+                                        .accumulate
+                                }
+                                climStep={
+                                    VOLUMEDATA.CArm_Configure.volume.climStep
+                                }
+                            />
+
+                            {/* ------------------------- */}
+                            {/* Clipping Controls */}
+                            <VolumeXYZClippingControls
+                                object={ref}
+                                planeSize={2}
+                                areaSize={
+                                    VOLUMEDATA.CArm_Configure.volume.areaSize
+                                }
+                                areaScale={1.1}
+                                lineColor={new THREE.Color(0x6e0010)}
+                            />
+
+                            {/* ------------------------- */}
+                            {/* Dosimeter */}
+                            {props.availables.dosimeter ? (
+                                <>
+                                    <DosimeterControls
+                                        ref={dosimeterRef}
+                                        object={yBotRef}
+                                        names={names}
+                                        targets={[
+                                            cArmAccumuRef,
+                                            cArmRoll180Pitch360AccumuRef,
+                                        ]}
+                                    />
+                                </>
+                            ) : null}
+
+                            {/* ========================= */}
+                            {/* Three.js Controls */}
+                            <CustomOrbitControls />
+
+                            {/* -------------------------------------------------- */}
                             {/* Enviroment */}
                             <ambientLight intensity={0.5} />
 
@@ -641,8 +668,8 @@ function VisualizationCArm({ ...props }: PageProps) {
                                 getVertexPosition={undefined}
                             />
 
-                            {/* ================================================== */}
-                            {/* UI */}
+                            {/* -------------------------------------------------- */}
+                            {/* UI (three.js) */}
                             <Stats />
 
                             <GizmoHelper
@@ -659,11 +686,22 @@ function VisualizationCArm({ ...props }: PageProps) {
                                     labelColor="black"
                                 />
                             </GizmoHelper>
-                        </Canvas>
-                    </Suspense>
+                        </Suspense>
+                    </Canvas>
+
+                    {/* ================================================== */}
+                    {/* UI */}
                     <Loader />
+                    {/* -------------------------------------------------- */}
+                    {/* Scene Options Controls UI */}
                     <SceneOptionsPanel activateStats={false} />
 
+                    {/* -------------------------------------------------- */}
+                    {/* Tips */}
+                    <Tips isEnglish={props.isEnglish} />
+
+                    {/* -------------------------------------------------- */}
+                    {/* Animation Controls UI */}
                     <audio
                         src={applyBasePath(audioPath)}
                         ref={audioRef}
@@ -676,6 +714,8 @@ function VisualizationCArm({ ...props }: PageProps) {
                         customSpeed={[8.0, 16.0]}
                     />
 
+                    {/* -------------------------------------------------- */}
+                    {/* Dosimeter UI */}
                     <div
                         className={`${
                             (!props.availables.dosimeter ||
@@ -686,6 +726,9 @@ function VisualizationCArm({ ...props }: PageProps) {
                         <DoseEquipmentsUI />
                         <DosimeterUI nPerPatient={5e5} />
                     </div>
+
+                    {/* -------------------------------------------------- */}
+                    {/* Scenario UI */}
                     <div
                         className={`${
                             !objectVisibles.scenarioUI &&
@@ -709,8 +752,6 @@ function VisualizationCArm({ ...props }: PageProps) {
                             </>
                         ) : null}
                     </div>
-
-                    <Tips isEnglish={props.isEnglish} />
                 </div>
             </div>
         </>

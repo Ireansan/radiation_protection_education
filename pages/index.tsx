@@ -158,14 +158,8 @@ const Home: NextPage = () => {
                 <h3>Prototype</h3>
                 <div className={styles.grid}>
                     <div className={styles.card}>
-                        <Link href={"/prototype/c-arm_scene_rough"}>
-                            <h2>C-Arm Scene &rarr;</h2>
-                            <p>Next.js + react-three/fiber</p>
-                        </Link>
-                    </div>
-                    <div className={styles.card}>
-                        <Link href={"/prototype/C-Arm"}>
-                            <h2>C-Arm &rarr;</h2>
+                        <Link href={"/prototype/C-Arm_Model_Prototype"}>
+                            <h2>C-Arm Model &rarr;</h2>
                             <p>Next.js + react-three/fiber</p>
                         </Link>
                     </div>
@@ -173,90 +167,6 @@ const Home: NextPage = () => {
                         <Link href={"/prototype/YBot_IK_Prototype"}>
                             <h2>Y-Bot IK &rarr;</h2>
                             <p>Next.js + react-three/fiber</p>
-                        </Link>
-                    </div>
-                    <div className={styles.card}>
-                        <Link href={"/prototype/X-Ray/basic"}>
-                            <h2>X-ray (Basic)&rarr;</h2>
-                            <p>prototype, Static Path</p>
-                        </Link>
-                    </div>
-                    <div className={styles.card}>
-                        <Link href={"/prototype/X-Ray/extra"}>
-                            <h2>X-ray (Extra)&rarr;</h2>
-                            <p>prototype, Static Path</p>
-                        </Link>
-                    </div>
-                    <div className={styles.card}>
-                        <Link href={"/prototype/X-Ray/tutorial"}>
-                            <h2>X-ray (Tutorial)&rarr;</h2>
-                            <p>prototype, Static Path</p>
-                        </Link>
-                    </div>
-                    <div className={styles.card}>
-                        <Link href={"/prototype/X-Ray/tutorial_en"}>
-                            <h2>X-ray (Tutorial, En)&rarr;</h2>
-                            <p>prototype, Static Path</p>
-                        </Link>
-                    </div>
-                    <div className={styles.card}>
-                        <Link href={"/prototype/X-Ray/exercise"}>
-                            <h2>X-ray (Experiment)&rarr;</h2>
-                            <p>prototype, Static Path</p>
-                        </Link>
-                    </div>
-                    <div className={styles.card}>
-                        <Link href={"/prototype/X-Ray/exercise_en"}>
-                            <h2>X-ray (Experiment, En)&rarr;</h2>
-                            <p>prototype, Static Path</p>
-                        </Link>
-                    </div>
-                    <div className={styles.card}>
-                        <Link href={"/prototype/X-Ray/perspective"}>
-                            <h2>X-ray (Perspective)&rarr;</h2>
-                            <p>prototype, Static Path</p>
-                        </Link>
-                    </div>
-                    <div className={styles.card}>
-                        <Link href={"/prototype/C-Arm/basic"}>
-                            <h2>C-Arm (Basic)&rarr;</h2>
-                            <p>prototype, Static Path</p>
-                        </Link>
-                    </div>
-                    <div className={styles.card}>
-                        <Link href={"/prototype/C-Arm/extra"}>
-                            <h2>C-Arm (Extra)&rarr;</h2>
-                            <p>prototype, Static Path</p>
-                        </Link>
-                    </div>
-                    <div className={styles.card}>
-                        <Link href={"/prototype/C-Arm/tutorial"}>
-                            <h2>C-Arm (Tutorial)&rarr;</h2>
-                            <p>prototype, Static Path</p>
-                        </Link>
-                    </div>
-                    <div className={styles.card}>
-                        <Link href={"/prototype/C-Arm/tutorial_en"}>
-                            <h2>C-Arm (Tutorial, En)&rarr;</h2>
-                            <p>prototype, Static Path</p>
-                        </Link>
-                    </div>
-                    <div className={styles.card}>
-                        <Link href={"/prototype/C-Arm/exercise"}>
-                            <h2>C-Arm (Experiment)&rarr;</h2>
-                            <p>prototype, Static Path</p>
-                        </Link>
-                    </div>
-                    <div className={styles.card}>
-                        <Link href={"/prototype/C-Arm/exercise_en"}>
-                            <h2>C-Arm (Experiment, En)&rarr;</h2>
-                            <p>prototype, Static Path</p>
-                        </Link>
-                    </div>
-                    <div className={styles.card}>
-                        <Link href={"/prototype/C-Arm/perspective"}>
-                            <h2>C-Arm (Perspective)&rarr;</h2>
-                            <p>prototype, Static Path</p>
                         </Link>
                     </div>
                 </div>

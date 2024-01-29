@@ -12,18 +12,19 @@ import {
 import * as THREE from "three";
 import { useControls, folder, button } from "leva";
 
+// ==========
+// Model
 import * as MODELS from "../../components/models";
 
+// ==========
+// Styles
 import styles from "../../styles/threejs.module.css";
 
 /**
  * https://zenn.dev/hironorioka28/articles/8247133329d64e
  * @returns
  */
-function CArmSceneRough() {
-    const CArmRef = useRef<THREE.Group>(null!);
-    const BedRef = useRef<THREE.Group>(null!);
-
+function CArmModelPrototype() {
     const [CArmMatrix, setCArmMatrix] = React.useState<THREE.Matrix4>(
         new THREE.Matrix4()
     );
@@ -31,33 +32,8 @@ function CArmSceneRough() {
         new THREE.Matrix4()
     );
 
-    function getObjectbyName(
-        object: React.RefObject<THREE.Group>,
-        objectName: string
-    ) {
-        if (object.current && object.current.children[0]) {
-            let element = object.current.children[0];
-            let obj = element.getObjectByName(objectName);
-
-            return obj;
-        }
-
-        return null;
-    }
-
-    function getBonebyName(
-        object: React.RefObject<THREE.Group>,
-        boneName: string
-    ) {
-        if (object.current && object.current.children[0]) {
-            let element = object.current.children[0];
-            let bone = element.getObjectByName(boneName);
-
-            return bone;
-        }
-
-        return null;
-    }
+    const CArmRef = useRef<THREE.Group>(null!);
+    const BedRef = useRef<THREE.Group>(null!);
 
     const [volumeConfig, setVolume] = useControls(() => ({
         "C-Arm": folder({
@@ -116,16 +92,43 @@ function CArmSceneRough() {
         }),
     }));
 
+    const getObjectbyName = (
+        object: React.RefObject<THREE.Group>,
+        objectName: string
+    ) => {
+        if (object.current && object.current.children[0]) {
+            let element = object.current.children[0];
+            let obj = element.getObjectByName(objectName);
+
+            return obj;
+        }
+
+        return null;
+    };
+
+    const getBonebyName = (
+        object: React.RefObject<THREE.Group>,
+        boneName: string
+    ) => {
+        if (object.current && object.current.children[0]) {
+            let element = object.current.children[0];
+            let bone = element.getObjectByName(boneName);
+
+            return bone;
+        }
+
+        return null;
+    };
+
     return (
         <div className={styles.container}>
             <div className={styles.canvas}>
                 {/* ================================================== */}
                 {/* Three.js Canvas */}
                 <Canvas camera={{ position: [-2, 4, 2] }}>
-                    {/* <Sphere /> */}
-
                     {/* -------------------------------------------------- */}
                     {/* Three.js Object */}
+                    {/* ========================= */}
                     {/* C-Arm */}
                     <group position={[0, 0, -1.7]}>
                         <PivotControls
@@ -142,6 +145,7 @@ function CArmSceneRough() {
                         </PivotControls>
                     </group>
 
+                    {/* ========================= */}
                     {/* Bed */}
                     <PivotControls
                         offset={[0, 0, -0.5]}
@@ -157,6 +161,8 @@ function CArmSceneRough() {
                     </PivotControls>
 
                     {/* -------------------------------------------------- */}
+                    {/* Controls */}
+                    {/* ========================= */}
                     {/* Three.js Controls */}
                     <OrbitControls makeDefault />
 
@@ -177,8 +183,8 @@ function CArmSceneRough() {
                         getVertexPosition={undefined}
                     />
 
-                    {/* ================================================== */}
-                    {/* UI */}
+                    {/* -------------------------------------------------- */}
+                    {/* UI (three.js) */}
                     <Stats />
 
                     <GizmoHelper
@@ -197,4 +203,4 @@ function CArmSceneRough() {
     );
 }
 
-export default CArmSceneRough;
+export default CArmModelPrototype;

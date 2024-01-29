@@ -38,7 +38,6 @@ import * as VOLUMEDATA from "../../components/models/VolumeData";
 // ----------
 // controls
 import {
-    DosePerspectiveToOrthographic,
     DoseBoardControls,
     DosimeterControls,
     DosimeterUI,
@@ -51,25 +50,59 @@ import {
 // Store
 import { useStore } from "../../components/store";
 
+// ==========
+// Styles
 import styles from "../../styles/css/game.module.css";
 
 function XRayRoomGame() {
+    const [menu, set] = useStore((state) => [state.menu, state.set]);
+    const editor = useStore((state) => state.editor);
+
+    const xOffset: number = -5;
+    const zOffset: number = 0;
+    const names = [
+        {
+            name: "mixamorigNeck",
+            displayName: "Neck",
+            category: "neck",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigLeftEye",
+            displayName: "Left Eye",
+            category: "goggle",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigRightEye",
+            displayName: "Right Eye",
+            category: "goggle",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigLeftHand",
+            displayName: "Left Hand",
+            category: "glove",
+            coefficient: 0.1,
+        },
+        {
+            name: "mixamorigRightHand",
+            displayName: "Right Hand",
+            category: "glove",
+            coefficient: 0.1,
+        },
+    ];
+
     const ref = useRef<VolumeGroup>(null!);
     const refAnimation = useRef<DoseAnimationObject>(null);
 
     const dosimeterRef = useRef<Dosimeter>(null);
     const yBotRef = useRef<THREE.Group>(null);
 
-    const xOffset: number = -5;
-    const zOffset: number = 0;
-
     const ToggledDebug = useToggle(Debug, "debug");
     const ToggledEditor = useToggle(Editor, "editor");
     const ToggledOrbitControls = useToggle(OrbitControls, "editor");
     const ToggledStats = useToggle(Stats, "stats");
-
-    const [menu, set] = useStore((state) => [state.menu, state.set]);
-    const editor = useStore((state) => state.editor);
 
     return (
         <>
@@ -80,15 +113,18 @@ function XRayRoomGame() {
                 >
                     {/* ================================================== */}
                     {/* Three.js Canvas */}
-                    <Canvas shadows camera={{ fov: 45 }} id={"mainCanvas"}>
-                        <DosePerspectiveToOrthographic
-                            object={ref}
-                            zoom={900}
-                        />
-
+                    <Canvas
+                        shadows
+                        camera={{ fov: 45 }}
+                        id={"mainCanvas"}
+                    >
                         {/* -------------------------------------------------- */}
                         {/* Volume Objects */}
-                        <volumeGroup ref={ref} position={[xOffset, 0, zOffset]}>
+                        <volumeGroup
+                            ref={ref}
+                            position={[xOffset, 0, zOffset]}
+                        >
+                            {/* ========================= */}
                             {/* Dose */}
                             <doseAnimationObject
                                 ref={refAnimation}
@@ -111,54 +147,9 @@ function XRayRoomGame() {
                         </volumeGroup>
 
                         {/* -------------------------------------------------- */}
-                        {/* Volume Controls */}
-                        <VolumeAnimationControls
-                            objects={[refAnimation]}
-                            duration={16}
-                        />
-                        <VolumeParameterControls object={ref} />
-                        <VolumeXYZClippingControls object={ref} />
-
-                        <DosimeterControls
-                            ref={dosimeterRef}
-                            object={yBotRef}
-                            names={[
-                                {
-                                    name: "mixamorigNeck",
-                                    displayName: "Neck",
-                                    category: "neck",
-                                    coefficient: 0.1,
-                                },
-                                {
-                                    name: "mixamorigLeftEye",
-                                    displayName: "Left Eye",
-                                    category: "goggle",
-                                    coefficient: 0.1,
-                                },
-                                {
-                                    name: "mixamorigRightEye",
-                                    displayName: "Right Eye",
-                                    category: "goggle",
-                                    coefficient: 0.1,
-                                },
-                                {
-                                    name: "mixamorigLeftHand",
-                                    displayName: "Left Hand",
-                                    category: "glove",
-                                    coefficient: 0.1,
-                                },
-                                {
-                                    name: "mixamorigRightHand",
-                                    displayName: "Right Hand",
-                                    category: "glove",
-                                    coefficient: 0.1,
-                                },
-                            ]}
-                            targets={[refAnimation]}
-                        />
-
-                        {/* -------------------------------------------------- */}
                         {/* Three.js Object */}
+                        {/* ========================= */}
+                        {/* Machine */}
                         <group position={[xOffset, 0, zOffset]}>
                             <group
                                 position={
@@ -180,6 +171,7 @@ function XRayRoomGame() {
                                 <VOLUMEDATA.XRay_nocurtain_region />
                             </group>
                         </group>
+
                         <ControlPanel position={[0, 2, -5]} />
 
                         {/* -------------------------------------------------- */}
@@ -187,6 +179,8 @@ function XRayRoomGame() {
                         <Physics gravity={[0, -30, 0]}>
                             <ToggledDebug />
                             <Ground />
+
+                            {/* ========================= */}
                             {/* Player */}
                             <Player>
                                 <group ref={yBotRef}>
@@ -194,7 +188,8 @@ function XRayRoomGame() {
                                 </group>
                             </Player>
 
-                            {/* Dose Board */}
+                            {/* ========================= */}
+                            {/* Shield */}
                             <DoseBoardControls
                                 object={refAnimation}
                                 origin={new THREE.Vector3(xOffset, 1, zOffset)}
@@ -213,6 +208,38 @@ function XRayRoomGame() {
                         </Physics>
 
                         {/* -------------------------------------------------- */}
+                        {/* Controls */}
+                        {/* ========================= */}
+                        {/* Volume Controls */}
+                        {/* ------------------------- */}
+                        {/* Animation Controls */}
+                        <VolumeAnimationControls
+                            objects={[refAnimation]}
+                            duration={16}
+                        />
+
+                        {/* ------------------------- */}
+                        {/* Parameter Controls */}
+                        <VolumeParameterControls object={ref} />
+
+                        {/* ------------------------- */}
+                        {/* Clipping Controls */}
+                        <VolumeXYZClippingControls object={ref} />
+
+                        {/* ------------------------- */}
+                        {/* Dosimeter */}
+                        <DosimeterControls
+                            ref={dosimeterRef}
+                            object={yBotRef}
+                            names={names}
+                            targets={[refAnimation]}
+                        />
+
+                        {/* ========================= */}
+                        {/* Player Contorls */}
+                        <Keyboard />
+
+                        {/* -------------------------------------------------- */}
                         {/* Enviroment */}
                         <Sky sunPosition={[100, 20, 100]} />
                         <ambientLight intensity={0.3} />
@@ -221,19 +248,17 @@ function XRayRoomGame() {
                             intensity={0.8}
                             position={[100, 100, 100]}
                         />
-
-                        {/* -------------------------------------------------- */}
-                        {/* Player Contorls */}
-                        <Keyboard />
                     </Canvas>
 
                     {/* ================================================== */}
-                    {/* UI */}
+                    {/* UI 1 */}
                     <Help />
                     <Leva />
                     <DosimeterUI />
                 </div>
 
+                {/* ================================================== */}
+                {/* UI 2 */}
                 <Menu />
                 <ToggledStats />
                 <ToggledEditor />

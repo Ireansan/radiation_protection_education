@@ -162,6 +162,7 @@ function VisualizationXRay({ ...props }: PageProps) {
     set((state) => ({
         sceneStates: { ...state.sceneStates, doseOrigin: doseOriginPosition },
     }));
+
     const audioPath = `/models/nrrd/x-ray/nocurtain_animation/x-ray_nocurtain.mp3`;
     const names = [
         {
@@ -221,8 +222,6 @@ function VisualizationXRay({ ...props }: PageProps) {
     const yBotRef = useRef<THREE.Group>(null!);
     const audioRef = useRef<HTMLAudioElement>(null!);
 
-    const ToggledDebug = useToggle(Debug, "debug");
-
     const options = ["nocurtain", "nocurtain 15x15", "curtain"];
     const refs = [
         { time: nocurtainRef, accumu: nocurtainAccumuRef },
@@ -269,6 +268,8 @@ function VisualizationXRay({ ...props }: PageProps) {
         }),
     }));
 
+    const ToggledDebug = useToggle(Debug, "debug");
+
     useEffect(() => {
         console.log(ref.current);
         // console.log(refAnimation);
@@ -306,8 +307,10 @@ function VisualizationXRay({ ...props }: PageProps) {
                                         .scale
                                 }
                             >
+                                {/* ========================= */}
                                 {/* Time Lapse */}
                                 <doseGroup ref={timelapseRef}>
+                                    {/* ------------------------- */}
                                     {/* X-Ray Dose, no curtain */}
                                     <doseAnimationObject
                                         ref={nocurtainRef}
@@ -315,6 +318,8 @@ function VisualizationXRay({ ...props }: PageProps) {
                                     >
                                         <VOLUMEDATA.XRay_nocurtain_all_Animation />
                                     </doseAnimationObject>
+
+                                    {/* ------------------------- */}
                                     {/* X-Ray Dose, no curtain 15x15 */}
                                     <doseAnimationObject
                                         ref={nocurtain15x15Ref}
@@ -333,6 +338,8 @@ function VisualizationXRay({ ...props }: PageProps) {
                                     >
                                         <VOLUMEDATA.XRay_nocurtain_15x15_all_Animation />
                                     </doseAnimationObject>
+
+                                    {/* ------------------------- */}
                                     {/* X-Ray Dose, curtain */}
                                     <doseAnimationObject
                                         ref={curtainRef}
@@ -343,11 +350,13 @@ function VisualizationXRay({ ...props }: PageProps) {
                                     </doseAnimationObject>
                                 </doseGroup>
 
+                                {/* ========================= */}
                                 {/* Accumulate */}
                                 <doseGroup
                                     ref={accumulateRef}
                                     visible={false}
                                 >
+                                    {/* ------------------------- */}
                                     {/* X-Ray Dose, no curtain, Accumulate */}
                                     <doseGroup
                                         ref={nocurtainAccumuRef}
@@ -355,6 +364,8 @@ function VisualizationXRay({ ...props }: PageProps) {
                                     >
                                         <VOLUMEDATA.XRay_nocurtain_all_accumulate />
                                     </doseGroup>
+
+                                    {/* ------------------------- */}
                                     {/* X-Ray Dose, no curtain 15x15, Accumulate */}
                                     <doseGroup
                                         ref={nocurtain15x15AccumuRef}
@@ -375,6 +386,8 @@ function VisualizationXRay({ ...props }: PageProps) {
                                     >
                                         <VOLUMEDATA.XRay_nocurtain_15x15_all_accumulate />
                                     </doseGroup>
+
+                                    {/* ------------------------- */}
                                     {/* X-Ray Dose, curtain, Accumulate */}
                                     <doseGroup
                                         ref={curtainAccumuRef}
@@ -387,55 +400,9 @@ function VisualizationXRay({ ...props }: PageProps) {
                             </doseGroup>
 
                             {/* -------------------------------------------------- */}
-                            {/* Volume Controls */}
-                            {/* <DoseAnimationControls
-                                objects={[nocurtainRef, curtainRef]}
-                                mainGroup={timelapseRef}
-                                subGroup={accumulateRef}
-                                duration={16}
-                                speed={8.0}
-                                customSpeed={[8.0, 16.0]}
-                            /> */}
-                            <DoseAnimationControlsWithAudio
-                                audioRef={audioRef}
-                                objects={[
-                                    nocurtainRef,
-                                    nocurtain15x15Ref,
-                                    curtainRef,
-                                ]}
-                                mainGroup={timelapseRef}
-                                subGroup={accumulateRef}
-                            />
-                            <VolumeParameterControls object={ref} />
-                            <VolumeXYZClippingControls
-                                object={ref}
-                                planeSize={2}
-                                areaSize={
-                                    VOLUMEDATA.XRay_curtain_Configure.volume
-                                        .areaSize
-                                }
-                                areaScale={1.1}
-                                lineColor={new THREE.Color(0x6e0010)}
-                            />
-
-                            {/* Dosimeter */}
-                            {props.availables.dosimeter ? (
-                                <>
-                                    <DosimeterControls
-                                        ref={dosimeterRef}
-                                        object={yBotRef}
-                                        names={names}
-                                        targets={[
-                                            nocurtainAccumuRef,
-                                            nocurtain15x15AccumuRef,
-                                            curtainAccumuRef,
-                                        ]}
-                                    />
-                                </>
-                            ) : null}
-
-                            {/* -------------------------------------------------- */}
                             {/* Three.js Object */}
+                            {/* ========================= */}
+                            {/* Machine & Patient */}
                             <group
                                 visible={objectVisibles.object3d}
                                 position={
@@ -446,11 +413,17 @@ function VisualizationXRay({ ...props }: PageProps) {
                                 }
                                 scale={ENVIROMENT.XRay_Configure.object3d.scale}
                             >
+                                {/* ------------------------- */}
+                                {/* Patient */}
                                 <ENVIROMENT.XRay_Bed />
-                                <ENVIROMENT.XRay_Machine />
                                 <ENVIROMENT.XRay_Patient />
 
-                                {/* Curtain (Three.js Object) */}
+                                {/* ------------------------- */}
+                                {/* X-Ray machine */}
+                                <ENVIROMENT.XRay_Machine />
+
+                                {/* ------------------------- */}
+                                {/* Curtain */}
                                 <group
                                     ref={curtainObjRef}
                                     visible={false}
@@ -458,6 +431,9 @@ function VisualizationXRay({ ...props }: PageProps) {
                                     <ENVIROMENT.XRay_Curtain />
                                 </group>
                             </group>
+
+                            {/* ========================= */}
+                            {/* Dose Origin */}
                             <mesh
                                 ref={originObjRef}
                                 position={doseOriginPosition}
@@ -467,6 +443,7 @@ function VisualizationXRay({ ...props }: PageProps) {
                                 <sphereBufferGeometry args={[0.25]} />
                             </mesh>
 
+                            {/* ========================= */}
                             {/* Avatar */}
                             {props.availables.player ? (
                                 <>
@@ -511,15 +488,12 @@ function VisualizationXRay({ ...props }: PageProps) {
                             ) : null}
 
                             {/* -------------------------------------------------- */}
-                            {/* Three.js Controls */}
-                            <CustomOrbitControls />
-
-                            {/* -------------------------------------------------- */}
                             {/* Physics */}
                             <Physics gravity={[0, -30, 0]}>
                                 <ToggledDebug />
 
-                                {/* Dose Board */}
+                                {/* ========================= */}
+                                {/* Shield */}
                                 {props.availables.shield ? (
                                     <>
                                         <DoseBoardControls
@@ -590,6 +564,69 @@ function VisualizationXRay({ ...props }: PageProps) {
                             </Physics>
 
                             {/* -------------------------------------------------- */}
+                            {/* Controls */}
+                            {/* ========================= */}
+                            {/* Volume Controls */}
+                            {/* ------------------------- */}
+                            {/* Animation Controls */}
+                            {/* <DoseAnimationControls
+                                objects={[nocurtainRef, curtainRef]}
+                                mainGroup={timelapseRef}
+                                subGroup={accumulateRef}
+                                duration={16}
+                                speed={8.0}
+                                customSpeed={[8.0, 16.0]}
+                            /> */}
+                            <DoseAnimationControlsWithAudio
+                                audioRef={audioRef}
+                                objects={[
+                                    nocurtainRef,
+                                    nocurtain15x15Ref,
+                                    curtainRef,
+                                ]}
+                                mainGroup={timelapseRef}
+                                subGroup={accumulateRef}
+                            />
+
+                            {/* ------------------------- */}
+                            {/* Parameter Controls */}
+                            <VolumeParameterControls object={ref} />
+
+                            {/* ------------------------- */}
+                            {/* Clipping Controls */}
+                            <VolumeXYZClippingControls
+                                object={ref}
+                                planeSize={2}
+                                areaSize={
+                                    VOLUMEDATA.XRay_curtain_Configure.volume
+                                        .areaSize
+                                }
+                                areaScale={1.1}
+                                lineColor={new THREE.Color(0x6e0010)}
+                            />
+
+                            {/* ------------------------- */}
+                            {/* Dosimeter */}
+                            {props.availables.dosimeter ? (
+                                <>
+                                    <DosimeterControls
+                                        ref={dosimeterRef}
+                                        object={yBotRef}
+                                        names={names}
+                                        targets={[
+                                            nocurtainAccumuRef,
+                                            nocurtain15x15AccumuRef,
+                                            curtainAccumuRef,
+                                        ]}
+                                    />
+                                </>
+                            ) : null}
+
+                            {/* ========================= */}
+                            {/* Three.js Controls */}
+                            <CustomOrbitControls />
+
+                            {/* -------------------------------------------------- */}
                             {/* Enviroment */}
                             <ambientLight intensity={0.5} />
 
@@ -607,8 +644,8 @@ function VisualizationXRay({ ...props }: PageProps) {
                                 getVertexPosition={undefined}
                             />
 
-                            {/* ================================================== */}
-                            {/* UI */}
+                            {/* -------------------------------------------------- */}
+                            {/* UI (three.js) */}
                             <Stats />
 
                             <GizmoHelper
@@ -628,9 +665,21 @@ function VisualizationXRay({ ...props }: PageProps) {
                             </GizmoHelper>
                         </Suspense>
                     </Canvas>
+
+                    {/* ================================================== */}
+                    {/* UI */}
                     <Loader />
+
+                    {/* -------------------------------------------------- */}
+                    {/* Scene Options Controls UI */}
                     <SceneOptionsPanel activateStats={false} />
 
+                    {/* -------------------------------------------------- */}
+                    {/* Tips */}
+                    <Tips isEnglish={props.isEnglish} />
+
+                    {/* -------------------------------------------------- */}
+                    {/* Animation Controls UI */}
                     <audio
                         src={applyBasePath(audioPath)}
                         ref={audioRef}
@@ -643,6 +692,8 @@ function VisualizationXRay({ ...props }: PageProps) {
                         customSpeed={[8.0, 16.0]}
                     />
 
+                    {/* -------------------------------------------------- */}
+                    {/* Dosimeter UI */}
                     <div
                         className={`${
                             (!props.availables.dosimeter ||
@@ -653,6 +704,9 @@ function VisualizationXRay({ ...props }: PageProps) {
                         <DoseEquipmentsUI />
                         <DosimeterUI />
                     </div>
+
+                    {/* -------------------------------------------------- */}
+                    {/* Scenario UI */}
                     <div
                         className={`${
                             !objectVisibles.scenarioUI &&
@@ -676,8 +730,6 @@ function VisualizationXRay({ ...props }: PageProps) {
                             </>
                         ) : null}
                     </div>
-
-                    <Tips isEnglish={props.isEnglish} />
                 </div>
             </div>
         </>

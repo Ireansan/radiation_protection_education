@@ -25,7 +25,6 @@ import { useControls, folder } from "leva";
 // ==========
 // Game
 import {
-    ControlPanel,
     // ----------
     // hook
     useToggle,
@@ -52,19 +51,7 @@ import * as ENVIROMENT from "../../components/models/Environment";
 import * as VOLUMEDATA from "../../components/models/VolumeData";
 // ----------
 // controls
-import {
-    DosePerspectiveToOrthographic,
-    DoseAnimationControls,
-    DoseBoardControls,
-    DoseEquipmentsUI,
-    DosimeterControls,
-    DosimeterUI,
-    VolumeParameterControls,
-    VolumeXYZClippingControls,
-} from "../../components/volumeRender";
-// FIXME:
-import { DoseAnimationControlsWithAudio } from "../../components/volumeRender/controls/dose/DoseAnimationControlsWithAudio";
-import { DoseAnimationControlsWithAudioUI } from "../../components/volumeRender/ui/DoseAnimationControlsWithAudioUI";
+import { DosimeterUI } from "../../components/volumeRender";
 
 // ==========
 // UI
@@ -149,6 +136,8 @@ function CArmVR() {
     const yBotRef = useRef<THREE.Group>(null!);
     const audioRef = useRef<HTMLAudioElement>(null!);
 
+    const ToggledDebug = useToggle(Debug, "debug");
+
     const options = ["type 1", "type 2"];
     const cArmConfigs = [
         {
@@ -168,9 +157,6 @@ function CArmVR() {
         { time: cArmRef, accumu: cArmAccumuRef },
         { time: cArmRoll180Pitch360Ref, accumu: cArmRoll180Pitch360AccumuRef },
     ];
-
-    const ToggledDebug = useToggle(Debug, "debug");
-
     const onChange = (e: number) => {
         const visibles = options.map((value, index) => index === e - 1);
 
@@ -275,6 +261,7 @@ function CArmVR() {
                                         VOLUMEDATA.CArm_Configure.volume.scale
                                     }
                                 >
+                                    {/* ========================= */}
                                     {/* Time Lapse */}
                                     <doseGroup
                                         ref={timelapseRef}
@@ -284,11 +271,13 @@ function CArmVR() {
                                         }
                                         // clim2AutoUpdate={false}
                                     >
+                                        {/* ------------------------- */}
                                         {/* C-Arm Dose */}
                                         <doseAnimationObject ref={cArmRef}>
                                             <VOLUMEDATA.CArm_all_Animation />
                                         </doseAnimationObject>
 
+                                        {/* ------------------------- */}
                                         {/* C-Arm Roll 180 Pitch 360 Dose */}
                                         <doseAnimationObject
                                             ref={cArmRoll180Pitch360Ref}
@@ -298,6 +287,7 @@ function CArmVR() {
                                         </doseAnimationObject>
                                     </doseGroup>
 
+                                    {/* ========================= */}
                                     {/* Accumulate */}
                                     <doseGroup
                                         ref={accumulateRef}
@@ -308,11 +298,13 @@ function CArmVR() {
                                         }
                                         // clim2AutoUpdate={false}
                                     >
+                                        {/* ------------------------- */}
                                         {/* C-Arm Dose, Accumulate */}
                                         <doseGroup ref={cArmAccumuRef}>
                                             <VOLUMEDATA.CArm_all_accumulate />
                                         </doseGroup>
 
+                                        {/* ------------------------- */}
                                         {/* C-Arm Roll 180 Pitch 360 Dose, Accumulate */}
                                         <doseGroup
                                             ref={cArmRoll180Pitch360AccumuRef}
@@ -325,14 +317,14 @@ function CArmVR() {
                             </doseGroup>
 
                             {/* -------------------------------------------------- */}
-                            {/* Volume Controls */}
-
+                            {/* Three.js Object */}
+                            {/* ========================= */}
+                            {/* Machine & Patient */}
                             <group
                                 position={[0, 0, -10]}
                                 rotation={[0, -Math.PI / 2, 0]}
                             >
-                                {/* -------------------------------------------------- */}
-                                {/* Three.js Object */}
+                                {/* ------------------------- */}
                                 {/* Patient */}
                                 <group
                                     ref={patientRef}
@@ -352,7 +344,9 @@ function CArmVR() {
                                     <MODELS.XRay_Bed />
                                     <MODELS.XRay_Patient />
                                 </group>
-                                {/* C Arm */}
+
+                                {/* ------------------------- */}
+                                {/* C-Arm machine */}
                                 <group
                                     ref={cArmModelRef}
                                     position={
@@ -384,6 +378,9 @@ function CArmVR() {
                                     />
                                 </group>
                             </group>
+
+                            {/* ========================= */}
+                            {/* Dose Origin */}
                             <mesh
                                 ref={originObjRef}
                                 position={doseOriginPosition}
@@ -393,6 +390,7 @@ function CArmVR() {
                                 <sphereBufferGeometry args={[0.25]} />
                             </mesh>
 
+                            {/* ========================= */}
                             {/* Player */}
                             <VRPlayer>
                                 <group
@@ -404,11 +402,7 @@ function CArmVR() {
                             </VRPlayer>
                             <VRHandIKControls object={yBotRef} />
 
-                            {/* -------------------------------------------------- */}
-                            {/* Enviroment */}
-                            <Sky sunPosition={[0, 1, 0]} />
-                            <ambientLight intensity={0.5} />
-
+                            {/* ========================= */}
                             {/* Floor */}
                             <mesh
                                 name={"VRFloor"}
@@ -418,6 +412,11 @@ function CArmVR() {
                                 <planeGeometry args={[200, 200]} />
                                 <meshStandardMaterial color={floorColor} />
                             </mesh>
+
+                            {/* -------------------------------------------------- */}
+                            {/* Enviroment */}
+                            <Sky sunPosition={[0, 1, 0]} />
+                            <ambientLight intensity={0.5} />
 
                             <Grid
                                 position={[0, -0.01, 0]}
@@ -432,10 +431,8 @@ function CArmVR() {
                                 getVertexPosition={undefined}
                             />
 
-                            {/* ================================================== */}
-                            {/* UI */}
-
-                            {/* VR UI */}
+                            {/* -------------------------------------------------- */}
+                            {/* UI (three.js) */}
                             <VRVolumeParameterControls
                                 object={ref}
                                 radius={4}
@@ -456,7 +453,10 @@ function CArmVR() {
                                 }
                             />
 
+                            {/* ========================= */}
+                            {/* VR UI */}
                             <VRUI>
+                                {/* ------------------------- */}
                                 {/* Front */}
                                 <VRStats
                                     position={[-0.7, 2.05, -1]}
@@ -476,6 +476,7 @@ function CArmVR() {
                                     scale={3}
                                 />
 
+                                {/* ------------------------- */}
                                 {/* Right */}
                                 <VRSceneControls
                                     position={[1.15, 1.95, -0.315]}
@@ -490,6 +491,7 @@ function CArmVR() {
                                     scale={3}
                                 />
 
+                                {/* ------------------------- */}
                                 {/* Left */}
                                 <VRDoseAnimationControls
                                     position={[-1.15, 1.6, -0.315]}
@@ -507,11 +509,18 @@ function CArmVR() {
                     </Canvas>
                 </div>
 
+                {/* ================================================== */}
+                {/* UI */}
+                {/* -------------------------------------------------- */}
+                {/* Scene Options Controls UI */}
+                <SceneOptionsPanel />
+
+                {/* -------------------------------------------------- */}
+                {/* Dosimeter UI */}
                 <DosimeterUI
                     isXR
                     nPerPatient={5e5}
                 />
-                <SceneOptionsPanel />
             </div>
         </>
     );

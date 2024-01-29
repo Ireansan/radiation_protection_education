@@ -49,6 +49,7 @@ function StentAndDose() {
                         {/* -------------------------------------------------- */}
                         {/* Volume Object */}
                         <volumeGroup ref={ref}>
+                            {/* ========================= */}
                             {/* Stent */}
                             <volumeGroup
                                 ref={refStent}
@@ -67,6 +68,7 @@ function StentAndDose() {
                                 />
                             </volumeGroup>
 
+                            {/* ========================= */}
                             {/* Dose */}
                             <volumeGroup
                                 ref={refDose}
@@ -93,16 +95,6 @@ function StentAndDose() {
                         </volumeGroup>
 
                         {/* -------------------------------------------------- */}
-                        {/* Volume Controls */}
-                        <VolumeAnimationControls
-                            objects={[refDoseAnimation]}
-                            duration={16}
-                        />
-                        <VolumeParameterControls object={refStent} />
-                        <VolumeParameterControls object={refDose} />
-                        <VolumeXYZClippingControls object={ref} planeSize={2} />
-
-                        {/* -------------------------------------------------- */}
                         {/* Three.js Objects */}
                         <group position={[-2.5, 0, 0]}>
                             <group
@@ -123,6 +115,30 @@ function StentAndDose() {
                         </group>
 
                         {/* -------------------------------------------------- */}
+                        {/* Controls */}
+                        {/* ========================= */}
+                        {/* Volume Controls */}
+                        {/* ------------------------- */}
+                        {/* Animation Controls */}
+                        <VolumeAnimationControls
+                            objects={[refDoseAnimation]}
+                            duration={16}
+                        />
+
+                        {/* ------------------------- */}
+                        {/* Parameter Controls 1 */}
+                        <VolumeParameterControls object={refStent} />
+                        {/* Parameter Controls 2 */}
+                        <VolumeParameterControls object={refDose} />
+
+                        {/* ------------------------- */}
+                        {/* Clipping Controls */}
+                        <VolumeXYZClippingControls
+                            object={ref}
+                            planeSize={2}
+                        />
+
+                        {/* ========================= */}
                         {/* Three.js Controls */}
                         <OrbitControls makeDefault />
 
@@ -143,8 +159,8 @@ function StentAndDose() {
                             getVertexPosition={undefined}
                         />
 
-                        {/* ================================================== */}
-                        {/* UI */}
+                        {/* -------------------------------------------------- */}
+                        {/* UI (three.js) */}
                         <Stats />
 
                         <GizmoHelper
