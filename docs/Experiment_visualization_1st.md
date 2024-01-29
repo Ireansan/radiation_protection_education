@@ -10,7 +10,7 @@
 全て実施すると，下図の左側から右側のようになり，Google フォームのリンクがアクセス可能になるので，回答をお願いいたします。
 
 <div align="center">
-    <img src=./img/manual/experiment/01/png/UI/ExperimentCheckList/before_after.png width="50%" alt="img/UI/ExperimentCheckList" />
+    <img src=../public/img/manual/experiment/01/png/UI/ExperimentCheckList/before_after.png width="50%" alt="img/UI/ExperimentCheckList" />
 </div>
 
 ### チェックリスト 詳細
@@ -45,7 +45,7 @@
 この教材の画面構成は大きく3つに分かれています。
 
 <div align="center">
-    <img src=./img/manual/experiment/01/png/All/screen_all.png width="50%" alt="img/UI/ExperimentCheckList" />
+    <img src=../public/img/manual/experiment/01/png/All/screen_all.png width="50%" alt="img/UI/ExperimentCheckList" />
 </div>
 
 ### 3D空間
@@ -68,7 +68,7 @@
 プレイヤーに紐付けられた仮想の線量計から被ばく量を取得し表示しています。
 
 <div align="center">
-    <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Dosimeter.png" width="25%" alt="img/UI/DosimeterUI" />
+    <img src="../public/img/manual/experiment/01/png/UI/DosimeterUI/Dosimeter.png" width="25%" alt="img/UI/DosimeterUI" />
 </div>
 
 左側が年間の上限被ばく量(20,000[&micro;Sv])，右側が一回の目標上限被ばく量に対して被ばく量を表しています。
@@ -78,7 +78,7 @@
 被ばく量以外にも防護具，防護板の影響を受けた場合，対応するアイコンが表示されます。
 
 <div align="center">
-    <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Dosimeter_all-icon.png" width="25%" alt="img/UI/DosimeterUI" />
+    <img src="../public/img/manual/experiment/01/png/UI/DosimeterUI/Dosimeter_all-icon.png" width="25%" alt="img/UI/DosimeterUI" />
 </div>
 
 今回の教材内では，被ばく量に対して防護具で0.1倍，防護板で0.01倍になるようにしています。
@@ -94,7 +94,7 @@
         <td>防護板</td>
         <td>
             <div align="center">
-                <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Shield.png" width="25%" />
+                <img src="../public/img/manual/experiment/01/png/UI/DosimeterUI/Icon_Shield.png" width="25%" />
             </div>
         </td>
     </tr>
@@ -102,7 +102,7 @@
         <td>ゴーグル</td>
         <td>
             <div align="center">
-                <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Goggle.png" width="25%" />
+                <img src="../public/img/manual/experiment/01/png/UI/DosimeterUI/Icon_Goggle.png" width="25%" />
             </div>
         </td>
     </tr>
@@ -110,7 +110,7 @@
         <td>ネックガード</td>
         <td>
             <div align="center">
-                <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_NeckGuard.png" width="25%" />
+                <img src="../public/img/manual/experiment/01/png/UI/DosimeterUI/Icon_NeckGuard.png" width="25%" />
             </div>
         </td>
     </tr>
@@ -118,7 +118,7 @@
         <td>エプロン</td>
         <td>
             <div align="center">
-                <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Apron.png" width="25%" />
+                <img src="../public/img/manual/experiment/01/png/UI/DosimeterUI/Icon_Apron.png" width="25%" />
             </div>
         </td>
     </tr>
@@ -126,7 +126,7 @@
         <td>手袋</td>
         <td>
             <div align="center">
-                <img src="./img/manual/experiment/01/png/UI/DosimeterUI/Icon_Glove.png" width="25%" />
+                <img src="../public/img/manual/experiment/01/png/UI/DosimeterUI/Icon_Glove.png" width="25%" />
             </div>
         </td>
     </tr>
@@ -144,13 +144,13 @@
 レントゲン室では，`curtain`でカーテンの有無を操作できます。
 
 <div align="center">
-    <img src="./img/manual/experiment/01/png/All/Gimmick_X-Ray.png" width="50%" alt="img/All/Gimmick/X-Ray" />
+    <img src="../public/img/manual/experiment/01/png/All/Gimmick_X-Ray.png" width="50%" alt="img/All/Gimmick/X-Ray" />
 </div>
 
 Cアームでは，`type`で患者に対して真上から照射した場合の`type 1`と，横から照射した場合の`type 2`に切り替えられます。
 
 <div align="center">
-    <img src="./img/manual/experiment/01/png/All/Gimmick_C-Arm.png" width="50%" alt="img/All/Gimmick/C-Arm" />
+    <img src="../public/img/manual/experiment/01/png/All/Gimmick_C-Arm.png" width="50%" alt="img/All/Gimmick/C-Arm" />
 </div>
 
 ### Player
@@ -159,7 +159,7 @@ Cアームでは，`type`で患者に対して真上から照射した場合の`
 放射線防護具の装備の有無を選択できます。
 
 <div align="center">
-    <img src="./img/manual/experiment/01/png/leva/Player/Equipments.png" width="25%" alt="img/leva/Player/Equipments" />
+    <img src="../public/img/manual/experiment/01/png/leva/Player/Equipments.png" width="25%" alt="img/leva/Player/Equipments" />
 </div>
 
 装備を有効にすることで，線量計UIに種類に応じたアイコンが表示され，被ばく量が変化します。
@@ -168,7 +168,7 @@ Cアームでは，`type`で患者に対して真上から照射した場合の`
 線量計UIの表示と，被ばく量の計算に関係する値の設定ができます。
 
 <div align="center">
-    <img src="./img/manual/experiment/01/png/leva/Player/Dosimeter_Config.png" width="25%" alt="img/leva/Player/Dosimeter_Config" />
+    <img src="../public/img/manual/experiment/01/png/leva/Player/Dosimeter_Config.png" width="25%" alt="img/leva/Player/Dosimeter_Config" />
 </div>
 
 - `N (/patient)`：患者一人に対して行う照射回数
@@ -183,7 +183,7 @@ Cアームでは，`type`で患者に対して真上から照射した場合の`
 時間経過データ(`time lapse`)と累積データ(`accumulate`)の2つのデータ表示形式を設定できます。
 
 <div align="center">
-    <img src="./img/manual/experiment/01/png/leva/Data/mode.png" width="25%" alt="img/leva/Data/mode" />
+    <img src="../public/img/manual/experiment/01/png/leva/Data/mode.png" width="25%" alt="img/leva/Data/mode" />
 </div>
 
 
@@ -191,7 +191,7 @@ Cアームでは，`type`で患者に対して真上から照射した場合の`
 データ表示形式が`time lapse`の際，アニメーションを操作できます。
 
 <div align="center">
-    <img src="./img/manual/experiment/01/png/leva/Data/Animation.png" width="25%" alt="img/leva/Data/Animation" />
+    <img src="../public/img/manual/experiment/01/png/leva/Data/Animation.png" width="25%" alt="img/leva/Data/Animation" />
 </div>
 
 
@@ -203,7 +203,7 @@ Cアームでは，`type`で患者に対して真上から照射した場合の`
 線量分布データの描画に関係する値を設定できます。
 
 <div align="center">
-    <img src="./img/manual/experiment/01/png/leva/Data/Parameter.png" width="25%" alt="img/leva/Data/Parameter" />
+    <img src="../public/img/manual/experiment/01/png/leva/Data/Parameter.png" width="25%" alt="img/leva/Data/Parameter" />
 </div>
 
 
@@ -219,7 +219,7 @@ X, Y, Z軸に垂直なクリッピング平面3つと，自由に位置・向き
 また，それぞれのクリッピング平面の向きを反転させることもできます。
 
 <div align="center">
-    <img src="./img/manual/experiment/01/png/leva/Data/Clip.png" width="25%" alt="img/leva/Data/Clip" />
+    <img src="../public/img/manual/experiment/01/png/leva/Data/Clip.png" width="25%" alt="img/leva/Data/Clip" />
 </div>
 
 
@@ -236,14 +236,14 @@ X, Y, Z軸に垂直なクリッピング平面3つと，自由に位置・向き
 プレイヤーの位置，手の位置を移動させることで，被ばく量が変化します。
 
 <div align="center">
-    <img src="./img/manual/experiment/01/gif/3D/Player/Move_and_HandIK.gif" width="50%" alt="gif/Player" />
+    <img src="../public/img/manual/experiment/01/gif/3D/Player/Move_and_HandIK.gif" width="50%" alt="gif/Player" />
 </div>
 
 ### Shield
 防護板を線量分布内に移動させることで，線量分布に影響が反映されます。
 
 <div align="center">
-    <img src="./img/manual/experiment/01/gif/3D/Shield/Move.gif" width="50%" alt="gif/Shield" />
+    <img src="../public/img/manual/experiment/01/gif/3D/Shield/Move.gif" width="50%" alt="gif/Shield" />
 </div>
 
 
@@ -254,14 +254,14 @@ X, Y, Z軸に垂直なクリッピング平面3つと，自由に位置・向き
 クリッピングの断面となる部分には赤い枠が表示されます。
 
 <div align="center">
-    <img src="./img/manual/experiment/01/gif/3D/Clip/FreeAxis.gif" width="50%" alt="gif/Clip/FreeAxis" />
+    <img src="../public/img/manual/experiment/01/gif/3D/Clip/FreeAxis.gif" width="50%" alt="gif/Clip/FreeAxis" />
 </div>
 
 有効にした全ての平面に対してクリッピングが成り立つ部分がクリッピングされます。
 例えば，XとZを有効にした場合，下図のような結果になります。
 
 <div align="center">
-    <img src="./img/manual/experiment/01/png/3D/Clip/X_and_Z.png" width="50%" alt="img/3D/Clip" />
+    <img src="../public/img/manual/experiment/01/png/3D/Clip/X_and_Z.png" width="50%" alt="img/3D/Clip" />
 </div>
 
 
