@@ -16,6 +16,11 @@ interface ActionMap {
     fn: (controls: Controls) => number;
 }
 
+/**
+ * FIXME: mode detail
+ * Animation Hook
+ * @link
+ */
 function useAnimationStates(actionConfig: ActionConfig[]) {
     let controls: Controls;
 

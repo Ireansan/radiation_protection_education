@@ -1,6 +1,4 @@
 import React from "react";
-import * as THREE from "three";
-import { useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { useControls, folder } from "leva";
@@ -15,6 +13,10 @@ export type CustomOrbitControlsProps = {
     enableRotate?: boolean;
     enableZoom?: boolean;
 };
+/**
+ * FIXME: more detail
+ * setting for OrbitControls
+ */
 export function CustomOrbitControls({
     dampingFactor = 0.05,
     enableDamping = false,

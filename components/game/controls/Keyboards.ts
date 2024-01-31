@@ -17,6 +17,10 @@ interface KeyMap {
     pressed?: boolean;
 }
 
+/**
+ * FIXME: more detail
+ * @link
+ */
 function useKeys(keyConfig: KeyConfig[]) {
     useEffect(() => {
         const keyMap = keyConfig.reduce<{ [key: string]: KeyMap }>(
@@ -56,6 +60,10 @@ function useKeys(keyConfig: KeyConfig[]) {
     }, [keyConfig]);
 }
 
+/**
+ * FIXME: more detail
+ * @link
+ */
 export function Keyboard() {
     const { reset, set } = useStore(({ actions: { reset }, set }) => ({
         reset,
