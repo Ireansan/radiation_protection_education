@@ -1,22 +1,35 @@
 import React from "react";
 import * as THREE from "three";
 import { extend, useFrame } from "@react-three/fiber";
-import { useControls, folder, button, Leva } from "leva";
+import { useControls, folder } from "leva";
 
+// ==========
+// Volume
+// ----------
+// object
 import { DoseAnimationObject, VolumeAnimationObject } from "../../../../src";
-extend({ VolumeAnimationObject });
 
 export type VolumeAnimationControlsProps = {
     objects: React.RefObject<VolumeAnimationObject | DoseAnimationObject>[];
     duration: number;
     folderName?: string;
 };
+/**
+ * Animation controller for volume rendering objects.
+ * @param objects - target volume object.
+ * @param duration - duration of animation.
+ * @param folderName - name of folder.
+ */
 export function VolumeAnimationControls({
     objects,
     duration,
     folderName = "Animation",
     ...props
 }: VolumeAnimationControlsProps) {
+    // ==================================================
+    // Variable, State
+    // --------------------------------------------------
+    // ref
     const childMaxLength = React.useRef<{
         index: number;
         length: number;
@@ -25,6 +38,8 @@ export function VolumeAnimationControls({
         length: 1,
     });
 
+    // --------------------------------------------------
+    // Animation mixer, actions
     /**
      * @link https://github.com/pmndrs/drei/blob/cce70ae77b5151601089114259fbffab8747c8fa/src/core/useAnimations.tsx
      */
@@ -53,6 +68,10 @@ export function VolumeAnimationControls({
         })
     );
 
+    // ==================================================
+    // Hooks (Effect)
+    // --------------------------------------------------
+    // set actions
     React.useEffect(() => {
         objects.forEach((object, i) => {
             if (object.current) {
@@ -78,12 +97,16 @@ export function VolumeAnimationControls({
         );
     }, [objects]);
 
+    // --------------------------------------------------
+    // play actions
     React.useEffect(() => {
         actions.forEach(
             (actions) => actions["volumeAnimation"]?.reset().play()
         );
     }, [actions]);
 
+    // --------------------------------------------------
+    // Control Panel
     /**
      * leva panels
      *
@@ -138,6 +161,8 @@ export function VolumeAnimationControls({
         }),
     }));
 
+    // --------------------------------------------------
+    // Frame
     useFrame((state, delta) => {
         if (edit) {
             actions.forEach((actions, i) => {

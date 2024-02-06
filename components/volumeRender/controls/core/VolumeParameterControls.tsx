@@ -1,33 +1,46 @@
 import React from "react";
-import * as THREE from "three";
-import { extend, ThreeEvent, useFrame } from "@react-three/fiber";
-import { useCursor, PivotControls } from "@react-three/drei";
-import { useControls, folder, Leva } from "leva";
+import { useControls, folder } from "leva";
 
+// ==========
+// Volume
+// ----------
+// object
 import {
-    VolumeObject,
     VolumeGroup,
     VolumeControls as VolumeControlsImpl,
     VolumeBase,
 } from "../../../../src";
+
+// ==========
+// Store
 import { useStore } from "../../../store";
 
-export type VolumeParameterControlsProps =
-    JSX.IntrinsicElements["volumeGroup"] & {
-        children?: React.ReactElement<VolumeBase>;
-        object?: VolumeBase | React.RefObject<VolumeBase>;
-        opacity?: number;
-        clim1?: number;
-        clim2?: number;
-        cmin?: number;
-        cmax?: number;
-        climStep?: number;
-        colormap?: string;
-        renderstyle?: string;
-        isothreshold?: number;
-    };
+export type VolumeParameterControlsProps = {
+    children?: React.ReactElement<VolumeBase>;
+    object?: VolumeBase | React.RefObject<VolumeBase>;
+    opacity?: number;
+    clim1?: number;
+    clim2?: number;
+    cmin?: number;
+    cmax?: number;
+    climStep?: number;
+    colormap?: string;
+    renderstyle?: string;
+    isothreshold?: number;
+} & JSX.IntrinsicElements["volumeGroup"];
 /**
- * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
+ * Parameter controller for volume rendering objects.
+ * @param children - target volume object.
+ * @param object - target volume object.
+ * @param opacity - opacity of volume object. Default is `0.6`.
+ * @param clim1 - lower colormap limits. Default is `0`.
+ * @param clim2 - upper colormap limits. Default is `1`.
+ * @param cmin - minimum value of colormap limits. Default is `0`.
+ * @param cmax - maximum value of colormap limits. Default is `1`.
+ * @param climStep - step of colormap limits. Default is `0.01`.
+ * @param colormap - color map. Default is `heat`.
+ * @param renderstyle - render style. Default is `mip`.
+ * @param isothreshold - iso threshold. Default is `0.15`.
  */
 export const VolumeParameterControls = React.forwardRef<
     VolumeControlsImpl,
@@ -49,18 +62,25 @@ export const VolumeParameterControls = React.forwardRef<
     },
     ref
 ) {
+    // ==================================================
+    // Variable, State
+    // --------------------------------------------------
+    // useStore
     const [set, sceneStates] = useStore((state) => [
         state.set,
         state.sceneStates,
     ]);
 
-    const controls = React.useMemo(() => new VolumeControlsImpl(), []);
+    // --------------------------------------------------
+    // Group
     const group = React.useRef<VolumeGroup>(null);
 
-    /**
-     * leva panels
-     */
-    // Volume
+    // --------------------------------------------------
+    // Controls
+    const controls = React.useMemo(() => new VolumeControlsImpl(), []);
+
+    // --------------------------------------------------
+    // Control Panel
     const [volumeConfig, setVolume] = useControls(() => ({
         Data: folder(
             {
@@ -170,6 +190,10 @@ export const VolumeParameterControls = React.forwardRef<
         ),
     }));
 
+    // ==================================================
+    // Hooks (Effect)
+    // --------------------------------------------------
+    // init
     React.useEffect(() => {
         controls.opacity = opacity;
     }, [controls, opacity]);
@@ -189,7 +213,8 @@ export const VolumeParameterControls = React.forwardRef<
         controls.isothreshold = isothreshold;
     }, [controls, isothreshold]);
 
-    // Attach volume to controls
+    // --------------------------------------------------
+    // attach volume to controls
     React.useLayoutEffect(() => {
         if (object) {
             if (object instanceof VolumeBase) {
@@ -204,6 +229,8 @@ export const VolumeParameterControls = React.forwardRef<
         return () => void controls.detach();
     }, [object, children, controls]);
 
+    // ==================================================
+    // Element
     return controls ? (
         <>
             <primitive

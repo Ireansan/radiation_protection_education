@@ -1,18 +1,22 @@
 import React, { useEffect } from "react";
 import * as THREE from "three";
 import { MeshBVH } from "three-mesh-bvh";
-import { useCursor, PivotControls } from "@react-three/drei";
-import { useControls, folder, button, Leva } from "leva";
+import { PivotControls } from "@react-three/drei";
+import { useControls, folder } from "leva";
 
+// ==========
+// Volume
+// ----------
+// object
 import {
     VolumeBase,
     VolumeControls as VolumeControlsImpl,
 } from "../../../../src";
+
+// ==========
+// Store
 import { useStore } from "../../../store";
 
-/**
- * Line Helper
- */
 type intersectLineHelperProps = {
     index: number;
     clipping: boolean;
@@ -35,6 +39,22 @@ type intersectLineHelperProps = {
     ) => void;
     onDragEnd: () => void;
 } & JSX.IntrinsicElements["group"];
+/**
+ * Crossable guide line and PivotController for each clipping.
+ * @param index - index of clipping plane.
+ * @param clipping - clipping flag.
+ * @param boxSize - size of box for guide.
+ * @param basePlanes - array of clipping planes.
+ * @param planes - array of clipping planes for guide.
+ * @param folderName - name of folder.
+ * @param renderOrder - rendering order. Default is `50`.
+ * @param center - center coordinates of the box for guiding. Default is `(0, 0, 0)`.
+ * @param activeAxes - active axes. Default is `[true, true, true]`.
+ * @param linewidth - width of guide line. Default is `1`.
+ * @param color - color of guide line. Default is `#ccff15`.
+ * @param onDrag - function for onDrag event.
+ * @param onDragEnd - function for onDragEnd event.
+ */
 function IntersectLineHelper({
     index,
     clipping,
@@ -51,13 +71,31 @@ function IntersectLineHelper({
     onDragEnd,
     ...props
 }: intersectLineHelperProps) {
+    // ==================================================
+    // Variable, State
+    // --------------------------------------------------
+    // useStore
     const [set, viewing] = useStore((state) => [state.set, state.viewing]);
 
+    // --------------------------------------------------
+    // const
+    const defaultArray = new Float32Array(9999);
+
+    // --------------------------------------------------
+    // invert
     const [invert, setInvert] = React.useState<boolean>(false);
 
+    // --------------------------------------------------
+    // PivotControls
     const pivotRef = React.useRef<THREE.Group>(null!);
+
+    // --------------------------------------------------
+    // Line
     const lineSegmentsRef = React.useRef<THREE.LineSegments>(null!);
     const geometryRef = React.useRef<THREE.BufferGeometry>(null!);
+
+    // --------------------------------------------------
+    // Mesh
     const bvhMesh = React.useMemo(() => {
         // setup BVH Mesh
         const geometry = new THREE.BoxBufferGeometry(...boxSize).translate(
@@ -67,8 +105,9 @@ function IntersectLineHelper({
         );
         return new MeshBVH(geometry, { maxLeafTris: 3 });
     }, [boxSize, center]);
-    const defaultArray = new Float32Array(9999);
 
+    // ==================================================
+    // Functions
     const onDragLine = () => {
         const plane = basePlanes[index];
         const tmpVector3 = new THREE.Vector3();
@@ -155,6 +194,41 @@ function IntersectLineHelper({
         }
     };
 
+    // ==================================================
+    // Hooks (Effect)
+    // --------------------------------------------------
+    // init event
+    useEffect(() => {
+        if (clipping) {
+            onDragLine();
+        }
+    });
+
+    // --------------------------------------------------
+    // set Center state
+    useEffect(() => {
+        pivotRef.current.matrix.setPosition(center);
+    }, [center]);
+
+    // --------------------------------------------------
+    // call onDrag and onDragEnd by invert
+    useEffect(() => {
+        const worldMatrix = pivotRef.current.matrixWorld.clone();
+        if (clipping) {
+            onDrag(
+                new THREE.Matrix4(),
+                new THREE.Matrix4(),
+                worldMatrix,
+                new THREE.Matrix4(),
+                index,
+                invert
+            );
+            onDragLine();
+        }
+    }, [invert]);
+
+    // --------------------------------------------------
+    // Control Panel
     const [,] = useControls(() => ({
         Data: folder({
             Clip: folder({
@@ -194,29 +268,8 @@ function IntersectLineHelper({
         }),
     }));
 
-    useEffect(() => {
-        if (clipping) {
-            onDragLine();
-        }
-    });
-    useEffect(() => {
-        pivotRef.current.matrix.setPosition(center);
-    }, [center]);
-    useEffect(() => {
-        const worldMatrix = pivotRef.current.matrixWorld.clone();
-        if (clipping) {
-            onDrag(
-                new THREE.Matrix4(),
-                new THREE.Matrix4(),
-                worldMatrix,
-                new THREE.Matrix4(),
-                index,
-                invert
-            );
-            onDragLine();
-        }
-    }, [invert]);
-
+    // ==================================================
+    // Element
     return (
         <>
             <PivotControls
@@ -261,6 +314,12 @@ function IntersectLineHelper({
     );
 }
 
+type ClippingFlag = {
+    x: boolean;
+    y: boolean;
+    z: boolean;
+    free: boolean;
+};
 export type VolumeXYZClippingControlsProps = {
     object: React.RefObject<VolumeBase>;
     planeSize?: number;
@@ -270,14 +329,15 @@ export type VolumeXYZClippingControlsProps = {
     lineWidth?: number;
     lineColor?: THREE.Color;
 };
-type ClippingFlag = {
-    x: boolean;
-    y: boolean;
-    z: boolean;
-    free: boolean;
-};
 /**
- * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
+ * 3-axis (XYZ) and free-axis clipping controller for volume rendering objects.
+ * @param object - target volume object.
+ * @param planeSize - size of clipping plane. Default is `2`.
+ * @param planeColor - color of clipping plane. Default is `#ffff00`.
+ * @param areaSize - size of guide line area. Default is `[1, 1, 1]`.
+ * @param areaScale - scale of guide line area. Default is `1`.
+ * @param lineWidth - width of guide line. Default is `1`.
+ * @param lineColor - color of guide line. Default is `#ccff15`.
  */
 export const VolumeXYZClippingControls = React.forwardRef<
     VolumeControlsImpl,
@@ -295,31 +355,22 @@ export const VolumeXYZClippingControls = React.forwardRef<
     },
     ref
 ) {
+    // ==================================================
+    // Variable, State
+    // --------------------------------------------------
+    // useStore
     const [set, debug, viewing] = useStore((state) => [
         state.set,
         state.debug,
         state.viewing,
     ]);
-    const controls = React.useMemo(() => new VolumeControlsImpl(), []);
 
-    const [center, setCenter] = React.useState<THREE.Vector3>(
-        new THREE.Vector3()
-    );
-
+    // --------------------------------------------------
     // Clipping
     const [clipping, setClipping] = React.useState<boolean>(false);
 
-    const initClippingFlag = {
-        x: false,
-        y: false,
-        z: false,
-        free: false,
-    };
-    const clippingFlagRef = React.useRef<ClippingFlag>(initClippingFlag);
-    const [clippingFlag, setClippingFlag] =
-        React.useState<ClippingFlag>(initClippingFlag);
-
-    // Plane
+    // --------------------------------------------------
+    // Clipping Plane
     const normals: THREE.Vector3Tuple[] = [
         [1, 0, 0], // X
         [0, 1, 0], // Y
@@ -334,6 +385,8 @@ export const VolumeXYZClippingControls = React.forwardRef<
     );
     const [Planes, setPlanes] = React.useState<THREE.Plane[]>([]);
 
+    // --------------------------------------------------
+    // Guide Box
     const [boxSize, setBoxSize] = React.useState<[number, number, number]>(
         areaSize.map((value) => value * 2 * areaScale) as [
             number,
@@ -349,10 +402,154 @@ export const VolumeXYZClippingControls = React.forwardRef<
     );
     const [linePlanes, setLinePlanes] = React.useState<THREE.Plane[]>([]);
 
-    /**
-     * leva panels
-     */
-    // Volume
+    const [center, setCenter] = React.useState<THREE.Vector3>(
+        new THREE.Vector3()
+    );
+
+    // --------------------------------------------------
+    // Clipping Flag
+    const initClippingFlag = {
+        x: false,
+        y: false,
+        z: false,
+        free: false,
+    };
+    const clippingFlagRef = React.useRef<ClippingFlag>(initClippingFlag);
+    const [clippingFlag, setClippingFlag] =
+        React.useState<ClippingFlag>(initClippingFlag);
+
+    // --------------------------------------------------
+    // Controls
+    const controls = React.useMemo(() => new VolumeControlsImpl(), []);
+
+    // ==================================================
+    // Functions
+    // --------------------------------------------------
+    // function for onDrag
+    const onDrag = (
+        l: THREE.Matrix4,
+        deltaL: THREE.Matrix4,
+        w: THREE.Matrix4,
+        deltaW: THREE.Matrix4,
+        index: number,
+        invert: boolean
+    ) => {
+        const direction = new THREE.Vector3();
+        const position = new THREE.Vector3();
+
+        position.setFromMatrixPosition(w);
+
+        if (index < 3) {
+            // X, Y, Z
+            direction.fromArray(normals[index]);
+        } else {
+            // Free
+            const e = w.elements;
+            direction.set(e[8], e[9], e[10]);
+        }
+
+        const coefficient = invert ? 1 : -1;
+        direction.normalize().multiplyScalar(coefficient);
+
+        basePlanes[index].normal.copy(direction);
+        basePlanes[index].constant = -position.dot(direction);
+
+        const lineDirection = direction.clone().multiplyScalar(-1);
+        const offset = direction.clone().multiplyScalar(1e-4);
+        const linePosition = position.clone().add(offset);
+
+        lineBasePlanes[index].normal.copy(lineDirection);
+        lineBasePlanes[index].constant = -linePosition.dot(lineDirection);
+    };
+
+    // ==================================================
+    // Hooks (Effect)
+    // --------------------------------------------------
+    // attach volume to controls
+    React.useLayoutEffect(() => {
+        if (object.current && object.current instanceof VolumeBase) {
+            controls.attach(object.current);
+
+            let bbox = new THREE.Box3().setFromObject(object.current);
+            let center = new THREE.Vector3();
+            bbox.getCenter(center);
+            setCenter(center);
+        }
+
+        return () => void controls.detach();
+    }, [object, controls]);
+
+    // --------------------------------------------------
+    // update basePlanes
+    React.useEffect(() => {
+        basePlanes[0].constant = center.x;
+        basePlanes[1].constant = center.y;
+        basePlanes[2].constant = center.z;
+
+        basePlanes.forEach((plane, index) => {
+            onDrag(
+                new THREE.Matrix4(),
+                new THREE.Matrix4(),
+                new THREE.Matrix4().setPosition(center),
+                new THREE.Matrix4(),
+                index,
+                false
+            );
+        });
+    }, [center, basePlanes]);
+
+    // --------------------------------------------------
+    // push Planes
+    React.useEffect(() => {
+        controls.clippingPlanes = Planes;
+        controls.clipIntersection = true;
+    }, [controls, Planes]);
+
+    // --------------------------------------------------
+    // update clipping flag and linePlanes
+    React.useEffect(() => {
+        const tmpClipping =
+            clippingFlag.x ||
+            clippingFlag.y ||
+            clippingFlag.z ||
+            clippingFlag.free;
+        controls.clipping = tmpClipping;
+
+        const clippingArray = Object.entries(clippingFlag);
+        // @link: https://dev.classmethod.jp/articles/typescript-exclude-ype-removing-undefined/
+        const planes: THREE.Plane[] = clippingArray
+            .map((value, index) => {
+                if (value[1]) {
+                    return basePlanes[index];
+                } else {
+                    return;
+                }
+            })
+            .filter((value): value is NonNullable<typeof value> => {
+                return value !== undefined;
+            });
+
+        setClipping(tmpClipping);
+        setPlanes(planes);
+
+        // Line
+        const linePlanes: THREE.Plane[] = clippingArray
+            .map((value, index) => {
+                if (value[1]) {
+                    return lineBasePlanes[index];
+                } else {
+                    return;
+                }
+            })
+            .filter((value): value is NonNullable<typeof value> => {
+                return value !== undefined;
+            });
+
+        setLinePlanes(linePlanes);
+    }, [controls, clippingFlag, basePlanes, lineBasePlanes]);
+
+    // --------------------------------------------------
+    // Control Panel
     const [,] = useControls(() => ({
         Data: folder(
             {
@@ -505,124 +702,8 @@ export const VolumeXYZClippingControls = React.forwardRef<
         ),
     }));
 
-    /**
-     *
-     */
-    const onDrag = (
-        l: THREE.Matrix4,
-        deltaL: THREE.Matrix4,
-        w: THREE.Matrix4,
-        deltaW: THREE.Matrix4,
-        index: number,
-        invert: boolean
-    ) => {
-        const direction = new THREE.Vector3();
-        const position = new THREE.Vector3();
-
-        position.setFromMatrixPosition(w);
-
-        if (index < 3) {
-            // X, Y, Z
-            direction.fromArray(normals[index]);
-        } else {
-            // Free
-            const e = w.elements;
-            direction.set(e[8], e[9], e[10]);
-        }
-
-        const coefficient = invert ? 1 : -1;
-        direction.normalize().multiplyScalar(coefficient);
-
-        basePlanes[index].normal.copy(direction);
-        basePlanes[index].constant = -position.dot(direction);
-
-        const lineDirection = direction.clone().multiplyScalar(-1);
-        const offset = direction.clone().multiplyScalar(1e-4);
-        const linePosition = position.clone().add(offset);
-
-        lineBasePlanes[index].normal.copy(lineDirection);
-        lineBasePlanes[index].constant = -linePosition.dot(lineDirection);
-    };
-
-    // Attach volume to controls
-    React.useLayoutEffect(() => {
-        if (object.current && object.current instanceof VolumeBase) {
-            controls.attach(object.current);
-
-            let bbox = new THREE.Box3().setFromObject(object.current);
-            let center = new THREE.Vector3();
-            bbox.getCenter(center);
-            setCenter(center);
-        }
-
-        return () => void controls.detach();
-    }, [object, controls]);
-
-    React.useEffect(() => {
-        basePlanes[0].constant = center.x;
-        basePlanes[1].constant = center.y;
-        basePlanes[2].constant = center.z;
-
-        basePlanes.forEach((plane, index) => {
-            onDrag(
-                new THREE.Matrix4(),
-                new THREE.Matrix4(),
-                new THREE.Matrix4().setPosition(center),
-                new THREE.Matrix4(),
-                index,
-                false
-            );
-        });
-    }, [center, basePlanes]);
-
-    // Push Planes
-    React.useEffect(() => {
-        controls.clippingPlanes = Planes;
-        controls.clipIntersection = true;
-    }, [controls, Planes]);
-
-    // Clipping
-    React.useEffect(() => {
-        const tmpClipping =
-            clippingFlag.x ||
-            clippingFlag.y ||
-            clippingFlag.z ||
-            clippingFlag.free;
-        controls.clipping = tmpClipping;
-
-        const clippingArray = Object.entries(clippingFlag);
-        // @link: https://dev.classmethod.jp/articles/typescript-exclude-ype-removing-undefined/
-        const planes: THREE.Plane[] = clippingArray
-            .map((value, index) => {
-                if (value[1]) {
-                    return basePlanes[index];
-                } else {
-                    return;
-                }
-            })
-            .filter((value): value is NonNullable<typeof value> => {
-                return value !== undefined;
-            });
-
-        setClipping(tmpClipping);
-        setPlanes(planes);
-
-        // Line
-        const linePlanes: THREE.Plane[] = clippingArray
-            .map((value, index) => {
-                if (value[1]) {
-                    return lineBasePlanes[index];
-                } else {
-                    return;
-                }
-            })
-            .filter((value): value is NonNullable<typeof value> => {
-                return value !== undefined;
-            });
-
-        setLinePlanes(linePlanes);
-    }, [controls, clippingFlag, basePlanes, lineBasePlanes]);
-
+    // ==================================================
+    // Element
     return controls ? (
         <>
             <primitive
