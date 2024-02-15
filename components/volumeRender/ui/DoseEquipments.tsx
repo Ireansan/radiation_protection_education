@@ -1,27 +1,23 @@
-import React, { useEffect, useRef, memo, useMemo } from "react";
-import { addEffect } from "@react-three/fiber";
-import { useControls, folder, button } from "leva";
+import React from "react";
+import { useControls, folder } from "leva";
 
+// ==========
+// Store
 import { useStore } from "../../store";
-import type { ResultsByName } from "../../../src";
 
-import style from "../../../styles/css/dosimeter.module.css";
-
-type EquipmentProps = {
-    goggle: boolean;
-    neck: boolean;
-    apron: boolean;
-    glove: boolean;
-};
-
+/**
+ * Equipments controller.
+ */
 export function DoseEquipmentsUI({ ...props }) {
+    // ==================================================
+    // Variable, State
+    // --------------------------------------------------
+    // useStore
     const [set] = useStore((state) => [state.set]);
 
-    /**
-     * leva panels
-     */
-    // Volume
-    const [dosimeterConfig, setVolume] = useControls(() => ({
+    // --------------------------------------------------
+    // Control Panel
+    const [,] = useControls(() => ({
         Player: folder({
             Equipments: folder({
                 Goggle: {
@@ -169,5 +165,7 @@ export function DoseEquipmentsUI({ ...props }) {
         }),
     }));
 
+    // ==================================================
+    // Element
     return <></>;
 }

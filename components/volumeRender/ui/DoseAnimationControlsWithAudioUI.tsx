@@ -1,9 +1,12 @@
 import React from "react";
-import * as THREE from "three";
 import { LevaPanel, useControls, useCreateStore } from "leva";
 
+// ==========
+// Store
 import { useStore } from "../../store";
 
+// ==========
+// Styles
 import style from "../../../styles/css/volumeAnimationControls.module.css";
 
 export type DoseAnimationControlsWithAudioUIProps = {

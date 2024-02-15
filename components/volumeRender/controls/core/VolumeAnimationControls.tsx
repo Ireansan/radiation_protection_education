@@ -68,43 +68,6 @@ export function VolumeAnimationControls({
         })
     );
 
-    // ==================================================
-    // Hooks (Effect)
-    // --------------------------------------------------
-    // set actions
-    React.useEffect(() => {
-        objects.forEach((object, i) => {
-            if (object.current) {
-                object.current.animations.forEach((clip) => {
-                    lazyActions.current[i][clip.name] = mixer[i].clipAction(
-                        clip,
-                        object.current!
-                    );
-
-                    if (childMaxLength.current.length <= clip.duration) {
-                        childMaxLength.current = {
-                            index: i,
-                            length: clip.duration,
-                        };
-                    }
-                });
-            }
-        });
-        setActions(lazyActions.current);
-
-        actions.forEach(
-            (actions) => actions["volumeAnimation"]?.reset().play()
-        );
-    }, [objects]);
-
-    // --------------------------------------------------
-    // play actions
-    React.useEffect(() => {
-        actions.forEach(
-            (actions) => actions["volumeAnimation"]?.reset().play()
-        );
-    }, [actions]);
-
     // --------------------------------------------------
     // Control Panel
     /**
@@ -161,6 +124,43 @@ export function VolumeAnimationControls({
         }),
     }));
 
+    // ==================================================
+    // Hooks (Effect)
+    // --------------------------------------------------
+    // set actions
+    React.useEffect(() => {
+        objects.forEach((object, i) => {
+            if (object.current) {
+                object.current.animations.forEach((clip) => {
+                    lazyActions.current[i][clip.name] = mixer[i].clipAction(
+                        clip,
+                        object.current!
+                    );
+
+                    if (childMaxLength.current.length <= clip.duration) {
+                        childMaxLength.current = {
+                            index: i,
+                            length: clip.duration,
+                        };
+                    }
+                });
+            }
+        });
+        setActions(lazyActions.current);
+
+        actions.forEach(
+            (actions) => actions["volumeAnimation"]?.reset().play()
+        );
+    }, [objects]);
+
+    // --------------------------------------------------
+    // play actions
+    React.useEffect(() => {
+        actions.forEach(
+            (actions) => actions["volumeAnimation"]?.reset().play()
+        );
+    }, [actions]);
+
     // --------------------------------------------------
     // Frame
     useFrame((state, delta) => {
@@ -198,6 +198,8 @@ export function VolumeAnimationControls({
         }
     });
 
+    // ==================================================
+    // Element
     return (
         <>
             {/* {console.log("animation rendering")} */}

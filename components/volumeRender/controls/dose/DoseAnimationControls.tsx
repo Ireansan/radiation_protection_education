@@ -1,13 +1,20 @@
 import React from "react";
 import * as THREE from "three";
-import { extend, useFrame } from "@react-three/fiber";
-import { useControls, folder, button, Leva } from "leva";
+import { useFrame } from "@react-three/fiber";
+import { useControls, folder } from "leva";
 
+// ==========
+// Volume
+// ----------
+// object
 import {
     VolumeBase,
     DoseAnimationObject,
     VolumeAnimationObject,
 } from "../../../../src";
+
+// ==========
+// Store
 import { useStore } from "../../../store";
 
 export type DoseAnimationControlsProps = {
@@ -19,6 +26,16 @@ export type DoseAnimationControlsProps = {
     speed?: number;
     customSpeed?: number[];
 };
+/**
+ * Animation controller for volume rendering objects (dose) and mode controller for dose data.
+ * @param objects - target volume object.
+ * @param mainGroup - time lapse volume group.
+ * @param subGroup - accumulate volume group.
+ * @param duration - duration of animation.
+ * @param mode - mode of data. Default is `time lapse`.
+ * @param speed - speed of animation playback. Default is `1.0`.
+ * @param customSpeed - custom speed list of animation playback.
+ */
 export function DoseAnimationControls({
     objects,
     mainGroup,
@@ -29,11 +46,24 @@ export function DoseAnimationControls({
     customSpeed,
     ...props
 }: DoseAnimationControlsProps) {
+    // ==================================================
+    // Variable, State
+    // --------------------------------------------------
+    // useStore
     const [set, sceneStates] = useStore((state) => [
         state.set,
         state.sceneStates,
     ]);
 
+    // --------------------------------------------------
+    // Speed list
+    let speedListTmp = [0.25, 0.5, 1.0, 1.5, 2.0];
+    const speedList = customSpeed
+        ? speedListTmp.concat(customSpeed)
+        : speedListTmp;
+
+    // --------------------------------------------------
+    // ref
     const childMaxLength = React.useRef<{
         index: number;
         length: number;
@@ -42,6 +72,8 @@ export function DoseAnimationControls({
         length: 1,
     });
 
+    // --------------------------------------------------
+    // Animation mixer, actions
     /**
      * @link https://github.com/pmndrs/drei/blob/cce70ae77b5151601089114259fbffab8747c8fa/src/core/useAnimations.tsx
      */
@@ -70,42 +102,8 @@ export function DoseAnimationControls({
         })
     );
 
-    let speedListTmp = [0.25, 0.5, 1.0, 1.5, 2.0];
-    const speedList = customSpeed
-        ? speedListTmp.concat(customSpeed)
-        : speedListTmp;
-
-    React.useEffect(() => {
-        objects.forEach((object, i) => {
-            if (object.current) {
-                object.current.animations.forEach((clip) => {
-                    lazyActions.current[i][clip.name] = mixer[i].clipAction(
-                        clip,
-                        object.current!
-                    );
-
-                    if (childMaxLength.current.length <= clip.duration) {
-                        childMaxLength.current = {
-                            index: i,
-                            length: clip.duration,
-                        };
-                    }
-                });
-            }
-        });
-        setActions(lazyActions.current);
-
-        actions.forEach(
-            (actions) => actions["volumeAnimation"]?.reset().play()
-        );
-    }, [objects]);
-
-    React.useEffect(() => {
-        actions.forEach(
-            (actions) => actions["volumeAnimation"]?.reset().play()
-        );
-    }, [actions]);
-
+    // --------------------------------------------------
+    // Control Panel
     /**
      * leva panels
      *
@@ -193,6 +191,45 @@ export function DoseAnimationControls({
         ),
     }));
 
+    // ==================================================
+    // Hooks (Effect)
+    // --------------------------------------------------
+    // set actions
+    React.useEffect(() => {
+        objects.forEach((object, i) => {
+            if (object.current) {
+                object.current.animations.forEach((clip) => {
+                    lazyActions.current[i][clip.name] = mixer[i].clipAction(
+                        clip,
+                        object.current!
+                    );
+
+                    if (childMaxLength.current.length <= clip.duration) {
+                        childMaxLength.current = {
+                            index: i,
+                            length: clip.duration,
+                        };
+                    }
+                });
+            }
+        });
+        setActions(lazyActions.current);
+
+        actions.forEach(
+            (actions) => actions["volumeAnimation"]?.reset().play()
+        );
+    }, [objects]);
+
+    // --------------------------------------------------
+    // play actions
+    React.useEffect(() => {
+        actions.forEach(
+            (actions) => actions["volumeAnimation"]?.reset().play()
+        );
+    }, [actions]);
+
+    // --------------------------------------------------
+    // Frame
     useFrame((state, delta) => {
         if (mainGroup.current?.visible) {
             if (edit) {
@@ -233,6 +270,8 @@ export function DoseAnimationControls({
         }
     });
 
+    // ==================================================
+    // Element
     return (
         <>
             {/* {console.log("animation rendering")} */}

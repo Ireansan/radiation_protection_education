@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, memo, useMemo, useState } from "react";
 import { addEffect } from "@react-three/fiber";
-import { useControls, folder, button } from "leva";
+import { useControls, folder } from "leva";
 import {
     Shield,
     HealthAndSafety,
@@ -16,13 +16,19 @@ import {
     // BackHand
 } from "@mui/icons-material";
 
-import { useStore } from "../../store";
-import type { Equipments } from "../../store";
 import type { ResultsByName } from "../../../src";
 
+// ==========
+// Store
+import { useStore } from "../../store";
+import type { Equipments } from "../../store";
+
+// ==========
+// Styles
 import style from "../../../styles/css/dosimeter.module.css";
 
 /**
+ * References
  * @link https://codesandbox.io/s/lo6kp?file=/src/ui/Speed/Boost.tsx
  * @link https://codesandbox.io/s/lo6kp?file=/src/styles.css
  * @link https://codesandbox.io/s/i2160?file=/src/Hud.js
@@ -32,11 +38,18 @@ export type ResultIconProps = {
     state: string[];
     color?: string;
 };
+/**
+ * Icons Component.
+ * @param state - state of survey point.
+ * @param color - color of icon. Default is `#D4875D`.
+ */
 function ResultIcon({
     state,
     color = "#D4875D", // Orange
     ...props
 }: ResultIconProps) {
+    // ==================================================
+    // Element
     return (
         <>
             <div
@@ -83,6 +96,16 @@ export type ResultDataProps = {
     typeValue: string;
     isXR: boolean;
 };
+/**
+ * Data Component.
+ * @param children - category name.
+ * @param value - exposure dose.
+ * @param coefficient - coefficient of impact from protection.
+ * @param maxHp - upper limit of exposure.
+ * @param typeBar - display type of bar.
+ * @param typeValue - display type of value.
+ * @param isXR - If `true` it will be styled for XR.
+ */
 function ResultData({
     children,
     value,
@@ -93,6 +116,9 @@ function ResultData({
     isXR,
     ...props
 }: ResultDataProps) {
+    // ==================================================
+    // Variable, State
+    // --------------------------------------------------
     const [isDanger, length, isAddBar] = useMemo(() => {
         const isAddBar = typeBar === "addition" ? true : false;
 
@@ -110,12 +136,15 @@ function ResultData({
         return [isDanger, length, isAddBar];
     }, [value, coefficient, maxHp, typeBar]);
 
+    // --------------------------------------------------
     const [isAddValue] = useMemo(() => {
         const isAddValue = typeValue === "addition" ? true : false;
 
         return [isAddValue];
     }, [typeValue]);
 
+    // ==================================================
+    // Element
     return (
         <>
             <div className={`${style.data} ${isXR && `${style.isXR}`}`}>
@@ -183,6 +212,15 @@ export type DosimeterResultProps = {
     typeValue: string;
     isXR: boolean;
 };
+/**
+ * Exposure Dose Component.
+ * @param result - dosimeter result.
+ * @param equipments - equipped state of protective equipment.
+ * @param typeOrder - order of data.
+ * @param typeBar - display type of bar.
+ * @param typeValue - display type of value.
+ * @param isXR - If `true` it will be styled for XR.
+ */
 function DosimeterResult({
     result,
     equipments,
@@ -192,10 +230,16 @@ function DosimeterResult({
     isXR,
     ...props
 }: DosimeterResultProps) {
+    // ==================================================
+    // Variable, State
+    // --------------------------------------------------
+    // useStore
     const [sceneStates] = useStore((state) => [state.sceneStates]);
     const { dosimeterSettingsState } = sceneStates;
     const { N_perPatient, N_perYear, Limit_once } = dosimeterSettingsState;
 
+    // --------------------------------------------------
+    // displayed value and state
     const [value, state] = useMemo(() => {
         // calc vale, state
         let doseValue =
@@ -227,10 +271,14 @@ function DosimeterResult({
         return [value, state];
     }, [result, equipments]);
 
+    // --------------------------------------------------
+    // order of data
     const isYearOnceOrder = useMemo(() => {
         return typeOrder === "year-once" ? true : false;
     }, [typeOrder]);
 
+    // ==================================================
+    // Element
     return (
         <>
             <div className={`${style.dose} ${isXR && `${style.isXR}`}`}>
@@ -299,6 +347,18 @@ export type DosimeterUIProps = {
     isXR?: boolean;
     activeNames?: string[];
 };
+/**
+ * UI for a list of exposure doses.
+ * @param nPerPatient - number of irradiations per patient. Default is `1`.
+ * @param nPerYear - number of implementations per year. Default is `500`.
+ * @param limitOnce - upper limit per patient. Default is `100`.
+ * @param typeOrder - order of data. Default is `year-once`.
+ * @param typeData - display type of data. Default is `addition`.
+ * @param typeBar - display type of bar. Default is `addition`.
+ * @param typeValue - display type of value. Default is `addition`.
+ * @param isXR - If `true` it will be styled for XR. Default is `false`.
+ * @param activeNames - Designation of survey points to be displayed. Default is `undefined`.
+ */
 export function DosimeterUI({
     nPerPatient = 1,
     nPerYear = 500,
@@ -311,6 +371,10 @@ export function DosimeterUI({
     activeNames = undefined,
     ...props
 }: DosimeterUIProps) {
+    // ==================================================
+    // Variable, State
+    // --------------------------------------------------
+    // useStore
     const [set, playerState, sceneStates] = useStore((state) => [
         state.set,
         state.sceneStates.playerState,
@@ -319,6 +383,8 @@ export function DosimeterUI({
     const { equipments } = playerState;
     const { dosimeterResults } = sceneStates;
 
+    // --------------------------------------------------
+    // Results of Dose Values
     const results = React.useMemo(() => {
         if (!activeNames) {
             return dosimeterResults;
@@ -333,10 +399,8 @@ export function DosimeterUI({
         return results;
     }, [activeNames, dosimeterResults]);
 
-    /**
-     * leva panels
-     */
-    // Volume
+    // --------------------------------------------------
+    // Control Panel
     const [dosimeterConfig, setDosimeterConfig] = useControls(() => ({
         Scene: folder({
             Options: folder({
@@ -406,6 +470,10 @@ export function DosimeterUI({
         }),
     }));
 
+    // ==================================================
+    // Hooks (Effect)
+    // --------------------------------------------------
+    // set dosimeter config whent update controles panel
     React.useEffect(() => {
         set((state) => ({
             sceneStates: {
@@ -419,6 +487,8 @@ export function DosimeterUI({
         }));
     }, [dosimeterConfig]);
 
+    // --------------------------------------------------
+    // set dosimeter config when update arugments
     React.useEffect(() => {
         set((state) => ({
             sceneStates: {
@@ -437,6 +507,8 @@ export function DosimeterUI({
         });
     }, [nPerPatient, nPerYear, limitOnce]);
 
+    // ==================================================
+    // Element
     return (
         <>
             <div

@@ -1,7 +1,6 @@
 import React from "react";
 import * as THREE from "three";
-import { extend } from "@react-three/fiber";
-import { useCursor, PivotControls } from "@react-three/drei";
+import { PivotControls } from "@react-three/drei";
 import {
     RigidBody,
     RigidBodyApi,
@@ -9,11 +8,14 @@ import {
     CuboidArgs,
 } from "@react-three/rapier";
 
-import {
-    DoseBase,
-    DoseControls as DoseControlsImpl,
-    VolumeBase,
-} from "../../../../src";
+// ==========
+// Volume
+// ----------
+// object
+import { DoseControls as DoseControlsImpl, VolumeBase } from "../../../../src";
+
+// ==========
+// Store
 import { useStore } from "../../../store";
 
 export type DoseBoardControlsProps = {
@@ -37,6 +39,25 @@ export type DoseBoardControlsProps = {
     visible?: boolean;
 };
 /**
+ * @param children - target volume object.
+ * @param object - target volume object.
+ * @param origin - origin of scattering.
+ * @param areaSize - size of box collision for clipping. Default is `[1, 1, 1]`.
+ * @param width - width of shield. Default is `1`.
+ * @param height - height of shield. Default is `1`.
+ * @param position - position of shield. Default is `[0, 0, 0]`.
+ * @param rotation - rotation of shield. Default is `[0, 0, 0]`.
+ * @param planeSize - size of planeHelper. Default is `2`.
+ * @param planeColor - color of planeHelper. Default is `#ffff00`.
+ * @param scale - PivotControls props. Default is `1`.
+ * @param lineWidth - PivotControls props. Default is `4`.
+ * @param fixed - PivotControls props. Default is `false`.
+ * @param offset - PivotControls props. Default is `[0, 0, 0]`.
+ * @param activeAxes - PivotControls props. Default is `[true, true, true]`.
+ * @param axisColors - PivotControls props. Default is `["#ff2060", "#20df80", "#2080ff"]`.
+ * @param opacity - PivotControls props. Default is `0.5`.
+ * @param visible - PivotControls props. Default is `true`.
+ * @link https://github.com/pmndrs/drei?tab=readme-ov-file#pivotcontrols
  * @link https://github.com/pmndrs/drei/blob/master/src/core/TransformControls.tsx
  */
 export const DoseBoardControls = React.forwardRef<
@@ -66,13 +87,22 @@ export const DoseBoardControls = React.forwardRef<
     },
     ref
 ) {
+    // ==================================================
+    // Variable, State
+    // --------------------------------------------------
+    // useStore
     const [set, debug, viewing] = useStore((state) => [
         state.set,
         state.debug,
         state.viewing,
     ]);
+
+    // --------------------------------------------------
+    // Controls
     const controls = React.useMemo(() => new DoseControlsImpl(), []);
 
+    // --------------------------------------------------
+    // PivotControls
     const [_position, setPosition] = React.useState<THREE.Vector3>(position);
     const [_rotation, setRotation] = React.useState<THREE.Euler>(rotation);
     const [matrix, setMatrix] = React.useState<THREE.Matrix4>(
@@ -84,12 +114,17 @@ export const DoseBoardControls = React.forwardRef<
     );
 
     const pivotRef = React.useRef<THREE.Group>(null!);
+
+    // --------------------------------------------------
+    // Board
     const boardRef = React.useRef<THREE.Group>(null!);
+
+    // --------------------------------------------------
+    // Helper
     const helperRef = React.useRef<THREE.Group>(null!);
 
-    // -----
+    // --------------------------------------------------
     // Plane
-    // -----
     const [clipping, setClipping] = React.useState<boolean>(false);
     const [Origin, setOrigin] = React.useState<THREE.Vector3>(
         origin instanceof THREE.Object3D ? origin.position : origin
@@ -113,17 +148,15 @@ export const DoseBoardControls = React.forwardRef<
         })
     );
 
-    // -----
+    // --------------------------------------------------
     // RigidBody
-    // -----
     const rigidBodyRef = React.useRef<RigidBodyApi>(null);
     const [center, setCenter] = React.useState<THREE.Vector3>(
         new THREE.Vector3()
     );
 
-    /**
-     *
-     */
+    // ==================================================
+    // Functions
     function onDrag(
         l: THREE.Matrix4,
         deltaL: THREE.Matrix4,
@@ -215,11 +248,10 @@ export const DoseBoardControls = React.forwardRef<
         }));
     }
 
-    /**
-     *
-     */
+    // ==================================================
+    // Hooks (Effect)
+    // --------------------------------------------------
     // Attach volume to controls
-    // Object 1
     React.useLayoutEffect(() => {
         if (object.current) {
             if (object.current instanceof VolumeBase) {
@@ -235,6 +267,7 @@ export const DoseBoardControls = React.forwardRef<
         return () => void controls.detach();
     }, [object, controls]);
 
+    // --------------------------------------------------
     // Push Planes
     React.useEffect(() => {
         controls.clippingPlanes = Planes;
@@ -243,14 +276,16 @@ export const DoseBoardControls = React.forwardRef<
         controls.isType = "board";
     }, [controls, Planes]);
 
+    // --------------------------------------------------
     // Clipping
     React.useEffect(() => {
         controls.clipping = clipping;
         controls.boardEffect = clipping;
     }, [controls, clipping]);
 
+    // --------------------------------------------------
+    // set execute log for experiment
     React.useEffect(() => {
-        // set execute log for experiment
         if (clipping) {
             set((state) => ({
                 sceneStates: {
@@ -267,6 +302,8 @@ export const DoseBoardControls = React.forwardRef<
         }
     }, [clipping]);
 
+    // ==================================================
+    // Element
     return controls ? (
         <>
             <primitive

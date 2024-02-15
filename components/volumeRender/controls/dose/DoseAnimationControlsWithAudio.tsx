@@ -1,15 +1,20 @@
 import React from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { styled, Box, Paper, Stack, Slider, Typography } from "@mui/material";
-import { PlayArrow, Pause } from "@mui/icons-material";
 import { useControls, folder } from "leva";
 
+// ==========
+// Volume
+// ----------
+// object
 import {
     VolumeBase,
     DoseAnimationObject,
     VolumeAnimationObject,
 } from "../../../../src";
+
+// ==========
+// Store
 import { useStore } from "../../../store";
 
 export type DoseAnimationControlsWithAudioProps = {
@@ -19,6 +24,14 @@ export type DoseAnimationControlsWithAudioProps = {
     subGroup?: React.RefObject<VolumeBase>;
     mode?: string;
 };
+/**
+ * Animation controller for volume rendering objects using audio data and mode controller for dose data (control only).
+ * @param audioRef - audio data.
+ * @param objects - target volume object.
+ * @param mainGroup - time lapse volume group.
+ * @param subGroup - accumulate volume group.
+ * @param mode - mode of data. Default is `time lapse`.
+ */
 export function DoseAnimationControlsWithAudio({
     audioRef,
     objects,
@@ -27,11 +40,17 @@ export function DoseAnimationControlsWithAudio({
     mode = "time lapse",
     ...props
 }: DoseAnimationControlsWithAudioProps) {
+    // ==================================================
+    // Variable, State
+    // --------------------------------------------------
+    // useStore
     const [set, executeLog] = useStore((state) => [
         state.set,
         state.sceneStates.executeLog,
     ]);
 
+    // --------------------------------------------------
+    // Animation mixer, actions
     /**
      * @link https://github.com/pmndrs/drei/blob/cce70ae77b5151601089114259fbffab8747c8fa/src/core/useAnimations.tsx
      */
@@ -60,10 +79,8 @@ export function DoseAnimationControlsWithAudio({
         })
     );
 
-    const audioPlayer = React.useRef<HTMLAudioElement>(null!);
-
-    const [isEditing, setIsEditing] = React.useState<boolean>(false);
-
+    // --------------------------------------------------
+    // Control Panel
     const [,] = useControls(() => ({
         Data: folder(
             {
@@ -131,6 +148,10 @@ export function DoseAnimationControlsWithAudio({
         ),
     }));
 
+    // ==================================================
+    // Hooks (Effect)
+    // --------------------------------------------------
+    // set actions
     React.useEffect(() => {
         objects.forEach((object, i) => {
             if (object.current) {
@@ -149,12 +170,16 @@ export function DoseAnimationControlsWithAudio({
         );
     }, [objects]);
 
+    // --------------------------------------------------
+    // play actions
     React.useEffect(() => {
         actions.forEach(
             (actions) => actions["volumeAnimation"]?.reset().play()
         );
     }, [actions]);
 
+    // --------------------------------------------------
+    // Frame
     useFrame((state, delta) => {
         if (!audioRef.current) {
             return;
@@ -184,5 +209,7 @@ export function DoseAnimationControlsWithAudio({
         }
     });
 
+    // ==================================================
+    // Element
     return <></>;
 }
