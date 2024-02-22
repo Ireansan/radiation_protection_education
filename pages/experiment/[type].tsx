@@ -246,8 +246,8 @@ const Experiment: NextPage = ({ ...props }: PageProps) => {
                         <a
                             href={
                                 !isEnglish
-                                    ? "https://github.com/Ireansan/radiation_protection_education/blob/develop/docs/Experiment_VR.md"
-                                    : "https://github.com/Ireansan/radiation_protection_education/blob/develop/docs/Experiment_VR_en.md"
+                                    ? "https://github.com/Ireansan/radiation_protection_education/blob/develop/docs/manual/experiment/Experiment_VR.md"
+                                    : "https://github.com/Ireansan/radiation_protection_education/blob/develop/docs/manual/experiment/Experiment_VR_en.md"
                             }
                             target="_blank"
                             rel="noopener noreferrer"
