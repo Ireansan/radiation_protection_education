@@ -1,5 +1,8 @@
 # ボリュームレンダリング用クラスについて
 
+Last Update: 2024/03/04
+Author: Kento Oka
+
 ## VolumeとDoseの違い
 `VolumeBase`, `DoseBase`など`Volume[XXX]`, `Dose[XXX]`といったクラスが`src/volumeRender`内にある。
 これら`Dose[XXX]`は開発初期段階の名残で，名前が違うだけで中身はほとんど`Volume[XXX]`と同じです。
