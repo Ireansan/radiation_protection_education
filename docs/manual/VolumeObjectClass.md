@@ -70,6 +70,7 @@ return (
 ## ボリュームオブジェクトのメンバー変数の更新について
 一部メンバー変数は代入などのタイミングで，子のメンバー変数も更新されます。
 `updateVolumeParam`, `updateVolumeClipping`で更新の処理は実行され，自動更新停止をしていない場合は基本的に親の値が反映されます。
+`updateVolumeParam`, `updateVolumeClipping`はthree.jsの`Object3D`の[`updateWorldUpdate`](https://github.com/mrdoob/three.js/blob/5ed5417d63e4eeba5087437cc27ab1e3d0813aea/src/core/Object3D.js#L623)を参考にして書いております。
 
 以下の例では，`Volume Animation Object 1`の`clim2`は固定となり，親の`Volume Group`をパラメーターコントローラーで操作しても変更されなくなります。
 `Volume Animation Object 2`は`clim2AutoUpdate={false}`としていないため，`Volume Group`の変更が反映されます。
@@ -118,4 +119,4 @@ return (
 クリッピングや防護板を有効にしたタイミングで実行される`updateVolumeClipping`では，`clippingPlanesObjects`の要素をもとにシェーダーに渡すクリッピング平面の配列を更新します。
 クリッピング平面がどのコントローラーのものか，防護板のものか否かの判別に用いる配列も同様に更新しています。
 
-防護板の擬似的な再現にクリッピングの処理を用いており，さらにクリッピング平面による断面表示を両立させるためにこのような仕組みになっています。
+防護板の擬似的な再現にクリッピングの処理を用いており，防護板の表現とクリッピング平面による断面表示を両立させるためにこのような仕組みになっています。
