@@ -1,5 +1,3 @@
-import * as THREE from "three";
-
 import { VolumeAnimationObject } from "../core";
 
 /**
@@ -16,6 +14,8 @@ import { VolumeAnimationObject } from "../core";
  * @param planes THREE.Plane
  */
 class DoseAnimationObject extends VolumeAnimationObject {
+    // ==================================================
+    // Constructor
     constructor() {
         super(true);
     }

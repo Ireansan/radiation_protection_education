@@ -1,10 +1,10 @@
-import * as THREE from "three";
 import { Volume } from "three-stdlib";
 
 import { VolumeObject } from "../core";
-import type { DoseValue } from "./doseBase";
 
 class DoseObject extends VolumeObject {
+    // ==================================================
+    // Constructor
     constructor(
         volume = new Volume(),
         isPerspective = false,

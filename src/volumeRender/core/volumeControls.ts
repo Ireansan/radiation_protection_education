@@ -5,6 +5,8 @@ import { ClippingPlanesObject, VolumeBase } from "./volumeBase";
  * @link https://github.com/mrdoob/three.js/blob/master/examples/jsm/controls/TransformControls.js
  */
 class VolumeControls extends VolumeBase {
+    // ==================================================
+    // Type Declaration
     object: VolumeBase | undefined;
 
     _invert: boolean;
@@ -14,6 +16,8 @@ class VolumeControls extends VolumeBase {
 
     isVolumeControls: boolean;
 
+    // ==================================================
+    // Constructor
     constructor(isDose = false) {
         super(isDose);
 
@@ -25,6 +29,8 @@ class VolumeControls extends VolumeBase {
         this.isVolumeControls = true;
     }
 
+    // ==================================================
+    // Getter, Setter
     get invert() {
         return this._invert;
     }
@@ -46,6 +52,8 @@ class VolumeControls extends VolumeBase {
         this.updateVolumeClipping();
     }
 
+    // ==================================================
+    // Method
     updateVolumeParam() {
         // update attached object
         if (this.object && this.object instanceof VolumeBase) {

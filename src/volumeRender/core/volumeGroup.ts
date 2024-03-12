@@ -9,9 +9,13 @@ import { VolumeObject } from "./volumeObject";
  * @abstract Volume Group
  */
 class VolumeGroup extends VolumeBase {
+    // ==================================================
+    // Type Declaration
     isGroup: boolean;
     type: string;
 
+    // ==================================================
+    // Constructor
     constructor(isDose = false) {
         super(isDose);
 
@@ -19,15 +23,15 @@ class VolumeGroup extends VolumeBase {
         this.type = "Group";
     }
 
+    // ==================================================
+    // Method
     updateVolumeClipping(updateParents: boolean, updateChildren: boolean) {
-        // ----------
+        // =========================
         // update parent, children
-        // ----------
         super.updateVolumeClipping(updateParents, updateChildren);
 
-        // ----------
+        // =========================
         // update children that is THREE.Mesh
-        // ----------
         if (updateChildren === true) {
             const children = this.children;
 

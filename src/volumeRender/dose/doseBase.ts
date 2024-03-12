@@ -1,5 +1,3 @@
-import * as THREE from "three";
-
 import { VolumeBase } from "../core";
 
 export type DoseValue = {
@@ -14,6 +12,8 @@ export type DoseValue = {
  * @abstract Volume Base
  */
 class DoseBase extends VolumeBase {
+    // ==================================================
+    // Constructor
     constructor(isPerspective = false) {
         super(true, isPerspective);
     }

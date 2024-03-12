@@ -16,11 +16,15 @@ import { VolumeGroup } from "./volumeGroup";
  * @param planes THREE.Plane
  */
 class VolumeAnimationObject extends VolumeGroup {
+    // ==================================================
+    // Type Declaration
     volumeAnimationParamAutoUpdate: boolean;
     childrenLength: number;
     // animation index
     index: number;
 
+    // ==================================================
+    // Constructor
     constructor(isDose = false) {
         super(isDose);
 
@@ -31,6 +35,8 @@ class VolumeAnimationObject extends VolumeGroup {
         this.type = "Group";
     }
 
+    // ==================================================
+    // Method
     add(...object: THREE.Object3D<Event>[]) {
         super.add(...object);
         this.updateAnimation();

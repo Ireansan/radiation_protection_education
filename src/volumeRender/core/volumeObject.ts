@@ -1,9 +1,8 @@
 import * as THREE from "three";
 import { Volume } from "three-stdlib";
 
-import doseShader from "../shaders/doseShader"; // FIXME: tmp
-import doseShaderPerspective from "../shaders/doseShaderPerspective"; // FIXME: tmp
-import volumeShader from "../shaders/volumeShader";
+import doseShader from "../shaders/doseShader";
+import doseShaderPerspective from "../shaders/doseShaderPerspective";
 import { cmtextures } from "../textures";
 import { VolumeBase } from "./volumeBase";
 
@@ -22,6 +21,8 @@ import { VolumeBase } from "./volumeBase";
  * @param planes THREE.Plane
  */
 class VolumeObject extends VolumeBase {
+    // ==================================================
+    // Type Declaration
     volume: Volume;
     width: number;
     height: number;
@@ -31,6 +32,8 @@ class VolumeObject extends VolumeBase {
     geometry: THREE.BufferGeometry;
     material: THREE.ShaderMaterial;
 
+    // ==================================================
+    // Constructor
     constructor(
         volume = new Volume(),
         isDose = false,
@@ -141,16 +144,16 @@ class VolumeObject extends VolumeBase {
         );
     }
 
+    // ==================================================
+    // Method
     // https://github.com/mrdoob/three.js/blob/master/src/core/Object3D.js#L601
     updateVolumeParam(updateParents: boolean, updateChildren: boolean) {
-        // ----------
+        // =========================
         // update parent, children
-        // ----------
         super.updateVolumeParam(updateParents, updateChildren);
 
-        // ----------
+        // =========================
         // update this
-        // ----------
         this.material.uniforms.u_coefficient.value = this._coefficient;
         this.material.uniforms.u_offset.value = this._offset;
         this.material.uniforms.u_boardCoefficient.value =
@@ -163,9 +166,8 @@ class VolumeObject extends VolumeBase {
             this._renderstyle === "mip" ? 0 : 1;
         this.material.uniforms.u_renderthreshold.value = this._isothreshold;
 
-        // ----------
+        // =========================
         // update this by parent
-        // ----------
         const parent = this.parent;
         if (parent !== null && this.volumeParamAutoUpdate) {
             if (parent instanceof VolumeBase) {
@@ -192,14 +194,12 @@ class VolumeObject extends VolumeBase {
     }
 
     updateVolumeClipping(updateParents: boolean, updateChildren: boolean) {
-        // ----------
+        // =========================
         // update parent, this, and children
-        // ----------
         super.updateVolumeClipping(updateParents, updateChildren);
 
-        // ----------
+        // =========================
         // update material
-        // ----------
         this.material.clipping = this._clipping;
         this.material.clippingPlanes = this.material.clipping
             ? this._clippingPlanes

@@ -14,10 +14,10 @@ export type SpecifiedSite = {
 export type ResultsByName = SpecifiedSite & {
     dose: DoseValue[];
 };
-/**
- *
- */
+
 class Dosimeter extends DoseBase {
+    // ==================================================
+    // Type Declaration
     object: THREE.Object3D | undefined;
     _namesData: SpecifiedSite[] | undefined;
     targets: (VolumeBase | undefined)[] | undefined;
@@ -27,6 +27,8 @@ class Dosimeter extends DoseBase {
 
     isDoseControls: boolean;
 
+    // ==================================================
+    // Constructor
     constructor() {
         super();
 
@@ -42,6 +44,8 @@ class Dosimeter extends DoseBase {
         this.isDoseControls = true;
     }
 
+    // ==================================================
+    // Getter, Setter
     get namesData() {
         return this._namesData;
     }
@@ -50,6 +54,8 @@ class Dosimeter extends DoseBase {
         this.updateObjectsByName();
     }
 
+    // ==================================================
+    // Method
     attach(object: THREE.Object3D<THREE.Event>) {
         this.object = object;
         this.visible = true;
@@ -88,15 +94,13 @@ class Dosimeter extends DoseBase {
         let tmpResults: DoseValue[] = new Array();
 
         if (this.targets && objectByName) {
-            // ----------
+            // =========================
             // world position by name
-            // ----------
             let position = new THREE.Vector3();
             objectByName.getWorldPosition(position);
 
-            // ----------
+            // =========================
             // within boundaries
-            // ----------
             const within_boundaries = (target: VolumeBase) => {
                 let boards = target.totalClippingPlanesObjects.filter(
                     (element) => element.isType === "board"
@@ -141,9 +145,8 @@ class Dosimeter extends DoseBase {
                 };
             };
 
-            // ----------
+            // =========================
             // each result
-            // ----------
             tmpResults = this.targets
                 .filter((value) => value?.visible === true)
                 .map((target) => {
