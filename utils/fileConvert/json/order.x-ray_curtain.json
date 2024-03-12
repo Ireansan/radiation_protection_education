@@ -1,0 +1,27 @@
+{
+    "volume": {
+        "input_dir": "../../public/models/vtk/x-ray/curtain_animation",
+        "out_dir_public": "models/nrrd/x-ray/curtain_animation",
+        "name_nrrd": "x-ray_curtain",
+        "out_dir": "../../components/models/VolumeData/XRay_curtain/XRay_curtain_all",
+        "name_component": "XRay_curtain_all",
+        "cell_id": 0,
+        "out_dir_depth": 5
+    },
+    "body": {
+        "input_path": "../../public/models/vtk/x-ray/curtain_animation/H(10)xyPbT_01.vtk",
+        "out_path": "../../public/models/gltf/x-ray_curtain_material_1-53.gltf",
+        "threshold_min": 1,
+        "threshold_max": 53,
+        "cell_id": 2,
+        "out_path_components": "../../components/models/VolumeData/XRay_curtain/XRay_curtain_material.tsx"
+    },
+    "machine": {
+        "input_path": "../../public/models/vtk/x-ray/curtain_animation/H(10)xyPbT_01.vtk",
+        "out_path": "../../public/models/gltf/x-ray_curtain_region_1002-1019.gltf",
+        "threshold_min": 1002,
+        "threshold_max": 1019,
+        "cell_id": 1,
+        "out_path_components": "../../components/models/VolumeData/XRay_curtain/XRay_curtain_region.tsx"
+    }
+}
