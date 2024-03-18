@@ -1,6 +1,6 @@
 # ボリュームレンダリング用クラスについて
 
-Last Update: 2024/03/04
+Last Update: 2024/03/18
 Author: Kento Oka
 
 ## VolumeとDoseの違い
