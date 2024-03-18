@@ -45,7 +45,11 @@ export function YBot(props: JSX.IntrinsicElements["group"]) {
 
     return (
         <>
-            <group ref={group} {...props} dispose={null}>
+            <group
+                ref={group}
+                {...props}
+                dispose={null}
+            >
                 <group name="Scene">
                     <group
                         name="Y-Bot"
@@ -80,7 +84,10 @@ export function YBot(props: JSX.IntrinsicElements["group"]) {
             </group>
             {/* FIXME: skeletonHelper */}
             <group>
-                <skeletonHelper args={[nodes.mixamorigHips]} visible={debug} />
+                <skeletonHelper
+                    args={[nodes.mixamorigHips]}
+                    visible={debug}
+                />
             </group>
         </>
     );
