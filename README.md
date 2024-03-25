@@ -15,12 +15,10 @@ Docker Desktop includes Docker Compose as part of the installation.
 ```
 $ git clone https://github.com/YoshihiroOkadaLab/radiation_protection_education.git
 $ cd radiation_protection_education
+$ touch .env
 $ docker compose -f docker-compose.yml build
 $ docker compose -f docker-compose.yml up
 ```
-
-## How To Run
-
 
 ## Reference
 - Next.js / Examples / With Docker Compose
